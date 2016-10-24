@@ -6,7 +6,7 @@ exports.up = function (knex, Promise) {
     table.decimal('Cost').notNullable()
     table.string('Description', 100)
     table.integer('NumberOfNights')
-    table.boolean('AwayOverFiveHours')
+    table.string('TravelTime', 100)
     table.decimal('ApprovedCost')
     table.string('Note', 250)
     table.string('Status', 20)
