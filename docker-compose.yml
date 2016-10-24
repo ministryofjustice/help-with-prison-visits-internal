@@ -1,0 +1,22 @@
+version: '2'
+services:
+
+  node-internal-apvs:
+    build: .
+    volumes:
+      - "./gulpfile.js:/usr/src/app/gulpfile.js"
+      - "./nodemon.json:/usr/src/app/nodemon.json"
+      - "./app:/usr/src/app/app"
+      - "./cache_node_modules:/usr/src/app/node_modules"
+      - "./logs:/usr/src/app/logs"
+    ports:
+      - "3001:3001"
+    environment:
+    - LOGGING_PATH=/usr/src/app/logs/internal-web.log
+    - APVS_DATABASE
+    - APVS_DATABASE_SERVER
+    - APVS_EXT_WEB_USERNAME
+    - APVS_EXT_WEB_PASSWORD
+    - APVS_EXT_MIGRATION_USERNAME
+    - APVS_EXT_MIGRATION_PASSWORD
+    - APVS_NOTIFY_API_KEY
