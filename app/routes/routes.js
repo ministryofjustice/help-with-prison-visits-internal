@@ -5,6 +5,9 @@
 var routes = [
   require('./index'),
 
+  // View Claim
+  require('./view-claim'),
+
   // Health check routes
   require('./health-check/status')
 ]
