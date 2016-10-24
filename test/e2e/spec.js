@@ -5,6 +5,6 @@ describe('First time claim flow', () => {
     return browser.url('/')
 
       // Index
-      .waitForExist('#temporary')
+      .waitForExist('#new-claims')
   })
 })
