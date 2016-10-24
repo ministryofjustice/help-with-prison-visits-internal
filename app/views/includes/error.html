@@ -1,0 +1,24 @@
+{% extends "includes/layout.html" %}
+
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<main id="content" role="main">
+
+  {% include "includes/phase_banner_beta.html" %}
+
+  <div class="grid-row">
+    <div class="column-two-thirds">
+
+      <h1 class="heading-xlarge">An Error has occurred</h1>
+      <p>{{ error }}</p>
+
+    </div>
+  </div>
+
+</main>
+
+{% endblock %}

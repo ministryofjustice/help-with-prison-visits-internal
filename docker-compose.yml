@@ -1,7 +1,7 @@
 version: '2'
 services:
 
-  node-external-apvs:
+  node-internal-apvs:
     build: .
     volumes:
       - "./gulpfile.js:/usr/src/app/gulpfile.js"
@@ -12,7 +12,7 @@ services:
     ports:
       - "3001:3001"
     environment:
-    - LOGGING_PATH=/usr/src/app/logs/external-web.log
+    - LOGGING_PATH=/usr/src/app/logs/internal-web.log
     - APVS_DATABASE
     - APVS_DATABASE_SERVER
     - APVS_EXT_WEB_USERNAME
