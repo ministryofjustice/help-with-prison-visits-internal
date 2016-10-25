@@ -1,6 +1,6 @@
 module.exports = function (router) {
-  router.get('/:ClaimID', function (req, res) {
-    return res.render('view-claim', {
+  router.get('/claim/:ClaimID', function (req, res) {
+    return res.render('./claim/view-claim', {
       title: 'APVS Claim',
       Claim: {
         Reference: '1234567',
