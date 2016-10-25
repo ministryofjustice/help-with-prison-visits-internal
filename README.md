@@ -57,3 +57,8 @@ To run the [knex](http://knexjs.org/) database migrations:
 ```
 npm run-script migrations
 ```
+
+To rollback the last batch of changes:
+```
+./node_modules/.bin/knex migrate:rollback --env migrations
+```
