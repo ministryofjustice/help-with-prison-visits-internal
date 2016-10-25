@@ -7,10 +7,11 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
 COPY knexfile.js /usr/src/app/
 COPY app /usr/src/app/app
+COPY migrations /usr/src/app/migrations
 
 EXPOSE 3001
 
 HEALTHCHECK CMD curl --fail http://localhost:3001/status || exit 1
 
 # Resolve dependencies at container startup to allow caching
-CMD npm install && node_modules/.bin/nodemon --exec node_modules/.bin/gulp --config="nodemon.json"
+CMD npm install && npm run-script migrations && node_modules/.bin/nodemon --exec node_modules/.bin/gulp --config="nodemon.json"
