@@ -24,8 +24,8 @@
       <tr>
       	<td>{{ claim['Reference'] }}</td>
       	<td>{{ claim['FirstName'] }} {{ claim['LastName'] }}</td>
-      	<td>{{ claim['DateCreated'] }}</td>
-      	<td><a href={{ claim['ClaimID'] }}>View</a></td>
+      	<td>{{ claim['DateSubmitted'] }}</td>
+      	<td><a href={{ claim['ClaimId'] }}>View</a></td>
       </tr>
     {% endfor %}
 
