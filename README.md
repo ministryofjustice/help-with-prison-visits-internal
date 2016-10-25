@@ -27,6 +27,23 @@ docker-compose build
 docker-compose up
 ```
 
+### Heroku
+
+The application can be deployed to [heroku](https://www.heroku.com/) for quick preview.
+
+Deployment to heroku is automatically performed by [Travis using an encrypted deployment key](https://docs.travis-ci.com/user/deployment/heroku/) in `.travis.yml`.
+
+```
+heroku login
+heroku create
+heroku buildpacks:set heroku/nodejs
+
+# Set config vars for application
+# heroku config:set DB_USERNAME=mydbuser
+
+git push heroku master
+```
+
 ## Test
 
 ```
@@ -50,10 +67,15 @@ npm run-script test-e2e-firefox
 
 ## Database
 
-The application requires a MS SQL database instance, configured with an external web user and a migration user. See [here](https://github.com/ministryofjustice/apvs/tree/develop/database) for details.
+The application requires a MS SQL database instance, configured with an internal web user and a migration user. See [here](https://github.com/ministryofjustice/apvs/tree/develop/database) for details.
 
 To run the [knex](http://knexjs.org/) database migrations:
 
 ```
 npm run-script migrations
+```
+
+To rollback the last batch of changes:
+```
+./node_modules/.bin/knex migrate:rollback --env migrations
 ```
