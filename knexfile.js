@@ -1,10 +1,10 @@
 module.exports = {
-  extweb: {
+  intweb: {
     client: 'mssql',
     connection: {
       host: process.env.APVS_DATABASE_SERVER,
-      user: process.env.APVS_EXT_WEB_USERNAME,
-      password: process.env.APVS_EXT_WEB_PASSWORD,
+      user: process.env.APVS_INT_WEB_USERNAME,
+      password: process.env.APVS_INT_WEB_PASSWORD,
       database: process.env.APVS_DATABASE,
       options: {
         encrypt: true
@@ -20,16 +20,16 @@ module.exports = {
     client: 'mssql',
     connection: {
       host: process.env.APVS_DATABASE_SERVER,
-      user: process.env.APVS_EXT_MIGRATION_USERNAME,
-      password: process.env.APVS_EXT_MIGRATION_PASSWORD,
+      user: process.env.APVS_INT_MIGRATION_USERNAME,
+      password: process.env.APVS_INT_MIGRATION_PASSWORD,
       database: process.env.APVS_DATABASE,
       options: {
         encrypt: true
       }
     },
     migrations: {
-      tableName: 'knex_ext_migrations'
-    },
-    debug: true
+      tableName: 'knex_int_migrations'
+    }
+    // , debug: true // Uncomment to see knex generated SQL
   }
 }

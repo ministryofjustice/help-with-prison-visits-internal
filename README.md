@@ -47,3 +47,13 @@ export INT_WEB_TEST_BASEURL='http://localhost:3001' # proxy url for sauce connec
 npm run-script test-e2e-ie8
 npm run-script test-e2e-firefox
 ```
+
+## Database
+
+The application requires a MS SQL database instance, configured with an external web user and a migration user. See [here](https://github.com/ministryofjustice/apvs/tree/develop/database) for details.
+
+To run the [knex](http://knexjs.org/) database migrations:
+
+```
+npm run-script migrations
+```
