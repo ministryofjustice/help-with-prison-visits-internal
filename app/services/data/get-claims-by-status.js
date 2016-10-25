@@ -7,6 +7,7 @@ module.exports.get = function (status) {
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
     .where('Claim.Status', status)
     .select('Eligibility.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.ClaimId')
+    .orderBy('Eligibility.Reference')
     .then(function (claims) {
       return claims
     })
