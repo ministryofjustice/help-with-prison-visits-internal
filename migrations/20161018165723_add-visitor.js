@@ -1,6 +1,6 @@
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('Visitor', function (table) {
-    table.increments('PrisonerId')
+    table.increments('VisitorId')
     table.integer('EligibilityId').notNullable().references('Eligibility.EligibilityId')
     table.string('Title', 10).notNullable()
     table.string('FirstName', 100).notNullable()
