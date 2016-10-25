@@ -67,7 +67,7 @@ npm run-script test-e2e-firefox
 
 ## Database
 
-The application requires a MS SQL database instance, configured with an external web user and a migration user. See [here](https://github.com/ministryofjustice/apvs/tree/develop/database) for details.
+The application requires a MS SQL database instance, configured with an internal web user and a migration user. See [here](https://github.com/ministryofjustice/apvs/tree/develop/database) for details.
 
 To run the [knex](http://knexjs.org/) database migrations:
 
