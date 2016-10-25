@@ -30,7 +30,7 @@ module.exports.setup = function (reference, DATE) {
             return ids.prisonerId
           })
       }).then(function () {
-        return knex('IntSchema.Visitor')
+      return knex('IntSchema.Visitor')
         .returning('VisitorId')
         .insert({
           EligibilityId: ids.eligibilityId,
@@ -54,8 +54,8 @@ module.exports.setup = function (reference, DATE) {
           ids.visitorId = result[0]
           return ids.visitorId
         })
-      }).then(function () {
-        return knex('IntSchema.Claim')
+    }).then(function () {
+      return knex('IntSchema.Claim')
         .returning('ClaimId')
         .insert({
           EligibilityId: ids.eligibilityId,
@@ -64,10 +64,10 @@ module.exports.setup = function (reference, DATE) {
           DateSubmitted: DATE,
           Status: 'TEST'
         })
-      }).then(function (result) {
-        ids.claimId = result[0]
-        resolve(ids)
-      })
+    }).then(function (result) {
+      ids.claimId = result[0]
+      resolve(ids)
+    })
       .catch(function (error) {
         reject(error)
       })
@@ -75,11 +75,18 @@ module.exports.setup = function (reference, DATE) {
 }
 
 module.exports.delete = function (claimId, eligibilityId, visitorId, prisonerId) {
-  knex('IntSchema.Claim').where('ClaimId', claimId).del().then(function () {
-    knex('IntSchema.Visitor').where('VisitorId', visitorId).del().then(function () {
-      knex('IntSchema.Prisoner').where('PrisonerId', prisonerId).del().then(function () {
-        knex('IntSchema.Eligibility').where('EligibilityId', eligibilityId).del()
+  return new Promise(function (resolve, reject) {
+    knex('IntSchema.Claim').where('ClaimId', claimId).del().then(function () {
+      knex('IntSchema.Visitor').where('VisitorId', visitorId).del().then(function () {
+        knex('IntSchema.Prisoner').where('PrisonerId', prisonerId).del().then(function () {
+          knex('IntSchema.Eligibility').where('EligibilityId', eligibilityId).del().then(function () {
+            resolve()
+          })
+        })
       })
     })
+      .catch(function (error) {
+        reject(error)
+      })
   })
 }

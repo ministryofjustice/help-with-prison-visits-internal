@@ -41,8 +41,9 @@ describe('services/data/get-claims-by-status', function () {
 
     after(function (done) {
       // Clean up
-      databaseHelper.delete(claimId, eligibilityId, visitorId, prisonerId)
-      done()
+      databaseHelper.delete(claimId, eligibilityId, visitorId, prisonerId).then(function () {
+        done()
+      })
     })
   })
 })
