@@ -1,3 +1,31 @@
 $(document).ready(function () {
-  var dataUrl = 'http://localhost:3001/'
+  var dataReference = 'http://localhost:3001/claims'
+  $('#new-claims').DataTable({
+    // 'processing': true,
+    // 'serverSide': true,
+    ajax: {
+      url: dataReference,
+      dataSrc: 'claims'
+    },
+
+    columns: [
+      {'data': 'Reference'},
+      {'data': 'Name'},
+      {'data': 'DateSubmitted'},
+      {'data': 'ClaimId',
+        'createdCell': function (td, cellData, rowData, row, col) {
+          $(td).html("<a href='claim/" + rowData.ClaimId + "'>View</a>")
+        }
+      }
+    ],
+
+    columnDefs: [
+      {
+        'targets': [3],
+        'visible': true,
+        'searchable': false,
+        'orderable': false
+      }
+    ]
+  })
 })

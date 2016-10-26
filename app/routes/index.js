@@ -14,4 +14,15 @@ module.exports = function (router) {
         })
       })
   })
+
+  router.get('/claims', function (req, res) {
+    claims.get('New')
+      .then(function (data) {
+        data.forEach(function (claim) {
+          claim.DateSubmitted = moment(claim.DateSubmitted).format('DD-MM-YYYY HH:MM')
+          claim.Name = claim.FirstName + ' ' + claim.LastName
+        })
+        return res.json({claims: data})
+      })
+  })
 }
