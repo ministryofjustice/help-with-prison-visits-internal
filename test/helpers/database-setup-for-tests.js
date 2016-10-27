@@ -30,7 +30,7 @@ module.exports.setup = function (reference, date, status) {
             return ids.prisonerId
           })
       }).then(function () {
-      return knex('IntSchema.Visitor')
+        return knex('IntSchema.Visitor')
         .returning('VisitorId')
         .insert({
           EligibilityId: ids.eligibilityId,
@@ -54,8 +54,8 @@ module.exports.setup = function (reference, date, status) {
           ids.visitorId = result[0]
           return ids.visitorId
         })
-    }).then(function () {
-      return knex('IntSchema.Claim')
+      }).then(function () {
+        return knex('IntSchema.Claim')
         .returning('ClaimId')
         .insert({
           EligibilityId: ids.eligibilityId,
@@ -64,10 +64,10 @@ module.exports.setup = function (reference, date, status) {
           DateSubmitted: date,
           Status: status
         })
-    }).then(function (result) {
-      ids.claimId = result[0]
-      resolve(ids)
-    })
+      }).then(function (result) {
+        ids.claimId = result[0]
+        resolve(ids)
+      })
       .catch(function (error) {
         reject(error)
       })
