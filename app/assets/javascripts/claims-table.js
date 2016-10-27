@@ -13,7 +13,7 @@ $(document).ready(function () {
     columns: [
       {'data': 'Reference'},
       {'data': 'Name'},
-      {'data': 'DateFormatted'},
+      {'data': 'DateSubmittedFormatted'},
       {'data': 'ClaimId',
         'createdCell': function (td, cellData, rowData, row, col) {
           $(td).html("<a href='/claim/" + rowData.ClaimId + "'>View</a>")

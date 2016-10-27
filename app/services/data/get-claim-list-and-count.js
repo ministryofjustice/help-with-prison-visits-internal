@@ -19,7 +19,7 @@ module.exports.getClaimsListAndCount = function (status, offset, limit) {
         .offset(offset)
         .then(function (claims) {
           claims.forEach(function (claim) {
-            claim.DateFormatted = moment(claim.DateSubmitted).format('DD-MM-YYYY HH:MM')
+            claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD-MM-YYYY HH:MM')
             claim.Name = claim.FirstName + ' ' + claim.LastName
           })
           return {claims: claims, total: count[0]}

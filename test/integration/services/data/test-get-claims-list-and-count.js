@@ -13,8 +13,8 @@ var visitorId
 describe('services/data/get-claim-list-and-count', function () {
   describe('get', function (done) {
     before(function (done) {
-      DATE = moment().toDate()
-      databaseHelper.setup(reference, DATE, 'TEST').then(function (ids) {
+      DATE = moment()
+      databaseHelper.setup(reference, DATE.toDate(), 'TEST').then(function (ids) {
         claimId = ids.claimId
         eligibilityId = ids.eligibilityId
         prisonerId = ids.prisonerId
@@ -30,9 +30,10 @@ describe('services/data/get-claim-list-and-count', function () {
           expect(result.claims[0].Reference).to.equal(reference)
           expect(result.claims[0].FirstName).to.equal('John')
           expect(result.claims[0].LastName).to.equal('Smith')
-          expect(result.claims[0].DateSubmitted.toString()).to.equal(DATE.toString())
+          expect(result.claims[0].Name).to.be.equal('John Smith')
+          expect(result.claims[0].DateSubmittedFormatted.toString()).to.equal(DATE.format('DD-MM-YYYY HH:MM').toString())
           expect(result.claims[0].ClaimId).to.equal(claimId)
-          // expect(result.total.Count).to.equal(1)
+          expect(result.total.Count).to.equal(1)
           done()
         })
         .catch(function (error) {
