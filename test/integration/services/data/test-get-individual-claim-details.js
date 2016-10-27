@@ -14,7 +14,7 @@ describe('services/data/get-individual-claim-details', function () {
   describe('get', function (done) {
     before(function (done) {
       DATE = moment().toDate()
-      databaseHelper.setup(reference, DATE).then(function (ids) {
+      databaseHelper.setup(reference, DATE, 'TEST').then(function (ids) {
         claimId = ids.claimId
         eligibilityId = ids.eligibilityId
         prisonerId = ids.prisonerId
