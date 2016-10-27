@@ -1,6 +1,6 @@
 $(document).ready(function () {
   var status = $('#claims').attr('title')
-  var dataReference = 'http://localhost:3001/claims/' + status
+  var dataReference = '/claims/' + status
   $('#claims').DataTable({
     processing: true,
     serverSide: true,
