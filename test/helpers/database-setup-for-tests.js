@@ -2,15 +2,15 @@ var config = require('../../knexfile').migrations
 var knex = require('knex')(config)
 var Promise = require('bluebird')
 
-module.exports.setup = function (reference, DATE) {
+module.exports.setup = function (reference, date, status) {
   return new Promise(function (resolve, reject) {
     var ids = {}
     knex('IntSchema.Eligibility')
       .insert({
         Reference: reference,
-        DateCreated: DATE,
-        DateSubmitted: DATE,
-        Status: 'TEST'
+        DateCreated: date,
+        DateSubmitted: date,
+        Status: status
       })
       .returning('EligibilityId')
       .then(function (result) {
@@ -21,7 +21,7 @@ module.exports.setup = function (reference, DATE) {
             EligibilityId: ids.eligibilityId,
             FirstName: 'TestFirst',
             LastName: 'TestLast',
-            DateOfBirth: DATE,
+            DateOfBirth: date,
             PrisonNumber: 'A123456',
             NameOfPrison: 'Test'
           })
@@ -45,7 +45,7 @@ module.exports.setup = function (reference, DATE) {
           Country: 'England',
           EmailAddress: 'test@test.com',
           PhoneNumber: '07911111111',
-          DateOfBirth: DATE,
+          DateOfBirth: date,
           Relationship: 'partner',
           JourneyAssistance: 'no',
           RequireBenefitUpload: 0
@@ -59,10 +59,10 @@ module.exports.setup = function (reference, DATE) {
         .returning('ClaimId')
         .insert({
           EligibilityId: ids.eligibilityId,
-          DateOfJourney: DATE,
-          DateCreated: DATE,
-          DateSubmitted: DATE,
-          Status: 'TEST'
+          DateOfJourney: date,
+          DateCreated: date,
+          DateSubmitted: date,
+          Status: status
         })
       }).then(function (result) {
         ids.claimId = result[0]
