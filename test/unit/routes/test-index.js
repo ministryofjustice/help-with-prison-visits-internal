@@ -40,13 +40,13 @@ describe('routes/index', function () {
 
   describe('GET /claims/:status', function () {
     it('should respond with a 200', function (done) {
-      var stubClaimsList = sinon.stub(claims, 'getClaimsListAndCount').resolves({claims: [], total: {Count: 0}})
+      var stubGetClaimsListAndCount = sinon.stub(claims, 'getClaimsListAndCount').resolves({claims: [], total: {Count: 0}})
       request
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(200)
         .end(function (error, response) {
           expect(error).to.be.null
-          expect(stubClaimsList.calledOnce).to.be.true
+          expect(stubGetClaimsListAndCount.calledOnce).to.be.true
           expect(response.recordTotal, 0)
           done()
         })
