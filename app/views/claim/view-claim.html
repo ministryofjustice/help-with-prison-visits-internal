@@ -20,12 +20,7 @@
     <div class="column-quarter">
 
       <h1 class="heading-large">
-        <span class="heading-secondary">Submitted </span>{{ Claim['DateCreated'] }}
-      </h1>
-    </div>
-    <div class="column-quarter">
-      <h1 class="heading-large">
-        <span class="heading-secondary">Last updated</span>{{ Claim['LastUpdated'] }}
+        <span class="heading-secondary">Submitted </span>{{ Claim['DateSubmitted'] }}
       </h1>
     </div>
   </div>
@@ -79,17 +74,17 @@
 
     <tr>
       <td>Prison</td>
-      <td>{{ Claim['Prison'] }}</td>
+      <td>{{ temp['Prison'] }}</td>
     </tr>
 
     <tr>
       <td>Prisoner Number</td>
-      <td>{{ Claim['PrisonerNumber']}}</td>
+      <td>{{ temp['PrisonerNumber']}}</td>
     </tr>
 
     <tr>
       <td>Name</td>
-      <td>{{ Claim['PrisonerFirstName'] }} {{ Claim['PrisonerLastName'] }}</td>
+      <td>{{ temp['PrisonerFirstName'] }} {{ temp['PrisonerLastName'] }}</td>
     </tr>
 
   </table>
@@ -98,7 +93,7 @@
 
   <table>
     <tbody>
-      {% for expense in Claim['Expense'] %}
+      {% for expense in temp['Expense'] %}
         <tr {% if expense['Status'] == '' %} class="warning" {% endif %}>
 	      <td><span class="bold">{{ expense['TransportType'] }}{{ expense['ExpenseType'] }} </span> 
 	        <br>{% if expense['TransportType'] %}
@@ -128,7 +123,7 @@
 
         <tr class="no-border">
           <td class="text-right"><h3 class="heading-small">Approved ammount</h3></td>
-            <td><h3 class="heading-small">£{{ Claim['Total'] }}</h3></td>
+            <td><h3 class="heading-small">£{{ temp['Total'] }}</h3></td>
             <td></td>
             <td>
           </td>
