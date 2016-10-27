@@ -5,7 +5,7 @@ var express = require('express')
 var mockViewEngine = require('./mock-view-engine')
 const sinon = require('sinon')
 require('sinon-bluebird')
-const claims = require('../../../app/services/data/get-claims-by-status')
+const claims = require('../../../app/services/data/get-claim-list-and-count')
 
 var log = {
   info: function (text) {}
@@ -17,7 +17,7 @@ describe('routes/index', function () {
   beforeEach(function () {
     var route = proxyquire('../../../app/routes/index', {
       '../services/log': log,
-      '../../services/data/get-claims-by-status': claims
+      '../../services/data/get-claim-list-and-count': claims
     })
 
     var app = express()
@@ -38,27 +38,15 @@ describe('routes/index', function () {
     })
   })
 
-  describe('GET /claims', function () {
+  describe('GET /claims/:status', function () {
     it('should respond with a 200', function (done) {
-      var stubGet = sinon.stub(claims, 'get').resolves([])
+      var stubClaimsList = sinon.stub(claims, 'getClaimsListAndCount').resolves({claims: [], total: {Count: 0}})
       request
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(200)
         .end(function (error, response) {
           expect(error).to.be.null
-          expect(stubGet.calledOnce).to.be.true
-          done()
-        })
-    })
-
-    it('recordTotal should be sent with value 0', function (done) {
-      var stubCount = sinon.stub(claims, 'count').resolves(0)
-      request
-        .get('/claims/TEST?draw=1&start=0&length=10')
-        .expect(200)
-        .end(function (error, response) {
-          expect(error).to.be.null
-          expect(stubCount.calledOnce).to.be.true
+          expect(stubClaimsList.calledOnce).to.be.true
           expect(response.recordTotal, 0)
           done()
         })
