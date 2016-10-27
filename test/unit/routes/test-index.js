@@ -28,13 +28,38 @@ describe('routes/index', function () {
 
   describe('GET /', function () {
     it('should respond with a 200', function (done) {
-      var stubGet = sinon.stub(claims, 'get').resolves([])
       request
         .get('/')
         .expect(200)
         .end(function (error, response) {
-          expect(stubGet.calledOnce).to.be.true
           expect(error).to.be.null
+          done()
+        })
+    })
+  })
+
+  describe('GET /claims', function () {
+    it('should respond with a 200', function (done) {
+      var stubGet = sinon.stub(claims, 'get').resolves([])
+      request
+        .get('/claims/TEST?draw=1&start=0&length=10')
+        .expect(200)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          expect(stubGet.calledOnce).to.be.true
+          done()
+        })
+    })
+
+    it('recordTotal should be sent with value 0', function (done) {
+      var stubCount = sinon.stub(claims, 'count').resolves(0)
+      request
+        .get('/claims/TEST?draw=1&start=0&length=10')
+        .expect(200)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          expect(stubCount.calledOnce).to.be.true
+          expect(response.recordTotal, 0)
           done()
         })
     })

@@ -32,7 +32,8 @@
       "beforeEach",
       "after",
       "it",
-      "browser"
+      "browser",
+      "$"
     ]
   },
   "dependencies": {

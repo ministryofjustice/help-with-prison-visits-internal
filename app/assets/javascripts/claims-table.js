@@ -1,8 +1,10 @@
 $(document).ready(function () {
-  var dataReference = 'http://localhost:3001/claims'
-  $('#new-claims').DataTable({
-    // 'processing': true,
-    // 'serverSide': true,
+  var status = $('#claims').attr('title')
+  var dataReference = 'http://localhost:3001/claims/' + status
+  $('#claims').DataTable({
+    processing: true,
+    serverSide: true,
+    searching: false,
     ajax: {
       url: dataReference,
       dataSrc: 'claims'
@@ -21,7 +23,7 @@ $(document).ready(function () {
 
     columnDefs: [
       {
-        'targets': [3],
+        'targets': [0, 1, 2, 3],
         'visible': true,
         'searchable': false,
         'orderable': false

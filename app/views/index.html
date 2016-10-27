@@ -10,7 +10,7 @@
 
   {% include "includes/phase_banner_beta.html" %}
 
-  <table id="new-claims" class="table">
+  <table id="claims" class="table" title="New">
   	<thead>
 	  <tr>
 		<th>Ref No.</th>
@@ -19,17 +19,6 @@
 		<th></th>
 	  </tr>
   	</thead>
-
-<!--
-    {% for claim in claims %}
-      <tr>
-      	<td>{{ claim['Reference'] }}</td>
-      	<td>{{ claim['FirstName'] }} {{ claim['LastName'] }}</td>
-      	<td>{{ claim['DateSubmitted'] }}</td>
-      	<td><a href="claim/{{ claim['ClaimId'] }}">View</a></td>
-      </tr>
-    {% endfor %}
--->
   </table>
 
 </main>

@@ -2,7 +2,7 @@ var config = require('../../knexfile').migrations
 var knex = require('knex')(config)
 var Promise = require('bluebird')
 
-module.exports.setup = function (reference, DATE) {
+module.exports.setup = function (reference, DATE, status) {
   return new Promise(function (resolve, reject) {
     var ids = {}
     knex('IntSchema.Eligibility')
@@ -10,7 +10,7 @@ module.exports.setup = function (reference, DATE) {
         Reference: reference,
         DateCreated: DATE,
         DateSubmitted: DATE,
-        Status: 'TEST'
+        Status: status
       })
       .returning('EligibilityId')
       .then(function (result) {
@@ -62,7 +62,7 @@ module.exports.setup = function (reference, DATE) {
           DateOfJourney: DATE,
           DateCreated: DATE,
           DateSubmitted: DATE,
-          Status: 'TEST'
+          Status: status
         })
       }).then(function (result) {
         ids.claimId = result[0]

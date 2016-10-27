@@ -14,7 +14,7 @@ describe('services/data/get-claims-by-status', function () {
   describe('get', function (done) {
     before(function (done) {
       DATE = moment().toDate()
-      databaseHelper.setup(reference, DATE).then(function (ids) {
+      databaseHelper.setup(reference, DATE, 'TEST').then(function (ids) {
         claimId = ids.claimId
         eligibilityId = ids.eligibilityId
         prisonerId = ids.prisonerId
@@ -23,8 +23,8 @@ describe('services/data/get-claims-by-status', function () {
       })
     })
 
-    it('should get 5 columns from 3 tables', function (done) {
-      claims.get('TEST')
+    it('should run get and return 1 row with 5 columns from 3 tables', function (done) {
+      claims.get('TEST', 0, 1)
         .then(function (result) {
           expect(result.length).to.equal(1)
           expect(result[0].Reference).to.equal(reference)
@@ -36,6 +36,25 @@ describe('services/data/get-claims-by-status', function () {
         })
         .catch(function (error) {
           throw error
+        })
+    })
+
+    it('should run get and return 0 rows', function (done) {
+      claims.get('TEST', 0, 0)
+        .then(function (result) {
+          expect(result.length).to.equal(0)
+          done()
+        })
+        .catch(function (error) {
+          throw error
+        })
+    })
+
+    it('should run count and return 1', function (done) {
+      claims.count('TEST')
+        .then(function (result) {
+          expect(result.Count).to.equal(1)
+          done()
         })
     })
 
