@@ -16,7 +16,7 @@ $(document).ready(function () {
       {'data': 'DateSubmittedFormatted'},
       {'data': 'ClaimId',
         'createdCell': function (td, cellData, rowData, row, col) {
-          $(td).html("<a href='/claim/" + rowData.ClaimId + "'>View</a>")
+          $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
         }
       }
     ],
