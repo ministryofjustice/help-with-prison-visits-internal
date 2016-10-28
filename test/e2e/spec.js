@@ -1,6 +1,7 @@
 // TODO: Will need to add check on each of the pages that has a constructed URL path.
 var moment = require('moment')
 var databaseHelper = require('../helpers/database-setup-for-tests')
+var expect = require('chai').expect
 
 // variables for creating and deleting a record
 var reference = 'AAAAAAA'
@@ -31,6 +32,9 @@ describe('First time claim viewing flow', () => {
 
       // view-claim
       .waitForExist('#reference')
+      .getText('#visitor-name').then(function (text) {
+      expect(text).to.be.equal('John Smith')
+    })
   })
 
   after(function () {
