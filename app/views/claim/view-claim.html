@@ -20,7 +20,7 @@
     <div class="column-quarter">
 
       <h1 class="heading-large">
-        <span class="heading-secondary">Submitted </span>{{ Claim['DateSubmitted'] }}
+        <span class="heading-secondary">Submitted </span>{{ Claim['DateSubmittedFormatted'] }}
       </h1>
     </div>
   </div>
@@ -36,7 +36,7 @@
 
 	  <tr>
 	    <td>Date of Birth</td>
-	    <td>{{ Claim['DateOfBirth'] }}</td>
+	    <td>{{ Claim['DateOfBirthFormatted'] }}</td>
 	  </tr>
 
 	  <tr>
@@ -66,6 +66,32 @@
 	  	<td>Prisoner Relationship</td>
 	  	<td>{{ Claim['Relationship'] }}</td>
 	  </tr>
+  </table>
+
+  <h1 class="table-heading">Prisoner</h1>
+
+  <table class="col-2">
+
+    <tr>
+      <td>Name</td>
+      <td>{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
+    </tr>
+
+    <tr>
+      <td>Date of birth</td>
+      <td>{{ Claim['PrisonerDateOfBirthFormatted'] }}</td>
+    </tr>
+
+    <tr>
+      <td>Prisoner Number</td>
+      <td>{{ Claim['PrisonNumber'] }}</td>
+    </tr>
+
+    <tr>
+      <td>Prison</td>
+      <td>{{ Claim['NameOfPrison'] }}</td>
+    </tr>
+
   </table>
 
   <br>

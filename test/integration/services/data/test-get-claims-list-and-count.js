@@ -4,7 +4,7 @@ var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 var claims = require('../../../../app/services/data/get-claim-list-and-count')
 var reference = 'V123456'
-var DATE
+var date
 var claimId
 var eligibilityId
 var prisonerId
@@ -13,8 +13,8 @@ var visitorId
 describe('services/data/get-claim-list-and-count', function () {
   describe('get', function (done) {
     before(function (done) {
-      DATE = moment()
-      databaseHelper.setup(reference, DATE.toDate(), 'TEST').then(function (ids) {
+      date = moment()
+      databaseHelper.setup(reference, date.toDate(), 'TEST').then(function (ids) {
         claimId = ids.claimId
         eligibilityId = ids.eligibilityId
         prisonerId = ids.prisonerId
@@ -31,7 +31,7 @@ describe('services/data/get-claim-list-and-count', function () {
           expect(result.claims[0].FirstName).to.equal('John')
           expect(result.claims[0].LastName).to.equal('Smith')
           expect(result.claims[0].Name).to.be.equal('John Smith')
-          expect(result.claims[0].DateSubmittedFormatted.toString()).to.equal(DATE.format('DD-MM-YYYY HH:MM').toString())
+          expect(result.claims[0].DateSubmittedFormatted.toString()).to.equal(date.format('DD-MM-YYYY HH:MM').toString())
           expect(result.claims[0].ClaimId).to.equal(claimId)
           expect(result.total.Count).to.equal(1)
           done()
