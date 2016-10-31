@@ -1,6 +1,6 @@
 # apvs-internal-web
 
-[![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![Build Status](https://travis-ci.org/ministryofjustice/apvs-internal-web.svg?branch=develop)](https://travis-ci.org/ministryofjustice/apvs-internal-web?branch=develop) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 Beta implementation of the Assisted Prison Visits Scheme internal web application.
 
