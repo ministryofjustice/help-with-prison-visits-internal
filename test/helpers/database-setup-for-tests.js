@@ -4,9 +4,9 @@ var Promise = require('bluebird')
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
 module.exports.insertTestData = function (reference, date, status) {
+  var data = this.getTestData(reference, status)
   return new Promise(function (resolve, reject) {
     var ids = {}
-    var data = this.getTestData(reference, date, status)
     knex('IntSchema.Eligibility')
       .insert({
         Reference: reference,
@@ -156,10 +156,10 @@ module.exports.getTestData = function (reference, status) {
       To: 'Hewell',
       IsReturn: true
     },
-    {
-      ExpenseType: 'accommodation',
-      Cost: 80,
-      DurationOfTravel: 1
-    }]
+      {
+        ExpenseType: 'accommodation',
+        Cost: 80,
+        DurationOfTravel: 1
+      }]
   }
 }
