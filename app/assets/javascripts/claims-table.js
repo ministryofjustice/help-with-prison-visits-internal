@@ -5,6 +5,7 @@ $(document).ready(function () {
     processing: true,
     serverSide: true,
     searching: false,
+    lengthChange: false,
     ajax: {
       url: dataReference,
       dataSrc: 'claims'
