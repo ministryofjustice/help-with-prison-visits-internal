@@ -2,7 +2,7 @@ var expect = require('chai').expect
 var moment = require('moment')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
-var claims = require('../../../../app/services/data/get-claim-list-and-count')
+var getClaimsListAndCount = require('../../../../app/services/data/get-claim-list-and-count')
 var reference = 'V123456'
 var date
 var claimId
@@ -13,7 +13,7 @@ var expenseId1
 var expenseId2
 
 describe('services/data/get-claim-list-and-count', function () {
-  describe('get', function (done) {
+  describe('module', function (done) {
     before(function (done) {
       date = moment()
       databaseHelper.setup(reference, date.toDate(), 'TESTING').then(function (ids) {
@@ -28,7 +28,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return list of claims and total', function (done) {
-      claims.getClaimsListAndCount('TESTING', 0, 1)
+      getClaimsListAndCount('TESTING', 0, 1)
         .then(function (result) {
           expect(result.claims.length).to.equal(1)
           expect(result.claims[0].Reference).to.equal(reference)
@@ -46,7 +46,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return no data', function (done) {
-      claims.getClaimsListAndCount('TESTING_NONE', 0, 10)
+      getClaimsListAndCount('TESTING_NONE', 0, 10)
         .then(function (result) {
           expect(result.total.Count).to.equal(0)
           done()

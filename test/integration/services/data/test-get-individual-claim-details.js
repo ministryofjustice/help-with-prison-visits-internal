@@ -2,7 +2,7 @@ var expect = require('chai').expect
 var moment = require('moment')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
-var claim = require('../../../../app/services/data/get-individual-claim-details')
+var getClaim = require('../../../../app/services/data/get-individual-claim-details')
 var reference = 'V123456'
 var date
 var claimId
@@ -28,7 +28,7 @@ describe('services/data/get-individual-claim-details', function () {
     })
 
     it('should return a claims details', function (done) {
-      claim.get(claimId)
+      getClaim(claimId)
         .then(function (result) {
           expect(result.claim.Reference).to.equal(reference)
           expect(result.claim.FirstName).to.equal('John')
