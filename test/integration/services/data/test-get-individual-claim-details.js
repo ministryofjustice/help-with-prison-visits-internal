@@ -2,8 +2,9 @@ var expect = require('chai').expect
 var moment = require('moment')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
-var claim = require('../../../../app/services/data/get-individual-claim-details')
+var getClaim = require('../../../../app/services/data/get-individual-claim-details')
 var reference = 'V123456'
+var testData
 var date
 var claimId
 var eligibilityId
@@ -15,8 +16,9 @@ var expenseId2
 describe('services/data/get-individual-claim-details', function () {
   describe('get', function (done) {
     before(function (done) {
+      testData = databaseHelper.getTestData(reference, 'Test')
       date = moment().toDate()
-      databaseHelper.setup(reference, date, 'Test').then(function (ids) {
+      databaseHelper.insertTestData(reference, date, 'Test').then(function (ids) {
         claimId = ids.claimId
         eligibilityId = ids.eligibilityId
         prisonerId = ids.prisonerId
@@ -28,18 +30,18 @@ describe('services/data/get-individual-claim-details', function () {
     })
 
     it('should return a claims details', function (done) {
-      claim.get(claimId)
+      getClaim(claimId)
         .then(function (result) {
           expect(result.claim.Reference).to.equal(reference)
-          expect(result.claim.FirstName).to.equal('John')
+          expect(result.claim.FirstName).to.equal(testData.Visitor.FirstName)
           expect(result.claim.DateSubmitted.toString()).to.equal(date.toString())
-          expect(result.claim.NationalInsuranceNumber).to.equal('QQ123456c')
-          expect(result.claim.HouseNumberAndStreet).to.equal('1 Test Road')
-          expect(result.claim.EmailAddress).to.equal('test@test.com')
-          expect(result.claim.PrisonNumber).to.equal('A123456')
-          expect(result.claim.NameOfPrison).to.equal('Test')
-          expect(result.claimExpenses[0].ExpenseType).to.equal('train')
-          expect(result.claimExpenses[1].Cost).to.equal(80)
+          expect(result.claim.NationalInsuranceNumber).to.equal(testData.Visitor.NationalInsuranceNumber)
+          expect(result.claim.HouseNumberAndStreet).to.equal(testData.Visitor.HouseNumberAndStreet)
+          expect(result.claim.EmailAddress).to.equal(testData.Visitor.EmailAddress)
+          expect(result.claim.PrisonNumber).to.equal(testData.Prisoner.PrisonNumber)
+          expect(result.claim.NameOfPrison).to.equal(testData.Prisoner.NameOfPrison)
+          expect(result.claimExpenses[0].ExpenseType).to.equal(testData.ClaimExpenses[0].ExpenseType)
+          expect(result.claimExpenses[1].Cost).to.equal(testData.ClaimExpenses[1].Cost)
           done()
         })
         .catch(function (error) {
@@ -49,7 +51,7 @@ describe('services/data/get-individual-claim-details', function () {
 
     after(function (done) {
       // Clean up
-      databaseHelper.delete(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2).then(function () {
+      databaseHelper.deleteTestData(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2).then(function () {
         done()
       })
     })

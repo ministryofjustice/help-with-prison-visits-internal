@@ -2,8 +2,7 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const moment = require('moment')
 
-// TODO remove getClaimsListAndCount and just expose function, set Total in data
-module.exports.getClaimsListAndCount = function (status, offset, limit) {
+module.exports = function (status, offset, limit) {
   return knex('Claim')
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
@@ -20,7 +19,7 @@ module.exports.getClaimsListAndCount = function (status, offset, limit) {
         .offset(offset)
         .then(function (claims) {
           claims.forEach(function (claim) {
-            claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD-MM-YYYY HH:MM')
+            claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD-MM-YYYY HH:mm')
             claim.Name = claim.FirstName + ' ' + claim.LastName
           })
           return {claims: claims, total: count[0]}

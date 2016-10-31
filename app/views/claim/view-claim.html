@@ -20,7 +20,7 @@
     <div class="column-quarter">
 
       <h1 class="heading-large">
-        <span class="heading-secondary">Submitted </span>{{ Claim['DateSubmittedFormatted'] }}
+        <span class="heading-secondary">Submitted </span>{{ getDateFormatted(Claim['DateSubmitted']) }}
       </h1>
     </div>
   </div>
@@ -36,7 +36,7 @@
 
 	  <tr>
 	    <td>Date of Birth</td>
-	    <td>{{ Claim['DateOfBirthFormatted'] }}</td>
+	    <td>{{ getDateFormatted(Claim['DateOfBirth']) }}</td>
 	  </tr>
 
 	  <tr>
@@ -79,7 +79,7 @@
 
     <tr>
       <td>Date of birth</td>
-      <td>{{ Claim['PrisonerDateOfBirthFormatted'] }}</td>
+      <td>{{ getDateFormatted(Claim['PrisonerDateOfBirth']) }}</td>
     </tr>
 
     <tr>
@@ -105,10 +105,10 @@
   <table>
     <tbody>
       {% for expense in Expenses %}
-        <tr {% if expense['Status'] == '' %} class="warning" {% endif %}>
-        <td><span class="bold">{{ expense['ExpenseType'] }} </span> 
+        <tr {% if expense['Status'] == undefined %} class="warning" {% endif %}>
+        <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
           <br>
-          {{ expense['Detail'] }}
+          {{ getClaimExpenseDetailFormatted(expense) }}
         </td>
         <td>£{{ expense['Cost'] }}</td>
 
@@ -118,7 +118,7 @@
 
           <td class="text-right">
           <select class="form-control action-select">
-            <option {% if expense['Status'] == '' %} selected {% endif %}>Select</option>
+            <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
             <option {% if expense['Status'] == 'Approved' %} selected {% endif %}>Approved</option>
             <option {% if expense['Status'] == 'Approve different amount' %} selected {% endif %}>Approve different amount</option>
             <option {% if expense['Status'] == 'Request information' %} selected {% endif %}>Request information</option>
@@ -128,6 +128,14 @@
         </tr>
 
       {% endfor %}
+
+      <tr class="no-border">
+        <td class="text-right"><h3 class="heading-small">Total Expense Cost:</h3></td>
+        <td><h3 class="heading-small">£{{ Claim.Total }}</h3></td>
+        <td></td>
+        <td></td>
+      </tr>
+
     </tbody>
   </table>
 
@@ -158,7 +166,7 @@
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" id="additional-info-accept"></textarea> 
+            <textarea type="text" class="form-control full" id="additional-info-accept"></textarea>
           </div>
 
           <a href="" class="button">Send confirmation email to claimant</a>
@@ -168,7 +176,7 @@
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-request">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" id="additional-info-request"></textarea> 
+            <textarea type="text" class="form-control full" id="additional-info-request"></textarea>
           </div>
 
           <a href="" class="button">Send request email to claimant</a>
@@ -178,7 +186,7 @@
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-reject">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" id="additional-info-reject"></textarea> 
+            <textarea type="text" class="form-control full" id="additional-info-reject"></textarea>
           </div>
 
           <a href="" class="button">Send rejection email to claimant</a>

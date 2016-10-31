@@ -5,8 +5,7 @@ var express = require('express')
 var mockViewEngine = require('../mock-view-engine')
 const sinon = require('sinon')
 require('sinon-bluebird')
-const claim = require('../../../../app/services/data/get-individual-claim-details')
-const display = require('../../../../app/services/display-helpers/view-claim-display')
+var getClaim
 
 var log = {
   info: function (text) {}
@@ -15,29 +14,28 @@ var log = {
 describe('routes/claim/view-claim', function () {
   var request
 
-  beforeEach(function () {
+  beforeEach(function (done) {
+    getClaim = sinon.stub()
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/log': log,
-      '../../services/data/get-individual-claim-details': claim,
-      '../../services/display-helpers/view-claim-display': display
+      '../../services/data/get-individual-claim-details': getClaim
     })
 
     var app = express()
     mockViewEngine(app, '../../../app/views')
     route(app)
     request = supertest(app)
+    done()
   })
 
   describe('GET /claim/:claimId', function () {
     it('should respond with a 200', function (done) {
-      var stubGet = sinon.stub(claim, 'get').resolves({})
-      var stubDisplay = sinon.stub(display, 'get').returns([])
+      getClaim.resolves({})
       request
         .get('/claim/123')
         .expect(200)
         .end(function (error, response) {
-          expect(stubGet.calledOnce).to.be.true
-          expect(stubDisplay.calledOnce).to.be.true
+          expect(getClaim.calledWith('123')).to.be.true
           expect(error).to.be.null
           done()
         })

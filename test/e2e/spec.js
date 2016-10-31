@@ -4,21 +4,25 @@ var databaseHelper = require('../helpers/database-setup-for-tests')
 var expect = require('chai').expect
 
 // variables for creating and deleting a record
-var reference = 'AAAAAAA'
+var reference = '1111111'
 var date
 var claimId
 var eligibilityId
 var prisonerId
 var visitorId
+var expenseId1
+var expenseId2
 
 describe('First time claim viewing flow', () => {
   before(function () {
     date = moment().toDate()
-    return databaseHelper.setup(reference, date, 'New').then(function (ids) {
+    return databaseHelper.insertTestData(reference, date, 'New').then(function (ids) {
       claimId = ids.claimId
       eligibilityId = ids.eligibilityId
       prisonerId = ids.prisonerId
       visitorId = ids.visitorId
+      expenseId1 = ids.expenseId1
+      expenseId2 = ids.expenseId2
     })
   })
 
@@ -39,6 +43,6 @@ describe('First time claim viewing flow', () => {
 
   after(function () {
     // Clean up
-    return databaseHelper.delete(claimId, eligibilityId, visitorId, prisonerId)
+    return databaseHelper.deleteTestData(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2)
   })
 })
