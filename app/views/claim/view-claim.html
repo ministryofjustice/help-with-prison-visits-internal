@@ -27,149 +27,148 @@
 
   <h1 class="table-heading">Visitor</h1>
 
-  <table class="col-2">
+  <form action="" method="post" class="form">
 
-	  <tr>
-	    <td>Visitor Name</td>
-	    <td id="visitor-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
-	  </tr>
+    <table class="col-2">
 
-	  <tr>
-	    <td>Date of Birth</td>
-	    <td>{{ getDateFormatted(Claim['DateOfBirth']) }}</td>
-	  </tr>
+  	  <tr>
+  	    <td>Visitor Name</td>
+  	    <td id="visitor-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
+  	  </tr>
 
-	  <tr>
-	    <td>National Insurance number</td>
-	    <td>{{ Claim['NationalInsuranceNumber'] }}</td>
-	  </tr>
+  	  <tr>
+  	    <td>Date of Birth</td>
+  	    <td>{{ getDateFormatted(Claim['DateOfBirth']) }}</td>
+  	  </tr>
 
-	  <tr>
-	    <td>Home Address</td>
-	    <td>  {{ Claim['HouseNumberAndStreet'] }}<br>
-	      {{ Claim['Town'] }}<br>
-	      {{ Claim['County'] }}<br>
-	      {{ Claim['PostCode'] }}</td>
-	  </tr>
+  	  <tr>
+  	    <td>National Insurance number</td>
+  	    <td>{{ Claim['NationalInsuranceNumber'] }}</td>
+  	  </tr>
 
-	  <tr>
-	    <td>Email Address</td>
-	    <td><a href={{ Claim['EmailAddress'] }}>{{ Claim['EmailAddress'] }}</a></td>
-	  </tr>
+  	  <tr>
+  	    <td>Home Address</td>
+  	    <td>  {{ Claim['HouseNumberAndStreet'] }}<br>
+  	      {{ Claim['Town'] }}<br>
+  	      {{ Claim['County'] }}<br>
+  	      {{ Claim['PostCode'] }}</td>
+  	  </tr>
 
-	  <tr>
-		<td>Phone Number</td>
-		<td>{{ Claim['PhoneNumber'] }}</td>
-	  </tr>
+  	  <tr>
+  	    <td>Email Address</td>
+  	    <td><a href={{ Claim['EmailAddress'] }}>{{ Claim['EmailAddress'] }}</a></td>
+  	  </tr>
 
-	  <tr>
-	  	<td>Prisoner Relationship</td>
-	  	<td>{{ Claim['Relationship'] }}</td>
-	  </tr>
-  </table>
+  	  <tr>
+  		<td>Phone Number</td>
+  		<td>{{ Claim['PhoneNumber'] }}</td>
+  	  </tr>
 
-  <h1 class="table-heading">Prisoner</h1>
+  	  <tr>
+  	  	<td>Prisoner Relationship</td>
+  	  	<td>{{ Claim['Relationship'] }}</td>
+  	  </tr>
+    </table>
 
-  <table class="col-2">
+    <h1 class="table-heading">Prisoner</h1>
 
-    <tr>
-      <td>Name</td>
-      <td>{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
-    </tr>
+    <table class="col-2">
 
-    <tr>
-      <td>Date of birth</td>
-      <td>{{ getDateFormatted(Claim['PrisonerDateOfBirth']) }}</td>
-    </tr>
-
-    <tr>
-      <td>Prisoner Number</td>
-      <td>{{ Claim['PrisonNumber'] }}</td>
-    </tr>
-
-    <tr>
-      <td>Prison</td>
-      <td>{{ Claim['NameOfPrison'] }}</td>
-    </tr>
-
-  </table>
-
-  <h1 class="table-heading">Claim</h1>
-
-  <table>
-    <tbody>
-
-    </tbody>
-  </table>
-
-  <table>
-    <tbody>
-      {% for expense in Expenses %}
-        <tr {% if expense['Status'] == undefined %} class="warning" {% endif %}>
-        <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
-          <br>
-          {{ getClaimExpenseDetailFormatted(expense) }}
-        </td>
-        <td>£{{ expense['Cost'] }}</td>
-
-        <td>
-          <a href="">View receipt</a>
-        </td>
-
-          <td class="text-right">
-          <select class="form-control action-select">
-            <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
-            <option {% if expense['Status'] == 'Approved' %} selected {% endif %}>Approved</option>
-            <option {% if expense['Status'] == 'Approve different amount' %} selected {% endif %}>Approve different amount</option>
-            <option {% if expense['Status'] == 'Request information' %} selected {% endif %}>Request information</option>
-            <option {% if expense['Status'] == 'Reject claim' %} selected {% endif %}>Reject claim</option>
-          </select>
-          </td>
-        </tr>
-
-      {% endfor %}
-
-      <tr class="no-border">
-        <td class="text-right"><h3 class="heading-small">Total Expense Cost:</h3></td>
-        <td><h3 class="heading-small">£{{ Claim.Total }}</h3></td>
-        <td></td>
-        <td></td>
+      <tr>
+        <td>Name</td>
+        <td>{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
       </tr>
 
-    </tbody>
-  </table>
+      <tr>
+        <td>Date of birth</td>
+        <td>{{ getDateFormatted(Claim['PrisonerDateOfBirth']) }}</td>
+      </tr>
 
-  <br>
-  <br>
+      <tr>
+        <td>Prisoner Number</td>
+        <td>{{ Claim['PrisonNumber'] }}</td>
+      </tr>
 
-  <form action="" method="post" class="form">
+      <tr>
+        <td>Prison</td>
+        <td>{{ Claim['NameOfPrison'] }}</td>
+      </tr>
+
+    </table>
+
+    <h1 class="table-heading">Claim</h1>
+
+    <table>
+      <tbody>
+
+      </tbody>
+    </table>
+
+    <table>
+      <tbody>
+        {% for expense in Expenses %}
+          <tr {% if expense['Status'] == undefined %} class="warning" {% endif %}>
+          <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
+            <br>
+            {{ getClaimExpenseDetailFormatted(expense) }}
+          </td>
+          <td>£{{ expense['Cost'] }}</td>
+
+          <td>
+            <a href="">View receipt</a>
+          </td>
+
+            <td class="text-right">
+            <select name="claimExpense" class="form-control action-select">
+              <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
+              <option {% if expense['Status'] == 'Approved' %} selected {% endif %}>Approved</option>
+              <option {% if expense['Status'] == 'Approve different amount' %} selected {% endif %}>Approve different amount</option>
+              <option {% if expense['Status'] == 'Request information' %} selected {% endif %}>Request information</option>
+              <option {% if expense['Status'] == 'Reject claim' %} selected {% endif %}>Reject claim</option>
+            </select>
+            </td>
+          </tr>
+
+        {% endfor %}
+
+        <tr class="no-border">
+          <td class="text-right"><h3 class="heading-small">Total Expense Cost:</h3></td>
+          <td><h3 class="heading-small">£{{ Claim.Total }}</h3></td>
+          <td></td>
+          <td></td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <br>
+    <br>
+
     <div class="form-group">
       <fieldset>
-
-
         <label for="accept" class="block-label inline" data-target="accept-input">
-          <input type="radio" name="decision" value="" id="accept">
+          <input type="radio" name="decision" value="approve" id="accept">
           <span>Approve</span>
         </label>
 
         <label for="request" class="block-label inline" data-target="request-input">
-          <input type="radio" name="decision" value="" id="request">
+          <input type="radio" name="decision" value="request-information" id="request">
           <span>Request information</span>
         </label>
 
         <label for="reject" class="block-label inline" data-target="reject-input">
-          <input type="radio" name="decision" value="" id="reject">
+          <input type="radio" name="decision" value="reject" id="reject">
           <span>Reject</span>
         </label>
 
-        <div class="panel panel-border-narrow js-hidden" id="accept-input">
+        <div class="panel panel-border-narrow" id="accept-input">
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
             <textarea type="text" class="form-control full" id="additional-info-accept"></textarea>
           </div>
 
-          <a href="" class="button">Send confirmation email to claimant</a>
+          <input type="submit" class="button" name="approve" value="Send confirmation email to claimant">
         </div>
 
         <div class="panel panel-border-narrow js-hidden" id="request-input">

@@ -17,4 +17,9 @@ module.exports = function (router) {
         })
       })
   })
+
+  router.post('/claim/:claimId', function (req, res) {
+    console.dir(req.body)
+    return res.redirect(`/claim/${req.params.claimId}`)
+  })
 }
