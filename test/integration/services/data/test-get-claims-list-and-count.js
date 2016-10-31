@@ -9,22 +9,26 @@ var claimId
 var eligibilityId
 var prisonerId
 var visitorId
+var expenseId1
+var expenseId2
 
 describe('services/data/get-claim-list-and-count', function () {
   describe('get', function (done) {
     before(function (done) {
       date = moment()
-      databaseHelper.setup(reference, date.toDate(), 'TEST').then(function (ids) {
+      databaseHelper.setup(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
         eligibilityId = ids.eligibilityId
         prisonerId = ids.prisonerId
         visitorId = ids.visitorId
+        expenseId1 = ids.expenseId1
+        expenseId2 = ids.expenseId2
         done()
       })
     })
 
     it('should run getting array of claims and total', function (done) {
-      claims.getClaimsListAndCount('TEST', 0, 1)
+      claims.getClaimsListAndCount('TESTING', 0, 1)
         .then(function (result) {
           expect(result.claims.length).to.equal(1)
           expect(result.claims[0].Reference).to.equal(reference)
@@ -42,7 +46,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should run get and get no data', function (done) {
-      claims.getClaimsListAndCount('TESTING', 0, 10)
+      claims.getClaimsListAndCount('TESTING_NONE', 0, 10)
         .then(function (result) {
           expect(result.total.Count).to.equal(0)
           done()
@@ -54,7 +58,7 @@ describe('services/data/get-claim-list-and-count', function () {
 
     after(function (done) {
       // Clean up
-      databaseHelper.delete(claimId, eligibilityId, visitorId, prisonerId).then(function () {
+      databaseHelper.delete(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2).then(function () {
         done()
       })
     })

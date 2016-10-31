@@ -66,6 +66,29 @@ module.exports.setup = function (reference, date, status) {
         })
       }).then(function (result) {
         ids.claimId = result[0]
+      }).then(function () {
+        return knex('IntSchema.ClaimExpense')
+        .returning('ClaimExpenseId')
+        .insert({
+          ClaimId: ids.claimId,
+          ExpenseType: 'train',
+          Cost: 12.50,
+          From: 'London',
+          To: 'Hewell',
+          IsReturn: true
+        })
+      }).then(function (result) {
+        ids.expenseId1 = result[0]
+        return knex('IntSchema.ClaimExpense')
+        .returning('ClaimExpenseId')
+        .insert({
+          ClaimId: ids.claimId,
+          ExpenseType: 'accommodation',
+          Cost: 80,
+          DurationOfTravel: 1
+        })
+      }).then(function(result){
+        ids.expenseId2 = result[0]
         resolve(ids)
       })
       .catch(function (error) {
@@ -74,13 +97,17 @@ module.exports.setup = function (reference, date, status) {
   })
 }
 
-module.exports.delete = function (claimId, eligibilityId, visitorId, prisonerId) {
+module.exports.delete = function (claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2) {
   return new Promise(function (resolve, reject) {
-    knex('IntSchema.Claim').where('ClaimId', claimId).del().then(function () {
-      knex('IntSchema.Visitor').where('VisitorId', visitorId).del().then(function () {
-        knex('IntSchema.Prisoner').where('PrisonerId', prisonerId).del().then(function () {
-          knex('IntSchema.Eligibility').where('EligibilityId', eligibilityId).del().then(function () {
-            resolve()
+    knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId1).del().then(function (){
+      knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId2).del().then(function (){
+        knex('IntSchema.Claim').where('ClaimId', claimId).del().then(function () {
+          knex('IntSchema.Visitor').where('VisitorId', visitorId).del().then(function () {
+            knex('IntSchema.Prisoner').where('PrisonerId', prisonerId).del().then(function () {
+              knex('IntSchema.Eligibility').where('EligibilityId', eligibilityId).del().then(function () {
+                resolve()
+              })
+            })
           })
         })
       })
