@@ -2,9 +2,8 @@ var config = require('../../knexfile').migrations
 var knex = require('knex')(config)
 var Promise = require('bluebird')
 
-// TODO name method for function, e.g. insertTestData
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-module.exports.setup = function (reference, date, status) {
+module.exports.insertTestData = function (reference, date, status) {
   return new Promise(function (resolve, reject) {
     var ids = {}
     knex('IntSchema.Eligibility')
@@ -105,8 +104,7 @@ module.exports.setup = function (reference, date, status) {
   })
 }
 
-// TODO name for function, deleteTestData
-module.exports.delete = function (claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2) {
+module.exports.deleteTestData = function (claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2) {
   return new Promise(function (resolve, reject) {
     knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId1).del().then(function () {
       knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId2).del().then(function () {

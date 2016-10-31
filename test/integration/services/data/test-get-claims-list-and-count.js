@@ -16,7 +16,7 @@ describe('services/data/get-claim-list-and-count', function () {
   describe('module', function (done) {
     before(function (done) {
       date = moment()
-      databaseHelper.setup(reference, date.toDate(), 'TESTING').then(function (ids) {
+      databaseHelper.insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
         eligibilityId = ids.eligibilityId
         prisonerId = ids.prisonerId
@@ -58,7 +58,7 @@ describe('services/data/get-claim-list-and-count', function () {
 
     after(function (done) {
       // Clean up
-      databaseHelper.delete(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2).then(function () {
+      databaseHelper.deleteTestData(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2).then(function () {
         done()
       })
     })
