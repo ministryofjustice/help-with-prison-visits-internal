@@ -27,7 +27,7 @@ describe('services/data/get-claim-list-and-count', function () {
       })
     })
 
-    it('should run getting array of claims and total', function (done) {
+    it('should return list of claims and total', function (done) {
       claims.getClaimsListAndCount('TESTING', 0, 1)
         .then(function (result) {
           expect(result.claims.length).to.equal(1)
@@ -45,7 +45,7 @@ describe('services/data/get-claim-list-and-count', function () {
         })
     })
 
-    it('should run get and get no data', function (done) {
+    it('should return no data', function (done) {
       claims.getClaimsListAndCount('TESTING_NONE', 0, 10)
         .then(function (result) {
           expect(result.total.Count).to.equal(0)

@@ -7,6 +7,7 @@ module.exports = function (router) {
       .then(function (data) {
         var claimDetails
         var claimExpenses
+        // TODO pass view helpers to view
         ;[claimDetails, claimExpenses] = viewClaimDisplay.get(data.claim, data.claimExpenses)
         return res.render('./claim/view-claim', {
           title: 'APVS Claim',

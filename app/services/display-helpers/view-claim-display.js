@@ -1,6 +1,9 @@
 const moment = require('moment')
 const DISPLAY_NAMES = require('./display-field-names')
 
+// TODO refactor to split into a DateHelper and ClaimExpenseHelper, pass into view in route and use there per Date/Expense
+// TODO move to /app/views/helpers
+// TODO add tests
 module.exports.get = function (claimDetails, claimExpenses) {
   var totalCost = 0
   claimDetails.DateSubmittedFormatted = moment(claimDetails.DateSubmitted).format('DD-MM-YYYY')
