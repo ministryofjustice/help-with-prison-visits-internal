@@ -156,10 +156,10 @@ module.exports.getTestData = function (reference, status) {
       To: 'Hewell',
       IsReturn: true
     },
-      {
-        ExpenseType: 'accommodation',
-        Cost: 80,
-        DurationOfTravel: 1
-      }]
+    {
+      ExpenseType: 'accommodation',
+      Cost: 80,
+      DurationOfTravel: 1
+    }]
   }
 }
