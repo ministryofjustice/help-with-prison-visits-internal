@@ -1,18 +1,19 @@
-const Claim = require('../../services/data/get-individual-claim-details')
-const viewClaimDisplay = require('../../services/display-helpers/view-claim-display')
+const getClaim = require('../../services/data/get-individual-claim-details')
+const getDateFormatted = require('../../views/helpers/date-helper')
+const getClaimExpenseDetailFormatted = require('../../views/helpers/claim-expense-helper')
+const getDisplayFieldName = require('../../views/helpers/display-field-names')
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
-    Claim.get(req.params.claimId)
+    getClaim(req.params.claimId)
       .then(function (data) {
-        var claimDetails
-        var claimExpenses
-        // TODO pass view helpers to view
-        ;[claimDetails, claimExpenses] = viewClaimDisplay.get(data.claim, data.claimExpenses)
         return res.render('./claim/view-claim', {
           title: 'APVS Claim',
-          Claim: claimDetails,
-          Expenses: claimExpenses
+          Claim: data.claim,
+          Expenses: data.claimExpenses,
+          getDateFormatted: getDateFormatted,
+          getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
+          getDisplayFieldName: getDisplayFieldName
         })
       })
   })
