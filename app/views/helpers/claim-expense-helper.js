@@ -11,9 +11,9 @@ module.exports = function (expense) {
     case 'bus':
     case 'train':
       if (expense.IsReturn) {
-        formattedDetail = expense.From + ' to ' + expense.To + ' - Return'
+        formattedDetail = `${expense.From} to ${expense.To} - Return`
       } else {
-        formattedDetail = expense.From + ' to ' + expense.To
+        formattedDetail = `${expense.From} to ${expense.To}`
       }
       break
     case 'light refreshment':
@@ -24,13 +24,13 @@ module.exports = function (expense) {
       }
       break
     case 'accommodation':
-      formattedDetail = 'Nights stayed: ' + expense.DurationOfTravel
+      formattedDetail = `Nights stayed: ${expense.DurationOfTravel}`
       break
     case 'ferry':
-      formattedDetail = expense.From + ' to ' + expense.To + ' as ' + displayFieldNames[expense.TicketType]
+      formattedDetail = `${expense.From} to ${expense.To} as ${displayFieldNames[expense.TicketType]}`
       break
     default:
-      formattedDetail = expense.From + ' to ' + expense.To
+      formattedDetail = `${expense.From} to ${expense.To}`
   }
 
   return formattedDetail
