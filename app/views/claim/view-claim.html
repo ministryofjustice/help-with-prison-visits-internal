@@ -13,19 +13,14 @@
   <div class="grid-row">
     <div class="column-half">
       <h1 class="heading-large">
-        <span class="heading-secondary">Reference number</span>{{ Claim['Reference'] }}
+        <span id="reference" class="heading-secondary">Reference number</span>{{ Claim['Reference'] }}
       </h1>
 
     </div>
     <div class="column-quarter">
 
       <h1 class="heading-large">
-        <span class="heading-secondary">Submitted </span>{{ Claim['DateCreated'] }}
-      </h1>
-    </div>
-    <div class="column-quarter">
-      <h1 class="heading-large">
-        <span class="heading-secondary">Last updated</span>{{ Claim['LastUpdated'] }}
+        <span class="heading-secondary">Submitted </span>{{ Claim['DateSubmittedFormatted'] }}
       </h1>
     </div>
   </div>
@@ -36,12 +31,12 @@
 
 	  <tr>
 	    <td>Visitor Name</td>
-	    <td>{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
+	    <td id="visitor-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
 	  </tr>
 
 	  <tr>
 	    <td>Date of Birth</td>
-	    <td>{{ Claim['DateOfBirth'] }}</td>
+	    <td>{{ Claim['DateOfBirthFormatted'] }}</td>
 	  </tr>
 
 	  <tr>
@@ -78,18 +73,23 @@
   <table class="col-2">
 
     <tr>
-      <td>Prison</td>
-      <td>{{ Claim['Prison'] }}</td>
+      <td>Name</td>
+      <td>{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
+    </tr>
+
+    <tr>
+      <td>Date of birth</td>
+      <td>{{ Claim['PrisonerDateOfBirthFormatted'] }}</td>
     </tr>
 
     <tr>
       <td>Prisoner Number</td>
-      <td>{{ Claim['PrisonerNumber']}}</td>
+      <td>{{ Claim['PrisonNumber'] }}</td>
     </tr>
 
     <tr>
-      <td>Name</td>
-      <td>{{ Claim['PrisonerFirstName'] }} {{ Claim['PrisonerLastName'] }}</td>
+      <td>Prison</td>
+      <td>{{ Claim['NameOfPrison'] }}</td>
     </tr>
 
   </table>
@@ -98,42 +98,36 @@
 
   <table>
     <tbody>
-      {% for expense in Claim['Expense'] %}
-        <tr {% if expense['Status'] == '' %} class="warning" {% endif %}>
-	      <td><span class="bold">{{ expense['TransportType'] }}{{ expense['ExpenseType'] }} </span> 
-	        <br>{% if expense['TransportType'] %}
-	        {{ expense['From'] }} to {{expense['To']}} 
-	        {% if expense['IsReturn'] %} - Return{% endif %}
-	        {% endif %}
-	        {{ expense['Description'] }}
-	      </td>
-	      <td>£{{ expense['Cost'] }}</td>
 
-	      <td>
-	        <a href="">View receipt</a>
-	      </td>
+    </tbody>
+  </table>
+
+  <table>
+    <tbody>
+      {% for expense in Expenses %}
+        <tr {% if expense['Status'] == '' %} class="warning" {% endif %}>
+        <td><span class="bold">{{ expense['ExpenseType'] }} </span> 
+          <br>
+          {{ expense['Detail'] }}
+        </td>
+        <td>£{{ expense['Cost'] }}</td>
+
+        <td>
+          <a href="">View receipt</a>
+        </td>
 
           <td class="text-right">
-	        <select class="form-control action-select">
-	          <option {% if expense['Status'] == '' %} selected {% endif %}>Select</option>
- 	          <option {% if expense['Status'] == 'Approved' %} selected {% endif %}>Approved</option>
-	          <option {% if expense['Status'] == 'Approve different amount' %} selected {% endif %}>Approve different amount</option>
-	          <option {% if expense['Status'] == 'Request information' %} selected {% endif %}>Request information</option>
-	          <option {% if expense['Status'] == 'Reject claim' %} selected {% endif %}>Reject claim</option>
-	        </select>
+          <select class="form-control action-select">
+            <option {% if expense['Status'] == '' %} selected {% endif %}>Select</option>
+            <option {% if expense['Status'] == 'Approved' %} selected {% endif %}>Approved</option>
+            <option {% if expense['Status'] == 'Approve different amount' %} selected {% endif %}>Approve different amount</option>
+            <option {% if expense['Status'] == 'Request information' %} selected {% endif %}>Request information</option>
+            <option {% if expense['Status'] == 'Reject claim' %} selected {% endif %}>Reject claim</option>
+          </select>
           </td>
         </tr>
 
-        {% endfor %}
-
-        <tr class="no-border">
-          <td class="text-right"><h3 class="heading-small">Approved ammount</h3></td>
-            <td><h3 class="heading-small">£{{ Claim['Total'] }}</h3></td>
-            <td></td>
-            <td>
-          </td>
-        </tr>
-
+      {% endfor %}
     </tbody>
   </table>
 
@@ -144,71 +138,50 @@
     <div class="form-group">
       <fieldset>
 
+
         <label for="accept" class="block-label inline" data-target="accept-input">
-          <input type="radio" name="accept" value="" id="accept">
+          <input type="radio" name="decision" value="" id="accept">
           <span>Approve</span>
         </label>
 
         <label for="request" class="block-label inline" data-target="request-input">
-          <input type="radio" name="accept" value="" id="request">
+          <input type="radio" name="decision" value="" id="request">
           <span>Request information</span>
         </label>
 
         <label for="reject" class="block-label inline" data-target="reject-input">
-          <input type="radio" name="accept" value="" id="accept">
+          <input type="radio" name="decision" value="" id="reject">
           <span>Reject</span>
         </label>
 
         <div class="panel panel-border-narrow js-hidden" id="accept-input">
+
           <div class="form-group">
-            <label class="form-label-bold" for="full-name">Additional notes (optional)</label>
-            <textarea type="text" class="form-control full" id="full-name"></textarea> 
+            <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
+            <textarea type="text" class="form-control full" id="additional-info-accept"></textarea> 
           </div>
-          <a href="index.html" class="button">Send confirmation email to claimant</a>
+
+          <a href="" class="button">Send confirmation email to claimant</a>
         </div>
 
         <div class="panel panel-border-narrow js-hidden" id="request-input">
 
           <div class="form-group">
-            <label class="form-label-bold" for="full-name">Select request type</label>
-
-            <select class="form-control full">
-              <option>Set answer</option>
-              <option>Set answer</option>
-              <option>Set answer</option>
-              <option>Set answer</option>
-            </select>
+            <label class="form-label-bold" for="additional-info-request">Additional information (optional)</label>
+            <textarea type="text" class="form-control full" id="additional-info-request"></textarea> 
           </div>
 
-          <div class="form-group">
-            <label class="form-label-bold" for="full-name">Additional notes (optional)</label>
-            <textarea type="text" class="form-control full" id="full-name"></textarea> 
-          </div>
-
-          <a href="index.html" class="button">Send request email to claimant</a>
+          <a href="" class="button">Send request email to claimant</a>
         </div>
-
-
 
         <div class="panel panel-border-narrow js-hidden" id="reject-input">
 
           <div class="form-group">
-            <label class="form-label-bold" for="full-name">Select reason</label>
-
-            <select class="form-control full">
-              <option>Set answer</option>
-              <option>Set answer</option>
-              <option>Set answer</option>
-              <option>Set answer</option>
-            </select>
+            <label class="form-label-bold" for="additional-info-reject">Additional information (optional)</label>
+            <textarea type="text" class="form-control full" id="additional-info-reject"></textarea> 
           </div>
 
-          <div class="form-group">
-            <label class="form-label-bold" for="full-name">Additional notes (optional)</label>
-            <textarea type="text" class="form-control full" id="full-name"></textarea> 
-          </div>
-
-          <a href="index.html" class="button">Send rejection email to claimant</a>
+          <a href="" class="button">Send rejection email to claimant</a>
         </div>
 
       </fieldset>
