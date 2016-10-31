@@ -119,7 +119,7 @@
           </td>
 
             <td class="text-right">
-            <select name="claimExpense" class="form-control action-select">
+            <select name="claimExpense-{{ expense.ClaimExpenseId }}" class="form-control action-select">
               <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
               <option {% if expense['Status'] == 'Approved' %} selected {% endif %}>Approved</option>
               <option {% if expense['Status'] == 'Approve different amount' %} selected {% endif %}>Approve different amount</option>
