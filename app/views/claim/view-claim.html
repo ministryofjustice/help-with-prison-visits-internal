@@ -183,12 +183,21 @@
 
         <div class="panel panel-border-narrow js-hidden" id="reject-input">
 
+        <label id="rejection-reason-select" class="form-label-bold">Rejection Reason:</label>
+          <select name="rejection-reason" class="form-control">
+            <option>Select</option>
+            <option>Benefit check failure</option>
+            <option>Relationship to prisoner incorrect</option>
+            <option>Prisoner ineligibile for visitation</option>
+          </select>
+          <br>
+
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-reject">Additional information (optional)</label>
             <textarea type="text" class="form-control full" id="additional-info-reject"></textarea>
           </div>
 
-          <a href="" class="button">Send rejection email to claimant</a>
+          <input type="submit" class="button" name="reject" value="Send rejection email to claimant">
         </div>
 
       </fieldset>
