@@ -41,4 +41,14 @@ describe('routes/claim/view-claim', function () {
         })
     })
   })
+
+  describe('POST /claim/:claimId', function () {
+    it('should respond with 302 when valid data entered', function (done) {
+      done()
+    })
+
+    it('should respond with 400 when invalid data entered', function (done) {
+      done()
+    })
+  })
 })
