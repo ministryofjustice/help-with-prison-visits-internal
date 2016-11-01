@@ -1,5 +1,5 @@
-module.exports = [
-  'APPROVED',
-  'REQUEST-INFORMATION',
-  'REJECTED'
-]
+module.exports = {
+  APPROVED: 'APPROVED',
+  REQUEST_INFORMATION: 'REQUEST-INFORMATION',
+  REJECTED: 'REJECTED'
+}
