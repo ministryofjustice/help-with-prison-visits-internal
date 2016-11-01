@@ -147,7 +147,7 @@
     <br>
     <br>
 
-    <div class="form-group">
+    <div id="decision" class="form-group {% if errors['decision'][0] %} error {% endif %}">
       <fieldset>
         <label for="accept" class="block-label inline" data-target="accept-input">
           <input type="radio" name="decision" value="approve" id="accept" {% if claimDecision['decision'] == 'accept' %} checked {% endif %}>
@@ -186,7 +186,10 @@
 
         <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'reject' %}js-hidden{% endif %}" id="reject-input">
 
-        <label id="reason" class="form-label-bold">Rejection Reason:</label>
+        <label id="reason" class="form-label-bold {% if errors['reason'][0] %} error {% endif %}">Rejection Reason:</label>
+          {% if errors['reason'][0] %}
+            <span class="error-message" id="error-message-reason">{{ errors['reason'][0] }}</span>
+          {% endif %}
           <select name="reason" class="form-control">
             <option>Select</option>
             <option>Benefit check failure</option>

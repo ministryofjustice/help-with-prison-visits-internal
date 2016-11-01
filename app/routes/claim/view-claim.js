@@ -30,7 +30,6 @@ module.exports = function (router) {
       if (error instanceof ValidationError) {
         getClaim(req.params.claimId)
           .then(function (data) {
-            console.log(req.body)
             return res.status(400).render('./claim/view-claim', {
               title: 'APVS Claim',
               Claim: data.claim,
