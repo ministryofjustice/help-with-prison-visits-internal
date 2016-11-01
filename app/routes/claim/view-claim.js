@@ -4,6 +4,7 @@ const getClaimExpenseDetailFormatted = require('../../views/helpers/claim-expens
 const getDisplayFieldName = require('../../views/helpers/display-field-names')
 const ValidationError = require('../../services/errors/validation-error')
 const ClaimDecision = require('../../services/domain/claim-decision')
+const ClaimExpenseResponse = require('../../services/domain/claim-expense-response')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 
 module.exports = function (router) {
@@ -22,9 +23,9 @@ module.exports = function (router) {
   })
 
   router.post('/claim/:claimId', function (req, res) {
-    console.dir(req.body)
     try {
-      var claimDecision = new ClaimDecision(req.body.decision, req.body.reason, req.body.note)
+      var claimExpenses = ClaimExpenseResponse.getClaimExpenseData(req.body)
+      var claimDecision = new ClaimDecision(req.body.decision, req.body.reason, req.body.note, claimExpenses)
       SubmitClaimResponse(req.params.claimId, claimDecision)
         .then(function () {
           return res.redirect('/')

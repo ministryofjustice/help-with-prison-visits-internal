@@ -3,7 +3,7 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 
 class ClaimDecision {
-  constructor (decision, reason, note) {
+  constructor (decision, reason, note, claimExpenseResponses) {
     if (decision) {
       if (decision === 'approve') {
         this.decision = 'APPROVED'
@@ -17,6 +17,8 @@ class ClaimDecision {
     }
     this.reason = reason
     this.note = note
+    this.claimExpenseResponses = claimExpenseResponses
+
     this.IsValid()
   }
 
@@ -30,6 +32,8 @@ class ClaimDecision {
       FieldValidator(this.reason, 'reason', errors)
         .isRequired()
     }
+
+    // TODO validate claimExpenseResponses
 
     var validationErrors = errors.get()
 
