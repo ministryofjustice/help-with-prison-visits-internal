@@ -12,6 +12,7 @@
 
   <div class="grid-row">
     <div class="column-half">
+
       <h1 class="heading-large">
         <span id="reference" class="heading-secondary">Reference number</span>{{ Claim['Reference'] }}
       </h1>
@@ -24,6 +25,8 @@
       </h1>
     </div>
   </div>
+
+  {% include "includes/validation-error-messages.html" %}
 
   <h1 class="table-heading">Visitor</h1>
 
@@ -147,21 +150,21 @@
     <div class="form-group">
       <fieldset>
         <label for="accept" class="block-label inline" data-target="accept-input">
-          <input type="radio" name="decision" value="approve" id="accept">
+          <input type="radio" name="decision" value="approve" id="accept" {% if claimDecision['decision'] == 'accept' %} checked {% endif %}>
           <span>Approve</span>
         </label>
 
         <label for="request" class="block-label inline" data-target="request-input">
-          <input type="radio" name="decision" value="request-information" id="request">
+          <input type="radio" name="decision" value="request-information" id="request" {% if claimDecision['decision'] == 'request-information' %} checked {% endif %}>
           <span>Request information</span>
         </label>
 
         <label for="reject" class="block-label inline" data-target="reject-input">
-          <input type="radio" name="decision" value="reject" id="reject">
+          <input type="radio" name="decision" value="reject" id="reject" {% if claimDecision['decision'] == 'reject' %} checked {% endif %}>
           <span>Reject</span>
         </label>
 
-        <div class="panel panel-border-narrow js-hidden" id="accept-input">
+        <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'accept' %}js-hidden{% endif %}" id="accept-input">
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
@@ -171,7 +174,7 @@
           <input type="submit" class="button" name="approve" value="Send confirmation email to claimant">
         </div>
 
-        <div class="panel panel-border-narrow js-hidden" id="request-input">
+        <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'request-information' %}js-hidden{% endif %}" id="request-input">
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-request">Additional information (optional)</label>
@@ -181,10 +184,10 @@
           <a href="" class="button">Send request email to claimant</a>
         </div>
 
-        <div class="panel panel-border-narrow js-hidden" id="reject-input">
+        <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'reject' %}js-hidden{% endif %}" id="reject-input">
 
-        <label id="rejection-reason-select" class="form-label-bold">Rejection Reason:</label>
-          <select name="rejection-reason" class="form-control">
+        <label id="reason" class="form-label-bold">Rejection Reason:</label>
+          <select name="reason" class="form-control">
             <option>Select</option>
             <option>Benefit check failure</option>
             <option>Relationship to prisoner incorrect</option>

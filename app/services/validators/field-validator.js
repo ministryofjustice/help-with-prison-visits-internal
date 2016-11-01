@@ -22,7 +22,7 @@ class FieldValidator {
       } else {
         this.errors.add(this.fieldName, ERROR_MESSAGES.getIsRequired)
       }
-    } else if (this.data === 'select') {
+    } else if (this.data === 'Select') {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getDropboxIsRequired)
     }
     return this

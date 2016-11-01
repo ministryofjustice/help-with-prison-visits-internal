@@ -26,7 +26,7 @@ class ClaimDecision {
     FieldValidator(this.decision, 'decision', errors)
       .isRequired()
 
-    if (!this.decision === 'APPROVED') {
+    if (this.decision !== 'APPROVED') {
       FieldValidator(this.reason, 'reason', errors)
         .isRequired()
     }
