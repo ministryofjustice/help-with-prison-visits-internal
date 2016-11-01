@@ -15,7 +15,7 @@ var expenseId2
 
 describe('First time claim viewing flow', () => {
   before(function () {
-    date = moment().toDate()
+    date = moment('20010101').toDate()
     return databaseHelper.insertTestData(reference, date, 'New').then(function (ids) {
       claimId = ids.claimId
       eligibilityId = ids.eligibilityId

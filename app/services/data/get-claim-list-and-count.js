@@ -14,7 +14,7 @@ module.exports = function (status, offset, limit) {
         .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
         .where('Claim.Status', status)
         .select('Eligibility.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.ClaimId')
-        .orderBy('Eligibility.Reference')
+        .orderBy('Claim.DateSubmitted', 'asc')
         .limit(limit)
         .offset(offset)
         .then(function (claims) {
