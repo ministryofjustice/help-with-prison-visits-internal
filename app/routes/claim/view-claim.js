@@ -24,7 +24,8 @@ module.exports = function (router) {
   router.post('/claim/:claimId', function (req, res) {
     console.dir(req.body)
     try {
-      var claimDecision = new ClaimDecision(req.body)
+      var claimDecision = new ClaimDecision(req.body.decision, req.body.reasonRequest, req.body.reasonReject,
+        req.body.additionalInfoApprove, req.body.additionalInfoRequest, req.body.additionalInfoReject)
       SubmitClaimResponse(req.params.claimId, claimDecision)
         .then(function () {
           return res.redirect('/')

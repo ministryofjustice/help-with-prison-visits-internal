@@ -150,17 +150,17 @@
     <div id="decision" class="form-group {% if errors['decision'][0] %} error {% endif %}">
       <fieldset id='reason' >
         <label for="accept" class="block-label inline" data-target="accept-input">
-          <input type="radio" name="decision" value="approve" id="accept" {% if claimDecision['decision'] == 'accept' %} checked {% endif %}>
+          <input type="radio" name="decision" value="APPROVED" id="accept" {% if claimDecision['decision'] == 'accept' %} checked {% endif %}>
           <span>Approve</span>
         </label>
 
         <label for="request" class="block-label inline" data-target="request-input">
-          <input type="radio" name="decision" value="request-information" id="request" {% if claimDecision['decision'] == 'request-information' %} checked {% endif %}>
+          <input type="radio" name="decision" value="REQUEST-INFORMATION" id="request" {% if claimDecision['decision'] == 'request-information' %} checked {% endif %}>
           <span>Request information</span>
         </label>
 
         <label for="reject" class="block-label inline" data-target="reject-input">
-          <input type="radio" name="decision" value="reject" id="reject" {% if claimDecision['decision'] == 'reject' %} checked {% endif %}>
+          <input type="radio" name="decision" value="REJECTED" id="reject" {% if claimDecision['decision'] == 'reject' %} checked {% endif %}>
           <span>Reject</span>
         </label>
 
