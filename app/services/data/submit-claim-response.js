@@ -19,9 +19,7 @@ module.exports = function (claimId, claimResponse) {
 }
 
 function updateEligibility (eligibilityId, decision) {
-  return knex('Eligibility').where('EligibilityId', eligibilityId).update({
-    'Status': decision
-  })
+  return knex('Eligibility').where('EligibilityId', eligibilityId).update('Status', decision)
 }
 
 function updateClaim (claimId, decision, reason, note) {
