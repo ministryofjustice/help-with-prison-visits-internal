@@ -16,7 +16,7 @@ module.exports = function (claimId) {
         .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
         .where('Claim.ClaimId', claimId)
         .select('ClaimExpense.ExpenseType', 'ClaimExpense.Cost', 'ClaimExpense.To', 'ClaimExpense.From', 'ClaimExpense.IsReturn', 'ClaimExpense.TravelTime',
-          'ClaimExpense.DurationOfTravel', 'ClaimExpense.TicketType')
+          'ClaimExpense.DurationOfTravel', 'ClaimExpense.TicketType', 'ClaimExpense.ClaimExpenseId')
         .orderBy('ClaimExpense.ClaimExpenseId')
         .then(function (claimExpenses) {
           var total = 0
