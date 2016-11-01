@@ -6,7 +6,8 @@ const taskStatusEnum = require('../../constants/task-status-enum')
 
 module.exports = function (notificationType, reference, eligibilityId, claimId) {
   if (notificationType !== tasksEnum.ACCEPT_CLAIM_NOTIFICATION &&
-      notificationType !== tasksEnum.REJECT_CLAIM_NOTIFICATION) {
+      notificationType !== tasksEnum.REJECT_CLAIM_NOTIFICATION &&
+      notificationType !== tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION) {
     throw new Error('Invalid notification type')
   }
 
