@@ -6,6 +6,7 @@ const ValidationError = require('../../services/errors/validation-error')
 const ClaimDecision = require('../../services/domain/claim-decision')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 const getClaimExpenseResponses = require('../helpers/get-claim-expense-responses')
+const prisonerRelationshipsEnum = require('../../constants/prisoner-relationships-enum')
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
@@ -17,7 +18,8 @@ module.exports = function (router) {
           Expenses: data.claimExpenses,
           getDateFormatted: getDateFormatted,
           getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
-          getDisplayFieldName: getDisplayFieldName
+          getDisplayFieldName: getDisplayFieldName,
+          prisonerRelationshipsEnum: prisonerRelationshipsEnum
         })
       })
   })
@@ -26,7 +28,7 @@ module.exports = function (router) {
     try {
       var claimExpenses = getClaimExpenseResponses(req.body)
       var claimDecision = new ClaimDecision(req.body.decision, req.body.reasonRequest, req.body.reasonReject,
-        req.body.additionalInfoApprove, req.body.additionalInfoRequest, req.body.additionalInfoReject, claimExpenses)
+        req.body.additionalInfoApprove, req.body.additionalInfoRequest, req.body.additionalInfoReject, req.body.nomisCheck, claimExpenses)
 
       SubmitClaimResponse(req.params.claimId, claimDecision)
         .then(function () {
@@ -37,12 +39,12 @@ module.exports = function (router) {
         getClaim(req.params.claimId)
           .then(function (data) {
             // TODO move to route helper and test
-            var claimExpensesById = {}
-            claimExpenses.forEach(function (claimExpense) {
-              claimExpensesById[claimExpense.claimExpenseId] = claimExpense
-            })
 
             if (data.claimExpenses) {
+              var claimExpensesById = {}
+              claimExpenses.forEach(function (claimExpense) {
+                claimExpensesById[claimExpense.claimExpenseId] = claimExpense
+              })
               data.claimExpenses.forEach(function (expense) {
                 var postedClaimExpenseResponse = claimExpensesById[expense.ClaimExpenseId.toString()]
                 expense.Status = postedClaimExpenseResponse.status
@@ -59,6 +61,7 @@ module.exports = function (router) {
               getDateFormatted: getDateFormatted,
               getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
               getDisplayFieldName: getDisplayFieldName,
+              prisonerRelationshipsEnum: prisonerRelationshipsEnum,
               claimDecision: req.body,
               errors: error.validationErrors
             })

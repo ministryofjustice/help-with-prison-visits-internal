@@ -69,7 +69,7 @@
 
   	  <tr>
   	  	<td>Prisoner Relationship</td>
-  	  	<td>{{ Claim['Relationship'] }}</td>
+        <td>{{ prisonerRelationshipsEnum[Claim['Relationship']].displayName }}</td>
   	  </tr>
     </table>
 
@@ -79,28 +79,36 @@
 
       <tr>
         <td>Name</td>
-        <td>{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
+        <td colspan="2">{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
       </tr>
 
       <tr>
         <td>Date of birth</td>
-        <td>{{ getDateFormatted(Claim['PrisonerDateOfBirth']) }}</td>
+        <td colspan="2">{{ getDateFormatted(Claim['PrisonerDateOfBirth']) }}</td>
       </tr>
 
       <tr>
         <td>Prisoner Number</td>
-        <td>{{ Claim['PrisonNumber'] }}</td>
+        <td colspan="2">{{ Claim['PrisonNumber'] }}</td>
       </tr>
 
       <tr>
         <td>Prison</td>
-        <td>{{ Claim['NameOfPrison'] }}</td>
+        <td colspan="2">{{ Claim['NameOfPrison'] }}</td>
       </tr>
 
       <tr>
         <td>Eligibile for visitation?</td>
         <td>
           <span class="text-warning">NOMIS check required</span>
+        </td>
+        <td>
+          <select class="form-control action-select" id="nomis-check" name="nomisCheck">
+            <option value="">Select</option>
+            <option value="APPROVED">Approve</option>
+            <option value="REQUEST-INFORMATION">Request information</option>
+            <option value="REJECTED">Reject</option>
+          </select>
         </td>
       </tr>
 

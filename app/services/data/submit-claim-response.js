@@ -14,9 +14,11 @@ module.exports = function (claimId, claimDecision) {
       var decision = claimDecision.decision
       var reason = claimDecision.reason
       var note = claimDecision.note
+      var nomisCheck = claimDecision.nomisCheck
 
       return Promise.all([updateEligibility(eligibilityId, decision),
         updateClaim(claimId, decision, reason, note),
+        updatePrisoner(eligibilityId, nomisCheck),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
         sendClaimNotification(reference, eligibilityId, claimId, decision)])
     })
@@ -32,6 +34,10 @@ function updateClaim (claimId, decision, reason, note) {
     'Reason': reason,
     'Note': note
   })
+}
+
+function updatePrisoner (eligibilityId, nomisCheck) {
+  return knex('Prisoner').where('EligibilityId', eligibilityId).update('NomisCheck', nomisCheck)
 }
 
 function updateClaimExpenses (claimExpenseResponses) {
