@@ -6,6 +6,7 @@ const ValidationError = require('../../services/errors/validation-error')
 const ClaimDecision = require('../../services/domain/claim-decision')
 const ClaimExpenseResponse = require('../../services/domain/claim-expense-response')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
+const prisonerRelationshipsEnum = require('../../constants/prisoner-relationships-enum')
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
@@ -17,7 +18,8 @@ module.exports = function (router) {
           Expenses: data.claimExpenses,
           getDateFormatted: getDateFormatted,
           getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
-          getDisplayFieldName: getDisplayFieldName
+          getDisplayFieldName: getDisplayFieldName,
+          prisonerRelationshipsEnum: prisonerRelationshipsEnum
         })
       })
   })
@@ -43,6 +45,7 @@ module.exports = function (router) {
               getDateFormatted: getDateFormatted,
               getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
               getDisplayFieldName: getDisplayFieldName,
+              prisonerRelationshipsEnum: prisonerRelationshipsEnum,
               claimDecision: req.body,
               errors: error.validationErrors
             })
