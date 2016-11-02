@@ -16,7 +16,13 @@ class ClaimDecision {
       this.note = additionalInfoRequest
     }
     this.claimExpenseResponses = claimExpenseResponses
-
+    claimExpenseResponses.forEach(function (expense) {
+      if (expense.status === 'REQUEST-INFORMATION') {
+        expense.approvedCost = null
+      } else if (expense.status !== 'APPROVED-DIFF-AMOUNT') {
+        expense.approvedCost = expense.cost
+      }
+    })
     this.IsValid()
   }
 
@@ -31,7 +37,15 @@ class ClaimDecision {
         .isRequired()
     }
 
-    // TODO validate claimExpenseResponses
+    this.claimExpenseResponses.forEach(function (expense) {
+      FieldValidator(expense.status, 'claim-expense', errors)
+        .isRequired()
+
+      FieldValidator(expense.approvedCost, 'approve-cost', errors)
+        .isRequired()
+        .isCurrency()
+        .isGreaterThanZero()
+    })
 
     var validationErrors = errors.get()
 

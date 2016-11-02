@@ -7,7 +7,8 @@ describe('services/domain/claim-decision', function () {
   const VALID_DECISION = 'REJECTED'
   const VALID_REASON = 'Relationship is incorrect'
   const NOTE = 'This is a test'
-  const VALID_CLAIMEXPENSES = [{claimExpenseId: 1, approvedCost: '20', status: 'APPROVED'}]
+  const VALID_CLAIMEXPENSES = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
+  const INVALID_CLAIMEXPENSES = [{claimExpenseId: '1', approvedCost: '20.00', cost: '-1', status: 'APPROVED'}]
 
   it('should construct a domain object given valid input', function (done) {
     claimDecision = new ClaimDecision(VALID_DECISION, '', VALID_REASON, '', '', NOTE, VALID_CLAIMEXPENSES)
@@ -29,7 +30,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return isRequired error for reason given on reject', function (done) {
     try {
-      claimDecision = new ClaimDecision(VALID_DECISION, '', '', '', '')
+      claimDecision = new ClaimDecision(VALID_DECISION, '', '', '', '', '', VALID_CLAIMEXPENSES)
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['reason'][0]).to.equal('Reason is required')
@@ -38,7 +39,12 @@ describe('services/domain/claim-decision', function () {
   })
 
   it('should return error for invalid claim expenses', function (done) {
-    // TODO
+    try {
+      claimDecision = new ClaimDecision('APPROVED', '', '', '', '', '', INVALID_CLAIMEXPENSES)
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['approve-cost'][0]).to.equal('New approved cost must be greater than zero')
+    }
     done()
   })
 })

@@ -8,14 +8,18 @@ require('sinon-bluebird')
 var stubGetClaim
 var stubSubmitClaimResponse
 var stubClaimDecision
+var stubGetClaimExpenseResponses
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var bodyParser = require('body-parser')
+const VALID_CLAIMEXPENSE_DATA = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
 const VALID_DATA = {
-  'decision': 'APPROVED'
+  'decision': 'APPROVED',
+  'claimExpenses': VALID_CLAIMEXPENSE_DATA
 }
 const INCOMPLETE_DATA = {
   'decision': 'REJECTED',
-  'reasonRejected': ''
+  'reasonRejected': '',
+  'claimExpense': []
 }
 
 var log = {
@@ -29,11 +33,13 @@ describe('routes/claim/view-claim', function () {
     stubGetClaim = sinon.stub()
     stubSubmitClaimResponse = sinon.stub()
     stubClaimDecision = sinon.stub()
+    stubGetClaimExpenseResponses = sinon.stub()
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/log': log,
       '../../services/data/get-individual-claim-details': stubGetClaim,
       '../../services/data/submit-claim-response': stubSubmitClaimResponse,
-      '../../services/domain/claim-decision': stubClaimDecision
+      '../../services/domain/claim-decision': stubClaimDecision,
+      '../helpers/get-claim-expense-responses': stubGetClaimExpenseResponses
     })
 
     var app = express()
@@ -62,8 +68,12 @@ describe('routes/claim/view-claim', function () {
   describe('POST /claim/:claimId', function () {
     it('should respond with 302 when valid data entered', function (done) {
       var newClaimDecision = {}
+      var newClaimExpenseResponse = []
+
       stubSubmitClaimResponse.resolves()
       stubClaimDecision.returns(newClaimDecision)
+      stubGetClaimExpenseResponses.returns(newClaimExpenseResponse)
+      stubGetClaim.resolves({})
 
       request
         .post('/claim/123')
@@ -71,6 +81,7 @@ describe('routes/claim/view-claim', function () {
         .expect(302)
         .end(function (error, response) {
           expect(error).to.be.null
+          expect(stubGetClaimExpenseResponses.calledOnce).to.be.true
           expect(stubClaimDecision.calledOnce).to.be.true
           expect(stubSubmitClaimResponse.calledOnce).to.be.true
           done()
