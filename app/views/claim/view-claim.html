@@ -146,19 +146,19 @@
     <br>
 
     <div id="decision" class="form-group {% if errors['decision'][0] %} error {% endif %}">
-      <fieldset>
+      <fieldset id='reason' >
         <label for="accept" class="block-label inline" data-target="accept-input">
-          <input type="radio" name="decision" value="approve" id="accept" {% if claimDecision['decision'] == 'accept' %} checked {% endif %}>
+          <input type="radio" name="decision" value="APPROVED" id="accept" {% if claimDecision['decision'] == 'accept' %} checked {% endif %}>
           <span>Approve</span>
         </label>
 
         <label for="request" class="block-label inline" data-target="request-input">
-          <input type="radio" name="decision" value="request-information" id="request" {% if claimDecision['decision'] == 'request-information' %} checked {% endif %}>
+          <input type="radio" name="decision" value="REQUEST-INFORMATION" id="request" {% if claimDecision['decision'] == 'request-information' %} checked {% endif %}>
           <span>Request information</span>
         </label>
 
         <label for="reject" class="block-label inline" data-target="reject-input">
-          <input type="radio" name="decision" value="reject" id="reject" {% if claimDecision['decision'] == 'reject' %} checked {% endif %}>
+          <input type="radio" name="decision" value="REJECTED" id="reject" {% if claimDecision['decision'] == 'reject' %} checked {% endif %}>
           <span>Reject</span>
         </label>
 
@@ -166,7 +166,7 @@
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" id="additional-info-accept"></textarea>
+            <textarea type="text" class="form-control full" name="additionalInfoApprove"></textarea>
           </div>
 
           <input type="submit" class="button" name="approve" value="Send confirmation email to claimant">
@@ -174,21 +174,33 @@
 
         <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'request-information' %}js-hidden{% endif %}" id="request-input">
 
+        <label class="form-label-bold {% if errors['reason'][0] %} error {% endif %}">Request more information on:</label>
+          {% if errors['reason'][0] %}
+            <span class="error-message" id="error-message-reason-request">{{ errors['reason'][0] }}</span>
+          {% endif %}
+          <select name="reasonRequest" class="form-control">
+            <option>Select</option>
+            <option>Need more info on relationship</option>
+            <option>Need more info on benefit</option>
+            <option>Need more info on expenses</option>
+          </select>
+
+          <br>
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-request">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" id="additional-info-request"></textarea>
+            <textarea type="text" class="form-control full" name="additionalInfoRequest"></textarea>
           </div>
 
-          <a href="" class="button">Send request email to claimant</a>
+          <input type="submit" class="button" name="request" value="Send request email to claimant">
         </div>
 
         <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'reject' %}js-hidden{% endif %}" id="reject-input">
 
-        <label id="reason" class="form-label-bold {% if errors['reason'][0] %} error {% endif %}">Rejection Reason:</label>
+        <label class="form-label-bold {% if errors['reason'][0] %} error {% endif %}">Rejection Reason:</label>
           {% if errors['reason'][0] %}
-            <span class="error-message" id="error-message-reason">{{ errors['reason'][0] }}</span>
+            <span class="error-message" id="error-message-reason-reject">{{ errors['reason'][0] }}</span>
           {% endif %}
-          <select name="reason" class="form-control">
+          <select name="reasonReject" class="form-control">
             <option>Select</option>
             <option>Benefit check failure</option>
             <option>Relationship to prisoner incorrect</option>
@@ -198,7 +210,7 @@
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-reject">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" id="additional-info-reject"></textarea>
+            <textarea type="text" class="form-control full" name="additionalInfoReject"></textarea>
           </div>
 
           <input type="submit" class="button" name="reject" value="Send rejection email to claimant">

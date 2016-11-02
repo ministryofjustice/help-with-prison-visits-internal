@@ -1,6 +1,6 @@
 class ClaimExpenseResponse {
-  constructor (id, approvedCost, status) {
-    this.id = id
+  constructor (claimExpenseId, approvedCost, status) {
+    this.claimExpenseId = claimExpenseId
     this.approvedCost = approvedCost
     this.status = status
   }
@@ -14,11 +14,11 @@ class ClaimExpenseResponse {
       if (formKey.match(/claim-expense-[0-9]*-status/)) {
         var approvedCostKey = formKey.replace('-status', '-approvedcost')
 
-        var id = formKey.replace('claim-expense-', '').replace('-status', '')
+        var claimExpenseId = formKey.replace('claim-expense-', '').replace('-status', '')
         var status = body[formKey]
         var approvedCost = body[approvedCostKey]
 
-        claimExpenses.push(new ClaimExpenseResponse(id, approvedCost, status))
+        claimExpenses.push(new ClaimExpenseResponse(claimExpenseId, approvedCost, status))
       }
     })
 

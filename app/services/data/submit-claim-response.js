@@ -4,16 +4,17 @@ const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const tasksEnum = require('../../constants/tasks-enum')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 
-module.exports = function (claimId, claimResponse) {
+module.exports = function (claimId, claimDecision) {
   return knex('Claim').where('ClaimId', claimId).first('EligibilityId').then(function (result) {
     var eligibilityId = result.EligibilityId
     var reference = result.Reference
-    var decision = claimResponse.decision
-    var reason = claimResponse.reason
-    var note = claimResponse.note
+    var decision = claimDecision.decision
+    var reason = claimDecision.reason
+    var note = claimDecision.note
 
     return Promise.all([updateEligibility(eligibilityId, decision),
                         updateClaim(claimId, decision, reason, note),
+                        updateClaimExpenses(claimDecision.claimExpenseResponses),
                         sendClaimNotification(reference, eligibilityId, claimId, decision)])
   })
 }
@@ -28,6 +29,21 @@ function updateClaim (claimId, decision, reason, note) {
     'Reason': reason,
     'Note': note
   })
+}
+
+function updateClaimExpenses (claimExpenseResponses) {
+  var updates = []
+
+  claimExpenseResponses.forEach(function (claimExpenseResponse) {
+    updates.push(function () {
+      return knex('ClaimExpense').where('ClaimExpenseId', claimExpenseResponse.claimExpenseId).update({
+        'ApprovedCost': claimExpenseResponse.approvedCost,
+        'Status': claimExpenseResponse.status
+      })
+    })
+  })
+
+  return Promise.all(updates)
 }
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {
