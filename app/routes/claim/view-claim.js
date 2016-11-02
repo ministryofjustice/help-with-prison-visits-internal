@@ -28,7 +28,7 @@ module.exports = function (router) {
     try {
       var claimExpenses = ClaimExpenseResponse.getClaimExpenseData(req.body)
       var claimDecision = new ClaimDecision(req.body.decision, req.body.reasonRequest, req.body.reasonReject,
-        req.body.additionalInfoApprove, req.body.additionalInfoRequest, req.body.additionalInfoReject, claimExpenses)
+        req.body.additionalInfoApprove, req.body.additionalInfoRequest, req.body.additionalInfoReject, req.body.nomisCheck, claimExpenses)
 
       SubmitClaimResponse(req.params.claimId, claimDecision)
         .then(function () {

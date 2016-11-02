@@ -1,4 +1,5 @@
 module.exports = {
   'reason': 'Reason',
-  'decision': 'Decision'
+  'decision': 'Decision',
+  'nomis-check': 'NOMIS check'
 }
