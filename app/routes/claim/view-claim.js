@@ -48,9 +48,11 @@ module.exports = function (router) {
               data.claimExpenses.forEach(function (expense) {
                 var postedClaimExpenseResponse = claimExpensesById[expense.ClaimExpenseId.toString()]
                 expense.Status = postedClaimExpenseResponse.status
-                expense.ApprovedCost = postedClaimExpenseResponse.approvedCost
-                if ((expense.Status === 'APPROVED-DIFF-AMOUNT') && (postedClaimExpenseResponse.approvedCost) === '') {
-                  expense.Error = true
+                if (expense.Status === 'APPROVED-DIFF-AMOUNT') {
+                  expense.ApprovedCost = postedClaimExpenseResponse.approvedCost
+                  if (postedClaimExpenseResponse.approvedCost === '') {
+                    expense.Error = true
+                  }
                 }
               })
             }
