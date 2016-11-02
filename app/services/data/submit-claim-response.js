@@ -33,17 +33,19 @@ function updateClaim (claimId, decision, reason, note) {
 
 function updateClaimExpenses (claimExpenseResponses) {
   var updates = []
-
-  claimExpenseResponses.forEach(function (claimExpenseResponse) {
-    updates.push(function () {
-      return knex('ClaimExpense').where('ClaimExpenseId', claimExpenseResponse.claimExpenseId).update({
-        'ApprovedCost': claimExpenseResponse.approvedCost,
-        'Status': claimExpenseResponse.status
-      })
+  if (claimExpenseResponses) {
+    claimExpenseResponses.forEach(function (claimExpenseResponse) {
+      updates.push(updateClaimExpense(claimExpenseResponse))
     })
-  })
-
+  }
   return Promise.all(updates)
+}
+
+function updateClaimExpense (claimExpenseResponse) {
+  return knex('ClaimExpense').where('ClaimExpenseId', claimExpenseResponse.claimExpenseId).update({
+    'ApprovedCost': claimExpenseResponse.approvedCost,
+    'Status': claimExpenseResponse.status
+  })
 }
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {

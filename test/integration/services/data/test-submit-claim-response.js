@@ -29,7 +29,11 @@ describe('services/data/submit-claim-response', function () {
     var claimResponse = {
       'decision': claimDecisionEnum.REJECTED,
       'reason': 'No valid relationship to prisoner',
-      'note': 'Could not verify in NOMIS'
+      'note': 'Could not verify in NOMIS',
+      'claimExpenseResponses': [
+        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REJECTED},
+        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
+      ]
     }
 
     return submitClaimResponse(claimId, claimResponse)
@@ -43,6 +47,15 @@ describe('services/data/submit-claim-response', function () {
             expect(result.Reason).to.be.equal(claimResponse.reason)
             expect(result.Note).to.be.equal(claimResponse.note)
             expect(stubInsertTaskSendClaimNotification.called).to.be.true
+
+            return knex('IntSchema.ClaimExpense').where('ClaimId', newIds.claimId).select()
+              .then(function (claimExpenses) {
+                expect(claimExpenses[0].Status).to.be.equal(claimDecisionEnum.REJECTED)
+                expect(claimExpenses[0].ApprovedCost).to.be.equal(10)
+
+                expect(claimExpenses[1].Status).to.be.equal(claimDecisionEnum.REQUEST_INFORMATION)
+                expect(claimExpenses[1].ApprovedCost).to.be.equal(20)
+              })
           })
       })
   })
