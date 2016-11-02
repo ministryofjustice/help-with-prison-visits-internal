@@ -3,7 +3,7 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 
 class ClaimDecision {
-  constructor (decision, reasonRequest, reasonReject, additionalInfoApprove, additionalInfoRequest, additionalInfoReject) {
+  constructor (decision, reasonRequest, reasonReject, additionalInfoApprove, additionalInfoRequest, additionalInfoReject, nomisCheck, claimExpenseResponses) {
     this.decision = decision
     if (this.decision === 'APPROVED') {
       this.reason = ''
@@ -15,6 +15,15 @@ class ClaimDecision {
       this.reason = reasonRequest
       this.note = additionalInfoRequest
     }
+    this.nomisCheck = nomisCheck
+    this.claimExpenseResponses = claimExpenseResponses
+    claimExpenseResponses.forEach(function (expense) {
+      if (expense.status === 'REQUEST-INFORMATION') {
+        expense.approvedCost = null
+      } else if (expense.status !== 'APPROVED-DIFF-AMOUNT') {
+        expense.approvedCost = expense.cost
+      }
+    })
     this.IsValid()
   }
 
@@ -28,6 +37,19 @@ class ClaimDecision {
       FieldValidator(this.reason, 'reason', errors)
         .isRequired()
     }
+
+    this.claimExpenseResponses.forEach(function (expense) {
+      FieldValidator(expense.status, 'claim-expense', errors)
+        .isRequired()
+
+      FieldValidator(expense.approvedCost, 'approve-cost', errors)
+        .isRequired()
+        .isCurrency()
+        .isGreaterThanZero()
+    })
+
+    FieldValidator(this.nomisCheck, 'nomis-check', errors)
+      .isRequired()
 
     var validationErrors = errors.get()
 

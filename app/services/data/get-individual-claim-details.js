@@ -7,7 +7,7 @@ module.exports = function (claimId) {
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
     .join('Prisoner', 'Eligibility.EligibilityId', '=', 'Prisoner.EligibilityId')
     .where('Claim.ClaimId', claimId)
-    .first('Eligibility.Reference', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Visitor.FirstName', 'Visitor.LastName',
+    .first('Eligibility.Reference', 'Claim.ClaimId', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Visitor.FirstName', 'Visitor.LastName',
       'Visitor.DateOfBirth', 'Visitor.NationalInsuranceNumber', 'Visitor.HouseNumberAndStreet', 'Visitor.Town', 'Visitor.County', 'Visitor.PostCode',
       'Visitor.EmailAddress', 'Visitor.PhoneNumber', 'Visitor.Relationship', 'Prisoner.FirstName AS PrisonerFirstName', 'Prisoner.LastName AS PrisonerLastName',
       'Prisoner.DateOfBirth AS PrisonerDateOfBirth', 'Prisoner.PrisonNumber', 'Prisoner.NameOfPrison')
@@ -15,7 +15,8 @@ module.exports = function (claimId) {
       return knex('Claim')
         .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
         .where('Claim.ClaimId', claimId)
-        .select('ClaimExpense.ExpenseType', 'ClaimExpense.Cost', 'ClaimExpense.To', 'ClaimExpense.From', 'ClaimExpense.IsReturn', 'ClaimExpense.TravelTime',
+        .select('ClaimExpense.ExpenseType', 'ClaimExpense.Cost', 'ClaimExpense.ApprovedCost', 'ClaimExpense.Status',
+          'ClaimExpense.To', 'ClaimExpense.From', 'ClaimExpense.IsReturn', 'ClaimExpense.TravelTime',
           'ClaimExpense.DurationOfTravel', 'ClaimExpense.TicketType', 'ClaimExpense.ClaimExpenseId')
         .orderBy('ClaimExpense.ClaimExpenseId')
         .then(function (claimExpenses) {

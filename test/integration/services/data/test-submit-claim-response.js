@@ -30,20 +30,36 @@ describe('services/data/submit-claim-response', function () {
     var claimResponse = {
       'decision': claimDecisionEnum.REJECTED,
       'reason': 'No valid relationship to prisoner',
-      'note': 'Could not verify in NOMIS'
+      'note': 'Could not verify in NOMIS',
+      'nomisCheck': claimDecisionEnum.REJECTED,
+      'claimExpenseResponses': [
+        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REJECTED},
+        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
+      ]
     }
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
         return knex('IntSchema.Eligibility').where('Reference', reference)
           .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
+          .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
           .first()
           .then(function (result) {
             expect(result.Status[0]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Status[1]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Reason).to.be.equal(claimResponse.reason)
             expect(result.Note).to.be.equal(claimResponse.note)
+            expect(result.NomisCheck).to.be.equal(claimDecisionEnum.REJECTED)
             expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true
+
+            return knex('IntSchema.ClaimExpense').where('ClaimId', newIds.claimId).select()
+              .then(function (claimExpenses) {
+                expect(claimExpenses[0].Status).to.be.equal(claimDecisionEnum.REJECTED)
+                expect(claimExpenses[0].ApprovedCost).to.be.equal(10)
+
+                expect(claimExpenses[1].Status).to.be.equal(claimDecisionEnum.REQUEST_INFORMATION)
+                expect(claimExpenses[1].ApprovedCost).to.be.equal(20)
+              })
           })
       })
   })

@@ -100,12 +100,21 @@ span.bold {
 }
 
 .form-control.action-select{
-    width:200px;
-    float:right;
+    width:250px;
 }
 
 .form-control.full{
     width:100%;
+}
+
+.form-control.cost{
+    width:90px;
+    margin-left: 10px;
+    display: none;
+}
+
+td.claim-expense-response{
+    width:360px;
 }
 
 .button.grey {

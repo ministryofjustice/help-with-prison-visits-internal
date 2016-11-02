@@ -4,20 +4,23 @@ const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const tasksEnum = require('../../constants/tasks-enum')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 
-module.exports = function (claimId, claimResponse) {
+module.exports = function (claimId, claimDecision) {
   return knex('Claim').where('ClaimId', claimId)
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .first('Eligibility.EligibilityId', 'Eligibility.Reference')
     .then(function (result) {
       var eligibilityId = result.EligibilityId
       var reference = result.Reference
-      var decision = claimResponse.decision
-      var reason = claimResponse.reason
-      var note = claimResponse.note
+      var decision = claimDecision.decision
+      var reason = claimDecision.reason
+      var note = claimDecision.note
+      var nomisCheck = claimDecision.nomisCheck
 
       return Promise.all([updateEligibility(eligibilityId, decision),
-                          updateClaim(claimId, decision, reason, note),
-                          sendClaimNotification(reference, eligibilityId, claimId, decision)])
+        updateClaim(claimId, decision, reason, note),
+        updatePrisoner(eligibilityId, nomisCheck),
+        updateClaimExpenses(claimDecision.claimExpenseResponses),
+        sendClaimNotification(reference, eligibilityId, claimId, decision)])
     })
 }
 
@@ -30,6 +33,27 @@ function updateClaim (claimId, decision, reason, note) {
     'Status': decision,
     'Reason': reason,
     'Note': note
+  })
+}
+
+function updatePrisoner (eligibilityId, nomisCheck) {
+  return knex('Prisoner').where('EligibilityId', eligibilityId).update('NomisCheck', nomisCheck)
+}
+
+function updateClaimExpenses (claimExpenseResponses) {
+  var updates = []
+  if (claimExpenseResponses) {
+    claimExpenseResponses.forEach(function (claimExpenseResponse) {
+      updates.push(updateClaimExpense(claimExpenseResponse))
+    })
+  }
+  return Promise.all(updates)
+}
+
+function updateClaimExpense (claimExpenseResponse) {
+  return knex('ClaimExpense').where('ClaimExpenseId', claimExpenseResponse.claimExpenseId).update({
+    'ApprovedCost': claimExpenseResponse.approvedCost,
+    'Status': claimExpenseResponse.status
   })
 }
 

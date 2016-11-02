@@ -30,7 +30,7 @@
 
   <h1 class="table-heading">Visitor</h1>
 
-  <form action="" method="post" class="form">
+  <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
 
     <table class="col-2">
 
@@ -69,7 +69,7 @@
 
   	  <tr>
   	  	<td>Prisoner Relationship</td>
-  	  	<td>{{ Claim['Relationship'] }}</td>
+        <td>{{ prisonerRelationshipsEnum[Claim['Relationship']].displayName }}</td>
   	  </tr>
     </table>
 
@@ -79,28 +79,36 @@
 
       <tr>
         <td>Name</td>
-        <td>{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
+        <td colspan="2">{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
       </tr>
 
       <tr>
         <td>Date of birth</td>
-        <td>{{ getDateFormatted(Claim['PrisonerDateOfBirth']) }}</td>
+        <td colspan="2">{{ getDateFormatted(Claim['PrisonerDateOfBirth']) }}</td>
       </tr>
 
       <tr>
         <td>Prisoner Number</td>
-        <td>{{ Claim['PrisonNumber'] }}</td>
+        <td colspan="2">{{ Claim['PrisonNumber'] }}</td>
       </tr>
 
       <tr>
         <td>Prison</td>
-        <td>{{ Claim['NameOfPrison'] }}</td>
+        <td colspan="2">{{ Claim['NameOfPrison'] }}</td>
       </tr>
 
       <tr>
         <td>Eligibile for visitation?</td>
         <td>
           <span class="text-warning">NOMIS check required</span>
+        </td>
+        <td>
+          <select class="form-control action-select" id="nomis-check" name="nomisCheck">
+            <option value="">Select</option>
+            <option value="APPROVED">Approve</option>
+            <option value="REQUEST-INFORMATION">Request information</option>
+            <option value="REJECTED">Reject</option>
+          </select>
         </td>
       </tr>
 
@@ -117,30 +125,34 @@
       </tbody>
     </table>
 
-    <h1 class="table-heading">Claim</h1>
+    <h1 id='claim-expense' class="table-heading">Claim</h1>
+
+    {% if errors['claim-expense'][0] %}
+      <span class="error-message" id="error-message-status-request">{{ errors['claim-expense'][0] }}</span>
+    {% endif %}
 
     <table>
-      <tbody>
+      <tbody id='approve-cost'>
+        {% if errors['approve-cost'][0] %}
+          <span class="error-message" id="error-message-cost-request">{{ errors['approve-cost'][0] }}</span>
+        {% endif %}
         {% for expense in Expenses %}
-          <tr {% if expense['Status'] == undefined %} class="warning" {% endif %}>
+          <tr {% if expense['Status'] == 'Select' %} class="warning" {% endif %} {% if expense['Error'] %} class="warning"{% endif %}>
           <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
             <br>
             {{ getClaimExpenseDetailFormatted(expense) }}
+            <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
           </td>
           <td>£{{ expense['Cost'] }}</td>
-
-          <td>
-            <a href="">View receipt</a>
-          </td>
-
-            <td class="text-right">
-            <select id="claimExpense-{{ expense.ClaimExpenseId }}" name="claimExpense-{{ expense.ClaimExpenseId }}" class="form-control action-select">
+          <td class="claim-expense-response">
+            <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status" class="form-control action-select claim-expense-status">
               <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
-              <option {% if expense['Status'] == 'Approved' %} selected {% endif %}>Approved</option>
-              <option {% if expense['Status'] == 'Approve different amount' %} selected {% endif %}>Approve different amount</option>
-              <option {% if expense['Status'] == 'Request information' %} selected {% endif %}>Request information</option>
-              <option {% if expense['Status'] == 'Reject claim' %} selected {% endif %}>Reject claim</option>
+              <option {% if expense['Status'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approved</option>
+              <option {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} selected {% endif %} value="APPROVED-DIFF-AMOUNT" >Approve different amount</option>
+              <option {% if expense['Status'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+              <option {% if expense['Status'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject claim</option>
             </select>
+            <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text" name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" class="form-control cost" value="{{ expense['ApprovedCost'] }}" {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} style="display: inline" {% endif %}>
             </td>
           </tr>
 
@@ -172,11 +184,11 @@
         </label>
 
         <label for="reject" class="block-label inline" data-target="reject-input">
-          <input type="radio" name="decision" value="REJECTED" id="reject" {% if claimDecision['decision'] == 'REGECTED' %} checked {% endif %}>
+          <input type="radio" name="decision" value="REJECTED" id="reject" {% if claimDecision['decision'] == 'REJECTED' %} checked {% endif %}>
           <span>Reject</span>
         </label>
 
-        <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'ACCEPTED' %}js-hidden{% endif %}" id="accept-input">
+        <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'APPROVED' %}js-hidden{% endif %}" id="accept-input">
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
