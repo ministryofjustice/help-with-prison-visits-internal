@@ -5,7 +5,6 @@ class ClaimExpenseResponse {
     this.status = status
   }
 
-  // TODO test
   static getClaimExpenseData (body) {
     var claimExpenses = []
     var formKeys = Object.keys(body)
