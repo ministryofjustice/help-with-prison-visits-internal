@@ -1,5 +1,4 @@
 $('[id^="claim-expense-status-"]').change(function () {
-  console.log('**************')
   var id = $(this).attr('data-id')
   var value = $(this).val()
   if (value === 'APPROVED-DIFF-AMOUNT') {
