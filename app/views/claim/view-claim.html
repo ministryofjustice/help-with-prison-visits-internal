@@ -97,15 +97,27 @@
         <td>{{ Claim['NameOfPrison'] }}</td>
       </tr>
 
+      <tr>
+        <td>Eligibile for visitation?</td>
+        <td>
+          <span class="text-warning">NOMIS check required</span>
+        </td>
+      </tr>
+
+    </table>
+
+    <h1 class="table-heading">Visit confirmation</h1>
+
+    <table class="col-2">
+      <tbody>
+        <tr>
+          <td><span class="bold">Date of visit</span></td>
+          <td>{{ getDateFormatted(Claim['DateOfJourney']) }}</td>
+        </tr>
+      </tbody>
     </table>
 
     <h1 class="table-heading">Claim</h1>
-
-    <table>
-      <tbody>
-
-      </tbody>
-    </table>
 
     <table>
       <tbody>

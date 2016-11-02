@@ -5,18 +5,21 @@ const tasksEnum = require('../../constants/tasks-enum')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 
 module.exports = function (claimId, claimDecision) {
-  return knex('Claim').where('ClaimId', claimId).first('EligibilityId').then(function (result) {
-    var eligibilityId = result.EligibilityId
-    var reference = result.Reference
-    var decision = claimDecision.decision
-    var reason = claimDecision.reason
-    var note = claimDecision.note
+  return knex('Claim').where('ClaimId', claimId)
+    .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
+    .first('Eligibility.EligibilityId', 'Eligibility.Reference')
+    .then(function (result) {
+      var eligibilityId = result.EligibilityId
+      var reference = result.Reference
+      var decision = claimDecision.decision
+      var reason = claimDecision.reason
+      var note = claimDecision.note
 
-    return Promise.all([updateEligibility(eligibilityId, decision),
-                        updateClaim(claimId, decision, reason, note),
-                        updateClaimExpenses(claimDecision.claimExpenseResponses),
-                        sendClaimNotification(reference, eligibilityId, claimId, decision)])
-  })
+      return Promise.all([updateEligibility(eligibilityId, decision),
+        updateClaim(claimId, decision, reason, note),
+        updateClaimExpenses(claimDecision.claimExpenseResponses),
+        sendClaimNotification(reference, eligibilityId, claimId, decision)])
+    })
 }
 
 function updateEligibility (eligibilityId, decision) {

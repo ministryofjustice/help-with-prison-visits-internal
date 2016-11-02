@@ -48,7 +48,7 @@ describe('services/data/insert-task-send-first-time-claim-notification', functio
   })
 
   after(function () {
-    return knex('ExtSchema.Task').where({Reference: reference, ClaimId: claimId}).del().then(function () {
+    return knex('IntSchema.Task').where({Reference: reference, ClaimId: claimId}).del().then(function () {
       return databaseHelper.deleteTestData(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2)
     })
   })
