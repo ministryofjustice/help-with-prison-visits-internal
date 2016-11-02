@@ -15,7 +15,8 @@ module.exports = function (claimId) {
       return knex('Claim')
         .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
         .where('Claim.ClaimId', claimId)
-        .select('ClaimExpense.ExpenseType', 'ClaimExpense.Cost', 'ClaimExpense.ApprovedCost', 'ClaimExpense.To', 'ClaimExpense.From', 'ClaimExpense.IsReturn', 'ClaimExpense.TravelTime',
+        .select('ClaimExpense.ExpenseType', 'ClaimExpense.Cost', 'ClaimExpense.ApprovedCost', 'ClaimExpense.Status',
+          'ClaimExpense.To', 'ClaimExpense.From', 'ClaimExpense.IsReturn', 'ClaimExpense.TravelTime',
           'ClaimExpense.DurationOfTravel', 'ClaimExpense.TicketType', 'ClaimExpense.ClaimExpenseId')
         .orderBy('ClaimExpense.ClaimExpenseId')
         .then(function (claimExpenses) {
