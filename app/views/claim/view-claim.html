@@ -140,7 +140,9 @@
         {% if errors['approve-cost'][0] %}
           <span class="error-message" id="error-message-cost-request">{{ errors['approve-cost'][0] }}</span>
         {% endif %}
+
         {% for expense in Expenses %}
+
           <tr {% if expense['Status'] == 'Select' %} class="warning" {% endif %} {% if expense['Error'] %} class="warning"{% endif %}>
           <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
             <br>
@@ -196,7 +198,7 @@
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" name="additionalInfoApprove"></textarea>
+            <textarea type="text" class="form-control full" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
           </div>
 
           <input type="submit" class="button" name="approve" value="Send confirmation email to claimant">
@@ -210,15 +212,15 @@
           {% endif %}
           <select name="reasonRequest" class="form-control">
             <option>Select</option>
-            <option>Need more info on relationship</option>
-            <option>Need more info on benefit</option>
-            <option>Need more info on expenses</option>
+            <option value="relationship" {% if claimDecision['reasonRequest'] == "relationship" %} selected {% endif %}>Need more info on relationship</option>
+            <option value="benefit" {% if claimDecision['reasonRequest'] == "benefit" %} selected {% endif %}>Need more info on benefit</option>
+            <option value="expenses" {% if claimDecision['reasonRequest'] == "expenses" %} selected {% endif %}>Need more info on expenses</option>
           </select>
 
           <br>
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-request">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" name="additionalInfoRequest"></textarea>
+            <textarea type="text" class="form-control full" name="additionalInfoRequest">{{ claimDecision['additionalInfoRequest'] }}</textarea>
           </div>
 
           <input type="submit" class="button" name="request" value="Send request email to claimant">
@@ -232,15 +234,15 @@
           {% endif %}
           <select name="reasonReject" class="form-control">
             <option>Select</option>
-            <option>Benefit check failure</option>
-            <option>Relationship to prisoner incorrect</option>
-            <option>Prisoner ineligibile for visitation</option>
+            <option value="benefit-check" {% if claimDecision['reasonReject'] == "benefit-check" %} selected {% endif %}>Benefit check failure</option>
+            <option value="relationship" {% if claimDecision['reasonReject'] == "relationship" %} selected {% endif %}>Relationship to prisoner incorrect</option>
+            <option value="prisoner-ineligble" {% if claimDecision['reasonReject'] == "prisoner-ineligible" %} selected {% endif %}>Prisoner ineligibile for visitation</option>
           </select>
           <br>
 
           <div class="form-group">
             <label class="form-label-bold" for="additional-info-reject">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" name="additionalInfoReject"></textarea>
+            <textarea type="text" class="form-control full" name="additionalInfoReject">{{ claimDecision['additionalInfoReject'] }}</textarea>
           </div>
 
           <input type="submit" class="button" name="reject" value="Send rejection email to claimant">
