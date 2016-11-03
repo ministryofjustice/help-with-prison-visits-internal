@@ -129,18 +129,19 @@
       </tbody>
     </table>
 
-    <h1 id='claim-expense' class="table-heading">Claim</h1>
-
+    <div id='claim-expense'></div>
+    <div id='approve-cost'></div>
+    <h1 class="table-heading">Claim</h1>
     {% if errors['claim-expense'][0] %}
       <span class="error-message" id="error-message-status-request">{{ errors['claim-expense'][0] }}</span>
     {% endif %}
 
-    <table>
-      <tbody id='approve-cost'>
-        {% if errors['approve-cost'][0] %}
-          <span class="error-message" id="error-message-cost-request">{{ errors['approve-cost'][0] }}</span>
-        {% endif %}
+    {% if errors['approve-cost'][0] %}
+      <span class="error-message" id="error-message-cost-request">{{ errors['approve-cost'][0] }}</span>
+    {% endif %}
 
+    <table>
+      <tbody>
         {% for expense in Expenses %}
 
           <tr {% if expense['Status'] == 'Select' %} class="warning" {% endif %} {% if expense['Error'] %} class="warning"{% endif %}>
