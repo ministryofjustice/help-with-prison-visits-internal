@@ -1,11 +1,13 @@
+const config = require('./config')
+
 module.exports = {
   intweb: {
     client: 'mssql',
     connection: {
-      host: process.env.APVS_DATABASE_SERVER,
-      user: process.env.APVS_INT_WEB_USERNAME,
-      password: process.env.APVS_INT_WEB_PASSWORD,
-      database: process.env.APVS_DATABASE,
+      host: config.DATABASE_SERVER,
+      user: config.INT_WEB_USERNAME,
+      password: config.INT_WEB_PASSWORD,
+      database: config.DATABASE,
       options: {
         encrypt: true
       }
@@ -19,10 +21,10 @@ module.exports = {
   migrations: {
     client: 'mssql',
     connection: {
-      host: process.env.APVS_DATABASE_SERVER,
-      user: process.env.APVS_INT_MIGRATION_USERNAME,
-      password: process.env.APVS_INT_MIGRATION_PASSWORD,
-      database: process.env.APVS_DATABASE,
+      host: config.DATABASE_SERVER,
+      user: config.INT_MIGRATION_USERNAME,
+      password: config.INT_MIGRATION_PASSWORD,
+      database: config.DATABASE,
       options: {
         encrypt: true
       }
