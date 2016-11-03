@@ -7,7 +7,7 @@ const ClaimDecision = require('../../services/domain/claim-decision')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 const getClaimExpenseResponses = require('../helpers/get-claim-expense-responses')
 const prisonerRelationshipsEnum = require('../../constants/prisoner-relationships-enum')
-const Validator = require('../../services/validators/common-validator')
+const getNonPersistedExpenseData = require('../helpers/get-claim-expense-non-persisted-details')
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
@@ -39,25 +39,9 @@ module.exports = function (router) {
       if (error instanceof ValidationError) {
         getIndividualClaimDetails(req.params.claimId)
           .then(function (data) {
-            // TODO move to route helper and test
-
             if (data.claim && data.claimExpenses) {
               data.claim.NomisCheck = req.body.nomisCheck
-
-              var claimExpensesById = {}
-              claimExpenses.forEach(function (claimExpense) {
-                claimExpensesById[claimExpense.claimExpenseId] = claimExpense
-              })
-              data.claimExpenses.forEach(function (expense) {
-                var postedClaimExpenseResponse = claimExpensesById[expense.ClaimExpenseId.toString()]
-                expense.Status = postedClaimExpenseResponse.status
-                if (expense.Status === 'APPROVED-DIFF-AMOUNT') {
-                  expense.ApprovedCost = postedClaimExpenseResponse.approvedCost
-                  if (!Validator.isCurrency(postedClaimExpenseResponse.approvedCost)) {
-                    expense.Error = true
-                  }
-                }
-              })
+              data.claimExpenses = getNonPersistedExpenseData(data.claimExpenses, claimExpenses)
             }
             return res.status(400).render('./claim/view-claim', {
               title: 'APVS Claim',
