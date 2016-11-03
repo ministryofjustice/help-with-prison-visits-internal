@@ -7,6 +7,7 @@ const ClaimDecision = require('../../services/domain/claim-decision')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 const getClaimExpenseResponses = require('../helpers/get-claim-expense-responses')
 const prisonerRelationshipsEnum = require('../../constants/prisoner-relationships-enum')
+const Validator = require('../../services/validators/common-validator')
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
@@ -52,7 +53,7 @@ module.exports = function (router) {
                 expense.Status = postedClaimExpenseResponse.status
                 if (expense.Status === 'APPROVED-DIFF-AMOUNT') {
                   expense.ApprovedCost = postedClaimExpenseResponse.approvedCost
-                  if (postedClaimExpenseResponse.approvedCost === '') {
+                  if (!Validator.isCurrency(postedClaimExpenseResponse.approvedCost)) {
                     expense.Error = true
                   }
                 }
