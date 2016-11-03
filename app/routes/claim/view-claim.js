@@ -40,6 +40,8 @@ module.exports = function (router) {
           .then(function (data) {
             // TODO move to route helper and test
 
+            data.claim.NomisCheck = req.body.nomisCheck
+
             if (data.claimExpenses) {
               var claimExpensesById = {}
               claimExpenses.forEach(function (claimExpense) {
