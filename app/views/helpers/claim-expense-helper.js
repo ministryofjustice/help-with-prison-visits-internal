@@ -1,6 +1,5 @@
 const displayFieldNames = require('./display-field-names')
 
-// TODO add tests
 module.exports = function (expense) {
   var formattedDetail
 
