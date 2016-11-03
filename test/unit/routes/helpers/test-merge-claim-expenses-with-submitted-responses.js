@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 
-const getNonPersistedExpenseData = require('../../../../app/routes/helpers/get-claim-expense-non-persisted-details')
+const mergeClaimExpensesWithSubmittedResponses = require('../../../../app/routes/helpers/merge-claim-expenses-with-submitted-responses')
 
 describe('routes/helpers/get-claim-expense-non-persisted-details', function () {
   it('should return an array of claim expenses', function (done) {
@@ -37,7 +37,7 @@ describe('routes/helpers/get-claim-expense-non-persisted-details', function () {
         approvedCost: ''
       }]
 
-    var nonPersistedExpenseData = getNonPersistedExpenseData(oldData, newData)
+    var nonPersistedExpenseData = mergeClaimExpensesWithSubmittedResponses(oldData, newData)
 
     expect(nonPersistedExpenseData[0].ClaimExpenseId).to.equal(1)
 

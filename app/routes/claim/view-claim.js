@@ -7,7 +7,7 @@ const ClaimDecision = require('../../services/domain/claim-decision')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 const getClaimExpenseResponses = require('../helpers/get-claim-expense-responses')
 const prisonerRelationshipsEnum = require('../../constants/prisoner-relationships-enum')
-const getNonPersistedExpenseData = require('../helpers/get-claim-expense-non-persisted-details')
+const mergeClaimExpensesWithSubmittedResponses = require('../helpers/merge-claim-expenses-with-submitted-responses')
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
@@ -41,7 +41,7 @@ module.exports = function (router) {
           .then(function (data) {
             if (data.claim && data.claimExpenses) {
               data.claim.NomisCheck = req.body.nomisCheck
-              data.claimExpenses = getNonPersistedExpenseData(data.claimExpenses, claimExpenses)
+              data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
             }
             return res.status(400).render('./claim/view-claim', {
               title: 'APVS Claim',
