@@ -1,4 +1,4 @@
-const getClaim = require('../../services/data/get-individual-claim-details')
+const getIndividualClaimDetails = require('../../services/data/get-individual-claim-details')
 const getDateFormatted = require('../../views/helpers/date-helper')
 const getClaimExpenseDetailFormatted = require('../../views/helpers/claim-expense-helper')
 const getDisplayFieldName = require('../../views/helpers/display-field-names')
@@ -10,7 +10,7 @@ const prisonerRelationshipsEnum = require('../../constants/prisoner-relationship
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
-    getClaim(req.params.claimId)
+    getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
         return res.render('./claim/view-claim', {
           title: 'APVS Claim',
@@ -36,11 +36,13 @@ module.exports = function (router) {
         })
     } catch (error) {
       if (error instanceof ValidationError) {
-        getClaim(req.params.claimId)
+        getIndividualClaimDetails(req.params.claimId)
           .then(function (data) {
             // TODO move to route helper and test
 
-            if (data.claimExpenses) {
+            if (data.claim && data.claimExpenses) {
+              data.claim.NomisCheck = req.body.nomisCheck
+
               var claimExpensesById = {}
               claimExpenses.forEach(function (claimExpense) {
                 claimExpensesById[claimExpense.claimExpenseId] = claimExpense

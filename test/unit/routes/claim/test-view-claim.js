@@ -5,7 +5,7 @@ var express = require('express')
 var mockViewEngine = require('../mock-view-engine')
 const sinon = require('sinon')
 require('sinon-bluebird')
-var stubGetClaim
+var stubGetIndividualClaimDetails
 var stubSubmitClaimResponse
 var stubClaimDecision
 var stubGetClaimExpenseResponses
@@ -30,13 +30,13 @@ describe('routes/claim/view-claim', function () {
   var request
 
   beforeEach(function (done) {
-    stubGetClaim = sinon.stub()
+    stubGetIndividualClaimDetails = sinon.stub()
     stubSubmitClaimResponse = sinon.stub()
     stubClaimDecision = sinon.stub()
     stubGetClaimExpenseResponses = sinon.stub()
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/log': log,
-      '../../services/data/get-individual-claim-details': stubGetClaim,
+      '../../services/data/get-individual-claim-details': stubGetIndividualClaimDetails,
       '../../services/data/submit-claim-response': stubSubmitClaimResponse,
       '../../services/domain/claim-decision': stubClaimDecision,
       '../helpers/get-claim-expense-responses': stubGetClaimExpenseResponses
@@ -52,13 +52,13 @@ describe('routes/claim/view-claim', function () {
 
   describe('GET /claim/:claimId', function () {
     it('should respond with a 200', function (done) {
-      stubGetClaim.resolves({})
+      stubGetIndividualClaimDetails.resolves({})
 
       request
         .get('/claim/123')
         .expect(200)
         .end(function (error, response) {
-          expect(stubGetClaim.calledWith('123')).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
           expect(error).to.be.null
           done()
         })
@@ -73,7 +73,7 @@ describe('routes/claim/view-claim', function () {
       stubSubmitClaimResponse.resolves()
       stubClaimDecision.returns(newClaimDecision)
       stubGetClaimExpenseResponses.returns(newClaimExpenseResponse)
-      stubGetClaim.resolves({})
+      stubGetIndividualClaimDetails.resolves({})
 
       request
         .post('/claim/123')
@@ -90,7 +90,7 @@ describe('routes/claim/view-claim', function () {
 
     it('should respond with 400 when invalid data entered', function (done) {
       stubClaimDecision.throws(new ValidationError({ 'reason': {} }))
-      stubGetClaim.resolves({})
+      stubGetIndividualClaimDetails.resolves({})
 
       request
         .post('/claim/123')
@@ -98,7 +98,7 @@ describe('routes/claim/view-claim', function () {
         .expect(400)
         .end(function (error, response) {
           expect(error).to.be.null
-          expect(stubGetClaim.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
           done()
         })
     })
