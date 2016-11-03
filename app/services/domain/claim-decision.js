@@ -18,10 +18,10 @@ class ClaimDecision {
     this.nomisCheck = nomisCheck
     this.claimExpenseResponses = claimExpenseResponses
     claimExpenseResponses.forEach(function (expense) {
-      if (expense.status === 'REQUEST-INFORMATION') {
-        expense.approvedCost = null
-      } else if (expense.status !== 'APPROVED-DIFF-AMOUNT') {
+      if (expense.status === 'APPROVED') {
         expense.approvedCost = expense.cost
+      } else {
+        expense.approvedCost = null
       }
     })
     this.IsValid()
@@ -42,10 +42,12 @@ class ClaimDecision {
       FieldValidator(expense.status, 'claim-expense', errors)
         .isRequired()
 
-      FieldValidator(expense.approvedCost, 'approve-cost', errors)
-        .isRequired()
-        .isCurrency()
-        .isGreaterThanZero()
+      if (expense.approvedCost != null) {
+        FieldValidator(expense.approvedCost, 'approve-cost', errors)
+          .isRequired()
+          .isCurrency()
+          .isGreaterThanZero()
+      }
     })
 
     FieldValidator(this.nomisCheck, 'nomis-check', errors)
