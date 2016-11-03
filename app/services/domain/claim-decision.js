@@ -20,7 +20,7 @@ class ClaimDecision {
     claimExpenseResponses.forEach(function (expense) {
       if (expense.status === 'APPROVED') {
         expense.approvedCost = expense.cost
-      } else {
+      } else if (expense.status !== 'APPROVED-DIFF-AMOUNT') {
         expense.approvedCost = null
       }
     })
