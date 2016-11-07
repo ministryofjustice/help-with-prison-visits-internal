@@ -5,7 +5,7 @@ exports.config = {
   services: ['sauce'],
   user: process.env.SAUCE_USERNAME,
   key: process.env.SAUCE_ACCESS_KEY,
-  baseUrl: process.env.INT_WEB_TEST_BASEURL || 'http://localhost:3001',
+  baseUrl: process.env.SAUCE_BASEURL || 'http://localhost:3001',
   capabilities: [{
     maxInstances: 1,
     browserName: 'firefox',
