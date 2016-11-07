@@ -34,11 +34,23 @@ describe('First time claim viewing flow', () => {
       .waitForExist('#claim' + claimId)
       .click('#claim' + claimId)
 
-      // view-claim
+      // View-claim
       .waitForExist('#reference')
       .getText('#visitor-name').then(function (text) {
         expect(text).to.be.equal('John Smith')
       })
+      .selectByVisibleText('#nomis-check', 'Approve')
+      .selectByVisibleText(`#claim-expense-${expenseId1}-status`, 'Approved')
+      .selectByVisibleText(`#claim-expense-${expenseId2}-status`, 'Approved')
+      .click('#approve')
+      .click('#approve-submit')
+
+      // Back to index with changed results
+      .waitForExist('#claims_wrapper')
+      .click('#approved')
+
+      // Go to approved list
+      .waitForExist('#claim' + claimId)
   })
 
   after(function () {

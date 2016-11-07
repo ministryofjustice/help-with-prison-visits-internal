@@ -181,7 +181,7 @@
     <div id="decision" class="form-group {% if errors['decision'][0] %} error {% endif %}">
       <fieldset id='reason' >
         <label for="accept" class="block-label inline" data-target="accept-input">
-          <input type="radio" name="decision" value="APPROVED" id="accept" {% if claimDecision['decision'] == 'APPROVED' %} checked {% endif %}>
+          <input type="radio" name="decision" value="APPROVED" id="approve" {% if claimDecision['decision'] == 'APPROVED' %} checked {% endif %}>
           <span>Approve</span>
         </label>
 
@@ -202,7 +202,7 @@
             <textarea type="text" class="form-control full" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
           </div>
 
-          <input type="submit" class="button" name="approve" value="Send confirmation email to claimant">
+          <input type="submit" class="button" name="approve" id="approve-submit" value="Send confirmation email to claimant">
         </div>
 
         <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'REQUEST-INFORMATION' %}js-hidden{% endif %}" id="request-input">
