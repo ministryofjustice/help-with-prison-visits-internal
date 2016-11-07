@@ -143,7 +143,7 @@ module.exports.getTestData = function (reference, status) {
       County: 'Durham',
       PostCode: 'BT111BT',
       Country: 'England',
-      EmailAddress: 'test@test.com',
+      EmailAddress: 'donotsend@apvs.com',
       PhoneNumber: '07911111111',
       Relationship: 'partner',
       JourneyAssistance: 'no',
