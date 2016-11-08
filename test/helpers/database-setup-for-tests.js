@@ -50,8 +50,7 @@ module.exports.insertTestData = function (reference, date, status) {
             PhoneNumber: data.Visitor.PhoneNumber,
             DateOfBirth: date,
             Relationship: data.Visitor.Relationship,
-            JourneyAssistance: data.Visitor.JourneyAssistance,
-            RequireBenefitUpload: data.Visitor.RequireBenefitUpload
+            JourneyAssistance: data.Visitor.JourneyAssistance
           })
           .then(function (result) {
             ids.visitorId = result[0]
@@ -146,8 +145,7 @@ module.exports.getTestData = function (reference, status) {
       EmailAddress: 'donotsend@apvs.com',
       PhoneNumber: '07911111111',
       Relationship: 'partner',
-      JourneyAssistance: 'no',
-      RequireBenefitUpload: 0
+      JourneyAssistance: 'no'
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
