@@ -7,10 +7,17 @@ module.exports = function (claimId) {
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
     .join('Prisoner', 'Eligibility.EligibilityId', '=', 'Prisoner.EligibilityId')
     .where('Claim.ClaimId', claimId)
-    .first('Eligibility.Reference', 'Claim.ClaimId', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Visitor.FirstName', 'Visitor.LastName',
-      'Visitor.DateOfBirth', 'Visitor.NationalInsuranceNumber', 'Visitor.HouseNumberAndStreet', 'Visitor.Town', 'Visitor.County', 'Visitor.PostCode',
-      'Visitor.EmailAddress', 'Visitor.PhoneNumber', 'Visitor.Relationship', 'Prisoner.FirstName AS PrisonerFirstName', 'Prisoner.LastName AS PrisonerLastName',
-      'Prisoner.DateOfBirth AS PrisonerDateOfBirth', 'Prisoner.PrisonNumber', 'Prisoner.NameOfPrison', 'Prisoner.NomisCheck')
+    .first('Eligibility.Reference',
+      'Claim.ClaimId', 'Claim.DateSubmitted', 'Claim.DateOfJourney',
+      // Visitor
+      'Visitor.FirstName', 'Visitor.LastName', 'Visitor.DateOfBirth', 'Visitor.NationalInsuranceNumber',
+      'Visitor.HouseNumberAndStreet', 'Visitor.Town', 'Visitor.County', 'Visitor.PostCode',
+      'Visitor.EmailAddress', 'Visitor.PhoneNumber', 'Visitor.Relationship',
+      'Visitor.Benefit', 'Visitor.DWPBenefitCheckerResult', 'Visitor.DWPCheck',
+      // Prisoner
+      'Prisoner.FirstName AS PrisonerFirstName', 'Prisoner.LastName AS PrisonerLastName',
+      'Prisoner.DateOfBirth AS PrisonerDateOfBirth', 'Prisoner.PrisonNumber',
+      'Prisoner.NameOfPrison', 'Prisoner.NomisCheck')
     .then(function (claim) {
       return knex('Claim')
         .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')

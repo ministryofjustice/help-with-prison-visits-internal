@@ -32,7 +32,7 @@
 
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
 
-    <table class="col-2">
+    <table class="col-2 no-pad-right">
 
   	  <tr>
   	    <td>Visitor Name</td>
@@ -71,30 +71,51 @@
   	  	<td>Prisoner Relationship</td>
         <td>{{ prisonerRelationshipsEnum[Claim['Relationship']].displayName }}</td>
   	  </tr>
+
+      <tr>
+        <td>Benefit Information</td>
+        <td>
+          {{ benefitsEnum[Claim['Benefit']].displayName }} <br/>
+          {% if Claim['DWPBenefitCheckerResult'] == 'YES' %}
+          <span class="text-success">DWP - Eligible</span>
+          {% elif Claim['DWPBenefitCheckerResult'] == 'NO' %}
+          <span class="text-warning">DWP - Not eligible</span>
+          {% else %}
+          <span class="text-warning">DWP - No information</span>
+          {% endif %}
+
+          <select class="form-control action-select" id="dwp-check" name="dwpCheck">
+            <option value="">Select</option>
+            <option {% if Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+            <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+            <option {% if Claim['DWPCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
+          </select>
+        </td>
+      </tr>
     </table>
 
     <h1 class="table-heading">Prisoner</h1>
 
-    <table class="col-2">
+    <table class="col-2 no-pad-right">
 
       <tr>
         <td>Name</td>
-        <td colspan="2">{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
+        <td>{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
       </tr>
 
       <tr>
         <td>Date of birth</td>
-        <td colspan="2">{{ getDateFormatted(Claim['PrisonerDateOfBirth']) }}</td>
+        <td>{{ getDateFormatted(Claim['PrisonerDateOfBirth']) }}</td>
       </tr>
 
       <tr>
         <td>Prisoner Number</td>
-        <td colspan="2">{{ Claim['PrisonNumber'] }}</td>
+        <td>{{ Claim['PrisonNumber'] }}</td>
       </tr>
 
       <tr>
         <td>Prison</td>
-        <td colspan="2">{{ Claim['NameOfPrison'] }}</td>
+        <td>{{ Claim['NameOfPrison'] }}</td>
       </tr>
 
       <tr>
@@ -105,8 +126,7 @@
           {% else %}
           <span class="text-success">NOMIS check confirmed</span>
           {% endif %}
-        </td>
-        <td>
+
           <select class="form-control action-select" id="nomis-check" name="nomisCheck">
             <option value="">Select</option>
             <option {% if Claim['NomisCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
@@ -120,7 +140,7 @@
 
     <h1 class="table-heading">Visit confirmation</h1>
 
-    <table class="col-2">
+    <table class="col-2 no-pad-right">
       <tbody>
         <tr>
           <td><span class="bold">Date of visit</span></td>
@@ -140,7 +160,7 @@
       <span class="error-message" id="error-message-cost-request">{{ errors['approve-cost'][0] }}</span>
     {% endif %}
 
-    <table>
+    <table class="no-pad-right">
       <tbody>
         {% for expense in Expenses %}
 
