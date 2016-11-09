@@ -39,6 +39,7 @@ describe('First time claim viewing flow', () => {
       .getText('#visitor-name').then(function (text) {
         expect(text).to.be.equal('John Smith')
       })
+      .selectByVisibleText('#dwp-check', 'Approve')
       .selectByVisibleText('#nomis-check', 'Approve')
       .selectByVisibleText(`#claim-expense-${expenseId1}-status`, 'Approved')
       .selectByVisibleText(`#claim-expense-${expenseId2}-status`, 'Approved')

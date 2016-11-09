@@ -32,6 +32,7 @@ describe('services/data/submit-claim-response', function () {
       'reason': 'No valid relationship to prisoner',
       'note': 'Could not verify in NOMIS',
       'nomisCheck': claimDecisionEnum.REJECTED,
+      'dwpCheck': claimDecisionEnum.REJECTED,
       'claimExpenseResponses': [
         {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REJECTED},
         {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
@@ -42,6 +43,7 @@ describe('services/data/submit-claim-response', function () {
       .then(function (result) {
         return knex('IntSchema.Eligibility').where('Reference', reference)
           .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
+          .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
           .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
           .first()
           .then(function (result) {
@@ -50,6 +52,7 @@ describe('services/data/submit-claim-response', function () {
             expect(result.Reason).to.be.equal(claimResponse.reason)
             expect(result.Note).to.be.equal(claimResponse.note)
             expect(result.NomisCheck).to.be.equal(claimDecisionEnum.REJECTED)
+            expect(result.DWPCheck).to.be.equal(claimDecisionEnum.REJECTED)
             expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true
 
             return knex('IntSchema.ClaimExpense').where('ClaimId', newIds.claimId).select()

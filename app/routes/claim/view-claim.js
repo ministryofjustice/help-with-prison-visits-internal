@@ -7,6 +7,7 @@ const ClaimDecision = require('../../services/domain/claim-decision')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 const getClaimExpenseResponses = require('../helpers/get-claim-expense-responses')
 const prisonerRelationshipsEnum = require('../../constants/prisoner-relationships-enum')
+const benefitsEnum = require('../../constants/benefits-enum')
 const mergeClaimExpensesWithSubmittedResponses = require('../helpers/merge-claim-expenses-with-submitted-responses')
 
 module.exports = function (router) {
@@ -20,7 +21,8 @@ module.exports = function (router) {
           getDateFormatted: getDateFormatted,
           getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
           getDisplayFieldName: getDisplayFieldName,
-          prisonerRelationshipsEnum: prisonerRelationshipsEnum
+          prisonerRelationshipsEnum: prisonerRelationshipsEnum,
+          benefitsEnum: benefitsEnum
         })
       })
   })
@@ -29,7 +31,7 @@ module.exports = function (router) {
     try {
       var claimExpenses = getClaimExpenseResponses(req.body)
       var claimDecision = new ClaimDecision(req.body.decision, req.body.reasonRequest, req.body.reasonReject,
-        req.body.additionalInfoApprove, req.body.additionalInfoRequest, req.body.additionalInfoReject, req.body.nomisCheck, claimExpenses)
+        req.body.additionalInfoApprove, req.body.additionalInfoRequest, req.body.additionalInfoReject, req.body.nomisCheck, req.body.dwpCheck, claimExpenses)
 
       SubmitClaimResponse(req.params.claimId, claimDecision)
         .then(function () {
@@ -41,6 +43,7 @@ module.exports = function (router) {
           .then(function (data) {
             if (data.claim && data.claimExpenses) {
               data.claim.NomisCheck = req.body.nomisCheck
+              data.claim.DWPCheck = req.body.dwpCheck
               data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
             }
             return res.status(400).render('./claim/view-claim', {
@@ -51,6 +54,7 @@ module.exports = function (router) {
               getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
               getDisplayFieldName: getDisplayFieldName,
               prisonerRelationshipsEnum: prisonerRelationshipsEnum,
+              benefitsEnum: benefitsEnum,
               claimDecision: req.body,
               errors: error.validationErrors
             })
