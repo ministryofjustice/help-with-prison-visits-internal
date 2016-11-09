@@ -43,6 +43,7 @@ module.exports = function (router) {
           .then(function (data) {
             if (data.claim && data.claimExpenses) {
               data.claim.NomisCheck = req.body.nomisCheck
+              data.claim.DWPCheck = req.body.dwpCheck
               data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
             }
             return res.status(400).render('./claim/view-claim', {
