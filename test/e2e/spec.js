@@ -40,8 +40,8 @@ describe('First time claim viewing flow', () => {
         expect(text).to.be.equal('John Smith')
       })
       .selectByVisibleText('#nomis-check', 'Approve')
-      .selectByVisibleText(`#claim-expense-${expenseId1}-status`, 'Approved')
-      .selectByVisibleText(`#claim-expense-${expenseId2}-status`, 'Approved')
+      .selectByVisibleText(`#claim-expense-${expenseId1}-status`, 'Approve')
+      .selectByVisibleText(`#claim-expense-${expenseId2}-status`, 'Approve')
       .click('#approve')
       .click('#approve-submit')
 
