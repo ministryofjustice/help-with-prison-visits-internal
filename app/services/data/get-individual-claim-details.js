@@ -7,24 +7,45 @@ module.exports = function (claimId) {
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
     .join('Prisoner', 'Eligibility.EligibilityId', '=', 'Prisoner.EligibilityId')
     .where('Claim.ClaimId', claimId)
-    .first('Eligibility.Reference',
-      'Claim.ClaimId', 'Claim.DateSubmitted', 'Claim.DateOfJourney',
-      // Visitor
-      'Visitor.FirstName', 'Visitor.LastName', 'Visitor.DateOfBirth', 'Visitor.NationalInsuranceNumber',
-      'Visitor.HouseNumberAndStreet', 'Visitor.Town', 'Visitor.County', 'Visitor.PostCode',
-      'Visitor.EmailAddress', 'Visitor.PhoneNumber', 'Visitor.Relationship',
-      'Visitor.Benefit', 'Visitor.DWPBenefitCheckerResult', 'Visitor.DWPCheck',
-      // Prisoner
-      'Prisoner.FirstName AS PrisonerFirstName', 'Prisoner.LastName AS PrisonerLastName',
-      'Prisoner.DateOfBirth AS PrisonerDateOfBirth', 'Prisoner.PrisonNumber',
+    .first(
+      'Eligibility.Reference',
+      'Claim.ClaimId',
+      'Claim.DateSubmitted',
+      'Claim.DateOfJourney',
+      'Visitor.FirstName',
+      'Visitor.LastName',
+      'Visitor.DateOfBirth',
+      'Visitor.NationalInsuranceNumber',
+      'Visitor.HouseNumberAndStreet',
+      'Visitor.Town',
+      'Visitor.County',
+      'Visitor.PostCode',
+      'Visitor.EmailAddress',
+      'Visitor.PhoneNumber',
+      'Visitor.Relationship',
+      'Visitor.Benefit',
+      'Visitor.DWPBenefitCheckerResult',
+      'Visitor.DWPCheck',
+      'Prisoner.FirstName AS PrisonerFirstName',
+      'Prisoner.LastName AS PrisonerLastName',
+      'Prisoner.DateOfBirth AS PrisonerDateOfBirth',
+      'Prisoner.PrisonNumber',
       'Prisoner.NameOfPrison', 'Prisoner.NomisCheck')
     .then(function (claim) {
       return knex('Claim')
         .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
         .where('Claim.ClaimId', claimId)
-        .select('ClaimExpense.ExpenseType', 'ClaimExpense.Cost', 'ClaimExpense.ApprovedCost', 'ClaimExpense.Status',
-          'ClaimExpense.To', 'ClaimExpense.From', 'ClaimExpense.IsReturn', 'ClaimExpense.TravelTime',
-          'ClaimExpense.DurationOfTravel', 'ClaimExpense.TicketType', 'ClaimExpense.ClaimExpenseId')
+        .select('ClaimExpense.ExpenseType',
+          'ClaimExpense.Cost',
+          'ClaimExpense.ApprovedCost',
+          'ClaimExpense.Status',
+          'ClaimExpense.To',
+          'ClaimExpense.From',
+          'ClaimExpense.IsReturn',
+          'ClaimExpense.TravelTime',
+          'ClaimExpense.DurationOfTravel',
+          'ClaimExpense.TicketType',
+          'ClaimExpense.ClaimExpenseId')
         .orderBy('ClaimExpense.ClaimExpenseId')
         .then(function (claimExpenses) {
           var total = 0
@@ -36,7 +57,26 @@ module.exports = function (claimId) {
             }
           })
           claim.Total = Number(total).toFixed(2)
-          return {claim: claim, claimExpenses: claimExpenses}
+          return claimExpenses
+        })
+        .then(function (claimExpenses) {
+          return knex('Claim')
+            .join('ClaimChild', 'Claim.ClaimId', '=', 'ClaimChild.ClaimId')
+            .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
+            .select(
+              'ClaimChild.ClaimChildId',
+              'ClaimChild.Name',
+              'ClaimChild.DateOfBirth',
+              'ClaimChild.Relationship'
+            )
+            .orderBy('ClaimChild.Name')
+            .then(function (claimChild) {
+              return {
+                claim: claim,
+                claimExpenses: claimExpenses,
+                claimChild: claimChild
+              }
+            })
         })
     })
 }

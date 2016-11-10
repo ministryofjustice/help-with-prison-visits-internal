@@ -21,7 +21,16 @@ var newIds = {}
 describe('services/data/submit-claim-response', function () {
   before(function () {
     return databaseHelper.insertTestData(reference, moment().toDate(), 'NEW').then(function (ids) {
-      newIds = {'claimId': ids.claimId, 'eligibilityId': ids.eligibilityId, 'prisonerId': ids.prisonerId, 'visitorId': ids.visitorId, 'expenseId1': ids.expenseId1, 'expenseId2': ids.expenseId2}
+      newIds = {
+        claimId: ids.claimId,
+        eligibilityId: ids.eligibilityId,
+        prisonerId: ids.prisonerId,
+        visitorId: ids.visitorId,
+        expenseId1: ids.expenseId1,
+        expenseId2: ids.expenseId2,
+        childId1: ids.childId1,
+        childId2: ids.childId2
+      }
     })
   })
 
@@ -68,6 +77,15 @@ describe('services/data/submit-claim-response', function () {
   })
 
   after(function () {
-    return databaseHelper.deleteTestData(newIds.claimId, newIds.eligibilityId, newIds.visitorId, newIds.prisonerId, newIds.expenseId1, newIds.expenseId2)
+    return databaseHelper.deleteTestData(
+      newIds.claimId,
+      newIds.eligibilityId,
+      newIds.visitorId,
+      newIds.prisonerId,
+      newIds.expenseId1,
+      newIds.expenseId2,
+      newIds.childId1,
+      newIds.childId2
+    )
   })
 })

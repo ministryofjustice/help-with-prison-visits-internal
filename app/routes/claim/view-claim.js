@@ -18,6 +18,7 @@ module.exports = function (router) {
           title: 'APVS Claim',
           Claim: data.claim,
           Expenses: data.claimExpenses,
+          Children: data.claimChild,
           getDateFormatted: getDateFormatted,
           getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
           getDisplayFieldName: getDisplayFieldName,
@@ -30,8 +31,17 @@ module.exports = function (router) {
   router.post('/claim/:claimId', function (req, res) {
     try {
       var claimExpenses = getClaimExpenseResponses(req.body)
-      var claimDecision = new ClaimDecision(req.body.decision, req.body.reasonRequest, req.body.reasonReject,
-        req.body.additionalInfoApprove, req.body.additionalInfoRequest, req.body.additionalInfoReject, req.body.nomisCheck, req.body.dwpCheck, claimExpenses)
+      var claimDecision = new ClaimDecision(
+        req.body.decision,
+        req.body.reasonRequest,
+        req.body.reasonReject,
+        req.body.additionalInfoApprove,
+        req.body.additionalInfoRequest,
+        req.body.additionalInfoReject,
+        req.body.nomisCheck,
+        req.body.dwpCheck,
+        claimExpenses
+      )
 
       SubmitClaimResponse(req.params.claimId, claimDecision)
         .then(function () {
