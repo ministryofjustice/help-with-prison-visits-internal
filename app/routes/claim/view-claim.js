@@ -1,3 +1,4 @@
+const authorisation = require('../../services/authorisation')
 const getIndividualClaimDetails = require('../../services/data/get-individual-claim-details')
 const getDateFormatted = require('../../views/helpers/date-helper')
 const getClaimExpenseDetailFormatted = require('../../views/helpers/claim-expense-helper')
@@ -12,6 +13,8 @@ const mergeClaimExpensesWithSubmittedResponses = require('../helpers/merge-claim
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
+    authorisation.isAuthenticated(req)
+
     getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
         return res.render('./claim/view-claim', {
@@ -29,6 +32,8 @@ module.exports = function (router) {
   })
 
   router.post('/claim/:claimId', function (req, res) {
+    authorisation.isAuthenticated(req)
+
     try {
       var claimExpenses = getClaimExpenseResponses(req.body)
       var claimDecision = new ClaimDecision(

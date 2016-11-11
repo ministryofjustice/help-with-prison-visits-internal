@@ -2,6 +2,9 @@
   <div class="content">
     <nav id="proposition-menu">
       <a href="/" id="proposition-name">{% if serviceName %} {{ serviceName }} {% endif %}</a>
+      <span id="login-details">
+        {{ user.email }} - <a href="{{ logout }}" id="logout">logout</a>
+      </span>
     </nav>
   </div>
 </div>

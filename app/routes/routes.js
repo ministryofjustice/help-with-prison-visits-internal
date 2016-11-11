@@ -4,9 +4,10 @@
 
 var routes = [
   require('./index'),
-
-  // View Claim
   require('./claim/view-claim'),
+
+  // Authentication routes
+  require('./authentication'),
 
   // Health check routes
   require('./health-check/status')

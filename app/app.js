@@ -8,8 +8,11 @@ const compression = require('compression')
 const routes = require('./routes/routes')
 const log = require('./services/log')
 const onFinished = require('on-finished')
+const authentication = require('./authentication')
 
 var app = express()
+
+authentication(app)
 
 // Use gzip compression - remove if possible via reverse proxy/Azure gateway.
 app.use(compression())
@@ -77,11 +80,14 @@ app.use(function (req, res, next) {
   next(err)
 })
 
-// Development error handler.
 app.use(function (err, req, res, next) {
   res.status(err.status || 500)
   if (err.status === 404) {
     res.render('includes/error-404')
+  } else if (err.status === 401) {
+    res.redirect('/auth/oauth2')
+  } else if (err.status === 403) {
+    res.render('includes/error-403')
   } else {
     res.render('includes/error', {
       error: developmentMode ? err : {}
