@@ -39,6 +39,13 @@
   	    <td id="visitor-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
   	  </tr>
 
+      {% for child in Children %}
+      <tr>
+        <td>Child</td>
+        <td>{{ child['Name'] }} - {{ getDateFormatted(child['DateOfBirth']) }} ({{ child['Relationship'] }})</td>
+      </tr>
+      {% endfor %}
+
   	  <tr>
   	    <td>Date of Birth</td>
   	    <td>{{ getDateFormatted(Claim['DateOfBirth']) }}</td>
@@ -51,7 +58,7 @@
 
   	  <tr>
   	    <td>Home Address</td>
-  	    <td>  {{ Claim['HouseNumberAndStreet'] }}<br>
+  	    <td>{{ Claim['HouseNumberAndStreet'] }}<br>
   	      {{ Claim['Town'] }}<br>
   	      {{ Claim['County'] }}<br>
   	      {{ Claim['PostCode'] }}</td>

@@ -1,9 +1,8 @@
-// TODO: Will need to add check on each of the pages that has a constructed URL path.
 var moment = require('moment')
 var databaseHelper = require('../helpers/database-setup-for-tests')
 var expect = require('chai').expect
 
-// variables for creating and deleting a record
+// Variables for creating and deleting a record
 var reference = '1111111'
 var date
 var claimId
@@ -12,6 +11,8 @@ var prisonerId
 var visitorId
 var expenseId1
 var expenseId2
+var childId1
+var childId2
 
 describe('First time claim viewing flow', () => {
   before(function () {
@@ -23,6 +24,8 @@ describe('First time claim viewing flow', () => {
       visitorId = ids.visitorId
       expenseId1 = ids.expenseId1
       expenseId2 = ids.expenseId2
+      childId1 = ids.childId1
+      childId2 = ids.childId2
     })
   })
 
@@ -55,7 +58,6 @@ describe('First time claim viewing flow', () => {
   })
 
   after(function () {
-    // Clean up
-    return databaseHelper.deleteTestData(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2)
+    return databaseHelper.deleteTestData(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2, childId1, childId2)
   })
 })
