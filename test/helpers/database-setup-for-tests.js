@@ -6,9 +6,14 @@ var Promise = require('bluebird')
 module.exports.insertTestData = function (reference, date, status) {
   var data = this.getTestData(reference, status)
   return new Promise(function (resolve, reject) {
+    // Generate unique Integer for Ids using timestamp in tenth of seconds
+    var uniqueId = Math.floor(Date.now() / 100) - 14000000000
+    var uniqueId2 = uniqueId + 1
+
     var ids = {}
     knex('IntSchema.Eligibility')
       .insert({
+        EligibilityId: uniqueId,
         Reference: reference,
         DateCreated: date,
         DateSubmitted: date,
@@ -20,7 +25,9 @@ module.exports.insertTestData = function (reference, date, status) {
         return knex('IntSchema.Prisoner')
           .returning('PrisonerId')
           .insert({
+            PrisonerId: uniqueId,
             EligibilityId: ids.eligibilityId,
+            Reference: reference,
             FirstName: data.Prisoner.FirstName,
             LastName: data.Prisoner.LastName,
             DateOfBirth: date,
@@ -36,7 +43,9 @@ module.exports.insertTestData = function (reference, date, status) {
         return knex('IntSchema.Visitor')
           .returning('VisitorId')
           .insert({
+            VisitorId: uniqueId,
             EligibilityId: ids.eligibilityId,
+            Reference: reference,
             Title: data.Visitor.Title,
             FirstName: data.Visitor.FirstName,
             LastName: data.Visitor.LastName,
@@ -60,7 +69,9 @@ module.exports.insertTestData = function (reference, date, status) {
         return knex('IntSchema.Claim')
           .returning('ClaimId')
           .insert({
+            ClaimId: uniqueId,
             EligibilityId: ids.eligibilityId,
+            Reference: reference,
             DateOfJourney: date,
             DateCreated: date,
             DateSubmitted: date,
@@ -74,12 +85,16 @@ module.exports.insertTestData = function (reference, date, status) {
         return knex('IntSchema.ClaimExpense')
           .returning('ClaimExpenseId')
           .insert({
+            ClaimExpenseId: uniqueId,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
             ClaimId: ids.claimId,
             ExpenseType: data.ClaimExpenses[0].ExpenseType,
             Cost: data.ClaimExpenses[0].Cost,
             From: data.ClaimExpenses[0].From,
             To: data.ClaimExpenses[0].To,
-            IsReturn: data.ClaimExpenses[0].IsReturn
+            IsReturn: data.ClaimExpenses[0].IsReturn,
+            IsEnabled: true
           })
       })
       .then(function (result) {
@@ -87,10 +102,14 @@ module.exports.insertTestData = function (reference, date, status) {
         return knex('IntSchema.ClaimExpense')
           .returning('ClaimExpenseId')
           .insert({
+            ClaimExpenseId: uniqueId2,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
             ClaimId: ids.claimId,
             ExpenseType: data.ClaimExpenses[1].ExpenseType,
             Cost: data.ClaimExpenses[1].Cost,
-            DurationOfTravel: data.ClaimExpenses[1].DurationOfTravel
+            DurationOfTravel: data.ClaimExpenses[1].DurationOfTravel,
+            IsEnabled: true
           })
       })
       .then(function (result) {
@@ -98,10 +117,14 @@ module.exports.insertTestData = function (reference, date, status) {
         return knex('IntSchema.ClaimChild')
           .returning('ClaimChildId')
           .insert({
+            ClaimChildId: uniqueId,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
             ClaimId: ids.claimId,
             Name: data.ClaimChild[0].Name,
             DateOfBirth: date,
-            Relationship: data.ClaimChild[0].Relationship
+            Relationship: data.ClaimChild[0].Relationship,
+            IsEnabled: true
           })
       })
       .then(function (result) {
@@ -109,10 +132,14 @@ module.exports.insertTestData = function (reference, date, status) {
         return knex('IntSchema.ClaimChild')
           .returning('ClaimChildId')
           .insert({
+            ClaimChildId: uniqueId2,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
             ClaimId: ids.claimId,
             Name: data.ClaimChild[1].Name,
             DateOfBirth: date,
-            Relationship: data.ClaimChild[1].Relationship
+            Relationship: data.ClaimChild[1].Relationship,
+            IsEnabled: true
           })
       })
       .then(function (result) {
@@ -125,17 +152,19 @@ module.exports.insertTestData = function (reference, date, status) {
   })
 }
 
-module.exports.deleteTestData = function (claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2, childId1, childId2) {
+module.exports.deleteAll = function (reference) {
   return new Promise(function (resolve, reject) {
-    return knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId1).del().then(function () {
-      return knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId2).del().then(function () {
-        return knex('IntSchema.ClaimChild').where('ClaimChildId', childId1).del().then(function () {
-          return knex('IntSchema.ClaimChild').where('ClaimChildId', childId2).del().then(function () {
-            return knex('IntSchema.Claim').where('ClaimId', claimId).del().then(function () {
-              return knex('IntSchema.Visitor').where('VisitorId', visitorId).del().then(function () {
-                return knex('IntSchema.Prisoner').where('PrisonerId', prisonerId).del().then(function () {
-                  return knex('IntSchema.Eligibility').where('EligibilityId', eligibilityId).del().then(function () {
-                    resolve()
+    return knex('IntSchema.Task').where('Reference', reference).del().then(function () {
+      return knex('IntSchema.ClaimBankDetail').where('Reference', reference).del().then(function () {
+        return knex('IntSchema.ClaimDocument').where('Reference', reference).del().then(function () {
+          return knex('IntSchema.ClaimExpense').where('Reference', reference).del().then(function () {
+            return knex('IntSchema.ClaimChild').where('Reference', reference).del().then(function () {
+              return knex('IntSchema.Claim').where('Reference', reference).del().then(function () {
+                return knex('IntSchema.Visitor').where('Reference', reference).del().then(function () {
+                  return knex('IntSchema.Prisoner').where('Reference', reference).del().then(function () {
+                    return knex('IntSchema.Eligibility').where('Reference', reference).del().then(function () {
+                      resolve()
+                    })
                   })
                 })
               })

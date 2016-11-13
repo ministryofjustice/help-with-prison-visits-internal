@@ -7,13 +7,6 @@ var reference = 'V123456'
 var testData
 var date
 var claimId
-var eligibilityId
-var prisonerId
-var visitorId
-var expenseId1
-var expenseId2
-var childId1
-var childId2
 
 describe('services/data/get-individual-claim-details', function () {
   describe('get', function () {
@@ -22,13 +15,6 @@ describe('services/data/get-individual-claim-details', function () {
       date = moment().toDate()
       return databaseHelper.insertTestData(reference, date, 'Test').then(function (ids) {
         claimId = ids.claimId
-        eligibilityId = ids.eligibilityId
-        prisonerId = ids.prisonerId
-        visitorId = ids.visitorId
-        expenseId1 = ids.expenseId1
-        expenseId2 = ids.expenseId2
-        childId1 = ids.childId1
-        childId2 = ids.childId2
       })
     })
 
@@ -54,16 +40,7 @@ describe('services/data/get-individual-claim-details', function () {
     })
 
     after(function () {
-      return databaseHelper.deleteTestData(
-        claimId,
-        eligibilityId,
-        visitorId,
-        prisonerId,
-        expenseId1,
-        expenseId2,
-        childId1,
-        childId2
-      )
+      return databaseHelper.deleteAll(reference)
     })
   })
 })
