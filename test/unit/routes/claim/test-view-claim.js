@@ -45,6 +45,11 @@ describe('routes/claim/view-claim', function () {
     app.use(bodyParser.json())
     mockViewEngine(app, '../../../app/views')
     route(app)
+    app.use(function (err, req, res, next) {
+      if (err) {
+        res.status(500).render('includes/error')
+      }
+    })
     request = supertest(app)
   })
 
@@ -95,6 +100,29 @@ describe('routes/claim/view-claim', function () {
         .expect(function () {
           expect(authorisation.calledOnce).to.be.true
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+  })
+
+  describe('GET /claim/:claimId/download', function () {
+    it('should respond respond with 200 if valid path entered', function (done) {
+      request
+        .get('/claim/123/download?path=test/resources/testfile.txt')
+        .expect(200)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          expect(response.header['content-length']).to.equal('4')
+          done()
+        })
+    })
+
+    it('should respond with 500 if no path provided', function (done) {
+      request
+        .get('/claim/123/download')
+        .expect(500)
+        .end(function (error, response) {
+          expect(error).to.be.null
+          done()
         })
     })
   })

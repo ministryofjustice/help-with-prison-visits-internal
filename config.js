@@ -20,5 +20,8 @@ module.exports = {
   AUTHORIZE_PATH: process.env.APVS_MOJ_SSO_AUTHORIZE_PATH,
   REDIRECT_URI: process.env.APVS_MOJ_SSO_REDIRECT_URI,
   USER_DETAILS_PATH: process.env.APVS_MOJ_SSO_USER_DETAILS_PATH,
-  LOGOUT_PATH: process.env.APVS_MOJ_SSO_LOGOUT_PATH
+  LOGOUT_PATH: process.env.APVS_MOJ_SSO_LOGOUT_PATH,
+
+  // File upload
+  FILE_UPLOAD_LOCATION: process.env.FILE_UPLOAD_LOCATION || './uploads'
 }

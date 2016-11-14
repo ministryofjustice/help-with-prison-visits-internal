@@ -30,37 +30,49 @@ module.exports = function (claimId) {
       'Prisoner.LastName AS PrisonerLastName',
       'Prisoner.DateOfBirth AS PrisonerDateOfBirth',
       'Prisoner.PrisonNumber',
-      'Prisoner.NameOfPrison', 'Prisoner.NomisCheck')
+      'Prisoner.NameOfPrison',
+      'Prisoner.NomisCheck',
+      'Claim.VisitConfirmationCheck')
     .then(function (claim) {
-      return knex('Claim')
-        .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
-        .where('Claim.ClaimId', claimId)
-        .select()
-        .orderBy('ClaimExpense.ClaimExpenseId')
-        .then(function (claimExpenses) {
-          var total = 0
-          claimExpenses.forEach(function (expense) {
-            total += expense.Cost
-            expense.Cost = Number(expense.Cost).toFixed(2)
-            if (expense.ApprovedCost !== null) {
-              expense.ApprovedCost = Number(expense.ApprovedCost).toFixed(2)
-            }
-          })
-          claim.Total = Number(total).toFixed(2)
-          return claimExpenses
-        })
-        .then(function (claimExpenses) {
+      return knex('ClaimDocument')
+        .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.DocumentType': 'VISIT-CONFIRMATION'})
+        .first(
+          'ClaimDocument.ClaimDocumentId',
+          'ClaimDocument.DocumentStatus',
+          'ClaimDocument.Filepath')
+        .orderBy('ClaimDocument.DateSubmitted', 'desc')
+        .then(function (claimVisitConfirmation) {
+          claim.visitConfirmation = claimVisitConfirmation
           return knex('Claim')
-            .join('ClaimChild', 'Claim.ClaimId', '=', 'ClaimChild.ClaimId')
-            .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
+            .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
+            .where('Claim.ClaimId', claimId)
             .select()
-            .orderBy('ClaimChild.Name')
-            .then(function (claimChild) {
-              return {
-                claim: claim,
-                claimExpenses: claimExpenses,
-                claimChild: claimChild
-              }
+            .orderBy('ClaimExpense.ClaimExpenseId')
+            .then(function (claimExpenses) {
+              var total = 0
+              claimExpenses.forEach(function (expense) {
+                total += expense.Cost
+                expense.Cost = Number(expense.Cost).toFixed(2)
+                if (expense.ApprovedCost !== null) {
+                  expense.ApprovedCost = Number(expense.ApprovedCost).toFixed(2)
+                }
+              })
+              claim.Total = Number(total).toFixed(2)
+              return claimExpenses
+            })
+            .then(function (claimExpenses) {
+              return knex('Claim')
+                .join('ClaimChild', 'Claim.ClaimId', '=', 'ClaimChild.ClaimId')
+                .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
+                .select()
+                .orderBy('ClaimChild.Name')
+                .then(function (claimChild) {
+                  return {
+                    claim: claim,
+                    claimExpenses: claimExpenses,
+                    claimChild: claimChild
+                  }
+                })
             })
         })
     })
