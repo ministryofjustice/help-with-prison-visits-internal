@@ -3,7 +3,9 @@
     <nav id="proposition-menu">
       <a href="/" id="proposition-name">{% if serviceName %} {{ serviceName }} {% endif %}</a>
       <span id="login-details">
-        {{ user.email }} - <a href="{{ logout }}" id="logout">logout</a>
+        {% if user %}
+          {{ user.email }} {% if user.roles.includes('admin') %} - <a href="/config" id="config">config</a>  {% endif %} - <a href="/logout" id="logout">logout</a>
+        {% endif %}
       </span>
     </nav>
   </div>

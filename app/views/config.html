@@ -1,0 +1,19 @@
+{% extends "includes/layout.html" %}
+
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<main id="content" role="main">
+
+  {% include "includes/phase_banner_beta.html" %}
+
+  <h1 class="table-heading">Configuration</h1>
+
+  <p>This is an Admin only page used for configuring the APVS service</p>
+
+</main>
+
+{% endblock %}

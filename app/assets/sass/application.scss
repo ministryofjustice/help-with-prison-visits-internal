@@ -230,7 +230,10 @@ tr.warning td:first-child{
     width: 1em;
 }
 
-#login-details, #logout {
+#login-details {
     float: right;
+    color: white!important;
+}
+#logout, #config {
     color: white!important;
 }

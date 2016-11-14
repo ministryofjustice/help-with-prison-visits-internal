@@ -6,6 +6,9 @@ var routes = [
   require('./index'),
   require('./claim/view-claim'),
 
+  // Configuration
+  require('./config'),
+
   // Authentication routes
   require('./authentication'),
 

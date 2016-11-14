@@ -41,6 +41,7 @@ module.exports = function (app) {
       request(options, function (error, response, userDetails) {
         if (!error && response.statusCode === 200) {
           var roles
+
           userDetails.permissions.forEach(function (permission) {
             if (permission.organisation === config.ORGANISATION) {
               roles = permission.roles
@@ -48,13 +49,13 @@ module.exports = function (app) {
           })
 
           if (roles) {
-            var user = {
+            var sessionUser = {
               email: userDetails.email,
-              first_name: 'Steven',
-              last_name: 'Alexander',
+              first_name: userDetails.first_name,
+              last_name: userDetails.last_name,
               roles: roles
             }
-            cb(null, user)
+            cb(null, sessionUser)
           } else {
             var notAuthorisedError = new Error('You are not authorised for this service')
             notAuthorisedError.status = 403
@@ -86,7 +87,6 @@ module.exports = function (app) {
   // Make user details available to the views
   app.use(function (req, res, next) {
     res.locals.user = req.user
-    res.locals.logout = `${config.TOKEN_HOST}${config.LOGOUT_PATH}`
     next()
   })
 }
