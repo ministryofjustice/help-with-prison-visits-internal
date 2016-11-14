@@ -17,6 +17,8 @@ var prisonerId
 var visitorId
 var expenseId1
 var expenseId2
+var childId1
+var childId2
 
 describe('services/data/insert-task-send-first-time-claim-notification', function () {
   before(function () {
@@ -29,6 +31,8 @@ describe('services/data/insert-task-send-first-time-claim-notification', functio
       visitorId = ids.visitorId
       expenseId1 = ids.expenseId1
       expenseId2 = ids.expenseId2
+      childId1 = ids.childId1
+      childId2 = ids.childId2
     })
   })
 
@@ -49,7 +53,16 @@ describe('services/data/insert-task-send-first-time-claim-notification', functio
 
   after(function () {
     return knex('IntSchema.Task').where({Reference: reference, ClaimId: claimId}).del().then(function () {
-      return databaseHelper.deleteTestData(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2)
+      return databaseHelper.deleteTestData(
+        claimId,
+        eligibilityId,
+        visitorId,
+        prisonerId,
+        expenseId1,
+        expenseId2,
+        childId1,
+        childId2
+      )
     })
   })
 })

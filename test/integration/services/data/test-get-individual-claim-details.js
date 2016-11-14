@@ -12,25 +12,28 @@ var prisonerId
 var visitorId
 var expenseId1
 var expenseId2
+var childId1
+var childId2
 
 describe('services/data/get-individual-claim-details', function () {
-  describe('get', function (done) {
-    before(function (done) {
+  describe('get', function () {
+    before(function () {
       testData = databaseHelper.getTestData(reference, 'Test')
       date = moment().toDate()
-      databaseHelper.insertTestData(reference, date, 'Test').then(function (ids) {
+      return databaseHelper.insertTestData(reference, date, 'Test').then(function (ids) {
         claimId = ids.claimId
         eligibilityId = ids.eligibilityId
         prisonerId = ids.prisonerId
         visitorId = ids.visitorId
         expenseId1 = ids.expenseId1
         expenseId2 = ids.expenseId2
-        done()
+        childId1 = ids.childId1
+        childId2 = ids.childId2
       })
     })
 
-    it('should return a claims details', function (done) {
-      getClaim(claimId)
+    it('should return a claims details', function () {
+      return getClaim(claimId)
         .then(function (result) {
           expect(result.claim.Reference).to.equal(reference)
           expect(result.claim.FirstName).to.equal(testData.Visitor.FirstName)
@@ -42,18 +45,25 @@ describe('services/data/get-individual-claim-details', function () {
           expect(result.claim.NameOfPrison).to.equal(testData.Prisoner.NameOfPrison)
           expect(result.claimExpenses[0].ExpenseType).to.equal(testData.ClaimExpenses[0].ExpenseType)
           expect(result.claimExpenses[1].Cost).to.equal(testData.ClaimExpenses[1].Cost)
-          done()
+          expect(result.claimChild[0].Name).to.equal(testData.ClaimChild[0].Name)
+          expect(result.claimChild[1].Name).to.equal(testData.ClaimChild[1].Name)
         })
         .catch(function (error) {
           throw error
         })
     })
 
-    after(function (done) {
-      // Clean up
-      databaseHelper.deleteTestData(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2).then(function () {
-        done()
-      })
+    after(function () {
+      return databaseHelper.deleteTestData(
+        claimId,
+        eligibilityId,
+        visitorId,
+        prisonerId,
+        expenseId1,
+        expenseId2,
+        childId1,
+        childId2
+      )
     })
   })
 })

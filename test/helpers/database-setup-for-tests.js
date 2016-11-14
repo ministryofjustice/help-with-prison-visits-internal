@@ -95,6 +95,28 @@ module.exports.insertTestData = function (reference, date, status) {
       })
       .then(function (result) {
         ids.expenseId2 = result[0]
+        return knex('IntSchema.ClaimChild')
+          .returning('ClaimChildId')
+          .insert({
+            ClaimId: ids.claimId,
+            Name: data.ClaimChild[0].Name,
+            DateOfBirth: date,
+            Relationship: data.ClaimChild[0].Relationship
+          })
+      })
+      .then(function (result) {
+        ids.childId1 = result[0]
+        return knex('IntSchema.ClaimChild')
+          .returning('ClaimChildId')
+          .insert({
+            ClaimId: ids.claimId,
+            Name: data.ClaimChild[1].Name,
+            DateOfBirth: date,
+            Relationship: data.ClaimChild[1].Relationship
+          })
+      })
+      .then(function (result) {
+        ids.childId2 = result[0]
         resolve(ids)
       })
       .catch(function (error) {
@@ -103,24 +125,28 @@ module.exports.insertTestData = function (reference, date, status) {
   })
 }
 
-module.exports.deleteTestData = function (claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2) {
+module.exports.deleteTestData = function (claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2, childId1, childId2) {
   return new Promise(function (resolve, reject) {
-    knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId1).del().then(function () {
-      knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId2).del().then(function () {
-        knex('IntSchema.Claim').where('ClaimId', claimId).del().then(function () {
-          knex('IntSchema.Visitor').where('VisitorId', visitorId).del().then(function () {
-            knex('IntSchema.Prisoner').where('PrisonerId', prisonerId).del().then(function () {
-              knex('IntSchema.Eligibility').where('EligibilityId', eligibilityId).del().then(function () {
-                resolve()
+    return knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId1).del().then(function () {
+      return knex('IntSchema.ClaimExpense').where('ClaimExpenseId', expenseId2).del().then(function () {
+        return knex('IntSchema.ClaimChild').where('ClaimChildId', childId1).del().then(function () {
+          return knex('IntSchema.ClaimChild').where('ClaimChildId', childId2).del().then(function () {
+            return knex('IntSchema.Claim').where('ClaimId', claimId).del().then(function () {
+              return knex('IntSchema.Visitor').where('VisitorId', visitorId).del().then(function () {
+                return knex('IntSchema.Prisoner').where('PrisonerId', prisonerId).del().then(function () {
+                  return knex('IntSchema.Eligibility').where('EligibilityId', eligibilityId).del().then(function () {
+                    resolve()
+                  })
+                })
               })
             })
           })
         })
       })
     })
-      .catch(function (error) {
-        reject(error)
-      })
+    .catch(function (error) {
+      reject(error)
+    })
   })
 }
 
@@ -156,6 +182,16 @@ module.exports.getTestData = function (reference, status) {
       ExpenseType: 'accommodation',
       Cost: '80.00',
       DurationOfTravel: 1
+    }],
+    ClaimChild: [{
+      Name: 'Jane Bloggs',
+      DateOfBirth: '01-09-2005',
+      Relationship: 'prisoners-child'
+    },
+    {
+      Name: 'Michael Bloggs',
+      DateOfBirth: '15-10-2010',
+      Relationship: 'claimants-child'
     }]
   }
 }
