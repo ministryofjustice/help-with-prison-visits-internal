@@ -8,6 +8,8 @@ const compression = require('compression')
 const routes = require('./routes/routes')
 const log = require('./services/log')
 const onFinished = require('on-finished')
+const cookieParser = require('cookie-parser')
+const csurf = require('csurf')
 
 var app = express()
 
@@ -64,6 +66,18 @@ app.use(function (req, res, next) {
   next()
 })
 
+// Use cookie parser middleware (required for csurf)
+app.use(cookieParser())
+
+// Check for valid CSRF tokens on state-changing methods.
+app.use(csurf({ cookie: true }))
+
+// Generate CSRF tokens to be sent in POST requests
+app.use(function (req, res, next) {
+  res.locals.csrfToken = req.csrfToken()
+  next()
+})
+
 // Build the router to route all HTTP requests and pass to the routes file for route configuration.
 var router = express.Router()
 routes(router)
@@ -75,6 +89,15 @@ app.use(function (req, res, next) {
   err.status = 404
   res.status(404)
   next(err)
+})
+
+// catch CSRF token errors
+app.use(function (err, req, res, next) {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err)
+  res.status(403)
+  res.render('includes/error', {
+    error: 'Invalid CSRF token'
+  })
 })
 
 // Development error handler.

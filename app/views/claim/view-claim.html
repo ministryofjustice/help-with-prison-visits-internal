@@ -32,6 +32,8 @@
 
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
 
+    {% include "partials/csrf-hidden-input.html" %}
+
     <table class="col-2 no-pad-right">
 
   	  <tr>
