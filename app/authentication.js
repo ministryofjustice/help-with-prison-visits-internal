@@ -40,7 +40,26 @@ module.exports = function (app) {
       }
       request(options, function (error, response, userDetails) {
         if (!error && response.statusCode === 200) {
-          cb(null, {'email': userDetails.email})
+          var roles
+          userDetails.permissions.forEach(function (permission) {
+            if (permission.organisation === config.ORGANISATION) {
+              roles = permission.roles
+            }
+          })
+
+          if (roles) {
+            var user = {
+              email: userDetails.email,
+              first_name: 'Steven',
+              last_name: 'Alexander',
+              roles: roles
+            }
+            cb(null, user)
+          } else {
+            var notAuthorisedError = new Error('You are not authorised for this service')
+            notAuthorisedError.status = 403
+            cb(notAuthorisedError, null)
+          }
         } else {
           cb(error, null)
         }
