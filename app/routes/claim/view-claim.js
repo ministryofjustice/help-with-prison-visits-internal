@@ -40,6 +40,7 @@ module.exports = function (router) {
         req.body.additionalInfoReject,
         req.body.nomisCheck,
         req.body.dwpCheck,
+        req.body.visitConfirmationCheck,
         claimExpenses
       )
 
@@ -54,6 +55,7 @@ module.exports = function (router) {
             if (data.claim && data.claimExpenses) {
               data.claim.NomisCheck = req.body.nomisCheck
               data.claim.DWPCheck = req.body.dwpCheck
+              data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
               data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
             }
             return res.status(400).render('./claim/view-claim', {
@@ -72,6 +74,15 @@ module.exports = function (router) {
       } else {
         throw error
       }
+    }
+  })
+
+  router.get('/claim/:claimId/download', function (req, res) {
+    var path = req.query.path
+    if (path) {
+      res.download(path)
+    } else {
+      throw new Error('No path to file provided')
     }
   })
 }

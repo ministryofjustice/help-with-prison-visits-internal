@@ -79,7 +79,7 @@
         <td>{{ prisonerRelationshipsEnum[Claim['Relationship']].displayName }}</td>
   	  </tr>
 
-      <tr>
+      <tr {% if errors['visit-confirmation-check'][0] %} class="warning"{% endif %}>
         <td>Benefit Information</td>
         <td>
           {{ benefitsEnum[Claim['Benefit']].displayName }} <br/>
@@ -125,7 +125,7 @@
         <td>{{ Claim['NameOfPrison'] }}</td>
       </tr>
 
-      <tr>
+      <tr {% if errors['nomis-check'][0] %} class="warning"{% endif %}>
         <td>Eligible for visitation?</td>
         <td>
           {% if Claim['NomisCheck'] != 'APPROVED' %}
@@ -149,9 +149,28 @@
 
     <table class="col-2 no-pad-right">
       <tbody>
-        <tr>
+        <tr {% if errors['visit-confirmation-check'][0] %} class="warning"{% endif %}>
           <td><span class="bold">Date of visit</span></td>
           <td>{{ getDateFormatted(Claim['DateOfJourney']) }}</td>
+          <td>
+            {% if Claim.visitConfirmation['DocumentStatus'] == 'uploaded' %}
+            <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ Claim.visitConfirmation['Filepath'] }}" target="_blank">View confirmation</a>
+
+            <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
+              <option value="">Select</option>
+              <option {% if Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+              <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+              <option {% if Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
+            </select>
+
+            {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
+            <span class="text-warning">To be uploaded later</span>
+
+            {% else %}
+            <span class="text-warning">To be posted later</span>
+
+            {% endif %}
+          </td>
         </tr>
       </tbody>
     </table>

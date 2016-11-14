@@ -144,6 +144,20 @@ module.exports.insertTestData = function (reference, date, status) {
       })
       .then(function (result) {
         ids.childId2 = result[0]
+        return knex('IntSchema.ClaimDocument')
+          .returning('ClaimDocumentId')
+          .insert({
+            ClaimDocumentId: uniqueId,
+            ClaimId: ids.claimId,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
+            DocumentType: data.ClaimDocument.DocumentType,
+            DocumentStatus: data.ClaimDocument.DocumentStatus,
+            DateSubmitted: date
+          })
+      })
+      .then(function (result) {
+        ids.claimDocumentId = result[0]
         resolve(ids)
       })
       .catch(function (error) {
@@ -210,6 +224,10 @@ module.exports.getTestData = function (reference, status) {
       Name: 'Michael Bloggs',
       DateOfBirth: '15-10-2010',
       Relationship: 'claimants-child'
-    }]
+    }],
+    ClaimDocument: {
+      DocumentType: 'VISIT-CONFIRMATION',
+      DocumentStatus: 'uploaded'
+    }
   }
 }

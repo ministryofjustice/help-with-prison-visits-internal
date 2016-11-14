@@ -3,7 +3,7 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 
 class ClaimDecision {
-  constructor (decision, reasonRequest, reasonReject, additionalInfoApprove, additionalInfoRequest, additionalInfoReject, nomisCheck, dwpCheck, claimExpenseResponses) {
+  constructor (decision, reasonRequest, reasonReject, additionalInfoApprove, additionalInfoRequest, additionalInfoReject, nomisCheck, dwpCheck, visitConfirmationCheck, claimExpenseResponses) {
     this.decision = decision
     if (this.decision === 'APPROVED') {
       this.reason = ''
@@ -17,6 +17,7 @@ class ClaimDecision {
     }
     this.nomisCheck = nomisCheck
     this.dwpCheck = dwpCheck
+    this.visitConfirmationCheck = visitConfirmationCheck
 
     this.claimExpenseResponses = claimExpenseResponses
     claimExpenseResponses.forEach(function (expense) {
@@ -56,6 +57,9 @@ class ClaimDecision {
       .isRequired()
 
     FieldValidator(this.dwpCheck, 'dwp-check', errors)
+      .isRequired()
+
+    FieldValidator(this.visitConfirmationCheck, 'visit-confirmation-check', errors)
       .isRequired()
 
     var validationErrors = errors.get()
