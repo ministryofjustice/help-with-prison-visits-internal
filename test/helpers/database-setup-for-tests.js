@@ -152,31 +152,21 @@ module.exports.insertTestData = function (reference, date, status) {
   })
 }
 
+function deleteByReference (schemaTable, reference) {
+  return knex(schemaTable).where('Reference', reference).del()
+}
+
 module.exports.deleteAll = function (reference) {
-  return new Promise(function (resolve, reject) {
-    return knex('IntSchema.Task').where('Reference', reference).del().then(function () {
-      return knex('IntSchema.ClaimBankDetail').where('Reference', reference).del().then(function () {
-        return knex('IntSchema.ClaimDocument').where('Reference', reference).del().then(function () {
-          return knex('IntSchema.ClaimExpense').where('Reference', reference).del().then(function () {
-            return knex('IntSchema.ClaimChild').where('Reference', reference).del().then(function () {
-              return knex('IntSchema.Claim').where('Reference', reference).del().then(function () {
-                return knex('IntSchema.Visitor').where('Reference', reference).del().then(function () {
-                  return knex('IntSchema.Prisoner').where('Reference', reference).del().then(function () {
-                    return knex('IntSchema.Eligibility').where('Reference', reference).del().then(function () {
-                      resolve()
-                    })
-                  })
-                })
-              })
-            })
-          })
-        })
-      })
-    })
-    .catch(function (error) {
-      reject(error)
-    })
-  })
+  return deleteByReference('IntSchema.Task', reference)
+    .then(function () { return deleteByReference('IntSchema.Task', reference) })
+    .then(function () { return deleteByReference('IntSchema.ClaimBankDetail', reference) })
+    .then(function () { return deleteByReference('IntSchema.ClaimDocument', reference) })
+    .then(function () { return deleteByReference('IntSchema.ClaimExpense', reference) })
+    .then(function () { return deleteByReference('IntSchema.ClaimChild', reference) })
+    .then(function () { return deleteByReference('IntSchema.Claim', reference) })
+    .then(function () { return deleteByReference('IntSchema.Visitor', reference) })
+    .then(function () { return deleteByReference('IntSchema.Prisoner', reference) })
+    .then(function () { return deleteByReference('IntSchema.Eligibility', reference) })
 }
 
 module.exports.getTestData = function (reference, status) {
