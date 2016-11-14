@@ -6,26 +6,16 @@ var expect = require('chai').expect
 var reference = '1111111'
 var date
 var claimId
-var eligibilityId
-var prisonerId
-var visitorId
 var expenseId1
 var expenseId2
-var childId1
-var childId2
 
 describe('First time claim viewing flow', () => {
   before(function () {
     date = moment('20010101').toDate()
     return databaseHelper.insertTestData(reference, date, 'New').then(function (ids) {
       claimId = ids.claimId
-      eligibilityId = ids.eligibilityId
-      prisonerId = ids.prisonerId
-      visitorId = ids.visitorId
       expenseId1 = ids.expenseId1
       expenseId2 = ids.expenseId2
-      childId1 = ids.childId1
-      childId2 = ids.childId2
     })
   })
 
@@ -58,6 +48,6 @@ describe('First time claim viewing flow', () => {
   })
 
   after(function () {
-    return databaseHelper.deleteTestData(claimId, eligibilityId, visitorId, prisonerId, expenseId1, expenseId2, childId1, childId2)
+    return databaseHelper.deleteAll(reference)
   })
 })
