@@ -158,7 +158,6 @@ function deleteByReference (schemaTable, reference) {
 
 module.exports.deleteAll = function (reference) {
   return deleteByReference('IntSchema.Task', reference)
-    .then(function () { return deleteByReference('IntSchema.Task', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimBankDetail', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimDocument', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimExpense', reference) })
