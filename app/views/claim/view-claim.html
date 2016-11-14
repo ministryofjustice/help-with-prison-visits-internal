@@ -1,7 +1,7 @@
 {% extends "includes/layout.html" %}
 
 {% block page_title %}
-{% if serviceName %} {{ serviceName }} {% endif %}
+  {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -28,23 +28,16 @@
 
   {% include "includes/validation-error-messages.html" %}
 
-  <h1 class="table-heading">Visitor</h1>
+  <h1 class="table-heading">{{ 'Visitors' if Children else 'Visitor' }}</h1>
 
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
 
     <table class="col-2 no-pad-right">
 
   	  <tr>
-  	    <td>Visitor Name</td>
+        <td>{{ 'Lead Visitor' if Children else 'Visitor' }}</td>
   	    <td id="visitor-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
   	  </tr>
-
-      {% for child in Children %}
-      <tr>
-        <td>Child</td>
-        <td>{{ child['Name'] }} - {{ getDateFormatted(child['DateOfBirth']) }} ({{ child['Relationship'] }})</td>
-      </tr>
-      {% endfor %}
 
   	  <tr>
   	    <td>Date of Birth</td>
@@ -99,6 +92,21 @@
           </select>
         </td>
       </tr>
+
+      {% set childNum = 1 %}
+      {% for child in Children %}
+      <tr>
+        <td>Child {{ childNum }}</td>
+        <td>
+          {{ child['Name'] }} <br>
+          {{ getDateFormatted(child['DateOfBirth']) }} <br>
+          {{ getChildFormatted(child['Relationship']) }}
+        </td>
+
+        {% set childNum = childNum + 1 %}
+      </tr>
+      {% endfor %}
+
     </table>
 
     <h1 class="table-heading">Prisoner</h1>

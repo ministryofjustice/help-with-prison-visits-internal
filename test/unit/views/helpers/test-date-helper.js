@@ -5,7 +5,7 @@ var getDateFormatted = require('../../../../app/views/helpers/date-helper')
 describe('views/date-helper', function () {
   describe('format date', function () {
     it('should change date to format DD-MM-YYYY', function () {
-      expect(getDateFormatted(new Date(2016, 10, 10))).to.equal('10-11-2016')
+      expect(getDateFormatted(new Date(2016, 10, 10))).to.equal('10/11/2016')
     })
   })
 })
