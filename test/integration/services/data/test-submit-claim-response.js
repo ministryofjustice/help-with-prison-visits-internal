@@ -50,7 +50,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return knex('IntSchema.Eligibility').where('Reference', reference)
+        return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
           .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
           .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
           .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
@@ -77,15 +77,6 @@ describe('services/data/submit-claim-response', function () {
   })
 
   after(function () {
-    return databaseHelper.deleteTestData(
-      newIds.claimId,
-      newIds.eligibilityId,
-      newIds.visitorId,
-      newIds.prisonerId,
-      newIds.expenseId1,
-      newIds.expenseId2,
-      newIds.childId1,
-      newIds.childId2
-    )
+    return databaseHelper.deleteAll(reference)
   })
 })
