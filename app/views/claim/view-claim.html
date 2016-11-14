@@ -79,7 +79,7 @@
         <td>{{ prisonerRelationshipsEnum[Claim['Relationship']].displayName }}</td>
   	  </tr>
 
-      <tr {% if errors['dwp-check'][0] %} class="warning"{% endif %}>
+      <tr {% if errors['visit-confirmation-check'][0] %} class="warning"{% endif %}>
         <td>Benefit Information</td>
         <td>
           {{ benefitsEnum[Claim['Benefit']].displayName }} <br/>
