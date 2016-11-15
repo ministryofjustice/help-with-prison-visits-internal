@@ -34,6 +34,7 @@ describe('First time claim viewing flow', () => {
       })
       .selectByVisibleText('#dwp-check', 'Approve')
       .selectByVisibleText('#nomis-check', 'Approve')
+      .selectByVisibleText('#visit-confirmation-check', 'Approve')
       .selectByVisibleText(`#claim-expense-${expenseId1}-status`, 'Approve')
       .selectByVisibleText(`#claim-expense-${expenseId2}-status`, 'Approve')
       .click('#approve')

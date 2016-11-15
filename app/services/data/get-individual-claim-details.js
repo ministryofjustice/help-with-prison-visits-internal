@@ -39,7 +39,8 @@ module.exports = function (claimId) {
         .select(
           'ClaimDocument.ClaimDocumentId',
           'ClaimDocument.DocumentStatus',
-          'ClaimDocument.Filepath')
+          'ClaimDocument.Filepath',
+          'ClaimDocument.DocumentType')
         .orderBy('ClaimDocument.DateSubmitted', 'desc')
         .then(function (claimDocuments) {
           claim.benefitDocument = []

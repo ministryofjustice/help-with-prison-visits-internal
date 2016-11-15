@@ -153,7 +153,8 @@ module.exports.insertTestData = function (reference, date, status) {
             Reference: reference,
             DocumentType: data.ClaimDocument.DocumentType,
             DocumentStatus: data.ClaimDocument.DocumentStatus,
-            DateSubmitted: date
+            DateSubmitted: date,
+            IsEnabled: data.ClaimDocument.IsEnabled
           })
       })
       .then(function (result) {
@@ -227,7 +228,8 @@ module.exports.getTestData = function (reference, status) {
     }],
     ClaimDocument: {
       DocumentType: 'VISIT-CONFIRMATION',
-      DocumentStatus: 'uploaded'
+      DocumentStatus: 'uploaded',
+      IsEnabled: 'true'
     }
   }
 }
