@@ -151,14 +151,29 @@ module.exports.insertTestData = function (reference, date, status) {
             ClaimId: ids.claimId,
             EligibilityId: ids.eligibilityId,
             Reference: reference,
-            DocumentType: data.ClaimDocument.DocumentType,
-            DocumentStatus: data.ClaimDocument.DocumentStatus,
+            DocumentType: data.ClaimDocument[0].DocumentType,
+            DocumentStatus: data.ClaimDocument[0].DocumentStatus,
             DateSubmitted: date,
-            IsEnabled: data.ClaimDocument.IsEnabled
+            IsEnabled: data.ClaimDocument[0].IsEnabled
           })
       })
       .then(function (result) {
-        ids.claimDocumentId = result[0]
+        ids.claimDocumentId1 = result[0]
+        return knex('IntSchema.ClaimDocument')
+          .returning('ClaimDocumentId')
+          .insert({
+            ClaimDocumentId: uniqueId2,
+            ClaimId: ids.claimId,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
+            DocumentType: data.ClaimDocument[1].DocumentType,
+            DocumentStatus: data.ClaimDocument[1].DocumentStatus,
+            DateSubmitted: date,
+            IsEnabled: data.ClaimDocument[1].IsEnabled
+          })
+      })
+      .then(function (result) {
+        ids.claimDocumentId2 = result[0]
         resolve(ids)
       })
       .catch(function (error) {
@@ -226,10 +241,15 @@ module.exports.getTestData = function (reference, status) {
       DateOfBirth: '15-10-2010',
       Relationship: 'claimants-child'
     }],
-    ClaimDocument: {
+    ClaimDocument: [{
       DocumentType: 'VISIT-CONFIRMATION',
       DocumentStatus: 'uploaded',
       IsEnabled: 'true'
-    }
+    },
+    {
+      DocumentType: 'BENEFIT',
+      DocumentStatus: 'uploaded',
+      IsEnabled: 'true'
+    }]
   }
 }
