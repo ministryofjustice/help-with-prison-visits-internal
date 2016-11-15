@@ -35,14 +35,21 @@ module.exports = function (claimId) {
       'Claim.VisitConfirmationCheck')
     .then(function (claim) {
       return knex('ClaimDocument')
-        .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.DocumentType': 'VISIT-CONFIRMATION'})
-        .first(
+        .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null})
+        .select(
           'ClaimDocument.ClaimDocumentId',
           'ClaimDocument.DocumentStatus',
           'ClaimDocument.Filepath')
         .orderBy('ClaimDocument.DateSubmitted', 'desc')
-        .then(function (claimVisitConfirmation) {
-          claim.visitConfirmation = claimVisitConfirmation
+        .then(function (claimDocuments) {
+          claim.benefitDocument = []
+          claimDocuments.forEach(function (document) {
+            if (document.DocumentType === 'VISIT-CONFIRMATION') {
+              claim.visitConfirmation = document
+            } else {
+              claim.benefitDocument.push(document)
+            }
+          })
           return knex('Claim')
             .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
             .where('Claim.ClaimId', claimId)

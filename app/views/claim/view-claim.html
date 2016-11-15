@@ -77,7 +77,16 @@
       <tr {% if errors['visit-confirmation-check'][0] %} class="warning"{% endif %}>
         <td>Benefit Information</td>
         <td>
-          {{ benefitsEnum[Claim['Benefit']].displayName }} <br/>
+          {{ benefitsEnum[Claim['Benefit']].displayName }}
+
+          <select class="form-control action-select" id="dwp-check" name="dwpCheck">
+            <option value="">Select</option>
+            <option {% if Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+            <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+            <option {% if Claim['DWPCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
+          </select>
+
+          <br/>
           {% if Claim['DWPBenefitCheckerResult'] == 'YES' %}
           <span class="text-success">DWP - Eligible</span>
           {% elif Claim['DWPBenefitCheckerResult'] == 'NO' %}
@@ -86,12 +95,19 @@
           <span class="text-warning">DWP - No information</span>
           {% endif %}
 
-          <select class="form-control action-select" id="dwp-check" name="dwpCheck">
-            <option value="">Select</option>
-            <option {% if Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-            <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-            <option {% if Claim['DWPCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
-          </select>
+          {% if benefitsEnum[Claim['Benefit']].documentUploadRequired %}
+          {% for document in Claim.benefitDocument %}
+            <br>
+            {% if document['DocumentStatus'] == 'uploaded' %}
+              <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ document['Filepath'] }}">View evidence</a>
+            {% elif document['DocumentStatus'] == 'upload-later' %}
+              <span class="text-pending">To be uploaded later</span>
+            {% else %}
+              <span class="text-pending">To be posted later</span>
+            {% endif %}
+          {% endfor %}
+
+          {% endif %}
         </td>
       </tr>
 
@@ -164,7 +180,7 @@
           <td>{{ getDateFormatted(Claim['DateOfJourney']) }}</td>
           <td>
             {% if Claim.visitConfirmation['DocumentStatus'] == 'uploaded' %}
-            <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ Claim.visitConfirmation['Filepath'] }}" target="_blank">View confirmation</a>
+            <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ Claim.visitConfirmation['Filepath'] }}">View confirmation</a>
 
             <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
               <option value="">Select</option>
@@ -174,10 +190,10 @@
             </select>
 
             {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
-            <span class="text-warning">To be uploaded later</span>
+            <span class="text-pending">To be uploaded later</span>
 
             {% else %}
-            <span class="text-warning">To be posted later</span>
+            <span class="text-pending">To be posted later</span>
 
             {% endif %}
           </td>
