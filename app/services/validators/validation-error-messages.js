@@ -4,5 +4,6 @@ module.exports = {
   getIsNumeric: function (displayName) { return `${displayName} must only contain numbers` },
   getDropboxIsRequired: function (displayName) { return `${displayName} is required` },
   getIsCurrency: function (displayName) { return `${displayName} must be a valid currency` },
-  getIsGreaterThan: function (displayName) { return `${displayName} must be greater than zero` }
+  getIsGreaterThan: function (displayName) { return `${displayName} must be greater than zero` },
+  getAssistedDigitalCaseworkerSameClaim: 'You cannot process a claim you submitted for assisted digital'
 }

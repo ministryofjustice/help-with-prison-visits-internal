@@ -12,6 +12,8 @@ module.exports = function (claimId) {
       'Claim.ClaimId',
       'Claim.DateSubmitted',
       'Claim.DateOfJourney',
+      'Claim.AssistedDigitalCaseworker',
+      'Claim.Caseworker',
       'Visitor.FirstName',
       'Visitor.LastName',
       'Visitor.DateOfBirth',
