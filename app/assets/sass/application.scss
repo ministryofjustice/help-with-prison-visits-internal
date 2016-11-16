@@ -104,7 +104,7 @@ span.bold {
 }
 
 .form-control.action-select{
-    width:250px;
+    width:200px;
     float:right;
 }
 
@@ -141,6 +141,14 @@ td.claim-expense-response{
 
 tr.no-border td{
     border:none;
+}
+
+#content {
+    font-size:18px;
+}
+
+#content table tr td{
+    font-size:16px;
 }
 
 td.text-right {
