@@ -28,7 +28,7 @@
 
   {% include "includes/validation-error-messages.html" %}
 
-  <h1 class="table-heading">{{ 'Visitors' if Children else 'Visitor' }}</h1>
+  <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
 
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
 
