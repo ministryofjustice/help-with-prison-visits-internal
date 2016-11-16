@@ -218,7 +218,7 @@
         {% for expense in Expenses %}
 
           <tr {% if expense['Status'] == 'Select' %} class="warning" {% endif %} {% if expense['Error'] %} class="warning"{% endif %}>
-          <td><span class="bold" id="claim-expense-{{ expense.ClaimExpenseId }}-name">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
+          <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
             <br>
             {{ getClaimExpenseDetailFormatted(expense) }}
             <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
