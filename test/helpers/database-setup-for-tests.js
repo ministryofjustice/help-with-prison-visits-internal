@@ -9,6 +9,8 @@ module.exports.insertTestData = function (reference, date, status) {
     // Generate unique Integer for Ids using timestamp in tenth of seconds
     var uniqueId = Math.floor(Date.now() / 100) - 14000000000
     var uniqueId2 = uniqueId + 1
+    var uniqueId3 = uniqueId2 + 1
+    var uniqueId4 = uniqueId3 + 1
 
     var ids = {}
     knex('IntSchema.Eligibility')
@@ -151,10 +153,10 @@ module.exports.insertTestData = function (reference, date, status) {
             ClaimId: ids.claimId,
             EligibilityId: ids.eligibilityId,
             Reference: reference,
-            DocumentType: data.ClaimDocument[0].DocumentType,
-            DocumentStatus: data.ClaimDocument[0].DocumentStatus,
+            DocumentType: data.ClaimDocument['visit-confirmation'].DocumentType,
+            DocumentStatus: data.ClaimDocument['visit-confirmation'].DocumentStatus,
             DateSubmitted: date,
-            IsEnabled: data.ClaimDocument[0].IsEnabled
+            IsEnabled: data.ClaimDocument['visit-confirmation'].IsEnabled
           })
       })
       .then(function (result) {
@@ -166,14 +168,46 @@ module.exports.insertTestData = function (reference, date, status) {
             ClaimId: ids.claimId,
             EligibilityId: ids.eligibilityId,
             Reference: reference,
-            DocumentType: data.ClaimDocument[1].DocumentType,
-            DocumentStatus: data.ClaimDocument[1].DocumentStatus,
+            DocumentType: data.ClaimDocument['benefit'].DocumentType,
+            DocumentStatus: data.ClaimDocument['benefit'].DocumentStatus,
             DateSubmitted: date,
-            IsEnabled: data.ClaimDocument[1].IsEnabled
+            IsEnabled: data.ClaimDocument['benefit'].IsEnabled
           })
       })
       .then(function (result) {
         ids.claimDocumentId2 = result[0]
+        return knex('IntSchema.ClaimDocument')
+          .returning('ClaimDocumentId')
+          .insert({
+            ClaimDocumentId: uniqueId3,
+            ClaimExpenseId: uniqueId,
+            ClaimId: ids.claimId,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
+            DocumentType: data.ClaimDocument['expense'].DocumentType,
+            DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+            DateSubmitted: date,
+            IsEnabled: data.ClaimDocument['expense'].IsEnabled
+          })
+      })
+      .then(function (result) {
+        ids.claimDocumentId3 = result[0]
+        return knex('IntSchema.ClaimDocument')
+          .returning('ClaimDocumentId')
+          .insert({
+            ClaimDocumentId: uniqueId4,
+            ClaimExpenseId: uniqueId2,
+            ClaimId: ids.claimId,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
+            DocumentType: data.ClaimDocument['expense'].DocumentType,
+            DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+            DateSubmitted: date,
+            IsEnabled: data.ClaimDocument['expense'].IsEnabled
+          })
+      })
+      .then(function (result) {
+        ids.claimDocumentId4 = result[0]
         resolve(ids)
       })
       .catch(function (error) {
@@ -241,15 +275,22 @@ module.exports.getTestData = function (reference, status) {
       DateOfBirth: '15-10-2010',
       Relationship: 'claimants-child'
     }],
-    ClaimDocument: [{
-      DocumentType: 'VISIT-CONFIRMATION',
-      DocumentStatus: 'uploaded',
-      IsEnabled: 'true'
-    },
-    {
-      DocumentType: 'BENEFIT',
-      DocumentStatus: 'uploaded',
-      IsEnabled: 'true'
-    }]
+    ClaimDocument: {
+      'visit-confirmation': {
+        DocumentType: 'VISIT-CONFIRMATION',
+        DocumentStatus: 'uploaded',
+        IsEnabled: 'true'
+      },
+      'benefit': {
+        DocumentType: 'BENEFIT',
+        DocumentStatus: 'uploaded',
+        IsEnabled: 'true'
+      },
+      'expense': {
+        DocumentType: 'RECEIPT',
+        DocumentStatus: 'uploaded',
+        IsEnabled: 'true'
+      }
+    }
   }
 }

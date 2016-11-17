@@ -17,6 +17,7 @@ const submitClaimResponse = proxyquire('../../../../app/services/data/submit-cla
 
 var reference = 'SUBC456'
 var newIds = {}
+var caseworker = 'adam@adams.gov'
 
 describe('services/data/submit-claim-response', function () {
   before(function () {
@@ -37,6 +38,7 @@ describe('services/data/submit-claim-response', function () {
   it('should update eligibility and claim then call to send notification', function () {
     var claimId = newIds.claimId
     var claimResponse = {
+      'caseworker': caseworker,
       'decision': claimDecisionEnum.REJECTED,
       'reason': 'No valid relationship to prisoner',
       'note': 'Could not verify in NOMIS',
@@ -56,6 +58,7 @@ describe('services/data/submit-claim-response', function () {
           .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
           .first()
           .then(function (result) {
+            expect(result.Caseworker).to.be.equal(caseworker)
             expect(result.Status[0]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Status[1]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Reason).to.be.equal(claimResponse.reason)
