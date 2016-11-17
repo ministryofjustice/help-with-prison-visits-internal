@@ -5,5 +5,5 @@ module.exports = {
   getDropboxIsRequired: function (displayName) { return `${displayName} is required` },
   getIsCurrency: function (displayName) { return `${displayName} must be a valid currency` },
   getIsGreaterThan: function (displayName) { return `${displayName} must be greater than zero` },
-  getAssistedDigitalCaseworkerSameClaim: 'You cannot process this claim since you filled in on behalf of a visitor'
+  getAssistedDigitalCaseworkerSameClaim: 'You cannot process this claim since you filled it in on behalf of a visitor'
 }
