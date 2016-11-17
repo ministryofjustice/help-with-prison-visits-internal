@@ -187,14 +187,6 @@
           <td>
             {% if Claim.visitConfirmation['DocumentStatus'] == 'uploaded' %}
             <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ Claim.visitConfirmation['Filepath'] }}">View confirmation</a>
-          </td>
-          <td>
-            <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
-              <option value="">Select</option>
-              <option {% if Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-              <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-NEW-IMAGE' %} selected {% endif %} value="REQUEST-NEW-IMAGE">Request new image</option>
-              <option {% if Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
-            </select>
 
             {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
             <span class="text-pending">To be uploaded later</span>
@@ -203,6 +195,14 @@
             <span class="text-pending">To be posted later</span>
 
             {% endif %}
+          <td>
+          <td>
+            <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
+              <option value="">Select</option>
+              <option {% if Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+              <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-NEW-IMAGE' %} selected {% endif %} value="REQUEST-NEW-IMAGE">Request new image</option>
+              <option {% if Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
+            </select>
           </td>
         </tr>
       </tbody>
