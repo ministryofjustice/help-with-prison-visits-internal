@@ -244,6 +244,7 @@
 
                 {% elif expense.DocumentStatus == 'post-later' %}
                   <span class="text-pending">Sending receipt by post</span>
+                  <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?claimExpenseId={{ expense.ClaimExpenseId }}" class="button grey pull-right">Add</a>
 
                 {% else %}
                   <span class="text-warning">Receipt required</span>
