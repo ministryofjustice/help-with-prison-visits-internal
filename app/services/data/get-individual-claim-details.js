@@ -54,7 +54,13 @@ module.exports = function (claimId) {
           return knex('Claim')
             .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
             .where('Claim.ClaimId', claimId)
-            .select()
+            .select('ClaimExpense.*', 'ClaimDocument.DocumentStatus', 'ClaimDocument.DocumentType', 'ClaimDocument.ClaimDocumentId', 'ClaimDocument.Filepath')
+            .leftJoin('ClaimDocument', function () {
+              this
+                .on('ClaimExpense.ClaimId', 'ClaimDocument.ClaimId')
+                .on('ClaimExpense.ClaimExpenseId', 'ClaimDocument.ClaimExpenseId')
+                .on('ClaimExpense.IsEnabled', 'ClaimDocument.IsEnabled')
+            })
             .orderBy('ClaimExpense.ClaimExpenseId')
             .then(function (claimExpenses) {
               var total = 0
