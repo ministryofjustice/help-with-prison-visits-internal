@@ -223,6 +223,7 @@
               {{ getClaimExpenseDetailFormatted(expense) }}
               <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
             </td>
+
             <td>£{{ expense['Cost'] }}</td>
 
             <td>
@@ -255,7 +256,6 @@
               <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text" name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost"
                 class="form-control cost" value="{{ expense['ApprovedCost'] }}" {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} style="display: inline" {% endif %}>
             </td>
-
           </tr>
 
         {% endfor %}
