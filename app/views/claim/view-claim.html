@@ -200,7 +200,7 @@
             <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
               <option value="">Select</option>
               <option {% if Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-              <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-NEW-IMAGE' %} selected {% endif %} value="REQUEST-NEW-IMAGE">Request new image</option>
+              <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
               <option {% if Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
             </select>
           </td>
