@@ -84,7 +84,7 @@ describe('services/domain/claim-decision', function () {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_CASEWORKER, '', '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, INVALID_CLAIMEXPENSES)
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['assisted-digital-caseworker'][0]).to.equal('You cannot process a claim you submitted for assisted digital')
+      expect(e.validationErrors['assisted-digital-caseworker'][0]).to.equal('You cannot process this claim since you filled in on behalf of a visitor')
     }
   })
 })
