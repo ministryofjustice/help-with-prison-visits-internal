@@ -153,10 +153,10 @@ module.exports.insertTestData = function (reference, date, status) {
             ClaimId: ids.claimId,
             EligibilityId: ids.eligibilityId,
             Reference: reference,
-            DocumentType: data.ClaimDocument['visit-conf'].DocumentType,
-            DocumentStatus: data.ClaimDocument['visit-conf'].DocumentStatus,
+            DocumentType: data.ClaimDocument['visit-confirmation'].DocumentType,
+            DocumentStatus: data.ClaimDocument['visit-confirmation'].DocumentStatus,
             DateSubmitted: date,
-            IsEnabled: data.ClaimDocument['visit-conf'].IsEnabled
+            IsEnabled: data.ClaimDocument['visit-confirmation'].IsEnabled
           })
       })
       .then(function (result) {
@@ -276,7 +276,7 @@ module.exports.getTestData = function (reference, status) {
       Relationship: 'claimants-child'
     }],
     ClaimDocument: {
-      'visit-conf': {
+      'visit-confirmation': {
         DocumentType: 'VISIT-CONFIRMATION',
         DocumentStatus: 'uploaded',
         IsEnabled: 'true'

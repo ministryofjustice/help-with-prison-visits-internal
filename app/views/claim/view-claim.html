@@ -218,43 +218,44 @@
         {% for expense in Expenses %}
 
           <tr {% if expense['Status'] == 'Select' %} class="warning" {% endif %} {% if expense['Error'] %} class="warning"{% endif %}>
-          <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
-            <br>
-            {{ getClaimExpenseDetailFormatted(expense) }}
-            <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
-          </td>
-          <td>£{{ expense['Cost'] }}</td>
+            <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
+              <br>
+              {{ getClaimExpenseDetailFormatted(expense) }}
+              <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
+            </td>
 
-          <td>
-            {% if expense.DocumentStatus == 'uploaded' %}
-              <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ expense['Filepath'] }}">View receipt</a>
+            <td>£{{ expense['Cost'] }}</td>
 
-              <td class="claim-expense-response">
-                <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status" class="form-control action-select claim-expense-status">
-                  <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
-                  <option {% if expense['Status'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-                  <option {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} selected {% endif %} value="APPROVED-DIFF-AMOUNT" >Approve different amount</option>
-                  <option {% if expense['Status'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-                  <option {% if expense['Status'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject claim</option>
-                </select>
-                <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text" name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" class="form-control cost" value="{{ expense['ApprovedCost'] }}" {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} style="display: inline" {% endif %}>
-              </td>
+            <td>
+              {% if receiptRequiredEnum[expense.ExpenseType] %}
+                {% if expense.DocumentStatus == 'uploaded' %}
+                  <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ expense['Filepath'] }}">View receipt</a>
 
-            {% elif expense.DocumentStatus == 'upload-later' %}
-              <span class="text-pending">Uploading receipt later</span>
-              <td></td>
+                {% elif expense.DocumentStatus == 'upload-later' %}
+                  <span class="text-pending">Uploading receipt later</span>
 
-            {% elif expense.DocumentStatus == 'post-later' %}
-              <span class="text-pending">Sending receipt by post</span>
-              <td></td>
+                {% elif expense.DocumentStatus == 'post-later' %}
+                  <span class="text-pending">Sending receipt by post</span>
 
-            {% else %}
-              <span class="text-warning">Receipt required</span>
-              <td></td>
+                {% else %}
+                  <span class="text-warning">Receipt required</span>
 
-            {% endif %}
-          </td>
+                {% endif %}
+              {% endif %}
+            </td>
 
+            <td class="claim-expense-response">
+              <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status"
+                class="form-control action-select claim-expense-status">
+                <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
+                <option {% if expense['Status'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+                <option {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} selected {% endif %} value="APPROVED-DIFF-AMOUNT" >Approve different amount</option>
+                <option {% if expense['Status'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+                <option {% if expense['Status'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject claim</option>
+              </select>
+              <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text" name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost"
+                class="form-control cost" value="{{ expense['ApprovedCost'] }}" {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} style="display: inline" {% endif %}>
+            </td>
           </tr>
 
         {% endfor %}

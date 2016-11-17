@@ -10,6 +10,7 @@ const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 const getClaimExpenseResponses = require('../helpers/get-claim-expense-responses')
 const prisonerRelationshipsEnum = require('../../constants/prisoner-relationships-enum')
 const benefitsEnum = require('../../constants/benefits-enum')
+const receiptRequiredEnum = require('../../constants/receipt-required-enum')
 const mergeClaimExpensesWithSubmittedResponses = require('../helpers/merge-claim-expenses-with-submitted-responses')
 
 module.exports = function (router) {
@@ -28,7 +29,8 @@ module.exports = function (router) {
           getChildFormatted: getChildFormatted,
           getDisplayFieldName: getDisplayFieldName,
           prisonerRelationshipsEnum: prisonerRelationshipsEnum,
-          benefitsEnum: benefitsEnum
+          benefitsEnum: benefitsEnum,
+          receiptRequiredEnum: receiptRequiredEnum
         })
       })
   })
