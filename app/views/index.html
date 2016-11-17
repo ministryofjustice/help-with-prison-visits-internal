@@ -25,6 +25,12 @@
   	</thead>
   </table>
 
+  {% if user %}
+  <p>
+    <a href="{{ user.assistedDigitalUrl }}">Submit an assisted digital claim</a>
+  </p>
+  {% endif %}
+
 </main>
 
 {% endblock %}

@@ -1,9 +1,24 @@
 const ValidationError = require('../errors/validation-error')
 const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
+const ERROR_MESSAGES = require('../validators/validation-error-messages')
 
 class ClaimDecision {
-  constructor (decision, reasonRequest, reasonReject, additionalInfoApprove, additionalInfoRequest, additionalInfoReject, nomisCheck, dwpCheck, visitConfirmationCheck, claimExpenseResponses) {
+  constructor (caseworker,
+               assistedDigitalCaseworker,
+               decision,
+               reasonRequest,
+               reasonReject,
+               additionalInfoApprove,
+               additionalInfoRequest,
+               additionalInfoReject,
+               nomisCheck,
+               dwpCheck,
+               visitConfirmationCheck,
+               claimExpenseResponses) {
+    this.caseworker = caseworker
+    this.assistedDigitalCaseworker = assistedDigitalCaseworker
+
     this.decision = decision
     if (this.decision === 'APPROVED') {
       this.reason = ''
@@ -32,6 +47,10 @@ class ClaimDecision {
 
   IsValid () {
     var errors = ErrorHandler()
+
+    if (this.caseworker === this.assistedDigitalCaseworker) {
+      throw new ValidationError({'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim]})
+    }
 
     FieldValidator(this.decision, 'decision', errors)
       .isRequired()

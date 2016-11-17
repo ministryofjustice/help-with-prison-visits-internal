@@ -16,7 +16,9 @@
       <h1 class="heading-large">
         <span id="reference" class="heading-secondary">Reference number</span>{{ Claim['Reference'] }}
       </h1>
-
+      {% if Claim['AssistedDigitalCaseworker'] %}
+      <span class="bold-small">Assisted digital - </span>{{ Claim['AssistedDigitalCaseworker'] }}
+      {% endif %}
     </div>
     <div class="column-quarter">
 
@@ -26,6 +28,8 @@
     </div>
   </div>
 
+
+
   {% include "includes/validation-error-messages.html" %}
 
   <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
@@ -33,6 +37,8 @@
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
 
     {% include "partials/csrf-hidden-input.html" %}
+
+    <input type="hidden" name="assistedDigitalCaseworker" value="{{ Claim['AssistedDigitalCaseworker'] }}">
 
     <table class="col-2 no-pad-right">
 

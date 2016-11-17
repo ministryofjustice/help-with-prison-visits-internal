@@ -41,6 +41,8 @@ module.exports = function (router) {
     try {
       var claimExpenses = getClaimExpenseResponses(req.body)
       var claimDecision = new ClaimDecision(
+        req.user.email,
+        req.body.assistedDigitalCaseworker,
         req.body.decision,
         req.body.reasonRequest,
         req.body.reasonReject,
