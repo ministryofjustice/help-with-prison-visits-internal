@@ -5,6 +5,7 @@
 var routes = [
   require('./index'),
   require('./claim/view-claim'),
+  require('./claim/file-upload'),
 
   // Configuration
   require('./config'),

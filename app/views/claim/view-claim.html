@@ -104,6 +104,7 @@
               <span class="text-pending">To be uploaded later</span>
             {% else %}
               <span class="text-pending">To be posted later</span>
+              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}" id="add-benefit-documentation" class="button grey pull-right">Add</a>
             {% endif %}
           {% endfor %}
 
@@ -195,6 +196,7 @@
 
             {% else %}
             <span class="text-pending">To be posted later</span>
+            <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT-CONFIRMATION" id="add-visit-confirmation" class="button grey pull-right">Add</a>
 
             {% endif %}
           </td>
