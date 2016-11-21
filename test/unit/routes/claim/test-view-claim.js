@@ -58,7 +58,7 @@ describe('routes/claim/view-claim', function () {
       stubGetIndividualClaimDetails.resolves({})
 
       request
-        .get('/claim/123')
+        .get('/claim/123/dsgihj,hfkjwesdhfkj')
         .expect(200)
         .expect(function () {
           expect(authorisation.calledOnce).to.be.true

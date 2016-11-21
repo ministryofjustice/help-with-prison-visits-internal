@@ -12,8 +12,8 @@ describe('routes/first-time/eligibility/claim/file-upload', function () {
   const ELIGIBILITYID = '1234'
   const CLAIMID = '1'
   const CLAIMDOCUMENTID = '1'
-  const BASEROUTE = `/claim/file-upload/${REFERENCE}/${CLAIMID}?documentType=`
-  const VALIDROUTE = `${BASEROUTE}VISIT_CONFIRMATION&claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`
+  const BASEROUTE = `/claim/file-upload/${REFERENCE}/${CLAIMID}/`
+  const VALIDROUTE = `${BASEROUTE}VISIT_CONFIRMATION/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`
   var request
 
   var directoryCheckStub
@@ -74,7 +74,7 @@ describe('routes/first-time/eligibility/claim/file-upload', function () {
 
     it('should respond with a 500 if passed invalid document type', function () {
       request
-        .get(`${BASEROUTE}VISIT_CONFIRMATION&claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
+        .get(`${BASEROUTE}VISIT_CONFIRMATION/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
         .expect(500)
     })
   })
@@ -104,7 +104,7 @@ describe('routes/first-time/eligibility/claim/file-upload', function () {
     it('should respond with a 500 if passed invalid document type', function () {
       uploadStub.callsArg(2).returns({})
       request
-        .post(`${BASEROUTE}VISIT_CONFIRMATION&claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
+        .post(`${BASEROUTE}VISIT_CONFIRMATION/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
         .expect(500)
     })
   })
