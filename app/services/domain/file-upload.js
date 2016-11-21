@@ -1,0 +1,45 @@
+const ValidationError = require('../errors/validation-error')
+const FieldValidator = require('../validators/field-validator')
+const ErrorHandler = require('../validators/error-handler')
+const moment = require('moment')
+const ERROR_MESSAGES = require('../validators/validation-error-messages')
+const UploadError = require('../errors/upload-error')
+
+class FileUpload {
+  constructor (file, error, claimDocumentId, caseworker) {
+    this.file = file
+    this.error = error
+    this.IsValid()
+    this.path = file.path
+    this.dateSubmitted = moment().toDate()
+    this.claimDocumentId = claimDocumentId
+    this.caseworker = caseworker
+
+    if (file) {
+      this.documentStatus = 'uploaded'
+    }
+  }
+
+  IsValid () {
+    var errors = ErrorHandler()
+
+    if (this.error) {
+      if (this.error instanceof UploadError) {
+        throw new ValidationError({upload: [ERROR_MESSAGES.getUploadIncorrectType]})
+      } else {
+        throw this.error
+      }
+    }
+
+    FieldValidator(this.file, 'upload', errors)
+      .isRequired()
+
+    var validationErrors = errors.get()
+
+    if (validationErrors) {
+      throw new ValidationError(validationErrors)
+    }
+  }
+}
+
+module.exports = FileUpload
