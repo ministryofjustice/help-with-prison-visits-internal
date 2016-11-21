@@ -28,7 +28,12 @@
     </div>
   </div>
 
-
+  {% if duplicates.length > 0 %}
+    <h1>The following claims may be duplicates of this claim:</h1>
+    {% for duplicateClaim in duplicates %}
+      <a href='/claim/{{ duplicateClaim.ClaimId }}'>{{ duplicateClaim.Reference }}</a>
+    {% endfor %}
+  {% endif %}
 
   {% include "includes/validation-error-messages.html" %}
 

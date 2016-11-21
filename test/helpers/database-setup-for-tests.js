@@ -294,3 +294,87 @@ module.exports.getTestData = function (reference, status) {
     }
   }
 }
+
+module.exports.insertDuplicateClaims = function (reference, date, status, visitDate) {
+  var data = this.getTestData(reference, status)
+  return new Promise(function (resolve, reject) {
+    // Generate unique Integer for Ids using timestamp in tenth of seconds
+    var uniqueId = Math.floor(Date.now() / 100) - 14000000000
+
+    var ids = {}
+    knex('IntSchema.Eligibility')
+      .insert({
+        EligibilityId: uniqueId,
+        Reference: reference,
+        DateCreated: date,
+        DateSubmitted: date,
+        Status: status
+      })
+      .returning('EligibilityId')
+      .then(function (result) {
+        ids.eligibilityId = result[0]
+        return knex('IntSchema.Prisoner')
+          .returning('PrisonerId')
+          .insert({
+            PrisonerId: uniqueId,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
+            FirstName: data.Prisoner.FirstName,
+            LastName: data.Prisoner.LastName,
+            DateOfBirth: date,
+            PrisonNumber: data.Prisoner.PrisonNumber,
+            NameOfPrison: data.Prisoner.NameOfPrison
+          })
+          .then(function (result) {
+            ids.prisonerId = result[0]
+            return ids.prisonerId
+          })
+      })
+      .then(function () {
+        return knex('IntSchema.Visitor')
+          .returning('VisitorId')
+          .insert({
+            VisitorId: uniqueId,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
+            Title: data.Visitor.Title,
+            FirstName: data.Visitor.FirstName,
+            LastName: data.Visitor.LastName,
+            NationalInsuranceNumber: data.Visitor.NationalInsuranceNumber,
+            HouseNumberAndStreet: data.Visitor.HouseNumberAndStreet,
+            Town: data.Visitor.Town,
+            County: data.Visitor.County,
+            PostCode: data.Visitor.PostCode,
+            Country: data.Visitor.Country,
+            EmailAddress: data.Visitor.EmailAddress,
+            PhoneNumber: data.Visitor.PhoneNumber,
+            DateOfBirth: date,
+            Relationship: data.Visitor.Relationship
+          })
+          .then(function (result) {
+            ids.visitorId = result[0]
+            return ids.visitorId
+          })
+      })
+      .then(function () {
+        return knex('IntSchema.Claim')
+          .returning('ClaimId')
+          .insert({
+            ClaimId: uniqueId,
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
+            DateOfJourney: visitDate,
+            DateCreated: date,
+            DateSubmitted: date,
+            Status: status
+          })
+      })
+      .then(function (result) {
+        ids.claimId = result[0]
+        resolve(ids)
+      })
+      .catch(function (error) {
+        reject(error)
+      })
+  })
+}
