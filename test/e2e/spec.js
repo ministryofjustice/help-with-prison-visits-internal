@@ -49,7 +49,7 @@ describe('First time claim viewing flow', () => {
       .selectByVisibleText('#visit-confirmation-check', 'Approve')
       .selectByVisibleText(`#claim-expense-${expenseId1}-status`, 'Approve')
       .selectByVisibleText(`#claim-expense-${expenseId2}-status`, 'Approve')
-      .click('#approve')
+      .click('[for="approve"]')
       .click('#approve-submit')
 
       // Back to index with changed results
