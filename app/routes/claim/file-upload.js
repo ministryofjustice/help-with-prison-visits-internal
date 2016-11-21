@@ -36,7 +36,11 @@ module.exports = function (router) {
           })
         }
         if (error) {
-          throw new ValidationError({upload: [ERROR_MESSAGES.getUploadTooLarge]})
+          if (error.message === 'File too large') {
+            throw new ValidationError({upload: [ERROR_MESSAGES.getUploadTooLarge]})
+          } else {
+            throw error
+          }
         } else {
           if (DocumentTypeEnum.hasOwnProperty(req.params.documentType)) {
             var fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
