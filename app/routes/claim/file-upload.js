@@ -29,13 +29,16 @@ module.exports = function (router) {
   router.post('/claim/file-upload/:referenceId/:claimId/:documentType', function (req, res, next) {
     Upload(req, res, function (error) {
       try {
+        console.log('upload 1')
         // If there was no file attached, we still need to check the CSRF token
         if (!req.file) {
+          console.log('no file')
           csrfProtection(req, res, function (error) {
             if (error) { throw error }
           })
         }
         if (error) {
+          console.log('error')
           if (error.message === 'File too large') {
             throw new ValidationError({upload: [ERROR_MESSAGES.getUploadTooLarge]})
           } else {
@@ -43,8 +46,11 @@ module.exports = function (router) {
           }
         } else {
           if (DocumentTypeEnum.hasOwnProperty(req.params.documentType)) {
+            console.log('correct type')
             var fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
+            console.log('domain created')
             ClaimDocumentUpdate(req.params.referenceId, fileUpload).then(function () {
+              console.log('DB call')
               res.redirect(`/claim/${req.params.claimId}`)
             }).catch(function (error) {
               next(error)

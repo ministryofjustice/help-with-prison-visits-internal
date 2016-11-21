@@ -7,20 +7,20 @@ const bodyParser = require('body-parser')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 require('sinon-bluebird')
 
-describe('routes/first-time/eligibility/claim/file-upload', function () {
+describe('routes/claim/file-upload', function () {
   const REFERENCE = 'V123456'
   const ELIGIBILITYID = '1234'
   const CLAIMID = '1'
   const CLAIMDOCUMENTID = '1'
   const BASEROUTE = `/claim/file-upload/${REFERENCE}/${CLAIMID}/`
-  const VALIDROUTE = `${BASEROUTE}VISIT_CONFIRMATION/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`
-  var request
+  const VALIDROUTE = `${BASEROUTE}VISIT_CONFIRMATION?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`
 
   var directoryCheckStub
   var uploadStub
   var fileUploadStub
   var claimDocumentUpdateStub
   var generateCSRFTokenStub
+  var app
 
   beforeEach(function () {
     directoryCheckStub = sinon.stub()
@@ -33,25 +33,33 @@ describe('routes/first-time/eligibility/claim/file-upload', function () {
       '../../services/directory-check': directoryCheckStub,
       '../../services/upload': uploadStub,
       '../../services/domain/file-upload': fileUploadStub,
-      '../../services/data/insert-file-upload-details-for-claim': claimDocumentUpdateStub,
+      '../../services/data/update-file-upload-details-for-claim': claimDocumentUpdateStub,
       '../../services/generate-csrf-token': generateCSRFTokenStub,
       'csurf': function () { return function () { } }
     })
-    var app = express()
+    app = express()
     app.use(bodyParser.json())
     mockViewEngine(app, '../../../app/views')
+    app.use(function (req, res, next) {
+      req.user = {
+        'email': 'test@test.com',
+        'first_name': 'Andrew',
+        'last_name': 'Adams',
+        'roles': ['caseworker', 'admin', 'sscl']
+      }
+      next()
+    })
     route(app)
     app.use(function (err, req, res, next) {
       if (err) {
         res.status(500).render('includes/error')
       }
     })
-    request = supertest(app)
   })
 
   describe(`GET ${BASEROUTE}`, function () {
     it('should call the CSRFToken generator', function () {
-      request
+      return supertest(app)
         .get(VALIDROUTE)
         .expect(function () {
           sinon.assert.calledOnce(generateCSRFTokenStub)
@@ -59,13 +67,14 @@ describe('routes/first-time/eligibility/claim/file-upload', function () {
     })
 
     it('should respond with a 200 if passed valid document type', function () {
-      request
+      return supertest(app)
         .get(VALIDROUTE)
         .expect(200)
+        .end()
     })
 
     it('should call the directory check', function () {
-      request
+      return supertest(app)
         .get(VALIDROUTE)
         .expect(function () {
           sinon.assert.calledOnce(directoryCheckStub)
@@ -73,8 +82,8 @@ describe('routes/first-time/eligibility/claim/file-upload', function () {
     })
 
     it('should respond with a 500 if passed invalid document type', function () {
-      request
-        .get(`${BASEROUTE}VISIT_CONFIRMATION/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
+      return supertest(app)
+        .get(`${BASEROUTE}TEST/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
         .expect(500)
     })
   })
@@ -83,7 +92,7 @@ describe('routes/first-time/eligibility/claim/file-upload', function () {
     it('should create a file upload object, insert it to DB and give 302', function () {
       uploadStub.callsArg(2).returns({})
       claimDocumentUpdateStub.resolves()
-      request
+      return supertest(app)
         .post(VALIDROUTE)
         .expect(function () {
           sinon.assert.calledOnce(uploadStub)
@@ -96,15 +105,15 @@ describe('routes/first-time/eligibility/claim/file-upload', function () {
     it('should catch a validation error', function () {
       uploadStub.callsArg(2).returns({})
       fileUploadStub.throws(new ValidationError())
-      request
+      return supertest(app)
         .post(VALIDROUTE)
         .expect(400)
     })
 
     it('should respond with a 500 if passed invalid document type', function () {
       uploadStub.callsArg(2).returns({})
-      request
-        .post(`${BASEROUTE}VISIT_CONFIRMATION/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
+      return supertest(app)
+        .post(`${BASEROUTE}TEST/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
         .expect(500)
     })
   })
