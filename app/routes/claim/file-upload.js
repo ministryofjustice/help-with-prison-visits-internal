@@ -40,7 +40,7 @@ module.exports = function (router) {
         } else {
           if (DocumentTypeEnum.hasOwnProperty(req.params.documentType)) {
             var fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
-            ClaimDocumentUpdate(req.params.referenceId, req.query.eligibilityId, req.params.claimId, fileUpload).then(function () {
+            ClaimDocumentUpdate(req.params.referenceId, fileUpload).then(function () {
               res.redirect(`/claim/${req.params.claimId}`)
             }).catch(function (error) {
               next(error)

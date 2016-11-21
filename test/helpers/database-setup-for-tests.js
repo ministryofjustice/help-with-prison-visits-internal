@@ -279,7 +279,8 @@ module.exports.getTestData = function (reference, status) {
       'visit-confirmation': {
         DocumentType: 'VISIT-CONFIRMATION',
         DocumentStatus: 'uploaded',
-        IsEnabled: 'true'
+        IsEnabled: 'true',
+        Caseworker: 'test@test.com'
       },
       'benefit': {
         DocumentType: 'BENEFIT',
