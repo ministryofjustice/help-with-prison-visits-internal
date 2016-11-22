@@ -43,7 +43,7 @@
     <td>
       {{ benefitsEnum[Claim['Benefit']].displayName }}
 
-      <select class="form-control action-select" name="dwpCheck">
+      <select class="form-control action-select" id="dwp-status" name="dwpCheck">
         <option value="">Select</option>
         <option {% if Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
         <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
