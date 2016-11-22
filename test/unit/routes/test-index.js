@@ -11,7 +11,7 @@ var authorisation
 
 describe('routes/index', function () {
   var app
-  authorisation = sinon.stub()
+  authorisation = { isAuthenticated: sinon.stub() }
   getClaimsListAndCount = sinon.stub()
 
   beforeEach(function () {
@@ -22,15 +22,6 @@ describe('routes/index', function () {
 
     app = express()
     mockViewEngine(app, '../../../app/views')
-    app.use(function (req, res, next) {
-      req.user = {
-        'email': 'test@test.com',
-        'first_name': 'Andrew',
-        'last_name': 'Adams',
-        'roles': ['caseworker', 'admin', 'sscl']
-      }
-      next()
-    })
     route(app)
   })
 
