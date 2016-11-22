@@ -9,19 +9,16 @@ var route = proxyquire('../../../../app/routes/health-check/status', {
 })
 
 describe('routes/health-check/status', function () {
-  var request
+  var app
 
   beforeEach(function () {
-    var app = express()
-
+    app = express()
     route(app)
-
-    request = supertest(app)
   })
 
   describe('GET /status', function () {
     it('should respond with a 200', function () {
-      request
+      return supertest(app)
         .get('/status')
         .expect(200)
     })

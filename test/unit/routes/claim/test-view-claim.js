@@ -25,43 +25,50 @@ const INCOMPLETE_DATA = {
 }
 
 describe('routes/claim/view-claim', function () {
-  var request
+  var app
 
   beforeEach(function () {
-    authorisation = sinon.stub()
+    authorisation = { isAuthenticated: sinon.stub() }
     stubGetIndividualClaimDetails = sinon.stub()
     stubSubmitClaimResponse = sinon.stub()
     stubClaimDecision = sinon.stub()
     stubGetClaimExpenseResponses = sinon.stub()
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
-      '../services/authorisation': authorisation,
+      '../../services/authorisation': authorisation,
       '../../services/data/get-individual-claim-details': stubGetIndividualClaimDetails,
       '../../services/data/submit-claim-response': stubSubmitClaimResponse,
       '../../services/domain/claim-decision': stubClaimDecision,
       '../helpers/get-claim-expense-responses': stubGetClaimExpenseResponses
     })
-
-    var app = express()
+    app = express()
     app.use(bodyParser.json())
     mockViewEngine(app, '../../../app/views')
+    app.use(function (req, res, next) {
+      req.user = {
+        'email': 'test@test.com',
+        'first_name': 'Andrew',
+        'last_name': 'Adams',
+        'roles': ['caseworker', 'admin', 'sscl']
+      }
+      next()
+    })
     route(app)
     app.use(function (err, req, res, next) {
       if (err) {
         res.status(500).render('includes/error')
       }
     })
-    request = supertest(app)
   })
 
   describe('GET /claim/:claimId', function () {
     it('should respond with a 200', function () {
       stubGetIndividualClaimDetails.resolves({})
 
-      request
+      return supertest(app)
         .get('/claim/123')
         .expect(200)
         .expect(function () {
-          expect(authorisation.calledOnce).to.be.true
+          expect(authorisation.isAuthenticated.calledOnce).to.be.true
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
@@ -77,12 +84,12 @@ describe('routes/claim/view-claim', function () {
       stubGetClaimExpenseResponses.returns(newClaimExpenseResponse)
       stubGetIndividualClaimDetails.resolves({})
 
-      request
+      return supertest(app)
         .post('/claim/123')
         .send(VALID_DATA)
         .expect(302)
         .expect(function () {
-          expect(authorisation.calledOnce).to.be.true
+          expect(authorisation.isAuthenticated.calledOnce).to.be.true
           expect(stubGetClaimExpenseResponses.calledOnce).to.be.true
           expect(stubClaimDecision.calledOnce).to.be.true
           expect(stubSubmitClaimResponse.calledOnce).to.be.true
@@ -93,37 +100,31 @@ describe('routes/claim/view-claim', function () {
       stubClaimDecision.throws(new ValidationError({ 'reason': {} }))
       stubGetIndividualClaimDetails.resolves({})
 
-      request
+      return supertest(app)
         .post('/claim/123')
         .send(INCOMPLETE_DATA)
         .expect(400)
         .expect(function () {
-          expect(authorisation.calledOnce).to.be.true
+          expect(authorisation.isAuthenticated.calledOnce).to.be.true
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
   })
 
   describe('GET /claim/:claimId/download', function () {
-    it('should respond respond with 200 if valid path entered', function (done) {
-      request
+    it('should respond respond with 200 if valid path entered', function () {
+      return supertest(app)
         .get('/claim/123/download?path=test/resources/testfile.txt')
         .expect(200)
-        .end(function (error, response) {
-          expect(error).to.be.null
+        .expect(function (response) {
           expect(response.header['content-length']).to.equal('4')
-          done()
         })
     })
 
-    it('should respond with 500 if no path provided', function (done) {
-      request
+    it('should respond with 500 if no path provided', function () {
+      return supertest(app)
         .get('/claim/123/download')
         .expect(500)
-        .end(function (error, response) {
-          expect(error).to.be.null
-          done()
-        })
     })
   })
 })

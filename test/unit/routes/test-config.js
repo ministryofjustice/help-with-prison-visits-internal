@@ -10,7 +10,7 @@ require('sinon-bluebird')
 var isAdmin
 
 describe('routes/config', function () {
-  var request
+  var app
 
   beforeEach(function () {
     isAdmin = sinon.stub()
@@ -19,16 +19,15 @@ describe('routes/config', function () {
       '../services/authorisation': { 'isAdmin': isAdmin }
     })
 
-    var app = express()
+    app = express()
     app.use(bodyParser.json())
     mockViewEngine(app, '../../../app/views')
     route(app)
-    request = supertest(app)
   })
 
   describe('GET /config', function () {
     it('should respond with a 200', function () {
-      request
+      return supertest(app)
         .get('/config')
         .expect(200)
         .expect(function () {
