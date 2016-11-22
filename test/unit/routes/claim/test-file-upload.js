@@ -70,7 +70,6 @@ describe('routes/claim/file-upload', function () {
       return supertest(app)
         .get(VALIDROUTE)
         .expect(200)
-        .end()
     })
 
     it('should call the directory check', function () {
