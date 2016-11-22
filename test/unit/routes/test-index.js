@@ -10,7 +10,7 @@ var getClaimsListAndCount
 var authorisation
 
 describe('routes/index', function () {
-  var request
+  var app
   authorisation = sinon.stub()
   getClaimsListAndCount = sinon.stub()
 
@@ -20,31 +20,35 @@ describe('routes/index', function () {
       '../services/data/get-claim-list-and-count': getClaimsListAndCount
     })
 
-    var app = express()
+    app = express()
     mockViewEngine(app, '../../../app/views')
+    app.use(function (req, res, next) {
+      req.user = {
+        'email': 'test@test.com',
+        'first_name': 'Andrew',
+        'last_name': 'Adams',
+        'roles': ['caseworker', 'admin', 'sscl']
+      }
+      next()
+    })
     route(app)
-    request = supertest(app)
   })
 
   describe('GET /', function () {
     it('should respond with a 200', function () {
-      request
+      return supertest(app)
         .get('/')
         .expect(200)
-        .expect(function () {
-          expect(getClaimsListAndCount.calledOnce).to.be.true
-        })
     })
   })
 
   describe('GET /claims/:status', function () {
     it('should respond with a 200', function () {
       getClaimsListAndCount.resolves({claims: [], total: {Count: 0}})
-      request
+      return supertest(app)
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(200)
-        .expect(function (error, response) {
-          expect(error).to.be.null
+        .expect(function (response) {
           expect(getClaimsListAndCount.calledWith('TEST', 0, 10)).to.be.true
           expect(response.recordTotal, 0)
         })

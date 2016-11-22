@@ -12,7 +12,6 @@ module.exports = function (router) {
 
   router.get('/claims/:status', function (req, res) {
     authorisation.isAuthenticated(req)
-
     getClaimsListAndCount(req.params.status, parseInt(req.query.start), parseInt(req.query.length))
       .then(function (data) {
         return res.json({
