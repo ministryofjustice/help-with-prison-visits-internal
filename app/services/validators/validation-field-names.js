@@ -5,5 +5,6 @@ module.exports = {
   'approve-cost': 'New approved cost',
   'nomis-check': 'NOMIS check',
   'dwp-check': 'DWP check',
-  'visit-confirmation-check': 'Visit confirmation check'
+  'visit-confirmation-check': 'Visit confirmation check',
+  'upload': 'A document upload'
 }

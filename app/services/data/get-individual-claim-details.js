@@ -9,6 +9,7 @@ module.exports = function (claimId) {
     .where('Claim.ClaimId', claimId)
     .first(
       'Eligibility.Reference',
+      'Eligibility.EligibilityId',
       'Claim.ClaimId',
       'Claim.DateSubmitted',
       'Claim.DateOfJourney',

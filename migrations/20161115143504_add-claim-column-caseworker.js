@@ -8,6 +8,6 @@ exports.up = function (knex, Promise) {
 exports.down = function (knex, Promise) {
   return knex.schema.table('Claim', function (table) {
     table.dropColumn('AssistedDigitalCaseworker')
-    table.string('Caseworker', 100)
+    table.dropColumn('Caseworker')
   })
 }
