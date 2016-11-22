@@ -108,9 +108,10 @@
               <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ document['Filepath'] }}">View evidence</a>
             {% elif document['DocumentStatus'] == 'upload-later' %}
               <span class="text-pending">To be uploaded later</span>
+              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-upload-later" class="button grey pull-right">Add</a>
             {% else %}
               <span class="text-pending">To be posted later</span>
-              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation" class="button grey pull-right">Add</a>
+              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-post-later" class="button grey pull-right">Add</a>
             {% endif %}
           {% endfor %}
 
@@ -191,10 +192,11 @@
 
             {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
             <span class="text-pending">To be uploaded later</span>
+            <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-upload-later" class="button grey pull-right">Add</a>
 
             {% else %}
             <span class="text-pending">To be posted later</span>
-            <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation" class="button grey pull-right">Add</a>
+            <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-post-later" class="button grey pull-right">Add</a>
 
             {% endif %}
           </td>
@@ -241,6 +243,7 @@
 
                 {% elif expense.DocumentStatus == 'upload-later' %}
                   <span class="text-pending">Uploading receipt later</span>
+                  <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
 
                 {% elif expense.DocumentStatus == 'post-later' %}
                   <span class="text-pending">Sending receipt by post</span>
