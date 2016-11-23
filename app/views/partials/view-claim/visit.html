@@ -5,15 +5,18 @@
       <td>{{ getDateFormatted.longDate(Claim['DateOfJourney']) }}</td>
       <td>
         {% if Claim.visitConfirmation['DocumentStatus'] == 'uploaded' %}
-        <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ Claim.visitConfirmation['Filepath'] }}">View confirmation</a>
+          <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ Claim.visitConfirmation['Filepath'] }}">View confirmation</a>
 
         {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
-        <span class="text-pending">To be uploaded later</span>
-        <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-upload-later" class="button grey pull-right">Add</a>
+          <span class="text-pending">To be uploaded later</span>
+          <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-upload-later" class="button grey pull-right">Add</a>
+
+        {% elif Claim.visitConfirmation['DocumentStatus'] == 'post-later' %}
+          <span class="text-pending">To be posted later</span>
+          <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-post-later" class="button grey pull-right">Add</a>
 
         {% else %}
-        <span class="text-pending">To be posted later</span>
-        <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-post-later" class="button grey pull-right">Add</a>
+          <span class="text-warning">Visit confirmation required</span>
 
         {% endif %}
       </td>
