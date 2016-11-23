@@ -28,8 +28,6 @@
     </div>
   </div>
 
-
-
   {% include "includes/validation-error-messages.html" %}
 
   <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
@@ -40,332 +38,28 @@
 
     <input type="hidden" name="assistedDigitalCaseworker" value="{{ Claim['AssistedDigitalCaseworker'] }}">
 
-    <table class="col-2 no-pad-right">
-
-  	  <tr>
-        <td>{{ 'Lead Visitor' if Children else 'Visitor' }}</td>
-  	    <td id="visitor-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
-  	  </tr>
-
-  	  <tr>
-  	    <td>Date of Birth</td>
-  	    <td>{{ getDateFormatted.shortDate(Claim['DateOfBirth']) }}</td>
-  	  </tr>
-
-  	  <tr>
-  	    <td>National Insurance number</td>
-  	    <td>{{ Claim['NationalInsuranceNumber'] }}</td>
-  	  </tr>
-
-  	  <tr>
-  	    <td>Home Address</td>
-  	    <td>{{ Claim['HouseNumberAndStreet'] }}<br>
-  	      {{ Claim['Town'] }}<br>
-  	      {{ Claim['County'] }}<br>
-  	      {{ Claim['PostCode'] }}</td>
-  	  </tr>
-
-  	  <tr>
-  	    <td>Email Address</td>
-  	    <td><a href="mailto:{{ Claim['EmailAddress'] }}">{{ Claim['EmailAddress'] }}</a></td>
-  	  </tr>
-
-  	  <tr>
-  		<td>Phone Number</td>
-  		<td>{{ Claim['PhoneNumber'] }}</td>
-  	  </tr>
-
-  	  <tr>
-  	  	<td>Prisoner Relationship</td>
-        <td>{{ prisonerRelationshipsEnum[Claim['Relationship']].displayName }}</td>
-  	  </tr>
-
-      <tr {% if errors['visit-confirmation-check'][0] %} class="warning"{% endif %}>
-        <td>Benefit Information</td>
-        <td>
-          {{ benefitsEnum[Claim['Benefit']].displayName }}
-
-          <select class="form-control action-select" id="dwp-check" name="dwpCheck">
-            <option value="">Select</option>
-            <option {% if Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-            <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-            <option {% if Claim['DWPCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
-          </select>
-
-          <br/>
-          {% if Claim['DWPBenefitCheckerResult'] == 'YES' %}
-          <span class="text-success">DWP - Eligible</span>
-          {% elif Claim['DWPBenefitCheckerResult'] == 'NO' %}
-          <span class="text-warning">DWP - Not eligible</span>
-          {% else %}
-          <span class="text-warning">DWP - No information</span>
-          {% endif %}
-
-          {% if benefitsEnum[Claim['Benefit']].documentUploadRequired %}
-          {% for document in Claim.benefitDocument %}
-            <br>
-            {% if document['DocumentStatus'] == 'uploaded' %}
-              <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ document['Filepath'] }}">View evidence</a>
-            {% elif document['DocumentStatus'] == 'upload-later' %}
-              <span class="text-pending">To be uploaded later</span>
-              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-upload-later" class="button grey pull-right">Add</a>
-            {% elif document['DocumentStatus'] == 'post-later' %}
-              <span class="text-pending">To be posted later</span>
-              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-post-later" class="button grey pull-right">Add</a>
-            {% else %}
-              <span class="text-warning">Benefit required</span>
-            {% endif %}
-          {% endfor %}
-
-          {% endif %}
-        </td>
-      </tr>
-
-      {% set childNum = 1 %}
-      {% for child in Children %}
-      <tr>
-        <td>Child {{ childNum }}</td>
-        <td>
-          {{ child['Name'] }} <br>
-          {{ getDateFormatted.shortDate(child['DateOfBirth']) }} <br>
-          {{ getChildFormatted(child['Relationship']) }}
-        </td>
-
-        {% set childNum = childNum + 1 %}
-      </tr>
-      {% endfor %}
-
-    </table>
+    {% include "partials/view-claim/visitor.html" %}
 
     <h1 class="table-heading">Prisoner</h1>
 
-    <table class="col-2 no-pad-right">
-
-      <tr>
-        <td>Name</td>
-        <td>{{ Claim['PrisonerFirstName']}} {{ Claim['PrisonerLastName'] }}</td>
-      </tr>
-
-      <tr>
-        <td>Date of birth</td>
-        <td>{{ getDateFormatted.shortDate(Claim['PrisonerDateOfBirth']) }}</td>
-      </tr>
-
-      <tr>
-        <td>Prisoner Number</td>
-        <td>{{ Claim['PrisonNumber'] }}</td>
-      </tr>
-
-      <tr>
-        <td>Prison</td>
-        <td>{{ Claim['NameOfPrison'] }}</td>
-      </tr>
-
-      <tr {% if errors['nomis-check'][0] %} class="warning"{% endif %}>
-        <td>Eligible for visitation?</td>
-        <td>
-          {% if Claim['NomisCheck'] != 'APPROVED' %}
-          <span class="text-warning">NOMIS check required</span>
-          {% else %}
-          <span class="text-success">NOMIS check confirmed</span>
-          {% endif %}
-
-          <select class="form-control action-select" id="nomis-check" name="nomisCheck">
-            <option value="">Select</option>
-            <option {% if Claim['NomisCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-            <option {% if Claim['NomisCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-            <option {% if Claim['NomisCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
-          </select>
-        </td>
-      </tr>
-
-    </table>
+    {% include "partials/view-claim/prisoner.html" %}
 
     <h1 class="table-heading">Visit</h1>
 
-    <table class="col-2 no-pad-right">
-      <tbody>
-        <tr {% if errors['visit-confirmation-check'][0] %} class="warning"{% endif %}>
-          <td><span class="bold">Date of visit</span></td>
-          <td>{{ getDateFormatted.longDate(Claim['DateOfJourney']) }}</td>
-          <td>
-            {% if Claim.visitConfirmation['DocumentStatus'] == 'uploaded' %}
-            <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ Claim.visitConfirmation['Filepath'] }}">View confirmation</a>
-
-            {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
-            <span class="text-pending">To be uploaded later</span>
-            <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-upload-later" class="button grey pull-right">Add</a>
-
-            {% elif Claim.visitConfirmation['DocumentStatus'] == 'post-later' %}
-            <span class="text-pending">To be posted later</span>
-            <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-post-later" class="button grey pull-right">Add</a>
-
-            {% else %}
-            <span class="text-warning">Visit confirmation required</span>
-
-            {% endif %}
-          </td>
-          <td>
-            <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
-              <option value="">Select</option>
-              <option {% if Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-              <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-              <option {% if Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
-            </select>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    {% include "partials/view-claim/visit.html" %}
 
     <div id='claim-expense'></div>
     <div id='approve-cost'></div>
     <h1 class="table-heading">Claim</h1>
-    {% if errors['claim-expense'][0] %}
-      <span class="error-message" id="error-message-status-request">{{ errors['claim-expense'][0] }}</span>
-    {% endif %}
 
-    {% if errors['approve-cost'][0] %}
-      <span class="error-message" id="error-message-cost-request">{{ errors['approve-cost'][0] }}</span>
-    {% endif %}
-
-    <table class="no-pad-right">
-      <tbody>
-        {% for expense in Expenses %}
-
-          <tr {% if expense['Status'] == 'Select' %} class="warning" {% endif %} {% if expense['Error'] %} class="warning"{% endif %}>
-            <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
-              <br>
-              {{ getClaimExpenseDetailFormatted(expense) }}
-              <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
-            </td>
-
-            <td>£{{ expense['Cost'] }}</td>
-
-            <td>
-              {% if receiptRequiredEnum[expense.ExpenseType] %}
-                {% if expense.DocumentStatus == 'uploaded' %}
-                  <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ expense['Filepath'] }}">View receipt</a>
-
-                {% elif expense.DocumentStatus == 'upload-later' %}
-                  <span class="text-pending">To be uploaded later</span>
-                  <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
-
-                {% elif expense.DocumentStatus == 'post-later' %}
-                  <span class="text-pending">To be posted later</span>
-                  <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
-
-                {% else %}
-                  <span class="text-warning">Receipt required</span>
-
-                {% endif %}
-              {% endif %}
-            </td>
-
-            <td class="claim-expense-response">
-              <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status"
-                class="form-control action-select claim-expense-status">
-                <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
-                <option {% if expense['Status'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-                <option {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} selected {% endif %} value="APPROVED-DIFF-AMOUNT" >Approve different amount</option>
-                <option {% if expense['Status'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-                <option {% if expense['Status'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject claim</option>
-              </select>
-              <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text" name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost"
-                class="form-control cost" value="{{ expense['ApprovedCost'] }}" {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} style="display: inline" {% endif %}>
-            </td>
-          </tr>
-
-        {% endfor %}
-
-        <tr class="no-border">
-          <td class="text-right"><h3 class="heading-small">Total Expense Cost:</h3></td>
-          <td><h3 class="heading-small">£{{ Claim.Total }}</h3></td>
-          <td></td>
-          <td></td>
-        </tr>
-
-      </tbody>
-    </table>
+    {% include "partials/view-claim/claim.html" %}
 
     <br>
     <br>
 
-    <div id="decision" class="form-group {% if errors['decision'][0] %} error {% endif %}">
-      <fieldset id='reason' >
-        <label for="approve" class="block-label inline" data-target="accept-input">
-          <input type="radio" name="decision" value="APPROVED" id="approve" {% if claimDecision['decision'] == 'APPROVED' %} checked {% endif %}>
-          <span>Approve</span>
-        </label>
+    {% include "partials/view-claim/decision.html" %}
 
-        <label for="request" class="block-label inline" data-target="request-input">
-          <input type="radio" name="decision" value="REQUEST-INFORMATION" id="request" {% if claimDecision['decision'] == 'REQUEST-INFORMATION' %} checked {% endif %}>
-          <span>Request information</span>
-        </label>
-
-        <label for="reject" class="block-label inline" data-target="reject-input">
-          <input type="radio" name="decision" value="REJECTED" id="reject" {% if claimDecision['decision'] == 'REJECTED' %} checked {% endif %}>
-          <span>Reject</span>
-        </label>
-
-        <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'APPROVED' %}js-hidden{% endif %}" id="accept-input">
-
-          <div class="form-group">
-            <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
-          </div>
-
-          <input type="submit" class="button" name="approve" id="approve-submit" value="Send confirmation email to claimant">
-        </div>
-
-        <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'REQUEST-INFORMATION' %}js-hidden{% endif %}" id="request-input">
-
-        <label class="form-label-bold {% if errors['reason'][0] %} error {% endif %}">Request more information on:</label>
-          {% if errors['reason'][0] %}
-            <span class="error-message" id="error-message-reason-request">{{ errors['reason'][0] }}</span>
-          {% endif %}
-          <select name="reasonRequest" class="form-control">
-            <option>Select</option>
-            <option value="relationship" {% if claimDecision['reasonRequest'] == "relationship" %} selected {% endif %}>Need more info on relationship</option>
-            <option value="benefit" {% if claimDecision['reasonRequest'] == "benefit" %} selected {% endif %}>Need more info on benefit</option>
-            <option value="expenses" {% if claimDecision['reasonRequest'] == "expenses" %} selected {% endif %}>Need more info on expenses</option>
-          </select>
-
-          <br>
-          <div class="form-group">
-            <label class="form-label-bold" for="additional-info-request">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" name="additionalInfoRequest">{{ claimDecision['additionalInfoRequest'] }}</textarea>
-          </div>
-
-          <input type="submit" class="button" name="request" value="Send request email to claimant">
-        </div>
-
-        <div class="panel panel-border-narrow {% if claimDecision['decision'] != 'REJECTED' %}js-hidden{% endif %}" id="reject-input">
-
-        <label class="form-label-bold {% if errors['reason'][0] %} error {% endif %}">Rejection Reason:</label>
-          {% if errors['reason'][0] %}
-            <span class="error-message" id="error-message-reason-reject">{{ errors['reason'][0] }}</span>
-          {% endif %}
-          <select name="reasonReject" class="form-control">
-            <option>Select</option>
-            <option value="benefit-check" {% if claimDecision['reasonReject'] == "benefit-check" %} selected {% endif %}>Benefit check failure</option>
-            <option value="relationship" {% if claimDecision['reasonReject'] == "relationship" %} selected {% endif %}>Relationship to prisoner incorrect</option>
-            <option value="prisoner-ineligible" {% if claimDecision['reasonReject'] == "prisoner-ineligible" %} selected {% endif %}>Prisoner ineligible for visitation</option>
-          </select>
-          <br>
-
-          <div class="form-group">
-            <label class="form-label-bold" for="additional-info-reject">Additional information (optional)</label>
-            <textarea type="text" class="form-control full" name="additionalInfoReject">{{ claimDecision['additionalInfoReject'] }}</textarea>
-          </div>
-
-          <input type="submit" class="button" name="reject" value="Send rejection email to claimant">
-        </div>
-
-      </fieldset>
-    </div>
   </form>
-
-
 
 </main>
 

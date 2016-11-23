@@ -57,7 +57,7 @@ describe('services/domain/claim-decision', function () {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['dwp-check'][0]).to.equal('DWP check is required')
+      expect(e.validationErrors['dwp-check'][0]).to.equal('Benefit check is required')
     }
   })
 

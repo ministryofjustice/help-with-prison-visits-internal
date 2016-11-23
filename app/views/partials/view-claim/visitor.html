@@ -1,0 +1,99 @@
+<table class="col-2 no-pad-right">
+
+  <tr>
+    <td>{{ 'Lead Visitor' if Children else 'Visitor' }}</td>
+    <td id="visitor-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
+  </tr>
+
+  <tr>
+    <td>Date of Birth</td>
+    <td>{{ getDateFormatted.shortDate(Claim['DateOfBirth']) }}</td>
+  </tr>
+
+  <tr>
+    <td>National Insurance number</td>
+    <td>{{ Claim['NationalInsuranceNumber'] }}</td>
+  </tr>
+
+  <tr>
+    <td>Home Address</td>
+    <td>{{ Claim['HouseNumberAndStreet'] }}<br>
+      {{ Claim['Town'] }}<br>
+      {{ Claim['County'] }}<br>
+      {{ Claim['PostCode'] }}</td>
+  </tr>
+
+  <tr>
+    <td>Email Address</td>
+    <td><a href="mailto:{{ Claim['EmailAddress'] }}">{{ Claim['EmailAddress'] }}</a></td>
+  </tr>
+
+  <tr>
+  <td>Phone Number</td>
+  <td>{{ Claim['PhoneNumber'] }}</td>
+  </tr>
+
+  <tr>
+    <td>Prisoner Relationship</td>
+    <td>{{ prisonerRelationshipsEnum[Claim['Relationship']].displayName }}</td>
+  </tr>
+
+  <tr id="dwp-check" {% if errors['dwp-check'][0] %} class="warning"{% endif %}>
+    <td>Benefit Information</td>
+    <td>
+      {{ benefitsEnum[Claim['Benefit']].displayName }}
+
+      <select class="form-control action-select" id="dwp-status" name="dwpCheck">
+        <option value="">Select</option>
+        <option {% if Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+        <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+        <option {% if Claim['DWPCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
+      </select>
+
+      <br/>
+
+      {% if benefitsEnum[Claim['Benefit']].documentUploadRequired %}
+      {% for document in Claim.benefitDocument %}
+        <br>
+        {% if document['DocumentStatus'] == 'uploaded' %}
+          <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ document['Filepath'] }}">View evidence</a>
+        {% elif document['DocumentStatus'] == 'upload-later' %}
+          <span class="text-pending">To be uploaded later</span>
+          <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-upload-later" class="button grey pull-right">Add</a>
+        {% elif document['DocumentStatus'] == 'post-later' %}
+          <span class="text-pending">To be posted later</span>
+          <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-post-later" class="button grey pull-right">Add</a>
+        {% else %}
+          <span class="text-warning">Benefit required</span>
+        {% endif %}
+      {% endfor %}
+
+      {% else %}
+
+        {% if Claim['DWPBenefitCheckerResult'] == 'YES' %}
+        <span class="text-success">DWP - Eligible</span>
+        {% elif Claim['DWPBenefitCheckerResult'] == 'NO' %}
+        <span class="text-warning">DWP - Not eligible</span>
+        {% else %}
+        <span class="text-warning">DWP - No information</span>
+        {% endif %}
+
+      {% endif %}
+    </td>
+  </tr>
+
+  {% set childNum = 1 %}
+  {% for child in Children %}
+  <tr>
+    <td>Child {{ childNum }}</td>
+    <td>
+      {{ child['Name'] }} <br>
+      {{ getDateFormatted.shortDate(child['DateOfBirth']) }} <br>
+      {{ getChildFormatted(child['Relationship']) }}
+    </td>
+
+    {% set childNum = childNum + 1 %}
+  </tr>
+  {% endfor %}
+
+</table>
