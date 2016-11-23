@@ -24,7 +24,7 @@ describe('services/data/insert-claim-event', function () {
     })
   })
 
-  it('should insert a new task to send the first time claim notification', function () {
+  it('should insert a claim event', function () {
     return insertClaimEvent(REFERENCE, eligibilityId, claimId, EVENT, ADDITIONAL_DATA, NOTE, CASEWORKER, IS_INTERNAL)
       .then(function () {
         return knex.first().from('IntSchema.ClaimEvent')
