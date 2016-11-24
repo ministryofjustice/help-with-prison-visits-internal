@@ -1,7 +1,6 @@
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('DirectPaymentFile', function (table) {
     table.increments('PaymentFileId')
-    table.integer('BatchId').notNullable()
     table.string('FileType', 20).notNullable()
     table.dateTime('DateCreated').notNullable()
     table.string('Filepath', 250).notNullable()
