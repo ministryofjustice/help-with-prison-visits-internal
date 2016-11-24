@@ -1,6 +1,6 @@
 exports.up = function (knex, Promise) {
   return knex.schema.table('Claim', function (table) {
-    table.string('PaymentStatus', 20).notNullable().defaultTo('PENDING')
+    table.string('PaymentStatus', 20)
   })
 }
 
