@@ -2,6 +2,7 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const tasksEnum = require('../../constants/tasks-enum')
+const insertClaimEvent = require('./insert-claim-event')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 
 module.exports = function (claimId, claimDecision) {
@@ -24,6 +25,7 @@ module.exports = function (claimId, claimDecision) {
         updateVisitor(eligibilityId, dwpCheck),
         updatePrisoner(eligibilityId, nomisCheck),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
+        insertClaimEventForDecision(reference, eligibilityId, claimId, decision, note, caseworker),
         sendClaimNotification(reference, eligibilityId, claimId, decision)])
     })
 }
@@ -65,6 +67,11 @@ function updateClaimExpense (claimExpenseResponse) {
     'ApprovedCost': claimExpenseResponse.approvedCost,
     'Status': claimExpenseResponse.status
   })
+}
+
+function insertClaimEventForDecision (reference, eligibilityId, claimId, decision, note, caseworker) {
+  const event = `CLAIM-${decision}`
+  return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, caseworker, false)
 }
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {
