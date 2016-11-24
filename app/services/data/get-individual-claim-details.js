@@ -1,7 +1,10 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
+const duplicateClaimCheck = require('./duplicate-claim-check')
 
 module.exports = function (claimId) {
+  var claimDetails
+
   return knex('Claim')
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
@@ -84,11 +87,17 @@ module.exports = function (claimId) {
                 .select()
                 .orderBy('ClaimChild.Name')
                 .then(function (claimChild) {
-                  return {
+                  claimDetails = {
                     claim: claim,
                     claimExpenses: claimExpenses,
                     claimChild: claimChild
                   }
+
+                  return duplicateClaimCheck(claimId, claimDetails.claim.NationalInsuranceNumber, claimDetails.claim.PrisonNumber, claimDetails.claim.DateOfJourney)
+                })
+                .then(function (result) {
+                  claimDetails.duplicates = result
+                  return claimDetails
                 })
             })
         })
