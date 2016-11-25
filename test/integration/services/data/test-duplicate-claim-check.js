@@ -1,10 +1,12 @@
-var expect = require('chai').expect
-var databaseHelper = require('../../../helpers/database-setup-for-tests')
+const expect = require('chai').expect
+const databaseHelper = require('../../../helpers/database-setup-for-tests')
+
+const REFERENCE1 = 'V123456'
+const REFERENCE2 = 'V234567'
+const REFERENCE3 = 'V345678'
 
 var duplicateClaimCheck = require('../../../../app/services/data/duplicate-claim-check')
-var reference1 = 'V123456'
-var reference2 = 'V234567'
-var reference3 = 'V345678'
+
 var testData
 var date1
 var date2
@@ -20,7 +22,7 @@ describe('services/data/duplicate-claim-check', function () {
   describe('module', function () {
     before(function () {
       // Insert two duplicate claims, and a third unique claim
-      testData = databaseHelper.getTestData(reference1, 'Test')
+      testData = databaseHelper.getTestData(REFERENCE1, 'Test')
 
       date1 = new Date()
       date2 = new Date()
@@ -37,13 +39,13 @@ describe('services/data/duplicate-claim-check', function () {
 
       prisonerNumber = duplicatePrisonerNumber + 'A'
 
-      return databaseHelper.insertDuplicateClaims(reference1, date1, 'Test', visitDate)
+      return databaseHelper.insertDuplicateClaims(REFERENCE1, date1, 'Test', visitDate)
         .then(function (ids) {
           claimIds.push(ids.claimId)
-          return databaseHelper.insertDuplicateClaims(reference2, date2, 'Test', duplicateVisitDate)
+          return databaseHelper.insertDuplicateClaims(REFERENCE2, date2, 'Test', duplicateVisitDate)
             .then(function () {
               claimIds.push(ids.claimId)
-              return databaseHelper.insertDuplicateClaims(reference3, date3, 'Test', duplicateVisitDate)
+              return databaseHelper.insertDuplicateClaims(REFERENCE3, date3, 'Test', duplicateVisitDate)
                 .then(function (ids) {
                   claimIds.push(ids.claimId)
                 })
@@ -67,9 +69,9 @@ describe('services/data/duplicate-claim-check', function () {
 
     after(function () {
       return Promise.all([
-        databaseHelper.deleteAll(reference1)
-        // databaseHelper.deleteAll(reference2),
-        // databaseHelper.deleteAll(reference3)
+        databaseHelper.deleteAll(REFERENCE1),
+        databaseHelper.deleteAll(REFERENCE2),
+        databaseHelper.deleteAll(REFERENCE3)
       ])
     })
   })
