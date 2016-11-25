@@ -30,7 +30,8 @@ module.exports = function (router) {
           getDisplayFieldName: getDisplayFieldName,
           prisonerRelationshipsEnum: prisonerRelationshipsEnum,
           benefitsEnum: benefitsEnum,
-          receiptRequiredEnum: receiptRequiredEnum
+          receiptRequiredEnum: receiptRequiredEnum,
+          duplicates: data.duplicates
         })
       })
   })
