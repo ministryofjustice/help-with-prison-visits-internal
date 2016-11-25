@@ -28,6 +28,17 @@
     </div>
   </div>
 
+  {% if duplicates.length > 0 %}
+  <div class="banner">
+    <p class="heading-small">This claim may be a duplicate</p>
+    <ul class="list">
+    {% for duplicateClaim in duplicates %}
+      <li><a href='/claim/{{ duplicateClaim.ClaimId }}'>{{ duplicateClaim.Reference }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
   {% include "includes/validation-error-messages.html" %}
 
   <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>

@@ -3,7 +3,7 @@ var knex = require('knex')(config)
 var Promise = require('bluebird')
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-module.exports.insertTestData = function (reference, date, status) {
+module.exports.insertTestData = function (reference, date, status, visitDate) {
   var data = this.getTestData(reference, status)
   return new Promise(function (resolve, reject) {
     // Generate unique Integer for Ids using timestamp in tenth of seconds
@@ -74,7 +74,7 @@ module.exports.insertTestData = function (reference, date, status) {
             ClaimId: uniqueId,
             EligibilityId: ids.eligibilityId,
             Reference: reference,
-            DateOfJourney: date,
+            DateOfJourney: visitDate || date,
             DateCreated: date,
             DateSubmitted: date,
             Status: status
@@ -222,6 +222,7 @@ function deleteByReference (schemaTable, reference) {
 
 module.exports.deleteAll = function (reference) {
   return deleteByReference('IntSchema.Task', reference)
+    .then(function () { return deleteByReference('IntSchema.ClaimEvent', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimBankDetail', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimDocument', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimExpense', reference) })
