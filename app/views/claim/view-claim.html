@@ -30,7 +30,7 @@
 
   {% if duplicates.length > 0 %}
   <div class="banner">
-    <p class="heading-small">This class may be a duplicate</p>
+    <p class="heading-small">This claim may be a duplicate</p>
     <ul class="list">
     {% for duplicateClaim in duplicates %}
       <li><a href='/claim/{{ duplicateClaim.ClaimId }}'>{{ duplicateClaim.Reference }}</a></li>
