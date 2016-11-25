@@ -1,7 +1,7 @@
 var expect = require('chai').expect
 var claimExpenseHelper = require('../../../../app/views/helpers/claim-expense-helper')
 
-describe('views/claim-expense-helper', function () {
+describe('views/helpers/claim-expense-helper', function () {
   describe('FormattedDetail', function () {
     const FROM = 'PointA'
     const TO = 'PointB'

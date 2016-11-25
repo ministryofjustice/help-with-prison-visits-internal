@@ -2,7 +2,7 @@ const expect = require('chai').expect
 const getChildHelper = require('../../../../app/views/helpers/child-helper')
 const childRelationshipEnum = require('../../../../app/constants/child-relationship-enum')
 
-describe('views/child-helper', function () {
+describe('views/helpers/child-helper', function () {
   const VISITORS_CHILD = childRelationshipEnum['claimants-child']
   const PRISONERS_CHILD = childRelationshipEnum['prisoners-child']
   const NON_MATCHING = ''
