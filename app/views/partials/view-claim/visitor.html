@@ -41,7 +41,7 @@
   <tr id="dwp-check" {% if errors['dwp-check'][0] %} class="warning"{% endif %}>
     <td>Benefit Information</td>
     <td>
-      {{ benefitsEnum[Claim['Benefit']].displayName }}
+      {{ displayHelper.getBenefitDisplayName(Claim['Benefit']) }}
 
       <select class="form-control action-select" id="dwp-status" name="dwpCheck">
         <option value="">Select</option>
@@ -52,7 +52,7 @@
 
       <br/>
 
-      {% if benefitsEnum[Claim['Benefit']].documentUploadRequired %}
+      {% if displayHelper.getBenefitRequireUpload(Claim['Benefit']) %}
       {% for document in Claim.benefitDocument %}
         <br>
         {% if document['DocumentStatus'] == 'uploaded' %}
