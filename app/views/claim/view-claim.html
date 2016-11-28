@@ -26,6 +26,14 @@
         <span class="heading-secondary">Submitted </span>{{ getDateFormatted.shortDate(Claim['DateSubmitted']) }}
       </h1>
     </div>
+
+    <div class="column-quarter">
+
+      <h1 class="heading-large">
+        <span class="heading-secondary">Last Updated </span>{{ getDateFormatted.shortDate(Claim['LastUpdated']) }}
+      </h1>
+    </div>
+
   </div>
 
   {% if duplicates.length > 0 %}

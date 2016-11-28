@@ -38,7 +38,8 @@ module.exports = function (claimId) {
       'Prisoner.PrisonNumber',
       'Prisoner.NameOfPrison',
       'Prisoner.NomisCheck',
-      'Claim.VisitConfirmationCheck')
+      'Claim.VisitConfirmationCheck',
+      'Claim.LastUpdated')
     .then(function (claim) {
       return knex('ClaimDocument')
         .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null})
