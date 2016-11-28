@@ -1,6 +1,12 @@
 {% if errors %}
 <div class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
 
+  {% if errors.UpdateConflict %}
+  <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
+    {{ errors.UpdateConflict[0] }}
+  </h1>
+
+  {% else %}
   <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
     There are errors on this page
   </h1>
@@ -12,6 +18,7 @@
       {% endif %}
     {% endfor %}
   </ul>
+  {% endif %}
 
 </div>
 {% endif %}
