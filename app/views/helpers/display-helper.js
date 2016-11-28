@@ -21,3 +21,8 @@ module.exports.getPrisonDisplayName = function (value) {
   var element = enumHelper.getKeyByValue(prisonsEnum, value)
   return element.displayName
 }
+
+module.exports.getPrisonRegion = function (value) {
+  var element = enumHelper.getKeyByValue(prisonsEnum, value)
+  return element.region
+}

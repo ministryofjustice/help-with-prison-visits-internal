@@ -27,4 +27,9 @@ describe('views/helpers/display-helper', function () {
     var result = displayHelper.getPrisonDisplayName(VALID_PRISON_VALUE)
     expect(result).to.equal(prisonsEnum.ALTCOURSE.displayName)
   })
+
+  it('should return the correct prison region given a valid value', function () {
+    var result = displayHelper.getPrisonRegion(VALID_PRISON_VALUE)
+    expect(result).to.equal(prisonsEnum.ALTCOURSE.region)
+  })
 })
