@@ -31,7 +31,8 @@ module.exports = function (router) {
           prisonerRelationshipsEnum: prisonerRelationshipsEnum,
           receiptRequiredEnum: receiptRequiredEnum,
           displayHelper: displayHelper,
-          duplicates: data.duplicates
+          duplicates: data.duplicates,
+          claimEvents: data.claimEvents
         })
       })
   })
