@@ -100,7 +100,14 @@ module.exports = function (claimId) {
                 })
                 .then(function (result) {
                   claimDetails.duplicates = result
-                  return claimDetails
+
+                  return knex('ClaimEvent')
+                    .where('ClaimId', claimId)
+                    .then(function (claimEvents) {
+                      claimDetails.claimEvents = claimEvents
+
+                      return claimDetails
+                    })
                 })
             })
         })

@@ -29,6 +29,7 @@ describe('services/data/insert-claim-event', function () {
       .then(function () {
         return knex.first().from('IntSchema.ClaimEvent')
           .where({EligibilityId: eligibilityId, Reference: REFERENCE, ClaimId: claimId})
+          .orderBy('DateAdded', 'desc')
           .then(function (claimEvent) {
             expect(claimEvent.EligibilityId).to.equal(eligibilityId)
             expect(claimEvent.Reference).to.equal(REFERENCE)

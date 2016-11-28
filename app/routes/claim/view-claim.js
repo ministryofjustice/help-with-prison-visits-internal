@@ -10,8 +10,8 @@ const ClaimDecision = require('../../services/domain/claim-decision')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 const getClaimExpenseResponses = require('../helpers/get-claim-expense-responses')
 const prisonerRelationshipsEnum = require('../../constants/prisoner-relationships-enum')
-const benefitsEnum = require('../../constants/benefits-enum')
 const receiptRequiredEnum = require('../../constants/receipt-required-enum')
+const displayHelper = require('../../views/helpers/display-helper')
 const mergeClaimExpensesWithSubmittedResponses = require('../helpers/merge-claim-expenses-with-submitted-responses')
 const getLastUpdated = require('../../services/data/get-claim-last-updated')
 const checkLastUpdated = require('../../services/check-last-updated')
@@ -32,9 +32,10 @@ module.exports = function (router) {
           getChildFormatted: getChildFormatted,
           getDisplayFieldName: getDisplayFieldName,
           prisonerRelationshipsEnum: prisonerRelationshipsEnum,
-          benefitsEnum: benefitsEnum,
           receiptRequiredEnum: receiptRequiredEnum,
-          duplicates: data.duplicates
+          displayHelper: displayHelper,
+          duplicates: data.duplicates,
+          claimEvents: data.claimEvents
         })
       })
   })
@@ -85,7 +86,7 @@ module.exports = function (router) {
                 getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
                 getDisplayFieldName: getDisplayFieldName,
                 prisonerRelationshipsEnum: prisonerRelationshipsEnum,
-                benefitsEnum: benefitsEnum,
+                displayHelper: displayHelper,
                 claimDecision: req.body,
                 errors: error.validationErrors
               })

@@ -7,7 +7,7 @@ var databaseHelper = require('../../../helpers/database-setup-for-tests')
 var updateClaimDocument = require('../../../../app/services/data/update-file-upload-details-for-claim')
 
 describe('services/data/update-file-upload-details-for-claim', function () {
-  var REFERENCE = 'V123456'
+  var REFERENCE = 'UPDFILE'
   var claimDocumentId
   var date
   var testData

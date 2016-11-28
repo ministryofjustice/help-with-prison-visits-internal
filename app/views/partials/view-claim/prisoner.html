@@ -17,7 +17,7 @@
 
   <tr>
     <td>Prison</td>
-    <td>{{ Claim['NameOfPrison'] }}</td>
+    <td>{{ displayHelper.getPrisonDisplayName(Claim['NameOfPrison']) }}</td>
   </tr>
 
   <tr {% if errors['nomis-check'][0] %} class="warning"{% endif %}>
