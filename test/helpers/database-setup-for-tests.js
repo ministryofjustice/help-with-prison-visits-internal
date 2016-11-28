@@ -1,259 +1,250 @@
 var config = require('../../knexfile').migrations
 var knex = require('knex')(config)
-var Promise = require('bluebird')
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-module.exports.insertTestData = function (reference, date, status, visitDate, idIncrement) {
-  // ID Increment to prevent duplicate unique IDs causing DB errors when tests run asynchronously
-  var increment = idIncrement || 0
+module.exports.insertTestData = function (reference, date, status, visitDate, increment) {
+  var idIncrement = increment || 0
+  // Generate unique Integer for Ids using timestamp in tenth of seconds
+  var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + idIncrement
 
+  return this.insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3)
+}
+
+module.exports.insertTestDataForIds = function (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4) {
   var data = this.getTestData(reference, status)
-  return new Promise(function (resolve, reject) {
-    // Generate unique Integer for Ids using timestamp in tenth of seconds
-    var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + increment
-    var uniqueId2 = uniqueId + 1 + increment
-    var uniqueId3 = uniqueId2 + 1 + increment
-    var uniqueId4 = uniqueId3 + 1 + increment
-    console.log(`insertTestData - reference: ${reference}, uniqueId: ${uniqueId}`)
 
-    var ids = {}
-    knex('IntSchema.Eligibility')
-      .insert({
-        EligibilityId: uniqueId,
-        Reference: reference,
-        DateCreated: date,
-        DateSubmitted: date,
-        Status: status
-      })
-      .returning('EligibilityId')
-      .then(function (result) {
-        ids.eligibilityId = result[0]
-        return knex('IntSchema.Prisoner')
-          .returning('PrisonerId')
-          .insert({
-            PrisonerId: uniqueId,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            FirstName: data.Prisoner.FirstName,
-            LastName: data.Prisoner.LastName,
-            DateOfBirth: date,
-            PrisonNumber: data.Prisoner.PrisonNumber,
-            NameOfPrison: data.Prisoner.NameOfPrison
-          })
-          .then(function (result) {
-            ids.prisonerId = result[0]
-            return ids.prisonerId
-          })
-      })
-      .then(function () {
-        return knex('IntSchema.Visitor')
-          .returning('VisitorId')
-          .insert({
-            VisitorId: uniqueId,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            Title: data.Visitor.Title,
-            FirstName: data.Visitor.FirstName,
-            LastName: data.Visitor.LastName,
-            NationalInsuranceNumber: data.Visitor.NationalInsuranceNumber,
-            HouseNumberAndStreet: data.Visitor.HouseNumberAndStreet,
-            Town: data.Visitor.Town,
-            County: data.Visitor.County,
-            PostCode: data.Visitor.PostCode,
-            Country: data.Visitor.Country,
-            EmailAddress: data.Visitor.EmailAddress,
-            PhoneNumber: data.Visitor.PhoneNumber,
-            DateOfBirth: date,
-            Relationship: data.Visitor.Relationship
-          })
-          .then(function (result) {
-            ids.visitorId = result[0]
-            return ids.visitorId
-          })
-      })
-      .then(function () {
-        return knex('IntSchema.Claim')
-          .returning('ClaimId')
-          .insert({
-            ClaimId: uniqueId,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            DateOfJourney: visitDate || date,
-            DateCreated: date,
-            DateSubmitted: date,
-            Status: status
-          })
-      })
-      .then(function (result) {
-        ids.claimId = result[0]
-      })
-      .then(function () {
-        return knex('IntSchema.ClaimExpense')
-          .returning('ClaimExpenseId')
-          .insert({
-            ClaimExpenseId: uniqueId,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            ClaimId: ids.claimId,
-            ExpenseType: data.ClaimExpenses[0].ExpenseType,
-            Cost: data.ClaimExpenses[0].Cost,
-            From: data.ClaimExpenses[0].From,
-            To: data.ClaimExpenses[0].To,
-            IsReturn: data.ClaimExpenses[0].IsReturn,
-            IsEnabled: true
-          })
-      })
-      .then(function (result) {
-        ids.expenseId1 = result[0]
-        return knex('IntSchema.ClaimExpense')
-          .returning('ClaimExpenseId')
-          .insert({
-            ClaimExpenseId: uniqueId2,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            ClaimId: ids.claimId,
-            ExpenseType: data.ClaimExpenses[1].ExpenseType,
-            Cost: data.ClaimExpenses[1].Cost,
-            DurationOfTravel: data.ClaimExpenses[1].DurationOfTravel,
-            IsEnabled: true
-          })
-      })
-      .then(function (result) {
-        ids.expenseId2 = result[0]
-        return knex('IntSchema.ClaimChild')
-          .returning('ClaimChildId')
-          .insert({
-            ClaimChildId: uniqueId,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            ClaimId: ids.claimId,
-            Name: data.ClaimChild[0].Name,
-            DateOfBirth: date,
-            Relationship: data.ClaimChild[0].Relationship,
-            IsEnabled: true
-          })
-      })
-      .then(function (result) {
-        ids.childId1 = result[0]
-        return knex('IntSchema.ClaimChild')
-          .returning('ClaimChildId')
-          .insert({
-            ClaimChildId: uniqueId2,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            ClaimId: ids.claimId,
-            Name: data.ClaimChild[1].Name,
-            DateOfBirth: date,
-            Relationship: data.ClaimChild[1].Relationship,
-            IsEnabled: true
-          })
-      })
-      .then(function (result) {
-        ids.childId2 = result[0]
-        console.log(`ClaimDocument1 - reference: ${reference}, uniqueId: ${uniqueId}`)
-        return knex('IntSchema.ClaimDocument')
-          .returning('ClaimDocumentId')
-          .insert({
-            ClaimDocumentId: uniqueId,
-            ClaimId: ids.claimId,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            DocumentType: data.ClaimDocument['visit-confirmation'].DocumentType,
-            DocumentStatus: data.ClaimDocument['visit-confirmation'].DocumentStatus,
-            DateSubmitted: date,
-            IsEnabled: data.ClaimDocument['visit-confirmation'].IsEnabled
-          })
-      })
-      .then(function (result) {
-        ids.claimDocumentId1 = result[0]
-        console.log(`ClaimDocument2 - reference: ${reference}, uniqueId: ${uniqueId2}`)
-        return knex('IntSchema.ClaimDocument')
-          .returning('ClaimDocumentId')
-          .insert({
-            ClaimDocumentId: uniqueId2,
-            ClaimId: ids.claimId,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            DocumentType: data.ClaimDocument['benefit'].DocumentType,
-            DocumentStatus: data.ClaimDocument['benefit'].DocumentStatus,
-            DateSubmitted: date,
-            IsEnabled: data.ClaimDocument['benefit'].IsEnabled
-          })
-      })
-      .then(function (result) {
-        ids.claimDocumentId2 = result[0]
-        console.log(`ClaimDocument3 - reference: ${reference}, uniqueId: ${uniqueId3}`)
-        return knex('IntSchema.ClaimDocument')
-          .returning('ClaimDocumentId')
-          .insert({
-            ClaimDocumentId: uniqueId3,
-            ClaimExpenseId: uniqueId,
-            ClaimId: ids.claimId,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            DocumentType: data.ClaimDocument['expense'].DocumentType,
-            DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
-            DateSubmitted: date,
-            IsEnabled: data.ClaimDocument['expense'].IsEnabled
-          })
-      })
-      .then(function (result) {
-        console.log(`ClaimDocument4 - reference: ${reference}, uniqueId: ${uniqueId4}`)
-        ids.claimDocumentId3 = result[0]
-        return knex('IntSchema.ClaimDocument')
-          .returning('ClaimDocumentId')
-          .insert({
-            ClaimDocumentId: uniqueId4,
-            ClaimExpenseId: uniqueId2,
-            ClaimId: ids.claimId,
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            DocumentType: data.ClaimDocument['expense'].DocumentType,
-            DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
-            DateSubmitted: date,
-            IsEnabled: data.ClaimDocument['expense'].IsEnabled
-          })
-      })
-      .then(function (result) {
-        ids.claimDocumentId4 = result[0]
-        return knex('IntSchema.ClaimEvent')
-          .returning('ClaimEventId')
-          .insert({
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            ClaimId: uniqueId,
-            DateAdded: date,
-            Event: 'An event',
-            AdditionalData: 'Additional stuff',
-            Note: 'A note',
-            Caseworker: 'Joe Bloggs',
-            IsInternal: true
-          })
-      })
-      .then(function (result) {
-        ids.claimEventId1 = result[0]
-        return knex('IntSchema.ClaimEvent')
-          .returning('ClaimEventId')
-          .insert({
-            EligibilityId: ids.eligibilityId,
-            Reference: reference,
-            ClaimId: uniqueId,
-            DateAdded: date,
-            Event: 'Another event',
-            AdditionalData: 'More additional stuff',
-            Note: 'Another note',
-            Caseworker: 'Jane Bloggs',
-            IsInternal: false
-          })
-      })
-      .then(function (result) {
-        ids.claimEventId2 = result[0]
-        resolve(ids)
-      })
-      .catch(function (error) {
-        reject(error)
-      })
-  })
+  var ids = {}
+  return knex('IntSchema.Eligibility')
+    .insert({
+      EligibilityId: uniqueId,
+      Reference: reference,
+      DateCreated: date,
+      DateSubmitted: date,
+      Status: status
+    })
+    .returning('EligibilityId')
+    .then(function (result) {
+      ids.eligibilityId = result[0]
+      return knex('IntSchema.Prisoner')
+        .returning('PrisonerId')
+        .insert({
+          PrisonerId: uniqueId,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          FirstName: data.Prisoner.FirstName,
+          LastName: data.Prisoner.LastName,
+          DateOfBirth: date,
+          PrisonNumber: data.Prisoner.PrisonNumber,
+          NameOfPrison: data.Prisoner.NameOfPrison
+        })
+        .then(function (result) {
+          ids.prisonerId = result[0]
+          return ids.prisonerId
+        })
+    })
+    .then(function () {
+      return knex('IntSchema.Visitor')
+        .returning('VisitorId')
+        .insert({
+          VisitorId: uniqueId,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          Title: data.Visitor.Title,
+          FirstName: data.Visitor.FirstName,
+          LastName: data.Visitor.LastName,
+          NationalInsuranceNumber: data.Visitor.NationalInsuranceNumber,
+          HouseNumberAndStreet: data.Visitor.HouseNumberAndStreet,
+          Town: data.Visitor.Town,
+          County: data.Visitor.County,
+          PostCode: data.Visitor.PostCode,
+          Country: data.Visitor.Country,
+          EmailAddress: data.Visitor.EmailAddress,
+          PhoneNumber: data.Visitor.PhoneNumber,
+          DateOfBirth: date,
+          Relationship: data.Visitor.Relationship,
+          Benefit: data.Visitor.Benefit,
+          DWPBenefitCheckerResult: data.Visitor.DWPBenefitCheckerResult
+        })
+        .then(function (result) {
+          ids.visitorId = result[0]
+          return ids.visitorId
+        })
+    })
+    .then(function () {
+      return knex('IntSchema.Claim')
+        .returning('ClaimId')
+        .insert({
+          ClaimId: uniqueId,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          DateOfJourney: visitDate || date,
+          DateCreated: date,
+          DateSubmitted: date,
+          Status: status
+        })
+    })
+    .then(function (result) {
+      ids.claimId = result[0]
+    })
+    .then(function () {
+      return knex('IntSchema.ClaimExpense')
+        .returning('ClaimExpenseId')
+        .insert({
+          ClaimExpenseId: uniqueId,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          ClaimId: ids.claimId,
+          ExpenseType: data.ClaimExpenses[0].ExpenseType,
+          Cost: data.ClaimExpenses[0].Cost,
+          From: data.ClaimExpenses[0].From,
+          To: data.ClaimExpenses[0].To,
+          IsReturn: data.ClaimExpenses[0].IsReturn,
+          IsEnabled: true
+        })
+    })
+    .then(function (result) {
+      ids.expenseId1 = result[0]
+      return knex('IntSchema.ClaimExpense')
+        .returning('ClaimExpenseId')
+        .insert({
+          ClaimExpenseId: uniqueId2,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          ClaimId: ids.claimId,
+          ExpenseType: data.ClaimExpenses[1].ExpenseType,
+          Cost: data.ClaimExpenses[1].Cost,
+          DurationOfTravel: data.ClaimExpenses[1].DurationOfTravel,
+          IsEnabled: true
+        })
+    })
+    .then(function (result) {
+      ids.expenseId2 = result[0]
+      return knex('IntSchema.ClaimChild')
+        .returning('ClaimChildId')
+        .insert({
+          ClaimChildId: uniqueId,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          ClaimId: ids.claimId,
+          Name: data.ClaimChild[0].Name,
+          DateOfBirth: date,
+          Relationship: data.ClaimChild[0].Relationship,
+          IsEnabled: true
+        })
+    })
+    .then(function (result) {
+      ids.childId1 = result[0]
+      return knex('IntSchema.ClaimChild')
+        .returning('ClaimChildId')
+        .insert({
+          ClaimChildId: uniqueId2,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          ClaimId: ids.claimId,
+          Name: data.ClaimChild[1].Name,
+          DateOfBirth: date,
+          Relationship: data.ClaimChild[1].Relationship,
+          IsEnabled: true
+        })
+    })
+    .then(function (result) {
+      ids.childId2 = result[0]
+      return knex('IntSchema.ClaimDocument')
+        .returning('ClaimDocumentId')
+        .insert({
+          ClaimDocumentId: uniqueId,
+          ClaimId: ids.claimId,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          DocumentType: data.ClaimDocument['visit-confirmation'].DocumentType,
+          DocumentStatus: data.ClaimDocument['visit-confirmation'].DocumentStatus,
+          DateSubmitted: date,
+          IsEnabled: data.ClaimDocument['visit-confirmation'].IsEnabled
+        })
+    })
+    .then(function (result) {
+      ids.claimDocumentId1 = result[0]
+      return knex('IntSchema.ClaimDocument')
+        .returning('ClaimDocumentId')
+        .insert({
+          ClaimDocumentId: uniqueId2,
+          ClaimId: ids.claimId,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          DocumentType: data.ClaimDocument['benefit'].DocumentType,
+          DocumentStatus: data.ClaimDocument['benefit'].DocumentStatus,
+          DateSubmitted: date,
+          IsEnabled: data.ClaimDocument['benefit'].IsEnabled
+        })
+    })
+    .then(function (result) {
+      ids.claimDocumentId2 = result[0]
+      return knex('IntSchema.ClaimDocument')
+        .returning('ClaimDocumentId')
+        .insert({
+          ClaimDocumentId: uniqueId3,
+          ClaimExpenseId: uniqueId,
+          ClaimId: ids.claimId,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          DocumentType: data.ClaimDocument['expense'].DocumentType,
+          DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+          DateSubmitted: date,
+          IsEnabled: data.ClaimDocument['expense'].IsEnabled
+        })
+    })
+    .then(function (result) {
+      ids.claimDocumentId3 = result[0]
+      return knex('IntSchema.ClaimDocument')
+        .returning('ClaimDocumentId')
+        .insert({
+          ClaimDocumentId: uniqueId4,
+          ClaimExpenseId: uniqueId2,
+          ClaimId: ids.claimId,
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          DocumentType: data.ClaimDocument['expense'].DocumentType,
+          DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+          DateSubmitted: date,
+          IsEnabled: data.ClaimDocument['expense'].IsEnabled
+        })
+    })
+    .then(function (result) {
+      ids.claimDocumentId4 = result[0]
+      return knex('IntSchema.ClaimEvent')
+        .returning('ClaimEventId')
+        .insert({
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          ClaimId: uniqueId,
+          DateAdded: date,
+          Event: 'An event',
+          AdditionalData: 'Additional stuff',
+          Note: 'A note',
+          Caseworker: 'Joe Bloggs',
+          IsInternal: true
+        })
+    })
+    .then(function (result) {
+      ids.claimEventId1 = result[0]
+      return knex('IntSchema.ClaimEvent')
+        .returning('ClaimEventId')
+        .insert({
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          ClaimId: uniqueId,
+          DateAdded: date,
+          Event: 'Another event',
+          AdditionalData: 'More additional stuff',
+          Note: 'Another note',
+          Caseworker: 'Jane Bloggs',
+          IsInternal: false
+        })
+    })
+    .then(function (result) {
+      ids.claimEventId2 = result[0]
+      return ids
+    })
 }
 
 function deleteByReference (schemaTable, reference) {
@@ -292,7 +283,9 @@ module.exports.getTestData = function (reference, status) {
       Country: 'England',
       EmailAddress: 'donotsend@apvs.com',
       PhoneNumber: '07911111111',
-      Relationship: 'partner'
+      Relationship: 'partner',
+      Benefit: 'income-support',
+      DWPBenefitCheckerResult: 'UNDETERMINED'
     },
     ClaimExpenses: [{
       ExpenseType: 'train',

@@ -39,13 +39,13 @@ describe('services/data/duplicate-claim-check', function () {
 
       prisonerNumber = duplicatePrisonerNumber + 'A'
 
-      return databaseHelper.insertTestData(REFERENCE1, date1, 'Test', visitDate, -10000)
+      return databaseHelper.insertTestData(REFERENCE1, date1, 'Test', visitDate)
         .then(function (ids) {
           claimIds.push(ids.claimId)
-          return databaseHelper.insertTestData(REFERENCE2, date2, 'Test', duplicateVisitDate, -20000)
+          return databaseHelper.insertTestData(REFERENCE2, date2, 'Test', duplicateVisitDate, 10000)
             .then(function () {
               claimIds.push(ids.claimId)
-              return databaseHelper.insertTestData(REFERENCE3, date3, 'Test', duplicateVisitDate, -30000)
+              return databaseHelper.insertTestData(REFERENCE3, date3, 'Test', duplicateVisitDate, 20000)
                 .then(function (ids) {
                   claimIds.push(ids.claimId)
                 })
