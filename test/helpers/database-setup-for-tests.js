@@ -14,7 +14,7 @@ module.exports.insertTestData = function (reference, date, status, visitDate, id
     var uniqueId2 = uniqueId + 1 + increment
     var uniqueId3 = uniqueId2 + 1 + increment
     var uniqueId4 = uniqueId3 + 1 + increment
-
+    console.log(`insertTestData - reference: ${reference}, uniqueId: ${uniqueId}`)
     var ids = {}
     knex('IntSchema.Eligibility')
       .insert({

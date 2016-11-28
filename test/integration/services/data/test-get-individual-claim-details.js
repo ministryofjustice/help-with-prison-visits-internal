@@ -3,7 +3,7 @@ var moment = require('moment')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 var getClaim = require('../../../../app/services/data/get-individual-claim-details')
-var reference = 'V123456'
+var reference = 'INDIVCD'
 var testData
 var date
 var claimId

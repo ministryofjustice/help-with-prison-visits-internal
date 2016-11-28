@@ -4,7 +4,7 @@ var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 var getClaimsListAndCount = require('../../../../app/services/data/get-claim-list-and-count')
 var testData
-var reference = 'V123456'
+var reference = 'CLISTC1'
 var date
 var claimId
 
