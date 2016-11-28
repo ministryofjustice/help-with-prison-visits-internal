@@ -216,6 +216,38 @@ module.exports.insertTestData = function (reference, date, status, visitDate, id
       })
       .then(function (result) {
         ids.claimDocumentId4 = result[0]
+        return knex('IntSchema.ClaimEvent')
+          .returning('ClaimEventId')
+          .insert({
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
+            ClaimId: uniqueId,
+            DateAdded: date,
+            Event: 'An event',
+            AdditionalData: 'Additional stuff',
+            Note: 'A note',
+            Caseworker: 'Joe Bloggs',
+            IsInternal: true
+          })
+      })
+      .then(function (result) {
+        ids.claimEventId1 = result[0]
+        return knex('IntSchema.ClaimEvent')
+          .returning('ClaimEventId')
+          .insert({
+            EligibilityId: ids.eligibilityId,
+            Reference: reference,
+            ClaimId: uniqueId,
+            DateAdded: date,
+            Event: 'Another event',
+            AdditionalData: 'More additional stuff',
+            Note: 'Another note',
+            Caseworker: 'Jane Bloggs',
+            IsInternal: false
+          })
+      })
+      .then(function (result) {
+        ids.claimEventId2 = result[0]
         resolve(ids)
       })
       .catch(function (error) {
@@ -301,6 +333,20 @@ module.exports.getTestData = function (reference, status) {
         DocumentStatus: 'uploaded',
         IsEnabled: 'true'
       }
-    }
+    },
+    ClaimEvent: [
+      {
+        Event: 'Event text',
+        AdditionalData: 'A note',
+        Caseworker: 'Joe Bloggs',
+        IsInternal: true
+      },
+      {
+        Event: 'Event text 2',
+        AdditionalData: 'Another note',
+        Caseworker: 'Jane Bloggs',
+        IsInternal: false
+      }
+    ]
   }
 }

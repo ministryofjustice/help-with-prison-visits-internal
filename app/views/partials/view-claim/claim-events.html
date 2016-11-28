@@ -1,0 +1,12 @@
+{% if claimEvents.length > 0 %}
+<h1 class="heading-medium">Additional information</h1>
+<ul class="claim-dialog">
+  {% for claimEvent in claimEvents %}
+    {% if claimEvent.Caseworker %}<li class="caseworker">{% else %}<li class="claimant">{% endif %}
+    <h2>{% if claimEvent.Caseworker %}{{ claimEvent.Caseworker }}{% else %}{{ claimEvent.AdditionalData }}{% endif %}</h2>
+    <p>{{ claimEvent.Note }}</p>
+    <p class="time">{{ getDateFormatted.shortDateAndTime(claimEvent.DateAdded) }}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

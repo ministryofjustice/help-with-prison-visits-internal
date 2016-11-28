@@ -317,3 +317,57 @@ label.custom-file-upload {
 #logout, #config {
     color: white!important;
 }
+
+ul.claim-dialog li {
+  max-width: 550px;
+  padding: 10px;
+  margin: 0 0 10px 0;
+  display: block;
+  clear: both !important;
+}
+
+ul.claim-dialog li p {
+  margin: 0 0 5px 0;
+}
+
+ul.claim-dialog li h2 {
+  font-weight: bold;
+  margin: 0 0 5px 0;
+}
+
+ul.claim-dialog li p.time {
+  font-style: italic;
+  font-size: 16px;
+  margin: 0;
+}
+
+ul.claim-dialog li.claimant {
+  background: #e0eef1;
+}
+
+ul.claim-dialog li.caseworker {
+  background: #b5e6f1;
+  float: right;
+  text-align: right;
+}
+
+ul.claim-dialog-public li h2 {
+  font-weight: bold;
+  margin: 0 0 5px 0;
+}
+
+ul.claim-dialog-public li p.time {
+  font-style: italic;
+  font-size: 16px;
+  margin: 0;
+}
+
+ul.claim-dialog-public li.caseworker {
+  background: #e0eef1;
+}
+
+ul.claim-dialog-public li.claimant {
+  background: #b5e6f1;
+  float: right;
+  text-align: right;
+}
