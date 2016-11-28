@@ -36,6 +36,8 @@ describe('services/data/get-individual-claim-details', function () {
           expect(result.claim.benefitDocument[0].DocumentStatus).to.equal(testData.ClaimDocument['benefit'].DocumentStatus)
           expect(result.claimChild[0].Name).to.equal(testData.ClaimChild[0].Name)
           expect(result.claimChild[1].Name).to.equal(testData.ClaimChild[1].Name)
+          expect(result.claimEvents[0].Caseworker).to.equal(testData.ClaimEvent[0].Caseworker)
+          expect(result.claimEvents[1].Caseworker).to.equal(testData.ClaimEvent[1].Caseworker)
         })
         .catch(function (error) {
           throw error
