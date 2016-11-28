@@ -11,8 +11,7 @@
   {% include "includes/phase_banner_beta.html" %}
 
   <div class="grid-row">
-    <div class="column-half">
-
+    <div class="column-quarter">
       <h1 class="heading-large">
         <span id="reference" class="heading-secondary">Reference number</span>{{ Claim['Reference'] }}
       </h1>
@@ -20,8 +19,15 @@
       <span class="bold-small">Assisted digital - </span>{{ Claim['AssistedDigitalCaseworker'] }}
       {% endif %}
     </div>
-    <div class="column-quarter">
 
+    <div class="column-quarter">
+      <h1 class="heading-large">
+        <span class="heading-secondary">Visit rules</span>
+        <span>{{ displayHelper.getPrisonRegion(Claim['NameOfPrison']) }}</span>
+      </h1>
+    </div>
+
+    <div class="column-quarter">
       <h1 class="heading-large">
         <span class="heading-secondary">Submitted </span>{{ getDateFormatted.shortDate(Claim['DateSubmitted']) }}
       </h1>
