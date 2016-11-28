@@ -3,14 +3,17 @@ var knex = require('knex')(config)
 var Promise = require('bluebird')
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-module.exports.insertTestData = function (reference, date, status, visitDate) {
+module.exports.insertTestData = function (reference, date, status, visitDate, idIncrement) {
+  // ID Increment to prevent duplicate unique IDs causing DB errors when tests run asynchronously
+  var increment = idIncrement || 0
+
   var data = this.getTestData(reference, status)
   return new Promise(function (resolve, reject) {
     // Generate unique Integer for Ids using timestamp in tenth of seconds
-    var uniqueId = Math.floor(Date.now() / 100) - 14000000000
-    var uniqueId2 = uniqueId + 1
-    var uniqueId3 = uniqueId2 + 1
-    var uniqueId4 = uniqueId3 + 1
+    var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + increment
+    var uniqueId2 = uniqueId + 1 + increment
+    var uniqueId3 = uniqueId2 + 1 + increment
+    var uniqueId4 = uniqueId3 + 1 + increment
 
     var ids = {}
     knex('IntSchema.Eligibility')
