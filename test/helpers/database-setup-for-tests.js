@@ -61,7 +61,9 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           EmailAddress: data.Visitor.EmailAddress,
           PhoneNumber: data.Visitor.PhoneNumber,
           DateOfBirth: date,
-          Relationship: data.Visitor.Relationship
+          Relationship: data.Visitor.Relationship,
+          Benefit: data.Visitor.Benefit,
+          DWPBenefitCheckerResult: data.Visitor.DWPBenefitCheckerResult
         })
         .then(function (result) {
           ids.visitorId = result[0]
@@ -249,7 +251,9 @@ module.exports.getTestData = function (reference, status) {
       Country: 'England',
       EmailAddress: 'donotsend@apvs.com',
       PhoneNumber: '07911111111',
-      Relationship: 'partner'
+      Relationship: 'partner',
+      Benefit: 'income-support',
+      DWPBenefitCheckerResult: 'UNDETERMINED'
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
