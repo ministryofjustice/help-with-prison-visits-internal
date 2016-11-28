@@ -1,6 +1,7 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const duplicateClaimCheck = require('./duplicate-claim-check')
+const moment = require('moment')
 
 module.exports = function (claimId) {
   var claimDetails
@@ -41,6 +42,7 @@ module.exports = function (claimId) {
       'Claim.VisitConfirmationCheck',
       'Claim.LastUpdated')
     .then(function (claim) {
+      claim.lastUpdatedHidden = moment(claim.LastUpdated)
       return knex('ClaimDocument')
         .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null})
         .select(

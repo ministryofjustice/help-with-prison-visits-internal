@@ -7,5 +7,6 @@ module.exports = {
   getIsGreaterThan: function (displayName) { return `${displayName} must be greater than zero` },
   getAssistedDigitalCaseworkerSameClaim: 'You cannot process this claim since you filled it in on behalf of a visitor',
   getUploadTooLarge: 'File uploaded too large',
-  getUploadIncorrectType: 'File uploaded was not an image or pdf'
+  getUploadIncorrectType: 'File uploaded was not an image or pdf',
+  getUpdateConflict: function (currentStatus) { return `This record has been updated since you started viewing it, its current status is ${currentStatus}` }
 }

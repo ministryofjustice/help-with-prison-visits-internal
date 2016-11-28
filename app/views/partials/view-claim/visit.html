@@ -2,7 +2,7 @@
   <tbody>
     <tr {% if errors['visit-confirmation-check'][0] %} class="warning"{% endif %}>
       <td><span class="bold">Date of visit</span></td>
-      <td>{{ getDateFormatted.longDate(Claim['DateOfJourney']) }}</td>
+      <td>{{ getDateFormatted.shortDate(Claim['DateOfJourney']) }}</td>
       <td>
         {% if Claim.visitConfirmation['DocumentStatus'] == 'uploaded' %}
           <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ Claim.visitConfirmation['Filepath'] }}">View confirmation</a>

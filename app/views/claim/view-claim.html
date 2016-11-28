@@ -56,6 +56,7 @@
     {% include "partials/csrf-hidden-input.html" %}
 
     <input type="hidden" name="assistedDigitalCaseworker" value="{{ Claim['AssistedDigitalCaseworker'] }}">
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
 
     {% include "partials/view-claim/visitor.html" %}
 
