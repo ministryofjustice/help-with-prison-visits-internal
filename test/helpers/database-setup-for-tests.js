@@ -12,7 +12,6 @@ module.exports.insertTestData = function (reference, date, status, visitDate, in
 
 module.exports.insertTestDataForIds = function (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4) {
   var data = this.getTestData(reference, status)
-  console.log(`insertTestData - reference: ${reference}, uniqueId: ${uniqueId}`)
 
   var ids = {}
   return knex('IntSchema.Eligibility')
@@ -148,7 +147,6 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.childId2 = result[0]
-      console.log(`ClaimDocument1 - reference: ${reference}, uniqueId: ${uniqueId}`)
       return knex('IntSchema.ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
@@ -164,7 +162,6 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimDocumentId1 = result[0]
-      console.log(`ClaimDocument2 - reference: ${reference}, uniqueId: ${uniqueId2}`)
       return knex('IntSchema.ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
@@ -180,7 +177,6 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimDocumentId2 = result[0]
-      console.log(`ClaimDocument3 - reference: ${reference}, uniqueId: ${uniqueId3}`)
       return knex('IntSchema.ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
@@ -196,7 +192,6 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
         })
     })
     .then(function (result) {
-      console.log(`ClaimDocument4 - reference: ${reference}, uniqueId: ${uniqueId4}`)
       ids.claimDocumentId3 = result[0]
       return knex('IntSchema.ClaimDocument')
         .returning('ClaimDocumentId')
