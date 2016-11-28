@@ -2,9 +2,10 @@ var config = require('../../knexfile').migrations
 var knex = require('knex')(config)
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-module.exports.insertTestData = function (reference, date, status, visitDate) {
+module.exports.insertTestData = function (reference, date, status, visitDate, increment) {
+  var idIncrement = increment || 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
-  var uniqueId = Math.floor(Date.now() / 100) - 14000000000
+  var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + idIncrement
 
   return this.insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3)
 }
