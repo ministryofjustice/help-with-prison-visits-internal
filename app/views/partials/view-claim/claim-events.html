@@ -2,18 +2,28 @@
 <h1 class="heading-medium">Additional information</h1>
 <ul class="claim-dialog">
   {% for claimEvent in claimEvents %}
-    {% if claimEvent.Caseworker %}<li class="caseworker">{% else %}<li class="claimant">{% endif %}
-    <h2>{% if claimEvent.Caseworker %}
-        {{ claimEvent.Caseworker }}
-      {% else %}
-        {% if displayHelper.getClaimTypeDisplayName(claimEvent.AdditionalData) %}
-          {{ displayHelper.getClaimTypeDisplayName(claimEvent.AdditionalData) }}
-        {% else %}
-          {{ claimEvent.AdditionalData }}
-        {% endif %}
-      {% endif %}
-    </h2>
+    {% if claimEvent.IsInternal %}<li class="internal">
+      <h2>{{ claimEvent.Event }}</h2>
+
+    {% elif claimEvent.Caseworker %}<li class="caseworker">
+      <h2>{{ claimEvent.Caseworker }}</h2>
+      <h2>{{ claimEvent.Event }}</h2>
+
+    {% else %}<li class="claimant">
+      <h2>{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</h2>
+
+    {% endif %}
+    
+    {% if displayHelper.getClaimTypeDisplayName(claimEvent.AdditionalData) %}
+      <p>{{ displayHelper.getClaimTypeDisplayName(claimEvent.AdditionalData) }}</p>
+
+    {% else %}
+      <p>{{ claimEvent.AdditionalData }}</p>
+
+    {% endif %}
+
     <p>{{ claimEvent.Note }}</p>
+
     <p class="time">{{ getDateFormatted.shortDateAndTime(claimEvent.DateAdded) }}</p>
   </li>
   {% endfor %}
