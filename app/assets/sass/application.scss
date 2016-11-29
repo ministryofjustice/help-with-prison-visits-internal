@@ -343,12 +343,18 @@ ul.claim-dialog li p.time {
 
 ul.claim-dialog li.claimant {
   background: #e0eef1;
+  float: left;
 }
 
 ul.claim-dialog li.caseworker {
   background: #b5e6f1;
   float: right;
   text-align: right;
+}
+
+ul.claim-dialog li.internal{
+  background: #e6e6fa;
+  float: left;
 }
 
 ul.claim-dialog-public li h2 {
