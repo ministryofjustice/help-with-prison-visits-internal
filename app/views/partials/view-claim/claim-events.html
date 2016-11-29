@@ -13,15 +13,8 @@
       <h2>{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</h2>
 
     {% endif %}
+    <p>{{ claimEvent.AdditionalData }}</p>
     
-    {% if displayHelper.getClaimTypeDisplayName(claimEvent.AdditionalData) %}
-      <p>{{ displayHelper.getClaimTypeDisplayName(claimEvent.AdditionalData) }}</p>
-
-    {% else %}
-      <p>{{ claimEvent.AdditionalData }}</p>
-
-    {% endif %}
-
     <p>{{ claimEvent.Note }}</p>
 
     <p class="time">{{ getDateFormatted.shortDateAndTime(claimEvent.DateAdded) }}</p>
