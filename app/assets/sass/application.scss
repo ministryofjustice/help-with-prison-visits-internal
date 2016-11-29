@@ -5,25 +5,62 @@ $path: "/public/images/";
 // This includes entire govuk-elements from _govuk-elements.scss
 @import 'govuk-elements';
 
- table.col-2 td:first-child {
- width:220px!important;
- font-weight:bold;
- }
+// override datatable styles
 
- table.no-pad-right td {
+table.dataTable thead th {
+    padding-left: inherit;
+    padding-right: inherit;
+}
+
+table.dataTable tbody td {
+    padding-left: inherit;
+    padding-right: inherit;
+}
+
+table.col-2 td:first-child {
+    width:220px!important;
+    font-weight:bold;
+}
+
+table.no-pad-right td {
     padding-right: 0;
- }
+}
 
 .table-heading {
- font-size:30px;
- font-weight:bold;
- border-bottom:1px solid #ccc;
- padding-bottom:10px;
+    font-size:30px;
+    font-weight:bold;
+    border-bottom:1px solid #ccc;
+    padding-bottom:10px;
     margin-bottom: 0px;
     margin-top: 40px;
- }
+}
 
- span.bold {
+.tag {
+    display: inline-block;
+    padding: 3px 5px 1px;
+}
+
+.tag.first-time {
+    background-color: #2b8cc4;
+    color:#fff;
+}
+
+.tag.repeat {
+    background-color: #15554f;
+    color:#fff;
+}
+
+.tag.repeat-duplicate {
+    background-color: #4c2c92;
+    color:#fff;
+}
+
+.tag.repeat-new-eligibility {
+    background-color: #1B567D;
+    color:#fff;
+}
+
+span.bold {
     font-weight:bold;
 }
 

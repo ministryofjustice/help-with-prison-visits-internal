@@ -80,6 +80,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           DateOfJourney: visitDate || date,
           DateCreated: date,
           DateSubmitted: date,
+          ClaimType: data.Claim.ClaimType,
           Status: status
         })
     })
@@ -286,6 +287,9 @@ module.exports.getTestData = function (reference, status) {
       Relationship: 'partner',
       Benefit: 'income-support',
       DWPBenefitCheckerResult: 'UNDETERMINED'
+    },
+    Claim: {
+      ClaimType: 'first-time'
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
