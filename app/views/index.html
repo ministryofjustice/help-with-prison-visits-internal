@@ -11,9 +11,15 @@
   {% include "includes/phase_banner_beta.html" %}
 
   <p>
-    <a href="/">new</a> | <a id="approved" href="/?status=APPROVED">approved</a> | <a href="/?status=PENDING">pending</a> 
+    <a href="/">new</a> | <a id="approved" href="/?status=APPROVED">approved</a> | <a href="/?status=PENDING">pending</a>
     | <a href="/?status=REQUEST-INFORMATION">request information</a> | <a href="/?status=REJECTED">rejected</a>
   </p>
+
+  <ul class="sub-tabs">
+    <li><a href="/" class="active">New <span class="badge"></span></a></li>
+    <li><a id="approved" href="/?status=APPROVED">Approved <span class="badge"></span></a></li>
+    <li><a href="/?status=PENDING">Pending <span class="badge"></span></a></li>
+  </ul>
 
   <table id="claims" class="table">
   	<thead>
