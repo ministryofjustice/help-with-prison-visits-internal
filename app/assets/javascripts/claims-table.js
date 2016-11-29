@@ -21,6 +21,7 @@ $(document).ready(function () {
     serverSide: true,
     searching: false,
     lengthChange: false,
+    order: [],
     ajax: {
       url: dataReference,
       dataSrc: 'claims'
@@ -49,6 +50,11 @@ $(document).ready(function () {
         'searchable': false,
         'orderable': false
       }
-    ]
+    ],
+
+    drawCallback: function () {
+      var total = $('#claims_info').text().split(' ')[5]
+      $('.badge').text(total)
+    }
   })
 })
