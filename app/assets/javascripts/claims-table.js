@@ -30,6 +30,11 @@ $(document).ready(function () {
       {'data': 'Reference'},
       {'data': 'Name'},
       {'data': 'DateSubmittedFormatted'},
+      {'data': 'ClaimType',
+        'createdCell': function (td, cellData, rowData, row, col) {
+          $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
+        }
+      },
       {'data': 'ClaimId',
         'createdCell': function (td, cellData, rowData, row, col) {
           $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
@@ -39,7 +44,7 @@ $(document).ready(function () {
 
     columnDefs: [
       {
-        'targets': [0, 1, 2, 3],
+        'targets': [0, 1, 2, 3, 4],
         'visible': true,
         'searchable': false,
         'orderable': false
