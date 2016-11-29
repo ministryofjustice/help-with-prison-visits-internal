@@ -7,17 +7,32 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 
 var getClaimsListAndCount
+var displayHelperStub
 var authorisation
+
+const RETURNED_CLAIM = {
+  Reference: 'A123456',
+  FirstName: 'Joe',
+  LastName: 'Bloggs',
+  DateSubmitted: '2016-11-29T00:00:00.000Z',
+  ClaimType: 'first-time',
+  ClaimId: 1,
+  DateSubmittedFormatted: '28-11-2016 00:00',
+  Name: 'Joe Bloggs'
+}
 
 describe('routes/index', function () {
   var app
   authorisation = { isAuthenticated: sinon.stub() }
   getClaimsListAndCount = sinon.stub()
+  displayHelperStub = sinon.stub({ 'getClaimTypeDisplayName': function () {} })
+  displayHelperStub.getClaimTypeDisplayName.returns('First time')
 
   beforeEach(function () {
     var route = proxyquire('../../../app/routes/index', {
       '../services/authorisation': authorisation,
-      '../services/data/get-claim-list-and-count': getClaimsListAndCount
+      '../services/data/get-claim-list-and-count': getClaimsListAndCount,
+      '../views/helpers/display-helper': displayHelperStub
     })
 
     app = express()
@@ -35,13 +50,15 @@ describe('routes/index', function () {
 
   describe('GET /claims/:status', function () {
     it('should respond with a 200', function () {
-      getClaimsListAndCount.resolves({claims: [], total: {Count: 0}})
+      getClaimsListAndCount.resolves({claims: [RETURNED_CLAIM], total: {Count: 0}})
+
       return supertest(app)
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
           expect(getClaimsListAndCount.calledWith('TEST', 0, 10)).to.be.true
-          expect(response.recordTotal, 0)
+          expect(response.body.recordsTotal).to.equal(0)
+          expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
         })
     })
   })

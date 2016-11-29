@@ -3,10 +3,12 @@ const expect = require('chai').expect
 const displayHelper = require('../../../../app/views/helpers/display-helper')
 const prisonsEnum = require('../../../../app/constants/prisons-enum')
 const benefitsEnum = require('../../../../app/constants/benefits-enum')
+const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 
 describe('views/helpers/display-helper', function () {
   const VALID_BENEFIT_VALUE = benefitsEnum.INCOME_SUPPORT.value
   const VALID_PRISON_VALUE = prisonsEnum.ALTCOURSE.value
+  const VALID_CLAIM_TYPE_VALUE = claimTypeEnum.FIRST_TIME.value
 
   it('should return the correct benefit display name given a valid value', function () {
     var result = displayHelper.getBenefitDisplayName(VALID_BENEFIT_VALUE)
@@ -31,5 +33,10 @@ describe('views/helpers/display-helper', function () {
   it('should return the correct prison region given a valid value', function () {
     var result = displayHelper.getPrisonRegion(VALID_PRISON_VALUE)
     expect(result).to.equal(prisonsEnum.ALTCOURSE.region)
+  })
+
+  it('should return the correct claim type display name given a valid value', function () {
+    var result = displayHelper.getClaimTypeDisplayName(VALID_CLAIM_TYPE_VALUE)
+    expect(result).to.equal(claimTypeEnum.FIRST_TIME.displayName)
   })
 })

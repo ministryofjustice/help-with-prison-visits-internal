@@ -3,7 +3,16 @@
 <ul class="claim-dialog">
   {% for claimEvent in claimEvents %}
     {% if claimEvent.Caseworker %}<li class="caseworker">{% else %}<li class="claimant">{% endif %}
-    <h2>{% if claimEvent.Caseworker %}{{ claimEvent.Caseworker }}{% else %}{{ claimEvent.AdditionalData }}{% endif %}</h2>
+    <h2>{% if claimEvent.Caseworker %}
+        {{ claimEvent.Caseworker }}
+      {% else %}
+        {% if displayHelper.getClaimTypeDisplayName(claimEvent.AdditionalData) %}
+          {{ displayHelper.getClaimTypeDisplayName(claimEvent.AdditionalData) }}
+        {% else %}
+          {{ claimEvent.AdditionalData }}
+        {% endif %}
+      {% endif %}
+    </h2>
     <p>{{ claimEvent.Note }}</p>
     <p class="time">{{ getDateFormatted.shortDateAndTime(claimEvent.DateAdded) }}</p>
   </li>
