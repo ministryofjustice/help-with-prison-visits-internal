@@ -8,6 +8,6 @@ module.exports = {
   'taxi': true,
   'plane': true,
   'ferry': true,
-  'light refreshment': false,
+  'refreshment': false,
   'accommodation': true
 }
