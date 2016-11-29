@@ -18,7 +18,6 @@ module.exports = function (router) {
         var claims = data.claims
         claims.map(function (claim) {
           claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
-          return claim
         })
 
         return res.json({
