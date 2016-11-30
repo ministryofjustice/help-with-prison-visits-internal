@@ -19,3 +19,7 @@ exports.isCurrency = function (value) {
 exports.isGreaterThanZero = function (value) {
   return value > 0
 }
+
+exports.isLessThanMaximumDifferentApproved = function (value) {
+  return value <= 250 && value !== null
+}

@@ -178,4 +178,53 @@ describe('services/validators/common-validator', function () {
       done()
     })
   })
+
+  describe('isLessThanMaximumDifferentApproved', function () {
+    const VALID_NUMERIC = '20'
+    const VALID_FLOAT = '7.99'
+    const INVALID_NUMERIC = '1000'
+    const INVALID_STRING = 'some invalid string'
+
+    it('should return false if passed null', function (done) {
+      var result = validator.isLessThanMaximumDifferentApproved(null)
+      expect(result).to.equal(false)
+      done()
+    })
+
+    it('should return false if passed undefined', function (done) {
+      var result = validator.isLessThanMaximumDifferentApproved(undefined)
+      expect(result).to.equal(false)
+      done()
+    })
+
+    it('should return false if passed an object', function (done) {
+      var result = validator.isLessThanMaximumDifferentApproved({})
+      expect(result).to.equal(false)
+      done()
+    })
+
+    it('should return true if passed a numeric string that is greater than zero', function (done) {
+      var result = validator.isLessThanMaximumDifferentApproved(VALID_NUMERIC)
+      expect(result).to.equal(true)
+      done()
+    })
+
+    it('should return true if passed a float that is greater than zero', function (done) {
+      var result = validator.isLessThanMaximumDifferentApproved(VALID_FLOAT)
+      expect(result).to.equal(true)
+      done()
+    })
+
+    it('should return false if passed a negative numeric string', function (done) {
+      var result = validator.isLessThanMaximumDifferentApproved(INVALID_NUMERIC)
+      expect(result).to.equal(false)
+      done()
+    })
+
+    it('should return false if passed a non-numeric string', function (done) {
+      var result = validator.isLessThanMaximumDifferentApproved(INVALID_STRING)
+      expect(result).to.equal(false)
+      done()
+    })
+  })
 })
