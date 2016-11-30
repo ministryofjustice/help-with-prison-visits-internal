@@ -1,9 +1,10 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const config = require('../../../config')
+const knexConfig = require('../../../knexfile').intweb
+const knex = require('knex')(knexConfig)
 const Promise = require('bluebird')
 
 module.exports = function () {
-  const NUMBER_OF_PAYMENT_FILES = 7
+  const NUMBER_OF_PAYMENT_FILES = parseInt(config.PAYMENT_NUMBER_OF_PAYMENT_FILES)
   const ACCESSPAY_FILE = 'ACCESSPAY_FILE'
   const ADI_JOURNAL_FILE = 'ADI_JOURNAL_FILE'
 
