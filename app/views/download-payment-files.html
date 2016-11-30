@@ -1,0 +1,71 @@
+{% extends "includes/layout.html" %}
+
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<main id="content" role="main">
+
+  {% include "includes/phase_banner_beta.html" %}
+
+<h1 class="heading-large">Download payment files</h1>
+
+<div class="grid-row">
+    <div class="column-one-half">
+
+      <h3 class="heading-medium">Access Pay file</h3>
+      {% if topAccessPayFile %}
+      <a href="/download-payment-files/download?path={{ topAccessPayFile.Filepath }}" class="link">Download file for {{ dateHelper.shortDate(topAccessPayFile.DateCreated) }}</a>
+      {% endif %}
+      <br>
+      <br>
+
+      {% if previousAccessPayFiles %}
+      <div class="form-group">
+        <details role="group">
+          <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Previous AccessPay files</span></summary>
+          <div class="panel panel-border-narrow" id="" aria-hidden="false">
+            <ul class="list list-bullet">
+              {% for previousAccessPayFile in previousAccessPayFiles %}
+              <li><a href="/download-payment-files/download?path={{ previousAccessPayFile.Filepath }}" class="link">Download file for {{ dateHelper.shortDate(previousAccessPayFile.DateCreated) }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </details>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="column-one-half">
+
+      <h3 class="heading-medium">ADI Journal</h3>
+        {% if topAdiJournalFile %}
+      <a href="/download-payment-files/download?path={{ topAdiJournalFile.Filepath }}" class="link">Download transactions for {{ dateHelper.shortDate(topAdiJournalFile.DateCreated) }}</a>
+      {% endif %}
+
+      <br>
+      <br>
+
+      {% if previousAdiJournalFiles %}
+      <div class="form-group">
+        <details role="group">
+          <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Previous ADI Journals</span></summary>
+          <div class="panel panel-border-narrow" id="" aria-hidden="false">
+            <ul class="list list-bullet">
+              {% for previousAdiJournalFile in previousAdiJournalFiles %}
+              <li><a href="/download-payment-files/download?path={{ previousAdiJournalFile.Filepath }}" class="link">Download transactions for {{ dateHelper.shortDate(previousAdiJournalFile.DateCreated) }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        </details>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</main>
+
+{% endblock %}

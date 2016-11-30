@@ -1,3 +1,4 @@
+const authorisation = require('../../services/authorisation')
 const DocumentTypeEnum = require('../../constants/document-type-enum')
 const DirectoryCheck = require('../../services/directory-check')
 const Upload = require('../../services/upload')
@@ -11,6 +12,8 @@ var csrfToken
 
 module.exports = function (router) {
   router.get('/claim/file-upload/:referenceId/:claimId/:documentType', function (req, res) {
+    authorisation.isCaseworker(req)
+
     csrfToken = generateCSRFToken(req)
 
     if (DocumentTypeEnum.hasOwnProperty(req.params.documentType)) {
@@ -27,6 +30,8 @@ module.exports = function (router) {
   })
 
   router.post('/claim/file-upload/:referenceId/:claimId/:documentType', function (req, res, next) {
+    authorisation.isCaseworker(req)
+
     Upload(req, res, function (error) {
       try {
         // If there was no file attached, we still need to check the CSRF token

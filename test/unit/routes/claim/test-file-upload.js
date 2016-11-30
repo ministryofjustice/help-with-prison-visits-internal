@@ -15,6 +15,7 @@ describe('routes/claim/file-upload', function () {
   const BASEROUTE = `/claim/file-upload/${REFERENCE}/${CLAIMID}/`
   const VALIDROUTE = `${BASEROUTE}VISIT_CONFIRMATION?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`
 
+  var authorisation
   var directoryCheckStub
   var uploadStub
   var fileUploadStub
@@ -23,6 +24,7 @@ describe('routes/claim/file-upload', function () {
   var app
 
   beforeEach(function () {
+    authorisation = { isCaseworker: sinon.stub() }
     directoryCheckStub = sinon.stub()
     uploadStub = sinon.stub()
     fileUploadStub = sinon.stub()
@@ -30,6 +32,7 @@ describe('routes/claim/file-upload', function () {
     generateCSRFTokenStub = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/file-upload', {
+      '../../services/authorisation': authorisation,
       '../../services/directory-check': directoryCheckStub,
       '../../services/upload': uploadStub,
       '../../services/domain/file-upload': fileUploadStub,
@@ -63,6 +66,7 @@ describe('routes/claim/file-upload', function () {
         .get(VALIDROUTE)
         .expect(function () {
           sinon.assert.calledOnce(generateCSRFTokenStub)
+          sinon.assert.calledOnce(authorisation.isCaseworker)
         })
     })
 
@@ -77,6 +81,7 @@ describe('routes/claim/file-upload', function () {
         .get(VALIDROUTE)
         .expect(function () {
           sinon.assert.calledOnce(directoryCheckStub)
+          sinon.assert.calledOnce(authorisation.isCaseworker)
         })
     })
 
