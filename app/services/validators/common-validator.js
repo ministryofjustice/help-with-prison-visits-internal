@@ -20,6 +20,6 @@ exports.isGreaterThanZero = function (value) {
   return value > 0
 }
 
-exports.isLessThanMaximumDifferentApproved = function (value) {
+exports.isLessThanMaximumDifferentApprovedAmount = function (value) {
   return value <= 250 && value !== null
 }

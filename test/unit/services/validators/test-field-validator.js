@@ -207,4 +207,54 @@ describe('services/validators/field-validator', function () {
       done()
     })
   })
+
+  describe('isLessThanMaximumDifferentApprovedAmount', function () {
+    const VALID_INPUT = '20'
+    const INVALID_INPUT = '300'
+
+    it('should return an error object if passed null', function (done) {
+      var errorHandler = ErrorHandler()
+      FieldValidator(null, FIELD_NAME, errorHandler)
+        .isLessThanMaximumDifferentApprovedAmount()
+      var errors = errorHandler.get()
+      expect(errors).to.have.property(FIELD_NAME)
+      done()
+    })
+
+    it('should return an error object if passed undefined', function (done) {
+      var errorHandler = ErrorHandler()
+      FieldValidator(undefined, FIELD_NAME, errorHandler)
+        .isLessThanMaximumDifferentApprovedAmount()
+      var errors = errorHandler.get()
+      expect(errors).to.have.property(FIELD_NAME)
+      done()
+    })
+
+    it('should return an error object if passed an object', function (done) {
+      var errorHandler = ErrorHandler()
+      FieldValidator({}, FIELD_NAME, errorHandler)
+        .isLessThanMaximumDifferentApprovedAmount()
+      var errors = errorHandler.get()
+      expect(errors).to.have.property(FIELD_NAME)
+      done()
+    })
+
+    it('should return false if passed a numeric value greater than zero', function (done) {
+      var errorHandler = ErrorHandler()
+      FieldValidator(VALID_INPUT, FIELD_NAME, errorHandler)
+        .isLessThanMaximumDifferentApprovedAmount()
+      var errors = errorHandler.get()
+      expect(errors).to.equal(false)
+      done()
+    })
+
+    it('should return an error object if passed a value greater than 250', function (done) {
+      var errorHandler = ErrorHandler()
+      FieldValidator(INVALID_INPUT, FIELD_NAME, errorHandler)
+        .isLessThanMaximumDifferentApprovedAmount()
+      var errors = errorHandler.get()
+      expect(errors).to.have.property(FIELD_NAME)
+      done()
+    })
+  })
 })
