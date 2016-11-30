@@ -13,7 +13,8 @@ module.exports = function (oldData, nonPersistedData) {
     expense.Status = postedClaimExpenseResponse.status
     if (expense.Status === 'APPROVED-DIFF-AMOUNT') {
       expense.ApprovedCost = postedClaimExpenseResponse.approvedCost
-      if (!Validator.isCurrency(postedClaimExpenseResponse.approvedCost)) {
+      if (!Validator.isCurrency(postedClaimExpenseResponse.approvedCost) || !Validator.isGreaterThanZero(postedClaimExpenseResponse.approvedCost) ||
+        !Validator.isLessThanMaximumDifferentApprovedAmount(postedClaimExpenseResponse.approvedCost)) {
         expense.Error = true
       }
     }
