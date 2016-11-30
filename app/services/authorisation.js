@@ -16,5 +16,27 @@ function isAdmin (req) {
   }
 }
 
+function isSscl (req) {
+  isAuthenticated(req)
+
+  if (!req.user.roles.includes('sscl')) {
+    var error = new Error('unauthorised')
+    error.status = 403
+    throw error
+  }
+}
+
+function isCaseworker (req) {
+  isAuthenticated(req)
+
+  if (!req.user.roles.includes('caseworker')) {
+    var error = new Error('unauthorised')
+    error.status = 403
+    throw error
+  }
+}
+
 module.exports.isAuthenticated = isAuthenticated
 module.exports.isAdmin = isAdmin
+module.exports.isSscl = isSscl
+module.exports.isCaseworker = isCaseworker
