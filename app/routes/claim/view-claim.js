@@ -18,7 +18,7 @@ const checkLastUpdated = require('../../services/check-last-updated')
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
-    authorisation.isAuthenticated(req)
+    authorisation.isCaseworker(req)
 
     getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
@@ -41,7 +41,8 @@ module.exports = function (router) {
   })
 
   router.post('/claim/:claimId', function (req, res) {
-    authorisation.isAuthenticated(req)
+    authorisation.isCaseworker(req)
+
     getLastUpdated(req.params.claimId).then(function (lastUpdatedData) {
       try {
         var updateConflict = checkLastUpdated(lastUpdatedData.LastUpdated, req.body.lastUpdated)
@@ -99,6 +100,8 @@ module.exports = function (router) {
   })
 
   router.get('/claim/:claimId/download', function (req, res) {
+    authorisation.isCaseworker(req)
+
     var path = req.query.path
     if (path) {
       res.download(path)

@@ -30,7 +30,7 @@ describe('routes/claim/view-claim', function () {
   var app
 
   beforeEach(function () {
-    authorisation = { isAuthenticated: sinon.stub() }
+    authorisation = { isCaseworker: sinon.stub() }
     stubGetIndividualClaimDetails = sinon.stub()
     stubSubmitClaimResponse = sinon.stub()
     stubClaimDecision = sinon.stub()
@@ -75,7 +75,7 @@ describe('routes/claim/view-claim', function () {
         .get('/claim/123')
         .expect(200)
         .expect(function () {
-          expect(authorisation.isAuthenticated.calledOnce).to.be.true
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
@@ -96,7 +96,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA)
         .expect(302)
         .expect(function () {
-          expect(authorisation.isAuthenticated.calledOnce).to.be.true
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
           expect(stubGetClaimLastUpdated.calledOnce).to.be.true
           expect(stubCheckLastUpdated.calledOnce).to.be.true
           expect(stubGetClaimExpenseResponses.calledOnce).to.be.true
@@ -115,7 +115,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA)
         .expect(400)
         .expect(function () {
-          expect(authorisation.isAuthenticated.calledOnce).to.be.true
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
           expect(stubGetClaimLastUpdated.calledOnce).to.be.true
           expect(stubCheckLastUpdated.calledOnce).to.be.true
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
@@ -133,7 +133,7 @@ describe('routes/claim/view-claim', function () {
         .send(INCOMPLETE_DATA)
         .expect(400)
         .expect(function () {
-          expect(authorisation.isAuthenticated.calledOnce).to.be.true
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
           expect(stubGetClaimLastUpdated.calledOnce).to.be.true
           expect(stubCheckLastUpdated.calledOnce).to.be.true
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
