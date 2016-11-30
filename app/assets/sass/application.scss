@@ -418,3 +418,52 @@ ul.claim-dialog-public li.claimant {
   float: right;
   text-align: right;
 }
+
+ul.sub-tabs {
+    border-bottom:2px solid #ccc;
+    display:block;
+    width:100%;
+    overflow:auto;
+    margin:0!important;
+}
+
+ul.sub-tabs li a{
+    background: #dde0e2;
+    padding:15px 25px;
+    margin: 0 4px 0px 0;
+    display:inline-block;
+    position:relative;
+    float:left;
+    text-decoration:none;
+    color:#000;
+}
+
+ul.sub-tabs li a:hover{
+    background: #dde0e2;
+}
+
+ul.sub-tabs li a.active{
+    background: #ffc136;
+    display:block;
+    text-decoration:none;
+}
+
+
+
+ul.sub-tabs li a span.badge  {
+    font-size: 14px;
+    padding:1px 3px 0px 4px;
+    min-width: 15px;
+    display: inline-block;
+    border-radius: 20px;
+    text-align: center;
+    background:#004A83;
+    margin:0 0 0 10px;
+    font-weight:bold;
+    color:#fff;
+}
+
+ul.sub-tabs li a.active span.badge {
+    background:#fff;
+    background:#b10e1e;
+}

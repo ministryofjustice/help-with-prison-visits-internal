@@ -7,7 +7,8 @@ module.exports = function (router) {
     authorisation.isAuthenticated(req)
 
     res.render('index', {
-      title: 'APVS index'
+      title: 'APVS index',
+      active: req.query.status
     })
   })
 

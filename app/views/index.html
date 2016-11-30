@@ -10,10 +10,15 @@
 
   {% include "includes/phase_banner_beta.html" %}
 
-  <p>
-    <a href="/">new</a> | <a id="approved" href="/?status=APPROVED">approved</a> | <a href="/?status=PENDING">pending</a> 
-    | <a href="/?status=REQUEST-INFORMATION">request information</a> | <a href="/?status=REJECTED">rejected</a>
-  </p>
+  <ul class="sub-tabs">
+    <li><a href="/" {% if active == undefined %} class="active">New <span class="badge"></span>{% else %}>New{% endif %}</a></li>
+    <li><a id="approved" href="/?status=UPDATED"{% if active == 'UPDATED' %} %} class="active">Updated <span class="badge"></span>{% else %}>Updated{% endif %}</a></li>
+    <li><a href="/?status=REQUEST-INFORMATION"{% if active == 'REQUEST-INFORMATION' %} class="active">In Progress <span class="badge"></span>{% else %}>In progress{% endif %}</a></li>
+    <li><a href="/?status=PENDING"{% if active == 'PENDING' %} class="active">Pending <span class="badge"></span>{% else %}>Pending{% endif %}</a></li>
+    <li><a id="approved" href="/?status=APPROVED"{% if active == 'APPROVED' %} %} class="active">Approved <span class="badge"></span>{% else %}>Approved{% endif %}</a></li>
+    <li><a href="/?status=AUTO-APPROVED"{% if active == 'AUTO-APPROVED' %} class="active">Auto <span class="badge"></span>{% else %}>Auto{% endif %}</a></li>
+    <li><a href="/?status=REJECTED"{% if active == 'REJECTED' %} class="active">Rejected <span class="badge"></span>{% else %}>Rejected{% endif %}</a></li>
+  </ul>
 
   <table id="claims" class="table">
   	<thead>
