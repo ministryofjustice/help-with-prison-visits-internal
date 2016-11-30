@@ -1,4 +1,5 @@
 const Validator = require('../../services/validators/common-validator')
+const claimDecisionEnum = require('../../constants/claim-decision-enum')
 
 module.exports = function (oldData, nonPersistedData) {
   var claimExpensesById = {}
@@ -11,7 +12,7 @@ module.exports = function (oldData, nonPersistedData) {
   oldData.forEach(function (expense) {
     var postedClaimExpenseResponse = claimExpensesById[expense.ClaimExpenseId.toString()]
     expense.Status = postedClaimExpenseResponse.status
-    if (expense.Status === 'APPROVED-DIFF-AMOUNT') {
+    if (expense.Status === claimDecisionEnum.APPROVED_DIFF_AMOUNT) {
       expense.ApprovedCost = postedClaimExpenseResponse.approvedCost
       if (!Validator.isCurrency(postedClaimExpenseResponse.approvedCost)) {
         expense.Error = true
