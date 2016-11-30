@@ -15,7 +15,11 @@
     {% endif %}
     <p>{{ claimEvent.AdditionalData }}</p>
 
+    {% if claimEvent.IsInternal %}
+    <p>{{ claimEvent.Note|safe }}</p>
+    {% else %}
     <p>{{ claimEvent.Note }}</p>
+    {% endif %}
 
     <p class="time">{{ getDateFormatted.shortDateAndTime(claimEvent.DateAdded) }}</p>
   </li>
