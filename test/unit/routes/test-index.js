@@ -9,6 +9,7 @@ require('sinon-bluebird')
 var getClaimsListAndCount
 var displayHelperStub
 var authorisation
+var isCaseworkerStub
 
 const RETURNED_CLAIM = {
   Reference: 'A123456',
@@ -23,12 +24,14 @@ const RETURNED_CLAIM = {
 
 describe('routes/index', function () {
   var app
-  authorisation = { isAuthenticated: sinon.stub() }
-  getClaimsListAndCount = sinon.stub()
-  displayHelperStub = sinon.stub({ 'getClaimTypeDisplayName': function () {} })
-  displayHelperStub.getClaimTypeDisplayName.returns('First time')
 
   beforeEach(function () {
+    isCaseworkerStub = sinon.stub()
+    authorisation = { isCaseworker: isCaseworkerStub }
+    getClaimsListAndCount = sinon.stub()
+    displayHelperStub = sinon.stub({ 'getClaimTypeDisplayName': function () {} })
+    displayHelperStub.getClaimTypeDisplayName.returns('First time')
+
     var route = proxyquire('../../../app/routes/index', {
       '../services/authorisation': authorisation,
       '../services/data/get-claim-list-and-count': getClaimsListAndCount,
@@ -45,6 +48,9 @@ describe('routes/index', function () {
       return supertest(app)
         .get('/')
         .expect(200)
+        .expect(function () {
+          expect(isCaseworkerStub.calledOnce).to.be.true
+        })
     })
   })
 
@@ -56,6 +62,7 @@ describe('routes/index', function () {
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
+          expect(isCaseworkerStub.calledOnce).to.be.true
           expect(getClaimsListAndCount.calledWith('TEST', 0, 10)).to.be.true
           expect(response.body.recordsTotal).to.equal(0)
           expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
