@@ -448,8 +448,6 @@ ul.sub-tabs li a.active{
     text-decoration:none;
 }
 
-
-
 ul.sub-tabs li a span.badge  {
     font-size: 14px;
     padding:1px 3px 0px 4px;
@@ -466,4 +464,34 @@ ul.sub-tabs li a span.badge  {
 ul.sub-tabs li a.active span.badge {
     background:#fff;
     background:#b10e1e;
+}
+
+.banner {
+  padding: 10px;
+  background: #f2dede;
+  border-left: 5px solid #a94442;
+  color: #a94442;
+}
+
+.heading-small {
+  font-family: "nta", Arial, sans-serif;
+  font-weight: 700;
+  text-transform: none;
+  font-size: 16px;
+  line-height: 1.25;
+  margin-top: 0.625em;
+  margin-bottom: 0.3125em;
+}
+
+@media (min-width: 641px) {
+  .heading-small {
+    font-size: 19px;
+    line-height: 1.3157894737;
+  }
+}
+
+@media (min-width: 641px) {
+  .heading-small {
+    margin-top: 1.0526315789em;
+  }
 }
