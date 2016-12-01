@@ -42,6 +42,7 @@ function updateClaim (claimId, caseworker, decision, reason, note, visitConfirma
     'Reason': reason,
     'Note': note,
     'VisitConfirmationCheck': visitConfirmationCheck,
+    'DateReviewed': moment().toDate(),
     'LastUpdated': moment().toDate()
   })
 }
