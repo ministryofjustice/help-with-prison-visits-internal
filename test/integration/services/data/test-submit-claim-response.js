@@ -51,6 +51,9 @@ describe('services/data/submit-claim-response', function () {
         {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
       ]
     }
+    var currentDate = new Date()
+    var twoMinutesAgo = new Date().setMinutes(currentDate.getMinutes() - 2)
+    var twoMinutesAhead = new Date().setMinutes(currentDate.getMinutes() + 2)
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
@@ -67,8 +70,8 @@ describe('services/data/submit-claim-response', function () {
             expect(result.Note).to.be.equal(claimResponse.note)
             expect(result.NomisCheck).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.DWPCheck).to.be.equal(claimDecisionEnum.REJECTED)
-            expect(result.LastUpdated).to.not.be.null
-            expect(result.DateReviewed).to.not.be.null
+            expect(result.LastUpdated).to.be.within(twoMinutesAgo, twoMinutesAhead)
+            expect(result.DateReviewed).to.be.within(twoMinutesAgo, twoMinutesAhead)
 
             expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).to.be.true
             expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true
