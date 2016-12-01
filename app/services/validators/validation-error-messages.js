@@ -8,5 +8,6 @@ module.exports = {
   getAssistedDigitalCaseworkerSameClaim: 'You cannot process this claim since you filled it in on behalf of a visitor',
   getUploadTooLarge: 'File uploaded too large',
   getUploadIncorrectType: 'File uploaded was not an image or pdf',
-  getUpdateConflict: function (currentStatus) { return `This record has been updated since you started viewing it, its current status is ${currentStatus}` }
+  getUpdateConflict: function (currentStatus) { return `This record has been updated since you started viewing it, its current status is ${currentStatus}` },
+  getIsLessThanMaximumDifferentApprovedAmount: function (displayName) { return `${displayName} can only be £250 or less` }
 }

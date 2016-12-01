@@ -48,6 +48,13 @@ class FieldValidator {
     }
     return this
   }
+
+  isLessThanMaximumDifferentApprovedAmount () {
+    if (!validator.isLessThanMaximumDifferentApprovedAmount(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getIsLessThanMaximumDifferentApprovedAmount)
+    }
+    return this
+  }
 }
 
 module.exports = function (data, fieldName, errors) {
