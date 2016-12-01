@@ -2,6 +2,7 @@ const ValidationError = require('../errors/validation-error')
 const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 const ERROR_MESSAGES = require('../validators/validation-error-messages')
+const claimDecisionEnum = require('../../constants/claim-decision-enum')
 
 class ClaimDecision {
   constructor (caseworker,
@@ -20,10 +21,10 @@ class ClaimDecision {
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
 
     this.decision = decision
-    if (this.decision === 'APPROVED') {
+    if (this.decision === claimDecisionEnum.APPROVED) {
       this.reason = ''
       this.note = additionalInfoApprove
-    } else if (decision === 'REJECTED') {
+    } else if (decision === claimDecisionEnum.REJECTED) {
       this.reason = reasonReject
       this.note = additionalInfoReject
     } else {
@@ -36,9 +37,9 @@ class ClaimDecision {
 
     this.claimExpenseResponses = claimExpenseResponses
     claimExpenseResponses.forEach(function (expense) {
-      if (expense.status === 'APPROVED') {
+      if (expense.status === claimDecisionEnum.APPROVED) {
         expense.approvedCost = expense.cost
-      } else if (expense.status !== 'APPROVED-DIFF-AMOUNT') {
+      } else if (expense.status !== claimDecisionEnum.APPROVED_DIFF_AMOUNT) {
         expense.approvedCost = null
       }
     })
@@ -55,7 +56,7 @@ class ClaimDecision {
     FieldValidator(this.decision, 'decision', errors)
       .isRequired()
 
-    if (this.decision !== 'APPROVED') {
+    if (this.decision !== claimDecisionEnum.APPROVED) {
       FieldValidator(this.reason, 'reason', errors)
         .isRequired()
     }

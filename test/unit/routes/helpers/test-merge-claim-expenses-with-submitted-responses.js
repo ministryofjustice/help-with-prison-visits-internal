@@ -1,5 +1,7 @@
 const expect = require('chai').expect
 const mergeClaimExpensesWithSubmittedResponses = require('../../../../app/routes/helpers/merge-claim-expenses-with-submitted-responses')
+const claimDecisionEnum = require('../../../../app/constants/claim-decision-enum')
+
 var oldData
 var newData
 
@@ -25,16 +27,16 @@ describe('routes/helpers/get-claim-expense-non-persisted-details', function () {
     newData = [
       {
         claimExpenseId: 1,
-        status: 'APPROVED'
+        status: claimDecisionEnum.APPROVED
       },
       {
         claimExpenseId: 2,
-        status: 'APPROVED-DIFF-AMOUNT',
+        status: claimDecisionEnum.APPROVED_DIFF_AMOUNT,
         approvedCost: '2.10'
       },
       {
         claimExpenseId: 3,
-        status: 'APPROVED-DIFF-AMOUNT',
+        status: claimDecisionEnum.APPROVED_DIFF_AMOUNT,
         approvedCost: ''
       }]
     done()
