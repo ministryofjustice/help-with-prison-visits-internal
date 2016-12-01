@@ -35,5 +35,8 @@ module.exports = {
   FILE_UPLOAD_MAXSIZE: process.env.FILE_UPLOAD_MAXSIZE || '5242880', // 5MB in Bytes.
 
   // Assisted Digital external link
-  EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'http://localhost:3000'
+  EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'http://localhost:3000',
+
+  // Value configurations
+  MAX_APPROVED_DIFFERENT_AMOUNT: process.env.MAX_APPROVED_DIFFERENT_AMOUNT || '250'
 }

@@ -1,3 +1,4 @@
+const config = require('../../../config')
 /**
  * This file defines all generic validation tests used in the application. This file can and should be used by the
  * three higher level validators: FieldValidator, FieldSetValidator, and UrlPathValidator.
@@ -18,4 +19,8 @@ exports.isCurrency = function (value) {
 
 exports.isGreaterThanZero = function (value) {
   return value > 0
+}
+
+exports.isLessThanMaximumDifferentApprovedAmount = function (value) {
+  return value <= parseInt(config.MAX_APPROVED_DIFFERENT_AMOUNT) && value !== null
 }

@@ -79,6 +79,9 @@ module.exports = function (claimId) {
                 if (expense.ApprovedCost !== null) {
                   expense.ApprovedCost = Number(expense.ApprovedCost).toFixed(2)
                 }
+                if (expense.ExpenseType === 'car' && expense.Status === null) {
+                  expense.Status = 'APPROVED-DIFF-AMOUNT'
+                }
               })
               claim.Total = Number(total).toFixed(2)
               return claimExpenses
