@@ -17,7 +17,7 @@ describe('services/data/update-auto-approval-config', function () {
         MaxClaimTotal: '100.00',
         MaxDaysAfterAPVUVisit: '28',
         MaxNumberOfClaimsPerYear: '10',
-        RulesDisabled: ['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'],
+        RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
         IsEnabled: 'true'
       })
       .returning('AutoApprovalConfigId')
