@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('AutoApprovalConfig', function (table) {
     table.increments('AutoApprovalConfigId')
@@ -8,8 +10,22 @@ exports.up = function (knex, Promise) {
     table.decimal('MaxClaimTotal')
     table.integer('MaxDaysAfterAPVUVisit')
     table.integer('MaxNumberOfClaimsPerYear')
-    table.string('RulesDisabled', 200)
+    table.string('RulesDisabled', 4000)
     table.boolean('IsEnabled')
+  })
+  .then(function () {
+    return knex('AutoApprovalConfig')
+      .insert({
+        Caseworker: null,
+        DateCreated: moment().toDate(),
+        AutoApprovalEnabled: 'true',
+        CostVariancePercentage: '0.1',
+        MaxClaimTotal: '250',
+        MaxDaysAfterAPVUVisit: '28',
+        MaxNumberOfClaimsPerYear: '26',
+        RulesDisabled: null,
+        IsEnabled: 'true'
+      })
   })
   .catch(function (error) {
     console.log(error)
@@ -18,5 +34,9 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  return knex.schema.dropTable('AutoApprovalConfig')
+  return knex('AutoApprovalConfig')
+    .del()
+    .then(function () {
+      return knex.schema.dropTable('AutoApprovalConfig')
+    })
 }

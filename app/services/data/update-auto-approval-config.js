@@ -14,6 +14,11 @@ module.exports = function (caseworker, autoApprovalEnabled, costVariancePercenta
     .update('IsEnabled', 'false')
     .then(function () {
       // Insert new config
+      var rulesDisabledJoined = null
+      if (rulesDisabled) {
+        rulesDisabledJoined = rulesDisabled.join()
+      }
+
       return knex('AutoApprovalConfig')
         .insert({
           Caseworker: caseworker,
@@ -23,7 +28,7 @@ module.exports = function (caseworker, autoApprovalEnabled, costVariancePercenta
           MaxClaimTotal: maxClaimTotal,
           MaxDaysAfterAPVUVisit: maxDaysAfterAPVUVisit,
           MaxNumberOfClaimsPerYear: maxNumberOfClaimsPerYear,
-          RulesDisabled: rulesDisabled,
+          RulesDisabled: rulesDisabledJoined,
           IsEnabled: 'true'
         })
         .returning('AutoApprovalConfigId')
