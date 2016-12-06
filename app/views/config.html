@@ -12,57 +12,56 @@
 
   <h1 class="table-heading">Configuration</h1>
 
-  <form>
-    <table class="table">
-      <thead>
-        <tr>
-        <th>Rule</th>
-        <th>Description</th>
-        <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Auto Approval Enabled -->
-        <tr>
-          <td>
-            Auto Approval Enabled
-          </td>
-          <td>
-            Controls auto approval globally
-          </td>
-          <td>
-            <label for="auto-approval-on" class="block-label inline">
-              <input id="auto-approval-on" type="radio" name="auto-approval" value="on">
-              <span>On</span>
-            </label>
-            <label for="auto-approval-off" class="block-label inline">
-              <input id="auto-approval-off" type="radio" name="auto-approval" value="off">
-              <span>Off</span>
-            </label>
-          </td>
-        </tr>
+  <form action="/config" method="post">
+    <div class="form-group">
+      <table class="table">
+        <thead>
+          <tr>
+          <th>Rule</th>
+          <th>Description</th>
+          <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Auto Approval Enabled -->
+          <tr>
+            <td>
+              Auto Approval Enabled
+            </td>
+            <td>
+              Controls auto approval globally
+            </td>
+            <td>
+              <label for="auto-approval-on" class="block-label inline">
+                <input id="auto-approval-on" type="radio" name="AutoApprovalEnabled" value="true" {% if autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
+                <span>On</span>
+              </label>
+              <label for="auto-approval-off" class="block-label inline">
+                <input id="auto-approval-off" type="radio" name="AutoApprovalEnabled" value="false" {% if not autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
+                <span>Off</span>
+              </label>
+            </td>
+          </tr>
 
-        <!-- Auto Approval Cost Variance -->
-        <tr>
-          <td>
-            Auto Approval Cost Variance
-          </td>
-          <td>
-            Controls the cost variance used for auto approval
-          </td>
-          <td>
-            <label for="cost-variance-on" class="block-label inline">
-              <input id="cost-variance-on" type="radio" name="cost-variance" value="on">
-              <span>On</span>
-            </label>
-            <label for="cost-variance-off" class="block-label inline">
-              <input id="cost-variance-off" type="radio" name="cost-variance" value="off">
-              <span>Off</span>
-            </label>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          <!-- Auto Approval Cost Variance -->
+          <tr>
+            <td>
+              Auto Approval Cost Variance
+            </td>
+            <td>
+              Controls the cost variance used for auto approval
+            </td>
+            <td>
+              <input id="cost-variance" type="number" name="CostVariancePercentage" class="form-control" value="{{ autoApprovalConfig.CostVariancePercentage }}">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {% include "partials/csrf-hidden-input.html" %}
+
+    <input type="submit" class="button">
   </form>
 
 </main>
