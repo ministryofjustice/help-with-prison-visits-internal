@@ -19,7 +19,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return list of claims and total', function () {
-      return getClaimsListAndCount('TESTING', 0, 1)
+      return getClaimsListAndCount('TESTING', false, 0, 1)
         .then(function (result) {
           expect(result.claims.length).to.equal(1)
           expect(result.claims[0].Reference).to.equal(reference)
@@ -36,8 +36,18 @@ describe('services/data/get-claim-list-and-count', function () {
         })
     })
 
-    it('should return no data', function () {
-      return getClaimsListAndCount('TESTING_NONE', 0, 10)
+    it('should return no data for status with no records', function () {
+      return getClaimsListAndCount('TESTING_NONE', false, 0, 10)
+        .then(function (result) {
+          expect(result.total.Count).to.equal(0)
+        })
+        .catch(function (error) {
+          throw error
+        })
+    })
+
+    it('should return no data when no advance claims', function () {
+      return getClaimsListAndCount('TESTING', true, 0, 10)
         .then(function (result) {
           expect(result.total.Count).to.equal(0)
         })

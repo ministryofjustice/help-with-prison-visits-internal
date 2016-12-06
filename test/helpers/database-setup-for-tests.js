@@ -81,6 +81,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           DateCreated: date,
           DateSubmitted: date,
           ClaimType: data.Claim.ClaimType,
+          IsAdvanceClaim: data.Claim.IsAdvanceClaim,
           Status: status
         })
     })
@@ -289,7 +290,8 @@ module.exports.getTestData = function (reference, status) {
       DWPBenefitCheckerResult: 'UNDETERMINED'
     },
     Claim: {
-      ClaimType: 'first-time'
+      ClaimType: 'first-time',
+      IsAdvanceClaim: false
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
