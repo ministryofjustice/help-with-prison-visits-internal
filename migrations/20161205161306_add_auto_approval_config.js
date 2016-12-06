@@ -1,4 +1,3 @@
-const config = require('../config')
 const moment = require('moment')
 
 exports.up = function (knex, Promise) {
@@ -19,11 +18,11 @@ exports.up = function (knex, Promise) {
       .insert({
         Caseworker: null,
         DateCreated: moment().toDate(),
-        AutoApprovalEnabled: config.AUTO_APPROVAL_ENABLED,
-        CostVariancePercentage: config.AUTO_APPROVAL_COST_VARIANCE_PERCENTAGE,
-        MaxClaimTotal: config.AUTO_APPROVAL_MAX_CLAIM_TOTAL,
-        MaxDaysAfterAPVUVisit: config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT,
-        MaxNumberOfClaimsPerYear: config.AUTO_APPROVAL_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        AutoApprovalEnabled: 'true',
+        CostVariancePercentage: '0.1',
+        MaxClaimTotal: '250',
+        MaxDaysAfterAPVUVisit: '28',
+        MaxNumberOfClaimsPerYear: '26',
         RulesDisabled: null,
         IsEnabled: 'true'
       })
