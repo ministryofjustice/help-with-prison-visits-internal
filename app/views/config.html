@@ -12,7 +12,58 @@
 
   <h1 class="table-heading">Configuration</h1>
 
-  <p>This is an Admin only page used for configuring the APVS service</p>
+  <form>
+    <table class="table">
+      <thead>
+        <tr>
+        <th>Rule</th>
+        <th>Description</th>
+        <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Auto Approval Enabled -->
+        <tr>
+          <td>
+            Auto Approval Enabled
+          </td>
+          <td>
+            Controls auto approval globally
+          </td>
+          <td>
+            <label for="auto-approval-on" class="block-label inline">
+              <input id="auto-approval-on" type="radio" name="auto-approval" value="on">
+              <span>On</span>
+            </label>
+            <label for="auto-approval-off" class="block-label inline">
+              <input id="auto-approval-off" type="radio" name="auto-approval" value="off">
+              <span>Off</span>
+            </label>
+          </td>
+        </tr>
+
+        <!-- Auto Approval Cost Variance -->
+        <tr>
+          <td>
+            Auto Approval Cost Variance
+          </td>
+          <td>
+            Controls the cost variance used for auto approval
+          </td>
+          <td>
+            <label for="cost-variance-on" class="block-label inline">
+              <input id="cost-variance-on" type="radio" name="cost-variance" value="on">
+              <span>On</span>
+            </label>
+            <label for="cost-variance-off" class="block-label inline">
+              <input id="cost-variance-off" type="radio" name="cost-variance" value="off">
+              <span>Off</span>
+            </label>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
 
 </main>
 
