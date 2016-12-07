@@ -116,7 +116,7 @@
             </td>
             <td>
               <div class="form-group">
-                <label for="{{ rule.value }}" class="block-label">
+                <label for="check-{{ rule.value }}" class="block-label">
                   <input type="checkbox" id="check-{{ rule.value }}" name="rulesEnabled" value="{{ rule.value }}" class="form-control" {% if rule.value not in rulesDisabled %} checked {% endif %}>
                 </label>
               </div>
