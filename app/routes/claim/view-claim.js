@@ -15,29 +15,14 @@ const displayHelper = require('../../views/helpers/display-helper')
 const mergeClaimExpensesWithSubmittedResponses = require('../helpers/merge-claim-expenses-with-submitted-responses')
 const getLastUpdated = require('../../services/data/get-claim-last-updated')
 const checkLastUpdated = require('../../services/check-last-updated')
+const insertDeduction = require('../../services/data/insert-deduction')
+const disableDeduction = require('../../services/data/disable-deduction')
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
     authorisation.isCaseworker(req)
 
-    getIndividualClaimDetails(req.params.claimId)
-      .then(function (data) {
-        return res.render('./claim/view-claim', {
-          title: 'APVS Claim',
-          Claim: data.claim,
-          Expenses: data.claimExpenses,
-          Children: data.claimChild,
-          getDateFormatted: getDateFormatted,
-          getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
-          getChildFormatted: getChildFormatted,
-          getDisplayFieldName: getDisplayFieldName,
-          prisonerRelationshipsEnum: prisonerRelationshipsEnum,
-          receiptRequiredEnum: receiptRequiredEnum,
-          displayHelper: displayHelper,
-          duplicates: data.duplicates,
-          claimEvents: data.claimEvents
-        })
-      })
+    renderViewClaimPage(req.params.claimId, res)
   })
 
   router.post('/claim/:claimId', function (req, res) {
@@ -49,26 +34,23 @@ module.exports = function (router) {
         if (updateConflict) {
           throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
         }
-        var claimExpenses = getClaimExpenseResponses(req.body)
-        var claimDecision = new ClaimDecision(
-          req.user.email,
-          req.body.assistedDigitalCaseworker,
-          req.body.decision,
-          req.body.reasonRequest,
-          req.body.reasonReject,
-          req.body.additionalInfoApprove,
-          req.body.additionalInfoRequest,
-          req.body.additionalInfoReject,
-          req.body.nomisCheck,
-          req.body.dwpCheck,
-          req.body.visitConfirmationCheck,
-          claimExpenses
-        )
 
-        SubmitClaimResponse(req.params.claimId, claimDecision)
-          .then(function () {
-            return res.redirect('/')
-          })
+        var removeDeductionClicked = false
+
+        Object.keys(req.body).forEach(function (key) {
+          if (key.indexOf('remove-deduction') > -1) {
+            removeDeductionClicked = true
+          }
+        })
+
+        if (req.body['add-deduction']) {
+          return addDeduction(req, res)
+        } else if (removeDeductionClicked) {
+          return removeDeduction(req, res)
+        } else {
+          var claimExpenses = getClaimExpenseResponses(req.body)
+          return submitClaimDecision(req, res, claimExpenses)
+        }
       } catch (error) {
         if (error instanceof ValidationError) {
           getIndividualClaimDetails(req.params.claimId)
@@ -89,6 +71,7 @@ module.exports = function (router) {
                 prisonerRelationshipsEnum: prisonerRelationshipsEnum,
                 displayHelper: displayHelper,
                 claimDecision: req.body,
+                deductions: data.deductions,
                 errors: error.validationErrors
               })
             })
@@ -109,4 +92,74 @@ module.exports = function (router) {
       throw new Error('No path to file provided')
     }
   })
+}
+
+function removeDeduction (req, res) {
+  var deductionId
+
+  Object.keys(req.body).forEach(function (key) {
+    if (key.indexOf('remove-deduction') > -1) {
+      deductionId = key.substring(key.lastIndexOf('-') + 1)
+    }
+  })
+
+  return disableDeduction(deductionId)
+    .then(function () {
+      renderViewClaimPage(req.params.claimId, res)
+    })
+}
+
+function addDeduction (req, res) {
+  // TODO: Validation
+  var deductionType = req.body.deductionType
+  var amount = Number(req.body.deductionAmount).toFixed(2)
+
+  return insertDeduction(req.params.claimId, deductionType, amount)
+    .then(function () {
+      renderViewClaimPage(req.params.claimId, res)
+    })
+}
+
+function submitClaimDecision (req, res, claimExpenses) {
+  var claimDecision = new ClaimDecision(
+    req.user.email,
+    req.body.assistedDigitalCaseworker,
+    req.body.decision,
+    req.body.reasonRequest,
+    req.body.reasonReject,
+    req.body.additionalInfoApprove,
+    req.body.additionalInfoRequest,
+    req.body.additionalInfoReject,
+    req.body.nomisCheck,
+    req.body.dwpCheck,
+    req.body.visitConfirmationCheck,
+    claimExpenses
+  )
+
+  SubmitClaimResponse(req.params.claimId, claimDecision)
+    .then(function () {
+      return res.redirect('/')
+    })
+}
+
+function renderViewClaimPage (claimId, res) {
+  getIndividualClaimDetails(claimId)
+    .then(function (data) {
+      return res.render('./claim/view-claim', {
+        title: 'APVS Claim',
+        Claim: data.claim,
+        Expenses: data.claimExpenses,
+        Children: data.claimChild,
+        getDateFormatted: getDateFormatted,
+        getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
+        getChildFormatted: getChildFormatted,
+        getDisplayFieldName: getDisplayFieldName,
+        prisonerRelationshipsEnum: prisonerRelationshipsEnum,
+        receiptRequiredEnum: receiptRequiredEnum,
+        displayHelper: displayHelper,
+        duplicates: data.duplicates,
+        claimEvents: data.claimEvents,
+        deductions: data.deductions
+      })
+    })
 }

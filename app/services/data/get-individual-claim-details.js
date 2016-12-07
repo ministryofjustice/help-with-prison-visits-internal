@@ -87,19 +87,33 @@ module.exports = function (claimId) {
               return claimExpenses
             })
             .then(function (claimExpenses) {
-              return knex('Claim')
-                .join('ClaimChild', 'Claim.ClaimId', '=', 'ClaimChild.ClaimId')
-                .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
-                .select()
-                .orderBy('ClaimChild.Name')
-                .then(function (claimChild) {
-                  claimDetails = {
-                    claim: claim,
-                    claimExpenses: claimExpenses,
-                    claimChild: claimChild
-                  }
+              return knex('ClaimDeduction')
+                .where({'ClaimId': claimId, 'IsEnabled': true})
+                .then(function (claimDeductions) {
+                  var deductions = []
+                  var deductionTotal = 0
+                  claimDeductions.forEach(function (claimDeduction) {
+                    deductionTotal += claimDeduction.Amount
+                    deductions.push(claimDeduction)
+                  })
 
-                  return duplicateClaimCheck(claimId, claimDetails.claim.NationalInsuranceNumber, claimDetails.claim.PrisonNumber, claimDetails.claim.DateOfJourney)
+                  claim.Total = Number(claim.Total - deductionTotal).toFixed(2)
+
+                  return knex('Claim')
+                    .join('ClaimChild', 'Claim.ClaimId', '=', 'ClaimChild.ClaimId')
+                    .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
+                    .select()
+                    .orderBy('ClaimChild.Name')
+                    .then(function (claimChild) {
+                      claimDetails = {
+                        claim: claim,
+                        claimExpenses: claimExpenses,
+                        claimChild: claimChild,
+                        deductions: deductions
+                      }
+
+                      return duplicateClaimCheck(claimId, claimDetails.claim.NationalInsuranceNumber, claimDetails.claim.PrisonNumber, claimDetails.claim.DateOfJourney)
+                    })
                 })
                 .then(function (result) {
                   claimDetails.duplicates = result

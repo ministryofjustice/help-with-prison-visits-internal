@@ -259,6 +259,7 @@ module.exports.deleteAll = function (reference) {
     .then(function () { return deleteByReference('IntSchema.ClaimDocument', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimExpense', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimChild', reference) })
+    .then(function () { return deleteByReference('IntSchema.ClaimDeduction', reference) })
     .then(function () { return deleteByReference('IntSchema.Claim', reference) })
     .then(function () { return deleteByReference('IntSchema.Visitor', reference) })
     .then(function () { return deleteByReference('IntSchema.Prisoner', reference) })
