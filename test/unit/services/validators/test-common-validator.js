@@ -5,6 +5,7 @@ describe('services/validators/common-validator', function () {
   const ALPHA_STRING = 'apvs'
   const NUMERIC_STRING = '123'
   const ALPHANUMERIC_STRING = 'apvs123'
+  const DECIMAL_STRING = '0.1'
 
   describe('isNullOrUndefined', function () {
     it('should return true if passed null', function (done) {
@@ -80,6 +81,12 @@ describe('services/validators/common-validator', function () {
 
     it('should return true if passed a numeric string', function (done) {
       var result = validator.isNumeric(NUMERIC_STRING)
+      expect(result).to.equal(true)
+      done()
+    })
+
+    it('should return true if passed a decimal string', function (done) {
+      var result = validator.isNumeric(DECIMAL_STRING)
       expect(result).to.equal(true)
       done()
     })

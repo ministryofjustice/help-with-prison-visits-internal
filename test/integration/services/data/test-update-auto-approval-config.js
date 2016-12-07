@@ -27,8 +27,16 @@ describe('services/data/update-auto-approval-config', function () {
   })
 
   it('should disable the current Auto Approval config and insert the new one', function () {
-    return updateAutoApprovalConfig('second-caseworker', 'true', null, null, null,
-      null, ['auto-approval-rule-1', 'auto-approval-rule-2'])
+    var AutoApprovalConfig = {
+      caseworker: 'second-caseworker',
+      autoApprovalEnabled: 'true',
+      costVariancePercentage: null,
+      maxClaimTotal: null,
+      maxDaysAfterAPVUVisit: null,
+      maxNumberOfClaimsPerYear: null,
+      rulesDisabled: ['auto-approval-rule-1', 'auto-approval-rule-2']
+    }
+    return updateAutoApprovalConfig(AutoApprovalConfig)
       .then(function (result) {
         insertedIds.push(result[0])
         return knex('AutoApprovalConfig')
@@ -45,8 +53,16 @@ describe('services/data/update-auto-approval-config', function () {
   })
 
   it('should disable the current Auto Approval config and insert the new one if rulesDisabled is null', function () {
-    return updateAutoApprovalConfig('second-caseworker', 'false', null, null, null,
-      null, null)
+    var AutoApprovalConfig = {
+      caseworker: 'second-caseworker',
+      autoApprovalEnabled: 'false',
+      costVariancePercentage: null,
+      maxClaimTotal: null,
+      maxDaysAfterAPVUVisit: null,
+      maxNumberOfClaimsPerYear: null,
+      rulesDisabled: null
+    }
+    return updateAutoApprovalConfig(AutoApprovalConfig)
       .then(function (result) {
         insertedIds.push(result[0])
         return knex('AutoApprovalConfig')
