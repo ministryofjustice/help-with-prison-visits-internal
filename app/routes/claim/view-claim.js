@@ -17,6 +17,7 @@ const getLastUpdated = require('../../services/data/get-claim-last-updated')
 const checkLastUpdated = require('../../services/check-last-updated')
 const insertDeduction = require('../../services/data/insert-deduction')
 const disableDeduction = require('../../services/data/disable-deduction')
+const ClaimDeduction = require('../../services/domain/claim-deduction')
 
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
@@ -110,11 +111,11 @@ function removeDeduction (req, res) {
 }
 
 function addDeduction (req, res) {
-  // TODO: Validation
   var deductionType = req.body.deductionType
   var amount = Number(req.body.deductionAmount).toFixed(2)
+  var claimDeduction = new ClaimDeduction(deductionType, amount)
 
-  return insertDeduction(req.params.claimId, deductionType, amount)
+  return insertDeduction(req.params.claimId, claimDeduction.deductionType, claimDeduction.amount)
     .then(function () {
       renderViewClaimPage(req.params.claimId, res)
     })

@@ -13,12 +13,23 @@ var stubClaimDecision
 var stubGetClaimExpenseResponses
 var stubGetClaimLastUpdated
 var stubCheckLastUpdated
+var stubInsertDeduction
+var stubDisableDeduction
 var ValidationError = require('../../../../app/services/errors/validation-error')
+var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 var bodyParser = require('body-parser')
 const VALID_CLAIMEXPENSE_DATA = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
-const VALID_DATA = {
+const VALID_DATA_APPROVE = {
   'decision': 'APPROVED',
   'claimExpenses': VALID_CLAIMEXPENSE_DATA
+}
+const VALID_DATA_ADD_DEDUCTION = {
+  'add-deduction': 'Submit',
+  deductionType: deductionTypeEnum.HC3_DEDUCTION.value,
+  deductionAmount: '1'
+}
+const VALID_DATA_DISABLE_DEDUCTION = {
+  'remove-deduction-1': 'Remove'
 }
 const INCOMPLETE_DATA = {
   'decision': 'REJECTED',
@@ -37,6 +48,8 @@ describe('routes/claim/view-claim', function () {
     stubGetClaimExpenseResponses = sinon.stub()
     stubGetClaimLastUpdated = sinon.stub()
     stubCheckLastUpdated = sinon.stub()
+    stubInsertDeduction = sinon.stub()
+    stubDisableDeduction = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -45,7 +58,9 @@ describe('routes/claim/view-claim', function () {
       '../../services/domain/claim-decision': stubClaimDecision,
       '../helpers/get-claim-expense-responses': stubGetClaimExpenseResponses,
       '../../services/data/get-claim-last-updated': stubGetClaimLastUpdated,
-      '../../services/check-last-updated': stubCheckLastUpdated
+      '../../services/check-last-updated': stubCheckLastUpdated,
+      '../../services/data/insert-deduction': stubInsertDeduction,
+      '../../services/data/disable-deduction': stubDisableDeduction
     })
     app = express()
     app.use(bodyParser.json())
@@ -93,7 +108,7 @@ describe('routes/claim/view-claim', function () {
 
       return supertest(app)
         .post('/claim/123')
-        .send(VALID_DATA)
+        .send(VALID_DATA_APPROVE)
         .expect(302)
         .expect(function () {
           expect(authorisation.isCaseworker.calledOnce).to.be.true
@@ -112,7 +127,7 @@ describe('routes/claim/view-claim', function () {
 
       return supertest(app)
         .post('/claim/123')
-        .send(VALID_DATA)
+        .send(VALID_DATA_APPROVE)
         .expect(400)
         .expect(function () {
           expect(authorisation.isCaseworker.calledOnce).to.be.true
@@ -137,6 +152,46 @@ describe('routes/claim/view-claim', function () {
           expect(stubGetClaimLastUpdated.calledOnce).to.be.true
           expect(stubCheckLastUpdated.calledOnce).to.be.true
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 302 when valid data entered (add deduction)', function () {
+      stubClaimDecision.throws(new ValidationError({ 'reason': {} }))
+      stubGetIndividualClaimDetails.resolves({})
+      stubGetClaimLastUpdated.resolves({})
+      stubCheckLastUpdated.returns(false)
+      stubInsertDeduction.resolves({})
+
+      return supertest(app)
+        .post('/claim/123')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(200)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+          expect(stubInsertDeduction.calledOnce).to.be.true
+        })
+    })
+
+    it('should respond with 200 when valid data entered (disable deduction)', function () {
+      stubClaimDecision.throws(new ValidationError({ 'reason': {} }))
+      stubGetIndividualClaimDetails.resolves({})
+      stubGetClaimLastUpdated.resolves({})
+      stubCheckLastUpdated.returns(false)
+      stubDisableDeduction.resolves({})
+
+      return supertest(app)
+        .post('/claim/123')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(200)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+          expect(stubDisableDeduction.calledOnce).to.be.true
         })
     })
   })

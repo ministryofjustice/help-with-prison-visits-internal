@@ -38,6 +38,8 @@ describe('services/data/get-individual-claim-details', function () {
           expect(result.claimChild[1].Name).to.equal(testData.ClaimChild[1].Name)
           expect(result.claimEvents[0].Caseworker).to.equal(testData.ClaimEvent[0].Caseworker)
           expect(result.claimEvents[1].Caseworker).to.equal(testData.ClaimEvent[1].Caseworker)
+          expect(result.deductions[0].DeductionType).to.equal(testData.ClaimDeduction['hc3'].DeductionType)
+          expect(result.deductions[1].DeductionType).to.equal(testData.ClaimDeduction['overpayment'].DeductionType)
         })
         .catch(function (error) {
           throw error

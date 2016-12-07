@@ -6,5 +6,7 @@ module.exports = {
   'nomis-check': 'NOMIS check',
   'dwp-check': 'Benefit check',
   'visit-confirmation-check': 'Visit confirmation check',
-  'upload': 'A document upload'
+  'upload': 'A document upload',
+  'deduction-type': 'A deduction type',
+  'deduction-amount': 'A deduction amount'
 }

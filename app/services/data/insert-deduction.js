@@ -5,6 +5,7 @@ module.exports = function (claimId, deductionType, amount) {
   return getClaim(claimId)
     .then(function (claim) {
       return knex('IntSchema.ClaimDeduction')
+        .returning('ClaimDeductionId')
         .insert({
           EligibilityId: claim.EligibilityId,
           Reference: claim.Reference,
@@ -13,7 +14,6 @@ module.exports = function (claimId, deductionType, amount) {
           DeductionType: deductionType,
           IsEnabled: true
         })
-        .returning('ClaimDeductionId')
     })
 }
 
