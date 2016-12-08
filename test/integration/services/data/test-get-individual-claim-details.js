@@ -1,8 +1,15 @@
 var expect = require('chai').expect
 var moment = require('moment')
+var sinon = require('sinon')
+var proxyquire = require('proxyquire')
+require('sinon-bluebird')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
-var getClaim = require('../../../../app/services/data/get-individual-claim-details')
+var stubOverpaidClaimsData = {}
+var stubGetOverpaidClaims = sinon.stub().resolves(stubOverpaidClaimsData)
+var getClaim = proxyquire('../../../../app/services/data/get-individual-claim-details', {
+  './get-overpaid-claims-by-reference': stubGetOverpaidClaims
+})
 var reference = 'INDIVCD'
 var testData
 var date
@@ -42,6 +49,8 @@ describe('services/data/get-individual-claim-details', function () {
           expect(result.claimEvents[1].Caseworker).to.equal(testData.ClaimEvent[1].Caseworker)
           expect(result.deductions[0].DeductionType).to.equal(testData.ClaimDeduction['hc3'].DeductionType)
           expect(result.deductions[1].DeductionType).to.equal(testData.ClaimDeduction['overpayment'].DeductionType)
+          
+          expect(stubGetOverpaidClaims.calledWith(reference)).to.be.true
         })
         .catch(function (error) {
           throw error

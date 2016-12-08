@@ -164,7 +164,8 @@ function renderViewClaimPage (claimId, res) {
         displayHelper: displayHelper,
         duplicates: data.duplicates,
         claimEvents: data.claimEvents,
-        deductions: data.deductions
+        deductions: data.deductions,
+        overpaidClaims: data.overpaidClaims
       })
     })
 }

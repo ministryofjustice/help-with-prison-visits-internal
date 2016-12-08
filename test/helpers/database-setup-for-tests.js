@@ -388,3 +388,19 @@ module.exports.getTestData = function (reference, status) {
     }
   }
 }
+
+module.exports.insertClaim = function (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount) {
+  return knex('Claim')
+    .insert({
+      ClaimId: claimId,
+      EligibilityId: eligibilityId,
+      Reference: reference,
+      DateOfJourney: date,
+      DateCreated: date,
+      DateSubmitted: date,
+      Status: status,
+      IsOverpaid: isOverpaid,
+      OverpaymentAmount: overpaymentAmount
+    })
+    .returning('ClaimId')
+}
