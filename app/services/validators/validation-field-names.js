@@ -8,5 +8,10 @@ module.exports = {
   'visit-confirmation-check': 'Visit confirmation check',
   'upload': 'A document upload',
   'deduction-type': 'A deduction type',
-  'deduction-amount': 'A deduction amount'
+  'deduction-amount': 'A deduction amount',
+  'auto-approval-enabled': 'Auto approval enabled',
+  'cost-variance-percentage': 'Auto approval cost variance',
+  'max-claim-total': 'Max claim total',
+  'max-days-after-apvu-visit': 'Max days after APVU visit',
+  'max-number-of-claims-per-year': 'Max number of claims per year'
 }

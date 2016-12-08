@@ -10,7 +10,7 @@ exports.isNullOrUndefined = function (value) {
 }
 
 exports.isNumeric = function (value) {
-  return validator.isNumeric(value)
+  return validator.isNumeric(value) || validator.isDecimal(value)
 }
 
 exports.isCurrency = function (value) {

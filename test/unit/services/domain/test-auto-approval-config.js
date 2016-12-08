@@ -1,0 +1,196 @@
+const AutoApprovalConfig = require('../../../../app/services/domain/auto-approval-config')
+const ValidationError = require('../../../../app/services/errors/validation-error')
+const expect = require('chai').expect
+var autoApprovalConfig
+
+describe('services/domain/auto-approve-config', function () {
+  const VALID_CASEWORKER = 'test@test.com'
+  const VALID_AUTO_APPROVAL_ENABLED = 'true'
+  const VALID_COST_VARIANCE_PERCENTAGE = '0.1'
+  const VALID_MAX_CLAIM_TOTAL = '250'
+  const VALID_MAX_DAYS_AFTER_APVU_VISIT = '28'
+  const VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR = '26'
+  const VALID_RULES_DISABLED = ['visit-in-the-past', 'first-time-claim-approved']
+
+  it('should contruct a domain object given valid input', function () {
+    autoApprovalConfig = new AutoApprovalConfig(
+      VALID_CASEWORKER,
+      VALID_AUTO_APPROVAL_ENABLED,
+      VALID_COST_VARIANCE_PERCENTAGE,
+      VALID_MAX_CLAIM_TOTAL,
+      VALID_MAX_DAYS_AFTER_APVU_VISIT,
+      VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+      VALID_RULES_DISABLED
+    )
+
+    expect(autoApprovalConfig.caseworker).to.equal(VALID_CASEWORKER)
+    expect(autoApprovalConfig.autoApprovalEnabled).to.equal(VALID_AUTO_APPROVAL_ENABLED)
+    expect(autoApprovalConfig.costVariancePercentage).to.equal(VALID_COST_VARIANCE_PERCENTAGE)
+    expect(autoApprovalConfig.maxClaimTotal).to.equal(VALID_MAX_CLAIM_TOTAL)
+    expect(autoApprovalConfig.maxDaysAfterAPVUVisit).to.equal(VALID_MAX_DAYS_AFTER_APVU_VISIT)
+    expect(autoApprovalConfig.maxNumberOfClaimsPerYear).to.equal(VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR)
+    expect(autoApprovalConfig.rulesDisabled).to.equal(VALID_RULES_DISABLED)
+  })
+
+  it('should throw an isRequired error for autoApprovalEnabled given undefined', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        undefined,
+        VALID_COST_VARIANCE_PERCENTAGE,
+        VALID_MAX_CLAIM_TOTAL,
+        VALID_MAX_DAYS_AFTER_APVU_VISIT,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['auto-approval-enabled'][0]).to.equal('Auto approval enabled is required')
+      done()
+    }
+  })
+
+  it('should throw an isRequired error for costVariancePercentage given an empty string', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        '',
+        VALID_MAX_CLAIM_TOTAL,
+        VALID_MAX_DAYS_AFTER_APVU_VISIT,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['cost-variance-percentage'][0]).to.equal('Auto approval cost variance is required')
+      done()
+    }
+  })
+
+  it('should throw an isNumeric error for costVariancePercentage given an alpha input', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        'invalid input',
+        VALID_MAX_CLAIM_TOTAL,
+        VALID_MAX_DAYS_AFTER_APVU_VISIT,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['cost-variance-percentage'][0]).to.equal('Auto approval cost variance must only contain numbers')
+      done()
+    }
+  })
+
+  it('should throw an isRequired error for maxClaimTotal given an empty string', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        VALID_COST_VARIANCE_PERCENTAGE,
+        '',
+        VALID_MAX_DAYS_AFTER_APVU_VISIT,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['max-claim-total'][0]).to.equal('Max claim total is required')
+      done()
+    }
+  })
+
+  it('should throw an isNumeric error for maxClaimTotal given an alpha input', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        VALID_COST_VARIANCE_PERCENTAGE,
+        'invalid input',
+        VALID_MAX_DAYS_AFTER_APVU_VISIT,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['max-claim-total'][0]).to.equal('Max claim total must only contain numbers')
+      done()
+    }
+  })
+
+  it('should throw an isRequired error for maxDaysAfterAPVUVisit given an empty string', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        VALID_COST_VARIANCE_PERCENTAGE,
+        VALID_MAX_CLAIM_TOTAL,
+        '',
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['max-days-after-apvu-visit'][0]).to.equal('Max days after APVU visit is required')
+      done()
+    }
+  })
+
+  it('should throw an isNumeric error for maxDaysAfterAPVUVisit given an alpha input', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        VALID_COST_VARIANCE_PERCENTAGE,
+        VALID_MAX_CLAIM_TOTAL,
+        'invalid input',
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['max-days-after-apvu-visit'][0]).to.equal('Max days after APVU visit must only contain numbers')
+      done()
+    }
+  })
+
+  it('should throw an isRequired error for maxNumberOfClaimsPerYear given an empty string', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        VALID_COST_VARIANCE_PERCENTAGE,
+        VALID_MAX_CLAIM_TOTAL,
+        VALID_MAX_DAYS_AFTER_APVU_VISIT,
+        '',
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['max-number-of-claims-per-year'][0]).to.equal('Max number of claims per year is required')
+      done()
+    }
+  })
+
+  it('should throw an isNumeric error for maxNumberOfClaimsPerYear given an alpha input', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        VALID_COST_VARIANCE_PERCENTAGE,
+        VALID_MAX_CLAIM_TOTAL,
+        VALID_MAX_DAYS_AFTER_APVU_VISIT,
+        'invalid input',
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['max-number-of-claims-per-year'][0]).to.equal('Max number of claims per year must only contain numbers')
+      done()
+    }
+  })
+})
