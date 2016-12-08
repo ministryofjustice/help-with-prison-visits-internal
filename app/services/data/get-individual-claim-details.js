@@ -15,6 +15,8 @@ module.exports = function (claimId) {
       'Eligibility.Reference',
       'Eligibility.EligibilityId',
       'Claim.ClaimId',
+      'Claim.ClaimType',
+      'Claim.IsAdvanceClaim',
       'Claim.DateSubmitted',
       'Claim.DateOfJourney',
       'Claim.AssistedDigitalCaseworker',

@@ -22,6 +22,8 @@ describe('services/data/get-individual-claim-details', function () {
       return getClaim(claimId)
         .then(function (result) {
           expect(result.claim.Reference).to.equal(reference)
+          expect(result.claim.ClaimType).to.equal('first-time')
+          expect(result.claim.IsAdvanceClaim).to.equal(false)
           expect(result.claim.FirstName).to.equal(testData.Visitor.FirstName)
           expect(result.claim.DateSubmitted.toString()).to.equal(date.toString())
           expect(result.claim.NationalInsuranceNumber).to.equal(testData.Visitor.NationalInsuranceNumber)
