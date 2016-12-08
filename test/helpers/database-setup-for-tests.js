@@ -245,6 +245,32 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimEventId2 = result[0]
+      return knex('IntSchema.ClaimDeduction')
+        .returning('ClaimDeductionId')
+        .insert({
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          ClaimId: uniqueId,
+          Amount: data.ClaimDeduction['hc3'].Amount,
+          DeductionType: data.ClaimDeduction['hc3'].DeductionType,
+          IsEnabled: true
+        })
+    })
+    .then(function (result) {
+      ids.claimDeductionId1 = result[0]
+      return knex('IntSchema.ClaimDeduction')
+        .returning('ClaimDeductionId')
+        .insert({
+          EligibilityId: ids.eligibilityId,
+          Reference: reference,
+          ClaimId: uniqueId,
+          Amount: data.ClaimDeduction['overpayment'].Amount,
+          DeductionType: data.ClaimDeduction['overpayment'].DeductionType,
+          IsEnabled: true
+        })
+    })
+    .then(function (result) {
+      ids.claimDeductionId2 = result[0]
       return ids
     })
 }
@@ -260,6 +286,7 @@ module.exports.deleteAll = function (reference) {
     .then(function () { return deleteByReference('IntSchema.ClaimDocument', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimExpense', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimChild', reference) })
+    .then(function () { return deleteByReference('IntSchema.ClaimDeduction', reference) })
     .then(function () { return deleteByReference('IntSchema.Claim', reference) })
     .then(function () { return deleteByReference('IntSchema.Visitor', reference) })
     .then(function () { return deleteByReference('IntSchema.Prisoner', reference) })
@@ -295,14 +322,14 @@ module.exports.getTestData = function (reference, status) {
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
-      Cost: '12.50',
+      Cost: 12,
       From: 'London',
       To: 'Hewell',
       IsReturn: true
     },
     {
       ExpenseType: 'accommodation',
-      Cost: '80.00',
+      Cost: 80,
       DurationOfTravel: 1
     }],
     ClaimChild: [{
@@ -346,6 +373,18 @@ module.exports.getTestData = function (reference, status) {
         Caseworker: 'Jane Bloggs',
         IsInternal: false
       }
-    ]
+    ],
+    ClaimDeduction: {
+      'overpayment': {
+        Amount: 5,
+        DeductionType: 'overpayment',
+        IsEnabled: true
+      },
+      'hc3': {
+        Amount: 10,
+        DeductionType: 'hc3',
+        IsEnabled: true
+      }
+    }
   }
 }

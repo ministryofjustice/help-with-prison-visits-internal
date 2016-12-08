@@ -1,11 +1,59 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const duplicateClaimCheck = require('./duplicate-claim-check')
+const getClaimTotalAmount = require('../get-claim-total-amount')
 const moment = require('moment')
 
 module.exports = function (claimId) {
+  var claim
+  var claimExpenses
+  var claimChildren
+  var claimDeductions
+  var claimDuplicatesExist
   var claimDetails
 
+  return getClaimantDetails(claimId)
+    .then(function (claimData) {
+      claim = claimData
+      claim.lastUpdatedHidden = moment(claim.LastUpdated)
+      return getClaimDocuments(claimId)
+    })
+    .then(function (claimDocumentData) {
+      claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
+      return getClaimExpenses(claimId)
+    })
+    .then(function (claimExpenseData) {
+      claimExpenses = claimExpenseData
+      return getClaimDeductions(claimId)
+    })
+    .then(function (claimDeductionData) {
+      claimDeductions = claimDeductionData
+      claim.Total = getClaimTotalAmount(claimExpenses, claimDeductionData)
+      return getClaimChildren(claimId)
+    })
+    .then(function (claimChildData) {
+      claimChildren = claimChildData
+      return duplicateClaimCheck(claimId, claim.NationalInsuranceNumber, claim.PrisonNumber, claim.DateOfJourney)
+    })
+    .then(function (result) {
+      claimDuplicatesExist = result
+      return getClaimEvents(claimId)
+    })
+    .then(function (claimEvents) {
+      claimDetails = {
+        claim: claim,
+        claimExpenses: setClaimExpenseStatusForCarJourneys(claimExpenses),
+        claimChild: claimChildren,
+        claimEvents: claimEvents,
+        deductions: claimDeductions,
+        duplicates: claimDuplicatesExist
+      }
+
+      return claimDetails
+    })
+}
+
+function getClaimantDetails (claimId) {
   return knex('Claim')
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
@@ -43,78 +91,70 @@ module.exports = function (claimId) {
       'Prisoner.NomisCheck',
       'Claim.VisitConfirmationCheck',
       'Claim.LastUpdated')
-    .then(function (claim) {
-      claim.lastUpdatedHidden = moment(claim.LastUpdated)
-      return knex('ClaimDocument')
-        .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null})
-        .select(
-          'ClaimDocument.ClaimDocumentId',
-          'ClaimDocument.DocumentStatus',
-          'ClaimDocument.Filepath',
-          'ClaimDocument.DocumentType')
-        .orderBy('ClaimDocument.DateSubmitted', 'desc')
-        .then(function (claimDocuments) {
-          claim.benefitDocument = []
-          claimDocuments.forEach(function (document) {
-            if (document.DocumentType === 'VISIT-CONFIRMATION') {
-              claim.visitConfirmation = document
-            } else {
-              claim.benefitDocument.push(document)
-            }
-          })
-          return knex('Claim')
-            .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
-            .where('Claim.ClaimId', claimId)
-            .select('ClaimExpense.*', 'ClaimDocument.DocumentStatus', 'ClaimDocument.DocumentType', 'ClaimDocument.ClaimDocumentId', 'ClaimDocument.Filepath')
-            .leftJoin('ClaimDocument', function () {
-              this
-                .on('ClaimExpense.ClaimId', 'ClaimDocument.ClaimId')
-                .on('ClaimExpense.ClaimExpenseId', 'ClaimDocument.ClaimExpenseId')
-                .on('ClaimExpense.IsEnabled', 'ClaimDocument.IsEnabled')
-            })
-            .orderBy('ClaimExpense.ClaimExpenseId')
-            .then(function (claimExpenses) {
-              var total = 0
-              claimExpenses.forEach(function (expense) {
-                total += expense.Cost
-                expense.Cost = Number(expense.Cost).toFixed(2)
-                if (expense.ApprovedCost !== null) {
-                  expense.ApprovedCost = Number(expense.ApprovedCost).toFixed(2)
-                }
-                if (expense.ExpenseType === 'car' && expense.Status === null) {
-                  expense.Status = 'APPROVED-DIFF-AMOUNT'
-                }
-              })
-              claim.Total = Number(total).toFixed(2)
-              return claimExpenses
-            })
-            .then(function (claimExpenses) {
-              return knex('Claim')
-                .join('ClaimChild', 'Claim.ClaimId', '=', 'ClaimChild.ClaimId')
-                .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
-                .select()
-                .orderBy('ClaimChild.Name')
-                .then(function (claimChild) {
-                  claimDetails = {
-                    claim: claim,
-                    claimExpenses: claimExpenses,
-                    claimChild: claimChild
-                  }
+}
 
-                  return duplicateClaimCheck(claimId, claimDetails.claim.NationalInsuranceNumber, claimDetails.claim.PrisonNumber, claimDetails.claim.DateOfJourney)
-                })
-                .then(function (result) {
-                  claimDetails.duplicates = result
+function getClaimDocuments (claimId) {
+  return knex('ClaimDocument')
+    .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null})
+    .select(
+      'ClaimDocument.ClaimDocumentId',
+      'ClaimDocument.DocumentStatus',
+      'ClaimDocument.Filepath',
+      'ClaimDocument.DocumentType')
+    .orderBy('ClaimDocument.DateSubmitted', 'desc')
+}
 
-                  return knex('ClaimEvent')
-                    .where('ClaimId', claimId)
-                    .then(function (claimEvents) {
-                      claimDetails.claimEvents = claimEvents
-
-                      return claimDetails
-                    })
-                })
-            })
-        })
+function getClaimExpenses (claimId) {
+  return knex('Claim')
+    .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
+    .where('Claim.ClaimId', claimId)
+    .select('ClaimExpense.*', 'ClaimDocument.DocumentStatus', 'ClaimDocument.DocumentType', 'ClaimDocument.ClaimDocumentId', 'ClaimDocument.Filepath')
+    .leftJoin('ClaimDocument', function () {
+      this
+        .on('ClaimExpense.ClaimId', 'ClaimDocument.ClaimId')
+        .on('ClaimExpense.ClaimExpenseId', 'ClaimDocument.ClaimExpenseId')
+        .on('ClaimExpense.IsEnabled', 'ClaimDocument.IsEnabled')
     })
+    .orderBy('ClaimExpense.ClaimExpenseId')
+}
+
+function getClaimDeductions (claimId) {
+  return knex('ClaimDeduction')
+    .where({'ClaimId': claimId, 'IsEnabled': true})
+}
+
+function getClaimChildren (claimId) {
+  return knex('Claim')
+    .join('ClaimChild', 'Claim.ClaimId', '=', 'ClaimChild.ClaimId')
+    .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
+    .select()
+    .orderBy('ClaimChild.Name')
+}
+
+function getClaimEvents (claimId) {
+  return knex('ClaimEvent')
+    .where('ClaimId', claimId)
+}
+
+function setClaimExpenseStatusForCarJourneys (claimExpenses) {
+  claimExpenses.forEach(function (claimExpense) {
+    if (claimExpense.ExpenseType === 'car' && claimExpense.Status === null) {
+      claimExpense.Status = 'APPROVED-DIFF-AMOUNT'
+    }
+  })
+
+  return claimExpenses
+}
+
+function appendClaimDocumentsToClaim (claim, claimDocuments) {
+  claim.benefitDocument = []
+  claimDocuments.forEach(function (document) {
+    if (document.DocumentType === 'VISIT-CONFIRMATION') {
+      claim.visitConfirmation = document
+    } else {
+      claim.benefitDocument.push(document)
+    }
+  })
+
+  return claim
 }
