@@ -7,6 +7,8 @@ module.exports = {
   'dwp-check': 'Benefit check',
   'visit-confirmation-check': 'Visit confirmation check',
   'upload': 'A document upload',
+  'deduction-type': 'A deduction type',
+  'deduction-amount': 'A deduction amount',
   'auto-approval-enabled': 'Auto approval enabled',
   'cost-variance-percentage': 'Auto approval cost variance',
   'max-claim-total': 'Max claim total',

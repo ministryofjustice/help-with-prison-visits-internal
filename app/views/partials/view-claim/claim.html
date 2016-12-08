@@ -54,6 +54,19 @@
       </tr>
 
     {% endfor %}
+    
+    {% for deduction in deductions %}
+    <tr>
+      <td>
+        <span class="bold">{{ displayHelper.getDeductionTypeDisplayName(deduction.DeductionType) }}</span>
+        <br>
+        Deduction
+      </td>
+      <td>-£{{ deduction['Amount'] }}</td>
+      <td></td>
+      <td><input type="submit" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey' value='Remove'></td>
+    </tr>
+    {% endfor %}
 
     <tr class="no-border">
       <td class="text-right"><h3 class="heading-small space-right">Total Expense Cost:</h3></td>

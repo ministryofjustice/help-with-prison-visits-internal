@@ -1,0 +1,20 @@
+<h1 class="table-heading">Deduction</h1>
+<table>
+  <tbody>
+    <tr>
+      <td>
+        Type: <select id="deductionType" name="deductionType" class="form-control">
+          <option selected>Select</option>
+          <option value="hc3">{{ displayHelper.getDeductionTypeDisplayName('hc3') }}</option>
+          <option value="overpayment">{{ displayHelper.getDeductionTypeDisplayName('overpayment') }}</option>
+        </select>
+      </td>
+      <td>
+        Amount: <input id="deductionAmount" name="deductionAmount" type="text" class="form-control">
+      </td>
+      <td>
+        <input type="submit" class="button pull-right grey" name="add-deduction" id="add-deduction" value="Submit">
+      </td>
+    </tr>
+  </tbody>
+</table>
