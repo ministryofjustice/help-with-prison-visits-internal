@@ -4,9 +4,9 @@ const expect = require('chai').expect
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 var claimDeduction
 
-describe('services/domain/claim-decision', function () {
+describe('services/domain/claim-deduction', function () {
   const VALID_DEDUCTION_TYPE = deductionTypeEnum.HC3_DEDUCTION
-  const VALID_AMOUNT = 10
+  const VALID_AMOUNT = '10'
 
   it('should construct a domain object given valid input', function () {
     claimDeduction = new ClaimDeduction(VALID_DEDUCTION_TYPE, VALID_AMOUNT)
@@ -18,7 +18,6 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDeduction = new ClaimDeduction('', VALID_AMOUNT)
     } catch (e) {
-      console.dir(e.validationErrors)
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['deduction-type'][0]).to.equal('A deduction type is required')
     }
@@ -26,9 +25,8 @@ describe('services/domain/claim-decision', function () {
 
   it('should return isRequired error for decision if amount is empty or zero', function () {
     try {
-      claimDeduction = new ClaimDeduction(VALID_DEDUCTION_TYPE, 0)
+      claimDeduction = new ClaimDeduction(VALID_DEDUCTION_TYPE, '')
     } catch (e) {
-      console.dir(e.validationErrors)
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['deduction-amount'][0]).to.equal('A deduction amount is required')
     }

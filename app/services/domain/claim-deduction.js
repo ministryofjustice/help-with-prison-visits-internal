@@ -17,6 +17,8 @@ class ClaimDeduction {
 
     FieldValidator(this.amount, 'deduction-amount', errors)
       .isRequired()
+      .isCurrency()
+      .isGreaterThanZero()
 
     var validationErrors = errors.get()
 

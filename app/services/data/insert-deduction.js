@@ -1,7 +1,7 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 
-module.exports = function (claimId, deductionType, amount) {
+module.exports = function (claimId, claimDeduction) {
   return getClaim(claimId)
     .then(function (claim) {
       return knex('IntSchema.ClaimDeduction')
@@ -10,8 +10,8 @@ module.exports = function (claimId, deductionType, amount) {
           EligibilityId: claim.EligibilityId,
           Reference: claim.Reference,
           ClaimId: claimId,
-          Amount: amount,
-          DeductionType: deductionType,
+          Amount: claimDeduction.amount,
+          DeductionType: claimDeduction.deductionType,
           IsEnabled: true
         })
     })

@@ -19,6 +19,8 @@ const insertDeduction = require('../../services/data/insert-deduction')
 const disableDeduction = require('../../services/data/disable-deduction')
 const ClaimDeduction = require('../../services/domain/claim-deduction')
 
+var claimExpenses
+
 module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
     authorisation.isCaseworker(req)
@@ -36,20 +38,19 @@ module.exports = function (router) {
           throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
         }
 
+        var removeDeductionId = getClaimDeductionId(req.body)
         var removeDeductionClicked = false
 
-        Object.keys(req.body).forEach(function (key) {
-          if (key.indexOf('remove-deduction') > -1) {
-            removeDeductionClicked = true
-          }
-        })
+        if (removeDeductionId) {
+          removeDeductionClicked = true
+        }
 
         if (req.body['add-deduction']) {
           return addDeduction(req, res)
         } else if (removeDeductionClicked) {
-          return removeDeduction(req, res)
+          return removeDeduction(req, res, removeDeductionId)
         } else {
-          var claimExpenses = getClaimExpenseResponses(req.body)
+          claimExpenses = getClaimExpenseResponses(req.body)
           return submitClaimDecision(req, res, claimExpenses)
         }
       } catch (error) {
@@ -95,29 +96,32 @@ module.exports = function (router) {
   })
 }
 
-function removeDeduction (req, res) {
-  var deductionId
+function removeDeduction (req, res, deductionId) {
+  return disableDeduction(deductionId)
+    .then(function () {
+      return res.redirect(req.get('referrer'))
+    })
+}
 
-  Object.keys(req.body).forEach(function (key) {
+function getClaimDeductionId (requestBody) {
+  var deductionId = null
+  Object.keys(requestBody).forEach(function (key) {
     if (key.indexOf('remove-deduction') > -1) {
       deductionId = key.substring(key.lastIndexOf('-') + 1)
     }
   })
 
-  return disableDeduction(deductionId)
-    .then(function () {
-      renderViewClaimPage(req.params.claimId, res)
-    })
+  return deductionId
 }
 
 function addDeduction (req, res) {
   var deductionType = req.body.deductionType
-  var amount = Number(req.body.deductionAmount).toFixed(2)
+  var amount = req.body.deductionAmount
   var claimDeduction = new ClaimDeduction(deductionType, amount)
 
-  return insertDeduction(req.params.claimId, claimDeduction.deductionType, claimDeduction.amount)
+  return insertDeduction(req.params.claimId, claimDeduction)
     .then(function () {
-      renderViewClaimPage(req.params.claimId, res)
+      return res.redirect(req.get('referrer'))
     })
 }
 

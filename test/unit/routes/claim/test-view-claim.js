@@ -15,6 +15,7 @@ var stubGetClaimLastUpdated
 var stubCheckLastUpdated
 var stubInsertDeduction
 var stubDisableDeduction
+var stubClaimDeduction
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 var bodyParser = require('body-parser')
@@ -50,6 +51,7 @@ describe('routes/claim/view-claim', function () {
     stubCheckLastUpdated = sinon.stub()
     stubInsertDeduction = sinon.stub()
     stubDisableDeduction = sinon.stub()
+    stubClaimDeduction = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -60,7 +62,8 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/get-claim-last-updated': stubGetClaimLastUpdated,
       '../../services/check-last-updated': stubCheckLastUpdated,
       '../../services/data/insert-deduction': stubInsertDeduction,
-      '../../services/data/disable-deduction': stubDisableDeduction
+      '../../services/data/disable-deduction': stubDisableDeduction,
+      '../../services/domain/claim-deduction': stubClaimDeduction
     })
     app = express()
     app.use(bodyParser.json())
@@ -156,28 +159,22 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 302 when valid data entered (add deduction)', function () {
-      stubClaimDecision.throws(new ValidationError({ 'reason': {} }))
-      stubGetIndividualClaimDetails.resolves({})
+      var testClaimDecisionObject = {deductionType: 'a', amount: '5'}
       stubGetClaimLastUpdated.resolves({})
       stubCheckLastUpdated.returns(false)
       stubInsertDeduction.resolves({})
+      stubClaimDeduction.returns(testClaimDecisionObject)
 
       return supertest(app)
         .post('/claim/123')
         .send(VALID_DATA_ADD_DEDUCTION)
-        .expect(200)
+        .expect(302)
         .expect(function () {
-          expect(authorisation.isCaseworker.calledOnce).to.be.true
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
-          expect(stubCheckLastUpdated.calledOnce).to.be.true
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
-          expect(stubInsertDeduction.calledOnce).to.be.true
+          expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).to.be.true
         })
     })
 
-    it('should respond with 200 when valid data entered (disable deduction)', function () {
-      stubClaimDecision.throws(new ValidationError({ 'reason': {} }))
-      stubGetIndividualClaimDetails.resolves({})
+    it('should respond with 302 when valid data entered (disable deduction)', function () {
       stubGetClaimLastUpdated.resolves({})
       stubCheckLastUpdated.returns(false)
       stubDisableDeduction.resolves({})
@@ -185,13 +182,9 @@ describe('routes/claim/view-claim', function () {
       return supertest(app)
         .post('/claim/123')
         .send(VALID_DATA_DISABLE_DEDUCTION)
-        .expect(200)
+        .expect(302)
         .expect(function () {
-          expect(authorisation.isCaseworker.calledOnce).to.be.true
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
-          expect(stubCheckLastUpdated.calledOnce).to.be.true
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
-          expect(stubDisableDeduction.calledOnce).to.be.true
+          expect(stubDisableDeduction.calledWith('1')).to.be.true
         })
     })
   })

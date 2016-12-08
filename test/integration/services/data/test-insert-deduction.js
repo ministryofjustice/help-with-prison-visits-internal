@@ -6,6 +6,7 @@ const databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 const insertDeduction = require('../../../../app/services/data/insert-deduction')
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
+const ClaimDeduction = require('../../../../app/services/domain/claim-deduction')
 var reference = 'V123456'
 var date
 var claimId
@@ -20,24 +21,24 @@ describe('services/data/insert-deduction', function () {
     })
 
     it('should add a claim deduction when called', function () {
-      var claimDeduction
       var claimDeductionType = deductionTypeEnum.OVERPAYMENT.value
       var claimDeductionAmount = 5
+      var claimDeduction = new ClaimDeduction(claimDeductionType, claimDeductionAmount.toString())
 
-      return insertDeduction(claimId, claimDeductionType, claimDeductionAmount)
+      return insertDeduction(claimId, claimDeduction)
         .then(function (claimDeductionId) {
           return knex('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId)
             .then(function (deduction) {
-              claimDeduction = deduction
+              var updatedClaimDeduction = deduction
 
               return knex('Claim').first().where('ClaimId', claimId)
                 .then(function (claim) {
-                  expect(claimDeduction.EligibilityId).to.equal(claim.EligibilityId)
-                  expect(claimDeduction.Reference).to.equal(claim.Reference)
-                  expect(claimDeduction.ClaimId).to.equal(claim.ClaimId)
-                  expect(claimDeduction.Amount).to.equal(claimDeductionAmount)
-                  expect(claimDeduction.DeductionType).to.equal(claimDeductionType)
-                  expect(claimDeduction.IsEnabled).to.be.true
+                  expect(updatedClaimDeduction.EligibilityId).to.equal(claim.EligibilityId)
+                  expect(updatedClaimDeduction.Reference).to.equal(claim.Reference)
+                  expect(updatedClaimDeduction.ClaimId).to.equal(claim.ClaimId)
+                  expect(updatedClaimDeduction.Amount).to.equal(claimDeductionAmount)
+                  expect(updatedClaimDeduction.DeductionType).to.equal(claimDeductionType)
+                  expect(updatedClaimDeduction.IsEnabled).to.be.true
                 })
             })
         })

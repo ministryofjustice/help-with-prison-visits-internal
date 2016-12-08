@@ -320,14 +320,14 @@ module.exports.getTestData = function (reference, status) {
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
-      Cost: '12.50',
+      Cost: 12,
       From: 'London',
       To: 'Hewell',
       IsReturn: true
     },
     {
       ExpenseType: 'accommodation',
-      Cost: '80.00',
+      Cost: 80,
       DurationOfTravel: 1
     }],
     ClaimChild: [{
