@@ -41,7 +41,7 @@ describe('services/data/get-auto-approval-config', function () {
     return getAutoApprovalConfig()
       .then(function (result) {
         expect(result.Caseworker).to.equal('caseworker1@test.com')
-        expect(result.RulesDisabled).to.equal('auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3')
+        expect(result.RulesDisabled).to.deep.equal(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
         expect(result.IsEnabled).to.equal(true)
       })
   })
