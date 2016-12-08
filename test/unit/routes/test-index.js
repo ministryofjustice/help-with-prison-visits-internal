@@ -63,9 +63,20 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function (response) {
           expect(isCaseworkerStub.calledOnce).to.be.true
-          expect(getClaimsListAndCount.calledWith('TEST', 0, 10)).to.be.true
+          expect(getClaimsListAndCount.calledWith('TEST', false, 0, 10)).to.be.true
           expect(response.body.recordsTotal).to.equal(0)
           expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
+        })
+    })
+
+    it('should call for advance claims when status is ADVANCE', function () {
+      getClaimsListAndCount.resolves({claims: [RETURNED_CLAIM], total: {Count: 0}})
+
+      return supertest(app)
+        .get('/claims/ADVANCE?draw=1&start=0&length=10')
+        .expect(200)
+        .expect(function (response) {
+          expect(getClaimsListAndCount.calledWith('NEW', true, 0, 10)).to.be.true
         })
     })
   })

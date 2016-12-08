@@ -15,7 +15,14 @@ module.exports = function (router) {
   router.get('/claims/:status', function (req, res) {
     authorisation.isCaseworker(req)
 
-    getClaimsListAndCount(req.params.status, parseInt(req.query.start), parseInt(req.query.length))
+    var advanceClaims = false
+    var status = req.params.status
+    if (status === 'ADVANCE') {
+      advanceClaims = true
+      status = 'NEW'
+    }
+
+    getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length))
       .then(function (data) {
         var claims = data.claims
         claims.map(function (claim) {
