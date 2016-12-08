@@ -99,7 +99,7 @@ module.exports = function (router) {
 function removeDeduction (req, res, deductionId) {
   return disableDeduction(deductionId)
     .then(function () {
-      return res.redirect(req.get('referrer'))
+      return res.redirect(`/claim/${req.params.claimId}`)
     })
 }
 
@@ -121,7 +121,7 @@ function addDeduction (req, res) {
 
   return insertDeduction(req.params.claimId, claimDeduction)
     .then(function () {
-      return res.redirect(req.get('referrer'))
+      return res.redirect(`/claim/${req.params.claimId}`)
     })
 }
 
