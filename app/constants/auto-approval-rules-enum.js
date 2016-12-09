@@ -53,5 +53,10 @@ module.exports = {
     value: 'is-visit-date-different-to-previous-claims',
     displayName: 'Visit date different to previous claims',
     description: 'The visit date must be different to the dates of previous claims'
+  },
+  CLAIMANT_HAS_NOT_OVERPAID: {
+    value: 'claimant-has-not-been-overpaid',
+    displayName: 'Claimant not overpaid on a previous claim',
+    description: 'Then claimant must not have an associated claim that has been flagged as overpaid'
   }
 }
