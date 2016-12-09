@@ -42,18 +42,17 @@
 
   </div>
 
-  {% if duplicates.length > 0 %}
-  <div class="banner">
-    <p class="heading-small">This claim may be a duplicate</p>
-    <ul class="list">
-    {% for duplicateClaim in duplicates %}
-      <li><a href='/claim/{{ duplicateClaim.ClaimId }}'>{{ duplicateClaim.Reference }}</a></li>
-    {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
+  {% include "partials/view-claim/warnings.html" %}
 
   {% include "includes/validation-error-messages.html" %}
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/overpayment" method="post" class="form">
+  {% include "partials/csrf-hidden-input.html" %}
+
+  {% include "partials/view-claim/overpayment.html" %}
+  </form>
+
+  <br>
 
   <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
 

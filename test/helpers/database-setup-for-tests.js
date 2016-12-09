@@ -82,6 +82,8 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           DateSubmitted: date,
           ClaimType: data.Claim.ClaimType,
           IsAdvanceClaim: data.Claim.IsAdvanceClaim,
+          IsOverpaid: data.Claim.IsOverpaid,
+          OverpaymentAmount: data.Claim.OverpaymentAmount,
           Status: status
         })
     })
@@ -318,7 +320,9 @@ module.exports.getTestData = function (reference, status) {
     },
     Claim: {
       ClaimType: 'first-time',
-      IsAdvanceClaim: false
+      IsAdvanceClaim: false,
+      IsOverpaid: false,
+      OverpaymentAmount: 20
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
@@ -387,4 +391,20 @@ module.exports.getTestData = function (reference, status) {
       }
     }
   }
+}
+
+module.exports.insertClaim = function (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount) {
+  return knex('Claim')
+    .insert({
+      ClaimId: claimId,
+      EligibilityId: eligibilityId,
+      Reference: reference,
+      DateOfJourney: date,
+      DateCreated: date,
+      DateSubmitted: date,
+      Status: status,
+      IsOverpaid: isOverpaid,
+      OverpaymentAmount: overpaymentAmount
+    })
+    .returning('ClaimId')
 }
