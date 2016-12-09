@@ -1,6 +1,6 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const tasksEnum = require('../../constants/tasks-enum')
 const insertClaimEvent = require('./insert-claim-event')
@@ -42,8 +42,8 @@ function updateClaim (claimId, caseworker, decision, reason, note, visitConfirma
     'Reason': reason,
     'Note': note,
     'VisitConfirmationCheck': visitConfirmationCheck,
-    'DateReviewed': moment().toDate(),
-    'LastUpdated': moment().toDate()
+    'DateReviewed': dateFormatter.now().toDate(),
+    'LastUpdated': dateFormatter.now().toDate()
   })
 }
 

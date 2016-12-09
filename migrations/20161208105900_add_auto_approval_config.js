@@ -1,4 +1,4 @@
-const moment = require('moment')
+const dateFormatter = require('../app/services/date-formatter')
 
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('AutoApprovalConfig', function (table) {
@@ -17,7 +17,7 @@ exports.up = function (knex, Promise) {
     return knex('AutoApprovalConfig')
       .insert({
         Caseworker: null,
-        DateCreated: moment().toDate(),
+        DateCreated: dateFormatter.now().toDate(),
         AutoApprovalEnabled: 'true',
         CostVariancePercentage: '0.1',
         MaxClaimTotal: '250',

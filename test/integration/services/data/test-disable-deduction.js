@@ -1,5 +1,5 @@
 const expect = require('chai').expect
-const moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 const config = require('../../../../knexfile').intweb
 const knex = require('knex')(config)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
@@ -12,7 +12,7 @@ var claimDeductionId
 describe('services/data/insert-deduction', function () {
   describe('module', function () {
     before(function () {
-      date = moment()
+      date = dateFormatter.now()
       return databaseHelper.insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimDeductionId = ids.claimDeductionId1
       })

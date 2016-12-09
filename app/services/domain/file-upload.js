@@ -1,7 +1,7 @@
 const ValidationError = require('../errors/validation-error')
 const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
-const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const UploadError = require('../errors/upload-error')
 
@@ -11,7 +11,7 @@ class FileUpload {
     this.error = error
     this.IsValid()
     this.path = file.path
-    this.dateSubmitted = moment().toDate()
+    this.dateSubmitted = dateFormatter.now().toDate()
     this.claimDocumentId = claimDocumentId
     this.caseworker = caseworker
 

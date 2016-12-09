@@ -2,7 +2,7 @@ var expect = require('chai').expect
 var updateAutoApprovalConfig = require('../../../../app/services/data/update-auto-approval-config')
 var config = require('../../../../knexfile').migrations
 var knex = require('knex')(config)
-var moment = require('moment')
+var dateFormatter = require('../../../../app/services/date-formatter')
 
 describe('services/data/update-auto-approval-config', function () {
   var insertedIds = []
@@ -11,7 +11,7 @@ describe('services/data/update-auto-approval-config', function () {
     return knex('AutoApprovalConfig')
       .insert({
         Caseworker: 'first-caseworker',
-        DateCreated: moment().toDate(),
+        DateCreated: dateFormatter.now().toDate(),
         AutoApprovalEnabled: 'true',
         CostVariancePercentage: '5.00',
         MaxClaimTotal: '100.00',

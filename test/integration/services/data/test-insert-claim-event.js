@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 const insertClaimEvent = require('../../../../app/services/data/insert-claim-event')
@@ -18,7 +18,7 @@ var claimId
 
 describe('services/data/insert-claim-event', function () {
   before(function () {
-    return databaseHelper.insertTestData(REFERENCE, moment().toDate(), 'Test').then(function (ids) {
+    return databaseHelper.insertTestData(REFERENCE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
       claimId = ids.claimId
       eligibilityId = ids.eligibilityId
     })
@@ -34,7 +34,7 @@ describe('services/data/insert-claim-event', function () {
             expect(claimEvent.EligibilityId).to.equal(eligibilityId)
             expect(claimEvent.Reference).to.equal(REFERENCE)
             expect(claimEvent.ClaimId).to.equal(claimId)
-            expect(claimEvent.DateAdded).to.be.within(moment().add(-2, 'minutes').toDate(), moment().add(2, 'minutes').toDate())
+            expect(claimEvent.DateAdded).to.be.within(dateFormatter.now().add(-2, 'minutes').toDate(), dateFormatter.now().add(2, 'minutes').toDate())
             expect(claimEvent.Event).to.equal(EVENT)
             expect(claimEvent.AdditionalData).to.equal(ADDITIONAL_DATA)
             expect(claimEvent.Note).to.equal(NOTE)
