@@ -15,8 +15,8 @@ class OverpaymentResponse {
     if (this.isOverpaid) {
       FieldValidator(this.amount, 'overpayment-amount', errors)
       .isRequired()
-      .isCurrency()
       .isGreaterThanZero()
+      .isCurrency()
     }
 
     var validationErrors = errors.get()
