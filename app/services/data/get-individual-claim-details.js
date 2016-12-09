@@ -45,7 +45,7 @@ module.exports = function (claimId) {
     })
     .then(function (claimEventData) {
       claimEvents = claimEventData
-      return getOverpaidClaimsByReference(reference)
+      return getOverpaidClaimsByReference(reference, claimId)
     })
     .then(function (overpaidClaimData) {
       claimDetails = {
@@ -74,6 +74,8 @@ function getClaimantDetails (claimId) {
       'Claim.ClaimId',
       'Claim.ClaimType',
       'Claim.IsAdvanceClaim',
+      'Claim.IsOverpaid',
+      'Claim.OverpaymentAmount',
       'Claim.DateSubmitted',
       'Claim.DateOfJourney',
       'Claim.AssistedDigitalCaseworker',
