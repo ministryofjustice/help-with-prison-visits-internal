@@ -28,6 +28,7 @@ describe('services/data/get-overpaid-claims-by-reference', function () {
     it('should return any previous claims marked as unpaid', function () {
       return getOverpaidClaimsByReference(reference, claimId1)
         .then(function (result) {
+          expect(result).to.have.lengthOf(1)
           expect(result[0].ClaimId).to.equal(claimId2)
         })
         .catch(function (error) {
