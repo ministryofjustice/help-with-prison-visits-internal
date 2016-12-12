@@ -13,6 +13,7 @@ const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
+const config = require('../config')
 
 var app = express()
 
@@ -23,6 +24,22 @@ app.use(compression())
 
 // Set security headers.
 app.use(helmet())
+app.use(helmet.hsts({ maxAge: 5184000 }))
+
+// Configure Content Security Policy
+// Hashes for inline Gov Template script entries
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'",
+      "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
+      "'sha256-G29/qSW/JHHANtFhlrZVDZW1HOkCDRc78ggbqwwIJ2g='",
+      'www.google-analytics.com'],
+    styleSrc: ["'self'"],
+    fontSrc: ['data:'],
+    imgSrc: ["'self'", 'www.google-analytics.com']
+  }
+}))
 
 var packageJson = require('../package.json')
 var developmentMode = app.get('env') === 'development'
@@ -73,10 +90,10 @@ app.use(function (req, res, next) {
 })
 
 // Use cookie parser middleware (required for csurf)
-app.use(cookieParser())
+app.use(cookieParser(config.INT_APPLICATION_SECRET, { httpOnly: true, secure: config.INT_SECURE_COOKIE }))
 
 // Check for valid CSRF tokens on state-changing methods.
-var csrfProtection = csurf({ cookie: true })
+var csrfProtection = csurf({ cookie: { httpOnly: true, secure: config.INT_SECURE_COOKIE } })
 
 app.use(function (req, res, next) {
   csrfExcludeRoutes.forEach(function (route) {
