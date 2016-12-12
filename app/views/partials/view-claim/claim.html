@@ -22,7 +22,7 @@
         <td>
           {% if receiptRequiredEnum[expense.ExpenseType] %}
             {% if expense.DocumentStatus == 'uploaded' %}
-              <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ expense['Filepath'] }}">View receipt</a>
+              <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ expense['ClaimDocumentId'] }}">View receipt</a>
 
             {% elif expense.DocumentStatus == 'upload-later' %}
               <span class="text-pending">To be uploaded later</span>
