@@ -12,6 +12,11 @@ function getUrlParameter (sParam) {
   }
 }
 
+function cleanColumnOutput (data, type, row) {
+  var unsafeOutputPattern = new RegExp(/>|<|&|"|\/|'/g)
+  return data.replace(unsafeOutputPattern, '')
+}
+
 $(document).ready(function () {
   var status = getUrlParameter('status') || 'NEW'
   var dataReference = '/claims/' + status
@@ -28,8 +33,8 @@ $(document).ready(function () {
     },
 
     columns: [
-      {'data': 'Reference'},
-      {'data': 'Name'},
+      {'data': 'Reference', 'render': cleanColumnOutput},
+      {'data': 'Name', 'render': cleanColumnOutput},
       {'data': 'DateSubmittedFormatted'},
       {'data': 'ClaimType',
         'createdCell': function (td, cellData, rowData, row, col) {
