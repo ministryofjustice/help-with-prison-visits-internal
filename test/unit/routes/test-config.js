@@ -4,6 +4,7 @@ const proxyquire = require('proxyquire')
 const express = require('express')
 const mockViewEngine = require('./mock-view-engine')
 const bodyParser = require('body-parser')
+const expressSanitizer = require('express-sanitized')
 const sinon = require('sinon')
 require('sinon-bluebird')
 const ValidationError = require('../../../app/services/errors/validation-error')
@@ -32,6 +33,7 @@ describe('routes/config', function () {
 
     app = express()
     app.use(bodyParser.json())
+    app.use(expressSanitizer())
     mockViewEngine(app, '../../../app/views')
     app.use(function (req, res, next) {
       req.user = {
