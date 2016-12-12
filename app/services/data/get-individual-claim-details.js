@@ -2,6 +2,7 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const duplicateClaimCheck = require('./duplicate-claim-check')
 const getClaimTotalAmount = require('../get-claim-total-amount')
+const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference')
 const moment = require('moment')
 
 module.exports = function (claimId) {
@@ -11,10 +12,13 @@ module.exports = function (claimId) {
   var claimDeductions
   var claimDuplicatesExist
   var claimDetails
+  var claimEvents
+  var reference
 
   return getClaimantDetails(claimId)
     .then(function (claimData) {
       claim = claimData
+      reference = claim.Reference
       claim.lastUpdatedHidden = moment(claim.LastUpdated)
       return getClaimDocuments(claimId)
     })
@@ -39,14 +43,19 @@ module.exports = function (claimId) {
       claimDuplicatesExist = result
       return getClaimEvents(claimId)
     })
-    .then(function (claimEvents) {
+    .then(function (claimEventData) {
+      claimEvents = claimEventData
+      return getOverpaidClaimsByReference(reference, claimId)
+    })
+    .then(function (overpaidClaimData) {
       claimDetails = {
         claim: claim,
         claimExpenses: setClaimExpenseStatusForCarJourneys(claimExpenses),
         claimChild: claimChildren,
         claimEvents: claimEvents,
         deductions: claimDeductions,
-        duplicates: claimDuplicatesExist
+        duplicates: claimDuplicatesExist,
+        overpaidClaims: overpaidClaimData
       }
 
       return claimDetails
@@ -65,6 +74,9 @@ function getClaimantDetails (claimId) {
       'Claim.ClaimId',
       'Claim.ClaimType',
       'Claim.IsAdvanceClaim',
+      'Claim.IsOverpaid',
+      'Claim.OverpaymentAmount',
+      'Claim.RemainingOverpaymentAmount',
       'Claim.DateSubmitted',
       'Claim.DateOfJourney',
       'Claim.AssistedDigitalCaseworker',

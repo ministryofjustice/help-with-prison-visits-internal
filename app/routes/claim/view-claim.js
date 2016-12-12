@@ -18,6 +18,8 @@ const checkLastUpdated = require('../../services/check-last-updated')
 const insertDeduction = require('../../services/data/insert-deduction')
 const disableDeduction = require('../../services/data/disable-deduction')
 const ClaimDeduction = require('../../services/domain/claim-deduction')
+const updateClaimOverpaymentStatus = require('../../services/data/update-claim-overpayment-status')
+const OverpaymentResponse = require('../../services/domain/overpayment-response')
 
 var claimExpenses
 
@@ -63,19 +65,7 @@ module.exports = function (router) {
                 data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
                 data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
               }
-              return res.status(400).render('./claim/view-claim', {
-                title: 'APVS Claim',
-                Claim: data.claim,
-                Expenses: data.claimExpenses,
-                getDateFormatted: getDateFormatted,
-                getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
-                getDisplayFieldName: getDisplayFieldName,
-                prisonerRelationshipsEnum: prisonerRelationshipsEnum,
-                displayHelper: displayHelper,
-                claimDecision: req.body,
-                deductions: data.deductions,
-                errors: error.validationErrors
-              })
+              return renderErrors(data, req, res, error)
             })
         } else {
           throw error
@@ -92,6 +82,32 @@ module.exports = function (router) {
       res.download(path)
     } else {
       throw new Error('No path to file provided')
+    }
+  })
+
+  router.post('/claim/:claimId/overpayment', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    var isOverpaid = req.body['is-overpaid'] === 'on'
+    var overpaymentAmount = req.body['overpayment-amount']
+
+    try {
+      var overpaymentResponse = new OverpaymentResponse(isOverpaid, overpaymentAmount)
+
+      return getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          var claim = data.claim
+
+          return updateClaimOverpaymentStatus(claim, overpaymentResponse)
+            .then(function () {
+              return res.redirect(`/claim/${req.params.claimId}`)
+            })
+        })
+    } catch (error) {
+      getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          return renderErrors(data, req, res, error)
+        })
     }
   })
 }
@@ -164,7 +180,24 @@ function renderViewClaimPage (claimId, res) {
         displayHelper: displayHelper,
         duplicates: data.duplicates,
         claimEvents: data.claimEvents,
-        deductions: data.deductions
+        deductions: data.deductions,
+        overpaidClaims: data.overpaidClaims
       })
     })
+}
+
+function renderErrors (data, req, res, error) {
+  res.status(400).render('./claim/view-claim', {
+    title: 'APVS Claim',
+    Claim: data.claim,
+    Expenses: data.claimExpenses,
+    getDateFormatted: getDateFormatted,
+    getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
+    getDisplayFieldName: getDisplayFieldName,
+    prisonerRelationshipsEnum: prisonerRelationshipsEnum,
+    displayHelper: displayHelper,
+    claimDecision: req.body,
+    deductions: data.deductions,
+    errors: error.validationErrors
+  })
 }

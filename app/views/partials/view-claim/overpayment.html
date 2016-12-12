@@ -1,0 +1,10 @@
+<h1 class="table-heading">Overpaid?</h1>
+<table>
+  <tbody>
+    <tr {% if errors['overpayment-amount'] %} class='warning' {% endif %}>
+      <td>Claim Overpaid?<input type='checkbox' name='is-overpaid' class='form-checkbox' id='is-overpaid' {% if Claim['IsOverpaid'] %} checked {% endif %}></td>
+      <td>Overpayment Amount:<input type='text' name='overpayment-amount' id='overpayment-amount' class='form-control' {% if Claim['OverpaymentAmount'] %} value='{{ Claim['OverpaymentAmount'] }}' {% endif %}></td>
+      <td><input type="submit" class="button pull-right grey" name="update-overpayment-status" id="update-overpayment-status" value="Submit"></td>
+    </tr>
+  </tbody>
+</table>
