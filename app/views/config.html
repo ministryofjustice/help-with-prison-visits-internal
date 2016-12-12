@@ -16,13 +16,6 @@
   <h1 class="table-heading">Configuration</h1>
     <div class="form-group">
       <table class="table">
-        <thead>
-          <tr>
-          <th>Rule</th>
-          <th>Description</th>
-          <th></th>
-          </tr>
-        </thead>
         <tbody>
           <tr {% if errors['auto-approval-enabled'][0] %} class="warning" {% endif %}>
             <td>
@@ -44,60 +37,11 @@
               </div>
             </td>
           </tr>
-
-          <tr {% if errors['cost-variance-percentage'][0] %} class="warning" {% endif %}>
-            <td>
-              Auto approval cost variance
-            </td>
-            <td>
-              Controls the cost variance percentage used for auto approval (e.g. 10)
-            </td>
-            <td>
-              <input id="cost-variance-percentage" type="text" name="CostVariancePercentage" class="form-control pull-right" value="{{ autoApprovalConfig.CostVariancePercentage }}">
-            </td>
-          </tr>
-
-          <tr {% if errors['max-claim-total'][0] %} class="warning" {% endif %}>
-            <td>
-              Max claim total
-            </td>
-            <td>
-              Controls the maximum claim total that can be auto-approved (e.g. 250)
-            </td>
-            <td>
-              <input id="max-claim-total" type="text" name="MaxClaimTotal" class="form-control pull-right" value="{{ autoApprovalConfig.MaxClaimTotal }}">
-            </td>
-          </tr>
-
-          <tr {% if errors['max-days-after-apvu-visit'][0] %} class="warning" {% endif %}>
-            <td>
-              Max days after APVU visit
-            </td>
-            <td>
-              Controls the number of days after a visit that a claim can be auto-approved (e.g. 28)
-            </td>
-            <td>
-              <input id="max-days-after-apvu-visit" type="text" name="MaxDaysAfterAPVUVisit" class="form-control pull-right" value="{{ autoApprovalConfig.MaxDaysAfterAPVUVisit }}">
-            </td>
-          </tr>
-
-          <tr {% if errors['max-number-of-claims-per-year'][0] %} class="warning" {% endif %}>
-            <td>
-              Max number of claims per year
-            </td>
-            <td>
-              Controls the maximum number of claims that can be auto-approved per year (e.g. 26)
-            </td>
-            <td>
-              <input id="max-number-of-claims-per-year" type="text" name="MaxNumberOfClaimsPerYear" class="form-control pull-right" value="{{ autoApprovalConfig.MaxNumberOfClaimsPerYear }}">
-            </td>
-          </tr>
         </tbody>
       </table>
     </div>
 
     <!-- Rules -->
-    <h1 class="table-heading">Checks</h1>
     <div class="form-group">
       <table class="table">
         <thead>
@@ -124,6 +68,68 @@
               </div>
             </td>
           </tr>
+          {% if rule.value == autoApprovalRulesEnum.COST_AND_VARIANCE_EQUAL_OR_LESS_THAN_FIRST_TIME_CLAIM.value and
+            rule.value not in rulesDisabled %}
+
+            <tr class="{% if errors['cost-variance-percentage'][0] %} warning {% endif %}">
+              <td>
+                Auto approval cost variance
+              </td>
+              <td>
+                Controls the cost variance used for auto approval
+              </td>
+              <td class="percentage-wrapper">
+                <span>%</span>
+                <input id="cost-variance-percentage"
+                  type="text" name="CostVariancePercentage"
+                  class="form-control"
+                  value="{{ autoApprovalConfig.CostVariancePercentage }}"
+                  >
+              </td>
+            </tr>
+          {% elif rule.value == autoApprovalRulesEnum.IS_CLAIM_TOTAL_UNDER_LIMIT.value and
+            rule.value not in rulesDisabled %}
+            <tr {% if errors['max-claim-total'][0] %} class="warning" {% endif %}>
+              <td>
+                Max claim total
+              </td>
+              <td>
+                Controls the maximum claim total that can be auto-approved (e.g. 250)
+              </td>
+              <td class="pound-wrapper">
+                <span>£</span>
+                <input id="max-claim-total" type="text" name="MaxClaimTotal" class="form-control" value="{{ autoApprovalConfig.MaxClaimTotal }}">
+              </td>
+            </tr>
+          {% elif rule.value == autoApprovalRulesEnum.IS_CLAIM_WITHIN_TIME_LIMIT.value and
+            rule.value not in rulesDisabled %}
+            <tr {% if errors['max-days-after-apvu-visit'][0] %} class="warning" {% endif %}>
+              <td>
+                Max days after APVU visit
+              </td>
+              <td>
+                Controls the number of days after a visit that a claim can be auto-approved (e.g. 28)
+              </td>
+              <td>
+                <input id="max-days-after-apvu-visit" type="text" name="MaxDaysAfterAPVUVisit" class="form-control" value="{{ autoApprovalConfig.MaxDaysAfterAPVUVisit }}">
+                <label>days</label>
+              </td>
+            </tr>
+          {% elif rule.value == autoApprovalRulesEnum.HAS_CLAIMED_LESS_THAN_MAX_TIMES_THIS_YEAR.value and
+            rule.value not in rulesDisabled %}
+            <tr {% if errors['max-number-of-claims-per-year'][0] %} class="warning" {% endif %}>
+              <td>
+                Max number of claims per year
+              </td>
+              <td>
+                Controls the maximum number of claims that can be auto-approved per year (e.g. 26)
+              </td>
+              <td>
+                <input id="max-number-of-claims-per-year" type="text" name="MaxNumberOfClaimsPerYear" class="form-control" value="{{ autoApprovalConfig.MaxNumberOfClaimsPerYear }}">
+                <label>claims</label>
+              </td>
+            </tr>
+          {% endif %}
           {% endfor %}
         </tbody>
       </table>
