@@ -8,8 +8,6 @@ class ClaimDecision {
   constructor (caseworker,
                assistedDigitalCaseworker,
                decision,
-               reasonRequest,
-               reasonReject,
                additionalInfoApprove,
                additionalInfoRequest,
                additionalInfoReject,
@@ -22,13 +20,10 @@ class ClaimDecision {
 
     this.decision = decision
     if (this.decision === claimDecisionEnum.APPROVED) {
-      this.reason = ''
       this.note = additionalInfoApprove
     } else if (decision === claimDecisionEnum.REJECTED) {
-      this.reason = reasonReject
       this.note = additionalInfoReject
     } else {
-      this.reason = reasonRequest
       this.note = additionalInfoRequest
     }
     this.nomisCheck = nomisCheck
@@ -57,7 +52,7 @@ class ClaimDecision {
       .isRequired()
 
     if (this.decision !== claimDecisionEnum.APPROVED) {
-      FieldValidator(this.reason, 'reason', errors)
+      FieldValidator(this.note, 'note', errors)
         .isRequired()
     }
 

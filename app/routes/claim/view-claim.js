@@ -138,8 +138,6 @@ function submitClaimDecision (req, res, claimExpenses) {
     req.user.email,
     req.body.assistedDigitalCaseworker,
     req.body.decision,
-    req.body.reasonRequest,
-    req.body.reasonReject,
     req.body.additionalInfoApprove,
     req.body.additionalInfoRequest,
     req.body.additionalInfoReject,
