@@ -247,29 +247,11 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimEventId2 = result[0]
-      return knex('IntSchema.ClaimDeduction')
-        .returning('ClaimDeductionId')
-        .insert({
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          ClaimId: uniqueId,
-          Amount: data.ClaimDeduction['hc3'].Amount,
-          DeductionType: data.ClaimDeduction['hc3'].DeductionType,
-          IsEnabled: true
-        })
+      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction['hc3'].DeductionType, data.ClaimDeduction['hc3'].Amount)
     })
     .then(function (result) {
       ids.claimDeductionId1 = result[0]
-      return knex('IntSchema.ClaimDeduction')
-        .returning('ClaimDeductionId')
-        .insert({
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          ClaimId: uniqueId,
-          Amount: data.ClaimDeduction['overpayment'].Amount,
-          DeductionType: data.ClaimDeduction['overpayment'].DeductionType,
-          IsEnabled: true
-        })
+      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction['overpayment'].DeductionType, data.ClaimDeduction['overpayment'].Amount)
     })
     .then(function (result) {
       ids.claimDeductionId2 = result[0]
@@ -393,8 +375,8 @@ module.exports.getTestData = function (reference, status) {
   }
 }
 
-module.exports.insertClaim = function (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount) {
-  return knex('Claim')
+module.exports.insertClaim = function (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount, remainingOverpaymentAmount) {
+  knex('Claim')
     .insert({
       ClaimId: claimId,
       EligibilityId: eligibilityId,
@@ -404,7 +386,23 @@ module.exports.insertClaim = function (claimId, eligibilityId, reference, date, 
       DateSubmitted: date,
       Status: status,
       IsOverpaid: isOverpaid,
-      OverpaymentAmount: overpaymentAmount
+      OverpaymentAmount: overpaymentAmount,
+      RemainingOverpaymentAmount: remainingOverpaymentAmount
     })
     .returning('ClaimId')
 }
+
+function insertClaimDeduction (claimId, reference, eligibilityId, deductionType, amount) {
+  return knex('ClaimDeduction')
+    .returning('ClaimDeductionId')
+    .insert({
+      EligibilityId: eligibilityId,
+      Reference: reference,
+      ClaimId: claimId,
+      DeductionType: deductionType,
+      Amount: amount,
+      IsEnabled: true
+    })
+}
+
+module.exports.insertClaimDeduction = insertClaimDeduction

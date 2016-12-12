@@ -11,10 +11,12 @@ const tasksEnum = require('../../../../app/constants/tasks-enum')
 
 var stubInsertClaimEvent = sinon.stub().resolves()
 var stubInsertTaskSendClaimNotification = sinon.stub().resolves()
+var stubUpdateRelatedClaimRemainingOverpaymentAmount = sinon.stub().resolves()
 
 const submitClaimResponse = proxyquire('../../../../app/services/data/submit-claim-response', {
   './insert-claim-event': stubInsertClaimEvent,
-  './insert-task-send-claim-notification': stubInsertTaskSendClaimNotification
+  './insert-task-send-claim-notification': stubInsertTaskSendClaimNotification,
+  './update-related-claim-remaining-overpayment-amount': stubUpdateRelatedClaimRemainingOverpaymentAmount
 })
 
 var reference = 'SUBC456'
@@ -75,6 +77,7 @@ describe('services/data/submit-claim-response', function () {
 
             expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).to.be.true
             expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true
+            expect(stubUpdateRelatedClaimRemainingOverpaymentAmount.calledWith(claimId, reference)).to.be.true
 
             return knex('IntSchema.ClaimExpense').where('ClaimId', newIds.claimId).select()
               .then(function (claimExpenses) {
