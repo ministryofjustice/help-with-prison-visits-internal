@@ -46,14 +46,6 @@
 
   {% include "includes/validation-error-messages.html" %}
 
-  <form action="/claim/{{ Claim['ClaimId'] }}/overpayment" method="post" class="form">
-  {% include "partials/csrf-hidden-input.html" %}
-
-  {% include "partials/view-claim/overpayment.html" %}
-  </form>
-
-  <br>
-
   <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
 
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
@@ -92,6 +84,12 @@
 
     {% include "partials/view-claim/decision.html" %}
 
+  </form>
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/overpayment" method="post" class="form">
+  {% include "partials/csrf-hidden-input.html" %}
+
+  {% include "partials/view-claim/overpayment.html" %}
   </form>
 
 </main>
