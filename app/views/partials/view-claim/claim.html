@@ -49,13 +49,19 @@
             <option {% if expense['Status'] == 'MANUALLY-PROCESSED' %} selected {% endif %} value="MANUALLY-PROCESSED">Process manually</option>
             <option {% if expense['Status'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject claim</option>
           </select>
-          <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text" name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost"
-            class="form-control cost" value="{{ expense['ApprovedCost'] }}" {% if expense['Status'] == ('APPROVED-DIFF-AMOUNT' or 'MANUALLY-PROCESSED') %} style="display: inline" {% endif %}>
+          <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text"
+            name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ expense['ApprovedCost'] }}"
+            class="form-control cost
+              {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' or expense['Status'] == 'MANUALLY-PROCESSED' %}
+                display-inline
+              {% else %}
+                display-none
+              {% endif %}">
         </td>
       </tr>
 
     {% endfor %}
-    
+
     {% for deduction in deductions %}
     <tr>
       <td>

@@ -1,7 +1,7 @@
 $('.claim-expense-status').change(function () {
   var id = $(this).attr('data-id')
   var value = $(this).val()
-  if (value === ('APPROVED-DIFF-AMOUNT' || 'MANUALLY-PROCESSED')) {
+  if (value === 'APPROVED-DIFF-AMOUNT' || value === 'MANUALLY-PROCESSED') {
     show(`#claim-expense-${id}-approvedcost`)
   } else {
     hide(`#claim-expense-${id}-approvedcost`)
