@@ -1,6 +1,6 @@
 const authorisation = require('../../services/authorisation')
 const getIndividualClaimDetails = require('../../services/data/get-individual-claim-details')
-const getClaimDocumatFilePath = require('../../services/data/get-claim-document-file-path')
+const getClaimDocumentFilePath = require('../../services/data/get-claim-document-file-path')
 const getDateFormatted = require('../../views/helpers/date-helper')
 const getClaimExpenseDetailFormatted = require('../../views/helpers/claim-expense-helper')
 const getChildFormatted = require('../../views/helpers/child-helper')
@@ -93,7 +93,7 @@ module.exports = function (router) {
       throw new Error('Invalid Document ID')
     }
 
-    getClaimDocumatFilePath(claimDocumentId)
+    getClaimDocumentFilePath(claimDocumentId)
       .then(function (document) {
         if (document && document.Filepath) {
           res.download(document.Filepath)
