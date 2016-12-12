@@ -8,4 +8,5 @@ module.exports = function (reference, currentClaimId) {
       'IsOverpaid': true
     })
     .whereNot('ClaimId', currentClaimId)
+    .orderBy('DateOfJourney', 'asc')
 }
