@@ -42,5 +42,5 @@ module.exports = {
 
   // Session and Cookie security (defaults for development)
   INT_APPLICATION_SECRET: process.env.APVS_INT_APPLICATION_SECRET || 'secret',
-  INT_SECURE_COOKIE: process.env.APVS_INT_SECURE_COOKIE || false
+  INT_SECURE_COOKIE: process.env.APVS_INT_SECURE_COOKIE || 'false'
 }
