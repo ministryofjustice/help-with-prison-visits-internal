@@ -12,7 +12,7 @@ module.exports = function (currentClaimId, reference) {
           var deductionTotal = getOverpaymentDeductionTotal(claimDetails.deductions)
 
           if (deductionTotal > 0 && overpaidClaims.length > 0) {
-            return subtractTotalDeductionsFromRemainingOverpayment(overpaidClaims, deductionTotal)
+            return subtractTotalDeductionsFromRemainingOverpayments(overpaidClaims, deductionTotal)
           }
         })
     })
@@ -29,7 +29,7 @@ function getOverpaymentDeductionTotal (claimDeductions) {
   return total
 }
 
-function subtractTotalDeductionsFromRemainingOverpayment (overpaidClaims, deductionTotal) {
+function subtractTotalDeductionsFromRemainingOverpayments (overpaidClaims, deductionTotal) {
   var deductionsToBeSubtracted = deductionTotal
   var index = 0
   var updates = []
@@ -46,7 +46,9 @@ function subtractTotalDeductionsFromRemainingOverpayment (overpaidClaims, deduct
       deductionsToBeSubtracted = deductionsToBeSubtracted - newRemainingBalance
     }
 
-    updates.push(updateRemainingOverpaymentAmount(overpaidClaim.ClaimId, newRemainingBalance, newRemainingBalance > 0))
+    var isOverpaid = newRemainingBalance > 0
+
+    updates.push(updateRemainingOverpaymentAmount(overpaidClaim.ClaimId, newRemainingBalance, isOverpaid))
     index++
   }
 

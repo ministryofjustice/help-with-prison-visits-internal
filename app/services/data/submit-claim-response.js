@@ -28,7 +28,7 @@ module.exports = function (claimId, claimDecision) {
         updatePrisoner(eligibilityId, nomisCheck),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
         insertClaimEventForDecision(reference, eligibilityId, claimId, decision, note, caseworker),
-        updateRelatedClaimRemainingOverpaymentAmount(claimId, reference),
+        updateRemainingOverpaymentAmounts(claimId, reference, decision),
         sendClaimNotification(reference, eligibilityId, claimId, decision)])
     })
 }
@@ -77,6 +77,14 @@ function updateClaimExpense (claimExpenseResponse) {
 function insertClaimEventForDecision (reference, eligibilityId, claimId, decision, note, caseworker) {
   const event = `CLAIM-${decision}`
   return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, caseworker, false)
+}
+
+function updateRemainingOverpaymentAmounts (claimId, reference, decision) {
+  if (decision === claimDecisionEnum.APPROVED) {
+    return updateRelatedClaimRemainingOverpaymentAmount(claimId, reference)
+  } else {
+    return Promise.resolve(null)
+  }
 }
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {

@@ -14,7 +14,7 @@
     <p class="heading-small">This claim is for a claimant that has been overpaid</p> 
     <ul class="list"> 
     {% for overpaidClaim in overpaidClaims %} 
-      <li><a href='/claim/{{ overpaidClaim.ClaimId }}'>{{ getDateFormatted.shortDate(overpaidClaim.DateOfJourney) }} - Total: £{{ overpaidClaim.OverpaymentAmount }}, Remaining: £{{ overpaidClaim.RemainingOverpaymentAmount }}</a></li> 
+      <li><a href='/claim/{{ overpaidClaim.ClaimId }}'>{{ getDateFormatted.shortDate(overpaidClaim.DateOfJourney) }} - Remaining: £{{ overpaidClaim.RemainingOverpaymentAmount }}</a></li> 
     {% endfor %} 
     </ul> 
   </div> 

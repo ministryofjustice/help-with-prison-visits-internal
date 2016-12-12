@@ -376,7 +376,8 @@ module.exports.getTestData = function (reference, status) {
 }
 
 module.exports.insertClaim = function (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount, remainingOverpaymentAmount) {
-  knex('Claim')
+  return knex('Claim')
+    .returning('ClaimId')
     .insert({
       ClaimId: claimId,
       EligibilityId: eligibilityId,
@@ -389,7 +390,6 @@ module.exports.insertClaim = function (claimId, eligibilityId, reference, date, 
       OverpaymentAmount: overpaymentAmount,
       RemainingOverpaymentAmount: remainingOverpaymentAmount
     })
-    .returning('ClaimId')
 }
 
 function insertClaimDeduction (claimId, reference, eligibilityId, deductionType, amount) {
