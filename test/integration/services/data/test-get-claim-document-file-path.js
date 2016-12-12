@@ -16,7 +16,7 @@ describe('services/data/get-claim-document-file-path', function () {
       })
   })
 
-  it('should return list of claims and total', function () {
+  it('should have expected file path', function () {
     return getClaimDocumentFilePath(claimDocumentId)
       .then(function (result) {
         expect(result.Filepath).to.equal('/example/path/1')

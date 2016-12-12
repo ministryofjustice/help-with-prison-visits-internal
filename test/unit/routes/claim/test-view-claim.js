@@ -16,7 +16,7 @@ var stubCheckLastUpdated
 var stubInsertDeduction
 var stubDisableDeduction
 var stubClaimDeduction
-var stubGetClaimDocumatFilePath
+var stubGetClaimDocumentFilePath
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 var bodyParser = require('body-parser')
@@ -53,7 +53,7 @@ describe('routes/claim/view-claim', function () {
     stubInsertDeduction = sinon.stub()
     stubDisableDeduction = sinon.stub()
     stubClaimDeduction = sinon.stub()
-    stubGetClaimDocumatFilePath = sinon.stub()
+    stubGetClaimDocumentFilePath = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -66,7 +66,7 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/insert-deduction': stubInsertDeduction,
       '../../services/data/disable-deduction': stubDisableDeduction,
       '../../services/domain/claim-deduction': stubClaimDeduction,
-      '../../services/data/get-claim-document-file-path': stubGetClaimDocumatFilePath
+      '../../services/data/get-claim-document-file-path': stubGetClaimDocumentFilePath
     })
     app = express()
     app.use(bodyParser.json())
@@ -197,15 +197,15 @@ describe('routes/claim/view-claim', function () {
       Filepath: 'test/resources/testfile.txt'
     }
 
-    it('should respond respond with 200 if valid path entered', function () {
-      stubGetClaimDocumatFilePath.resolves(CLAIM_DOCUMENT)
+    it('should respond respond with 200 if a valid file path is returned', function () {
+      stubGetClaimDocumentFilePath.resolves(CLAIM_DOCUMENT)
       return supertest(app)
         .get('/claim/123/download?claim-document-id=55')
         .expect(200)
         .expect('content-length', '4')
     })
 
-    it('should respond with 500 if no path provided', function () {
+    it('should respond with 500 if no claim-document-id provided', function () {
       return supertest(app)
         .get('/claim/123/download')
         .expect(500)
