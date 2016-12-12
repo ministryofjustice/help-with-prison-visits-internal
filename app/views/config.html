@@ -13,25 +13,18 @@
   {% include "includes/validation-error-messages.html" %}
 
   <form action="/config" method="post">
-  <h1 class="table-heading">Configuration</h1>
+  <h1 class="table-heading">Auto Approval Configuration</h1>
     <div class="form-group">
       <table class="table">
-        <thead>
-          <tr>
-          <th>Rule</th>
-          <th>Description</th>
-          <th></th>
-          </tr>
-        </thead>
         <tbody>
           <tr {% if errors['auto-approval-enabled'][0] %} class="warning" {% endif %}>
-            <td>
+            <td width="22%">
               Auto approval enabled
             </td>
             <td>
-              Controls auto approval globally
+              Controls whether claims that meet the rules below will be automatically approved
             </td>
-            <td>
+            <td width="20%">
               <div class="pull-right">
                 <label for="auto-approval-on" class="block-label inline">
                   <input id="auto-approval-on" type="radio" name="AutoApprovalEnabled" value="true" {% if autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
@@ -44,16 +37,28 @@
               </div>
             </td>
           </tr>
-
+        </tbody>
+      </table>
+      <br>
+      <table class="table">
+        <thead>
+          <tr>
+          <th>Value</th>
+          <th>Description</th>
+          <th></th>
+          </tr>
+        </thead>
+        <tbody>
           <tr {% if errors['cost-variance-percentage'][0] %} class="warning" {% endif %}>
             <td>
               Auto approval cost variance
             </td>
             <td>
-              Controls the cost variance used for auto approval
+              Controls the cost variance percentage used for auto approval (e.g. 10)
             </td>
-            <td>
-              <input id="cost-variance-percentage" type="text" name="CostVariancePercentage" class="form-control pull-right" value="{{ autoApprovalConfig.CostVariancePercentage }}">
+            <td width="20%" class="percentage-wrapper">
+              <span>%</span>
+              <input id="cost-variance-percentage" type="text" name="CostVariancePercentage" class="form-control" value="{{ autoApprovalConfig.CostVariancePercentage }}">
             </td>
           </tr>
 
@@ -62,10 +67,11 @@
               Max claim total
             </td>
             <td>
-              Controls the maximum claim total that can be auto-approved
+              Controls the maximum claim total that can be auto-approved (e.g. 250)
             </td>
-            <td>
-              <input id="max-claim-total" type="text" name="MaxClaimTotal" class="form-control pull-right" value="{{ autoApprovalConfig.MaxClaimTotal }}">
+            <td class="pound-wrapper">
+              <span>£</span>
+              <input id="max-claim-total" type="text" name="MaxClaimTotal" class="form-control" value="{{ autoApprovalConfig.MaxClaimTotal }}">
             </td>
           </tr>
 
@@ -74,10 +80,11 @@
               Max days after APVU visit
             </td>
             <td>
-              Controls the number of days after a visit that a claim can be auto-approved
+              Controls the number of days after a visit that a claim can be auto-approved (e.g. 28)
             </td>
             <td>
-              <input id="max-days-after-apvu-visit" type="text" name="MaxDaysAfterAPVUVisit" class="form-control pull-right" value="{{ autoApprovalConfig.MaxDaysAfterAPVUVisit }}">
+              <input id="max-days-after-apvu-visit" type="text" name="MaxDaysAfterAPVUVisit" class="form-control" value="{{ autoApprovalConfig.MaxDaysAfterAPVUVisit }}">
+              <label>days</label>
             </td>
           </tr>
 
@@ -86,18 +93,19 @@
               Max number of claims per year
             </td>
             <td>
-              Controls the maximum number of claims that can be auto-approved per year
+              Controls the maximum number of claims that can be auto-approved per year (e.g. 26)
             </td>
             <td>
-              <input id="max-number-of-claims-per-year" type="text" name="MaxNumberOfClaimsPerYear" class="form-control pull-right" value="{{ autoApprovalConfig.MaxNumberOfClaimsPerYear }}">
+              <input id="max-number-of-claims-per-year" type="text" name="MaxNumberOfClaimsPerYear" class="form-control" value="{{ autoApprovalConfig.MaxNumberOfClaimsPerYear }}">
+              <label>claims</label>
             </td>
           </tr>
+        </thead>
         </tbody>
       </table>
     </div>
 
     <!-- Rules -->
-    <h1 class="table-heading">Checks</h1>
     <div class="form-group">
       <table class="table">
         <thead>
