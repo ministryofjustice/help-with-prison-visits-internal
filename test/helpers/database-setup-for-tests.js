@@ -160,6 +160,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           Reference: reference,
           DocumentType: data.ClaimDocument['visit-confirmation'].DocumentType,
           DocumentStatus: data.ClaimDocument['visit-confirmation'].DocumentStatus,
+          Filepath: '/example/path/1',
           DateSubmitted: date,
           IsEnabled: data.ClaimDocument['visit-confirmation'].IsEnabled
         })
@@ -175,6 +176,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           Reference: reference,
           DocumentType: data.ClaimDocument['benefit'].DocumentType,
           DocumentStatus: data.ClaimDocument['benefit'].DocumentStatus,
+          Filepath: '/example/path/2',
           DateSubmitted: date,
           IsEnabled: data.ClaimDocument['benefit'].IsEnabled
         })
@@ -191,6 +193,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           Reference: reference,
           DocumentType: data.ClaimDocument['expense'].DocumentType,
           DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+          Filepath: '/example/path/3',
           DateSubmitted: date,
           IsEnabled: data.ClaimDocument['expense'].IsEnabled
         })
@@ -207,6 +210,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           Reference: reference,
           DocumentType: data.ClaimDocument['expense'].DocumentType,
           DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+          Filepath: '/example/path/4',
           DateSubmitted: date,
           IsEnabled: data.ClaimDocument['expense'].IsEnabled
         })

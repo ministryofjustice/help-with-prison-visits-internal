@@ -18,6 +18,7 @@
       {% if Claim['AssistedDigitalCaseworker'] %}
       <span class="bold-small">Assisted digital - </span>{{ Claim['AssistedDigitalCaseworker'] }}
       {% endif %}
+      <span class="tag {{ Claim['ClaimType'] }}" \>{{ displayHelper.getClaimTypeDisplayName(Claim['ClaimType']) }} {% if Claim['IsAdvanceClaim'] %} - Advance{% endif %}</span>
     </div>
 
     <div class="column-quarter">

@@ -1,5 +1,6 @@
 const authorisation = require('../../services/authorisation')
 const getIndividualClaimDetails = require('../../services/data/get-individual-claim-details')
+const getClaimDocumentFilePath = require('../../services/data/get-claim-document-file-path')
 const getDateFormatted = require('../../views/helpers/date-helper')
 const getClaimExpenseDetailFormatted = require('../../views/helpers/claim-expense-helper')
 const getChildFormatted = require('../../views/helpers/child-helper')
@@ -87,12 +88,19 @@ module.exports = function (router) {
   router.get('/claim/:claimId/download', function (req, res) {
     authorisation.isCaseworker(req)
 
-    var path = req.query.path
-    if (path) {
-      res.download(path)
-    } else {
-      throw new Error('No path to file provided')
+    var claimDocumentId = req.query['claim-document-id']
+    if (!claimDocumentId) {
+      throw new Error('Invalid Document ID')
     }
+
+    getClaimDocumentFilePath(claimDocumentId)
+      .then(function (document) {
+        if (document && document.Filepath) {
+          res.download(document.Filepath)
+        } else {
+          throw new Error('No path to file provided')
+        }
+      })
   })
 }
 
