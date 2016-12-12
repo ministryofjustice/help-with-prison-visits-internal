@@ -90,9 +90,10 @@ module.exports = function (router) {
 
     var isOverpaid = req.body['is-overpaid'] === 'on'
     var overpaymentAmount = req.body['overpayment-amount']
+    var overpaymentReason = req.body['overpayment-reason']
 
     try {
-      var overpaymentResponse = new OverpaymentResponse(isOverpaid, overpaymentAmount)
+      var overpaymentResponse = new OverpaymentResponse(isOverpaid, overpaymentAmount, overpaymentReason)
 
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {

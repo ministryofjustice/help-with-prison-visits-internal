@@ -3,6 +3,7 @@ exports.up = function (knex, Promise) {
     table.boolean('IsOverpaid')
     table.decimal('OverpaymentAmount')
     table.decimal('RemainingOverpaymentAmount')
+    table.string('OverpaymentReason', 250)
   })
 }
 
@@ -11,5 +12,6 @@ exports.down = function (knex, Promise) {
     table.dropColumn('IsOverpaid')
     table.dropColumn('OverpaymentAmount')
     table.dropColumn('RemainingOverpaymentAmount')
+    table.dropColumn('OverpaymentReason')
   })
 }

@@ -3,9 +3,10 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 
 class OverpaymentResponse {
-  constructor (isOverpaid, amount) {
+  constructor (isOverpaid, amount, reason) {
     this.isOverpaid = isOverpaid
     this.amount = amount
+    this.reason = reason
     this.IsValid()
   }
 

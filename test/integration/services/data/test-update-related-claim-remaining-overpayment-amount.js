@@ -6,7 +6,7 @@ const knex = require('knex')(config)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const updateRelatedClaimRemainingOverpaymentAmount = require('../../../../app/services/data/update-related-claims-remaining-overpayment-amount')
 
-describe('services/data/update-file-upload-details-for-claim', function () {
+describe('services/data/update-related-claim-remaining-overpayment-amount', function () {
   var REFERENCE = 'OVERPAY'
   var date = moment().toDate()
   var currentClaimId
