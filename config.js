@@ -38,5 +38,9 @@ module.exports = {
   EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'http://localhost:3000',
 
   // Value configurations
-  MAX_APPROVED_DIFFERENT_AMOUNT: process.env.MAX_APPROVED_DIFFERENT_AMOUNT || '250'
+  MAX_APPROVED_DIFFERENT_AMOUNT: process.env.MAX_APPROVED_DIFFERENT_AMOUNT || '250',
+
+  // Session and Cookie security (defaults for development)
+  INT_APPLICATION_SECRET: process.env.APVS_INT_APPLICATION_SECRET || 'secret',
+  INT_SECURE_COOKIE: process.env.APVS_INT_SECURE_COOKIE || 'false'
 }
