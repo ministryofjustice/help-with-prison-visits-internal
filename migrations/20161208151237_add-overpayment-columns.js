@@ -2,7 +2,7 @@ exports.up = function (knex, Promise) {
   return knex.schema.table('Claim', function (table) {
     table.boolean('IsOverpaid')
     table.decimal('OverpaymentAmount')
-    table.decimal('OutstandingOverpaymentAmount')
+    table.decimal('RemainingOverpaymentAmount')
   })
 }
 

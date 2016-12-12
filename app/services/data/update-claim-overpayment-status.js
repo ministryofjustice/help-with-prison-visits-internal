@@ -9,7 +9,10 @@ module.exports = function (claim, overpaymentResponse) {
     IsOverpaid: overpaymentResponse.isOverpaid
   }
 
-  if (overpaymentResponse.isOverpaid) { updateClaim.OverpaymentAmount = overpaymentResponse.amount }
+  if (overpaymentResponse.isOverpaid) {
+    updateClaim.OverpaymentAmount = overpaymentResponse.amount
+    updateClaim.RemainingOverpaymentAmount = overpaymentResponse.amount
+  }
 
   return knex('Claim')
     .where('ClaimId', claim.ClaimId)
