@@ -51,7 +51,7 @@ describe('views/helpers/display-helper', function () {
     expect(result).to.equal(deductionTypeEnum.HC3_DEDUCTION.displayName)
   })
 
-  it('should return the correct closed value for a given a valid claim status', function () {
+  it('should return the correct closed value given a valid claim status', function () {
     expect(displayHelper.getClaimStatusClosed(CLOSED_CLAIM_STATUS_VALUE)).to.be.true
     expect(displayHelper.getClaimStatusClosed(NOT_CLOSED_CLAIM_STATUS_VALUE)).to.be.false
   })

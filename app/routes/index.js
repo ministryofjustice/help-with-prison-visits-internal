@@ -1,5 +1,6 @@
 const authorisation = require('../services/authorisation')
 const getClaimsListAndCount = require('../services/data/get-claim-list-and-count')
+const claimStatusEnum = require('../constants/claim-status-enum')
 const displayHelper = require('../views/helpers/display-helper')
 
 module.exports = function (router) {
@@ -19,13 +20,13 @@ module.exports = function (router) {
     var status = req.params.status
     if (status === 'ADVANCE') {
       advanceClaims = true
-      status = 'NEW'
+      status = claimStatusEnum.NEW.value
     } else if (status === 'ADVANCE-APPROVED') {
       advanceClaims = true
-      status = 'APPROVED'
+      status = claimStatusEnum.APPROVED.value
     } else if (status === 'ADVANCE-UPDATED') {
       advanceClaims = true
-      status = 'UPDATED'
+      status = claimStatusEnum.UPDATED.value
     }
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length))
