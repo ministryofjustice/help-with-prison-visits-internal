@@ -16,9 +16,13 @@
     <p>{{ claimEvent.AdditionalData }}</p>
 
     {% if claimEvent.IsInternal %}
-    <p>{{ claimEvent.Note|safe }}</p>
+      <p>{{ claimEvent.Note|safe }}</p>
+      {% if claimEvent['ClaimDocumentId'] %}
+        <br>
+        <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ claimEvent['ClaimDocumentId'] }}">View previous document</a>
+      {% endif %}
     {% else %}
-    <p>{{ claimEvent.Note }}</p>
+      <p>{{ claimEvent.Note }}</p>
     {% endif %}
 
     <p class="time">{{ getDateFormatted.shortDateAndTime(claimEvent.DateAdded) }}</p>

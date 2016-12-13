@@ -19,7 +19,7 @@
 
       <div class="form-group">
         <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
-        <textarea type="text" class="form-control full" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
+        <textarea type="text" class="form-control" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
       </div>
 
       <input type="submit" class="button" name="approve" id="approve-submit" value="Send confirmation email to claimant">
@@ -32,7 +32,7 @@
         {% if errors['note'][0] %}
           <span class="error-message" id="error-message-note-request">{{ errors['note'][0] }}</span>
         {% endif %}
-        <textarea type="text" class="form-control full" name="additionalInfoRequest">{{ claimDecision['additionalInfoRequest'] }}</textarea>
+        <textarea type="text" class="form-control" name="additionalInfoRequest">{{ claimDecision['additionalInfoRequest'] }}</textarea>
       </div>
 
       <input type="submit" class="button" name="request" value="Send request email to claimant">
@@ -45,7 +45,7 @@
         {% if errors['note'][0] %}
           <span class="error-message" id="error-message-note-reject">{{ errors['note'][0] }}</span>
         {% endif %}
-        <textarea type="text" class="form-control full" name="additionalInfoReject">{{ claimDecision['additionalInfoReject'] }}</textarea>
+        <textarea type="text" class="form-control" name="additionalInfoReject">{{ claimDecision['additionalInfoReject'] }}</textarea>
       </div>
 
       <input type="submit" class="button" name="reject" value="Send rejection email to claimant">
