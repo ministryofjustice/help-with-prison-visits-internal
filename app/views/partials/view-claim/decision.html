@@ -1,3 +1,4 @@
+{% if not displayHelper.getClaimStatusClosed(Claim['Status']) %}
 <div id="decision" class="form-group {% if errors['decision'][0] %} error {% endif %}">
   <fieldset id='reason' >
     <label for="approve" class="block-label inline" data-target="accept-input">
@@ -71,3 +72,4 @@
 
   </fieldset>
 </div>
+{% endif %}
