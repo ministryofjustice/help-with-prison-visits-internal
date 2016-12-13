@@ -22,10 +22,10 @@ module.exports = function (claim, overpaymentResponse) {
     updateClaim.RemainingOverpaymentAmount = overpaymentResponse.amount
     updateClaim.OverpaymentReason = overpaymentResponse.reason
   } else if (toBeResolved) {
-    note = buildUpdateNote(claim.RemainingOverpaymentAmount, overpaymentResponse.remaining, overpaymentResponse.reason)
-
     updateClaim.RemainingOverpaymentAmount = overpaymentResponse.remaining
   } else if (toBeUpdated) {
+    note = buildUpdateNote(claim.RemainingOverpaymentAmount, overpaymentResponse.remaining, overpaymentResponse.reason)
+
     updateClaim.RemainingOverpaymentAmount = overpaymentResponse.remaining
   }
 
