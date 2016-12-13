@@ -95,33 +95,7 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/overpayment', function (req, res) {
     authorisation.isCaseworker(req)
-
-    var isOverpaid = req.body['is-overpaid'] === 'on'
-    var overpaymentAmount = req.body['overpayment-amount']
-    var overpaymentReason = req.body['overpayment-reason']
-
-    try {
-      var overpaymentResponse = new OverpaymentResponse(isOverpaid, overpaymentAmount, overpaymentReason)
-
-      return getIndividualClaimDetails(req.params.claimId)
-        .then(function (data) {
-          var claim = data.claim
-
-          return updateClaimOverpaymentStatus(claim, overpaymentResponse)
-            .then(function () {
-              return res.redirect(`/claim/${req.params.claimId}`)
-            })
-        })
-    } catch (error) {
-      getIndividualClaimDetails(req.params.claimId)
-        .then(function (data) {
-          return renderErrors(data, req, res, error)
-        })
-    }
-  })
-
-  router.post('/claim/:claimId/overpayment', function (req, res) {
-    authorisation.isCaseworker(req)
+    console.dir(req.body)
 
     try {
       return getIndividualClaimDetails(req.params.claimId)
@@ -221,6 +195,7 @@ function renderViewClaimPage (claimId, res) {
 }
 
 function renderErrors (data, req, res, error) {
+  console.dir(error)
   res.status(400).render('./claim/view-claim', {
     title: 'APVS Claim',
     Claim: data.claim,
