@@ -34,7 +34,8 @@ class ClaimDecision {
     claimExpenseResponses.forEach(function (expense) {
       if (expense.status === claimDecisionEnum.APPROVED) {
         expense.approvedCost = expense.cost
-      } else if (expense.status !== claimDecisionEnum.APPROVED_DIFF_AMOUNT) {
+      } else if (expense.status !== claimDecisionEnum.APPROVED_DIFF_AMOUNT &&
+                 expense.status !== claimDecisionEnum.MANUALLY_PROCESSED) {
         expense.approvedCost = null
       }
     })
