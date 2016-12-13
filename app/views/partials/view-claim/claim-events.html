@@ -18,8 +18,7 @@
     {% if claimEvent.IsInternal %}
       <p>{{ claimEvent.Note|safe }}</p>
       {% if claimEvent['ClaimDocumentId'] %}
-        <br>
-        <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ claimEvent['ClaimDocumentId'] }}">View previous document</a>
+        <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ claimEvent['ClaimDocumentId'] }}">View document</a>
       {% endif %}
     {% else %}
       <p>{{ claimEvent.Note }}</p>
