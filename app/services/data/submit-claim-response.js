@@ -15,14 +15,13 @@ module.exports = function (claimId, claimDecision) {
       var reference = result.Reference
       var caseworker = claimDecision.caseworker
       var decision = claimDecision.decision
-      var reason = claimDecision.reason
       var note = claimDecision.note
       var nomisCheck = claimDecision.nomisCheck
       var dwpCheck = claimDecision.dwpCheck
       var visitConfirmationCheck = claimDecision.visitConfirmationCheck
 
       return Promise.all([updateEligibility(eligibilityId, decision),
-        updateClaim(claimId, caseworker, decision, reason, note, visitConfirmationCheck),
+        updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck),
         updateVisitor(eligibilityId, dwpCheck),
         updatePrisoner(eligibilityId, nomisCheck),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
@@ -35,11 +34,10 @@ function updateEligibility (eligibilityId, decision) {
   return knex('Eligibility').where('EligibilityId', eligibilityId).update('Status', decision)
 }
 
-function updateClaim (claimId, caseworker, decision, reason, note, visitConfirmationCheck) {
+function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck) {
   return knex('Claim').where('ClaimId', claimId).update({
     'Caseworker': caseworker,
     'Status': decision,
-    'Reason': reason,
     'Note': note,
     'VisitConfirmationCheck': visitConfirmationCheck,
     'DateReviewed': moment().toDate(),

@@ -42,7 +42,6 @@ describe('services/data/submit-claim-response', function () {
     var claimResponse = {
       'caseworker': caseworker,
       'decision': claimDecisionEnum.REJECTED,
-      'reason': 'No valid relationship to prisoner',
       'note': 'Could not verify in NOMIS',
       'nomisCheck': claimDecisionEnum.REJECTED,
       'dwpCheck': claimDecisionEnum.REJECTED,
@@ -66,7 +65,6 @@ describe('services/data/submit-claim-response', function () {
             expect(result.Caseworker).to.be.equal(caseworker)
             expect(result.Status[0]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Status[1]).to.be.equal(claimDecisionEnum.REJECTED)
-            expect(result.Reason).to.be.equal(claimResponse.reason)
             expect(result.Note).to.be.equal(claimResponse.note)
             expect(result.NomisCheck).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.DWPCheck).to.be.equal(claimDecisionEnum.REJECTED)
