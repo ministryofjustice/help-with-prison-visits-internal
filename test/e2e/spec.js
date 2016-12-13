@@ -52,11 +52,8 @@ describe('First time claim viewing flow', () => {
       .click('[for="approve"]')
       .click('#approve-submit')
 
-      // Back to index with changed results
-      .waitForExist('#claims_wrapper')
-      .click('#approved')
-
-      // Go to approved list
+      // Check that claim has been rejected
+      .url('/?status=APPROVED')
       .waitForExist('#claim' + claimId)
   })
 

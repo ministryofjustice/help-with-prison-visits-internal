@@ -82,6 +82,9 @@ function getClaimantDetails (claimId) {
       'Claim.DateOfJourney',
       'Claim.AssistedDigitalCaseworker',
       'Claim.Caseworker',
+      'Claim.VisitConfirmationCheck',
+      'Claim.LastUpdated',
+      'Claim.Status',
       'Visitor.FirstName',
       'Visitor.LastName',
       'Visitor.DateOfBirth',
@@ -101,9 +104,7 @@ function getClaimantDetails (claimId) {
       'Prisoner.DateOfBirth AS PrisonerDateOfBirth',
       'Prisoner.PrisonNumber',
       'Prisoner.NameOfPrison',
-      'Prisoner.NomisCheck',
-      'Claim.VisitConfirmationCheck',
-      'Claim.LastUpdated')
+      'Prisoner.NomisCheck')
 }
 
 function getClaimDocuments (claimId) {
