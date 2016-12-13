@@ -20,6 +20,12 @@ module.exports = function (router) {
     if (status === 'ADVANCE') {
       advanceClaims = true
       status = 'NEW'
+    } else if (status === 'ADVANCE-APPROVED') {
+      advanceClaims = true
+      status = 'APPROVED'
+    } else if (status === 'ADVANCE-UPDATED') {
+      advanceClaims = true
+      status = 'UPDATED'
     }
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length))

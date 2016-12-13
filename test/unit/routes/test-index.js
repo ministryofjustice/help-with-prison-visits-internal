@@ -79,5 +79,27 @@ describe('routes/index', function () {
           expect(getClaimsListAndCount.calledWith('NEW', true, 0, 10)).to.be.true
         })
     })
+
+    it('should call for approved advance claims when status is ADVANCE-APPROVED', function () {
+      getClaimsListAndCount.resolves({claims: [RETURNED_CLAIM], total: {Count: 0}})
+
+      return supertest(app)
+        .get('/claims/ADVANCE-APPROVED?draw=1&start=0&length=10')
+        .expect(200)
+        .expect(function (response) {
+          expect(getClaimsListAndCount.calledWith('APPROVED', true, 0, 10)).to.be.true
+        })
+    })
+
+    it('should call for updated advance claims when status is ADVANCE-UPDATED', function () {
+      getClaimsListAndCount.resolves({claims: [RETURNED_CLAIM], total: {Count: 0}})
+
+      return supertest(app)
+        .get('/claims/ADVANCE-UPDATED?draw=1&start=0&length=10')
+        .expect(200)
+        .expect(function (response) {
+          expect(getClaimsListAndCount.calledWith('UPDATED', true, 0, 10)).to.be.true
+        })
+    })
   })
 })
