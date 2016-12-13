@@ -5,6 +5,7 @@ const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const tasksEnum = require('../../constants/tasks-enum')
 const insertClaimEvent = require('./insert-claim-event')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
+const updateRelatedClaimRemainingOverpaymentAmount = require('./update-related-claims-remaining-overpayment-amount')
 
 module.exports = function (claimId, claimDecision) {
   return knex('Claim').where('ClaimId', claimId)
@@ -26,6 +27,7 @@ module.exports = function (claimId, claimDecision) {
         updatePrisoner(eligibilityId, nomisCheck),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
         insertClaimEventForDecision(reference, eligibilityId, claimId, decision, note, caseworker),
+        updateRemainingOverpaymentAmounts(claimId, reference, decision),
         sendClaimNotification(reference, eligibilityId, claimId, decision)])
     })
 }
@@ -73,6 +75,14 @@ function updateClaimExpense (claimExpenseResponse) {
 function insertClaimEventForDecision (reference, eligibilityId, claimId, decision, note, caseworker) {
   const event = `CLAIM-${decision}`
   return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, caseworker, false)
+}
+
+function updateRemainingOverpaymentAmounts (claimId, reference, decision) {
+  if (decision === claimDecisionEnum.APPROVED) {
+    return updateRelatedClaimRemainingOverpaymentAmount(claimId, reference)
+  } else {
+    return Promise.resolve(null)
+  }
 }
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {
