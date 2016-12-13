@@ -88,16 +88,16 @@ module.exports = function (router) {
   router.post('/claim/:claimId/overpayment', function (req, res) {
     authorisation.isCaseworker(req)
 
-    var isOverpaid = req.body['is-overpaid'] === 'on'
-    var overpaymentAmount = req.body['overpayment-amount']
-    var overpaymentReason = req.body['overpayment-reason']
-
     try {
-      var overpaymentResponse = new OverpaymentResponse(isOverpaid, overpaymentAmount, overpaymentReason)
-
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           var claim = data.claim
+
+          var overpaymentAmount = req.body['overpayment-amount']
+          var overpaymentRemaining = req.body['overpayment-remaining']
+          var overpaymentReason = req.body['overpayment-reason']
+
+          var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
 
           return updateClaimOverpaymentStatus(claim, overpaymentResponse)
             .then(function () {

@@ -49,6 +49,13 @@ class FieldValidator {
     return this
   }
 
+  isGreaterThanOrEqualToZero () {
+    if (!validator.isGreaterThanOrEqualToZero(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getIsGreaterThanOrEqualTo)
+    }
+    return this
+  }
+
   isLessThanMaximumDifferentApprovedAmount () {
     if (!validator.isLessThanMaximumDifferentApprovedAmount(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsLessThanMaximumDifferentApprovedAmount)

@@ -10,6 +10,7 @@ module.exports = {
   'deduction-type': 'A deduction type',
   'deduction-amount': 'A deduction amount',
   'overpayment-amount': 'An overpayment amount',
+  'overpayment-remaining': 'The remaining overpayment amount',
   'auto-approval-enabled': 'Auto approval enabled',
   'cost-variance-percentage': 'Auto approval cost variance',
   'max-claim-total': 'Max claim total',

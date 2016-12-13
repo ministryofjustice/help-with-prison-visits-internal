@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 const expect = require('chai').expect
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
@@ -5,29 +6,31 @@ const moment = require('moment')
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 const updateClaimOverpaymentStatus = require('../../../../app/services/data/update-claim-overpayment-status')
+const overpaymentActionEnum = require('../../../../app/constants/overpayment-action-enum')
 
 var date
 var reference = 'OVERPAY'
 var claimId
 
 describe('services/data/test-update-claim-overpayment-status', function () {
-  before(function () {
+  beforeEach(function () {
     date = moment().toDate()
     return databaseHelper.insertTestData(reference, date, 'Test').then(function (ids) {
       claimId = ids.claimId
     })
   })
 
-  it('should set IsOverpaid to true, and set OverpaymentAmount', function () {
-    var isOverpaid = true
-    var amount = '10'
+  it(`should mark a non-overpaid claim as overpaid (${overpaymentActionEnum.OVERPAID})`, function () {
+    var amount = '50'
+    var reason = 'Test Reason'
 
     return knex('IntSchema.Claim').first().where('ClaimId', claimId)
       .then(function (claimBefore) {
         var overpaymentResponse = {
-          isOverpaid: isOverpaid,
+          action: overpaymentActionEnum.OVERPAID,
           amount: amount,
-          reason: 'reason'
+          remaining: amount,
+          reason: reason
         }
 
         return updateClaimOverpaymentStatus(claimBefore, overpaymentResponse)
@@ -36,40 +39,87 @@ describe('services/data/test-update-claim-overpayment-status', function () {
               .then(function (claimAfter) {
                 return knex('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
                   .then(function (claimEvent) {
-                    expect(claimAfter.IsOverpaid).to.equal(isOverpaid)
+                    expect(claimAfter.IsOverpaid).to.be.true
                     expect(claimAfter.OverpaymentAmount.toString()).to.equal(amount)
-                    expect(claimAfter.OverpaymentReason).to.equal(overpaymentResponse.reason)
-                    expect(claimEvent.Event).to.equal('OVERPAID-CLAIM')
+                    expect(claimAfter.OverpaymentReason).to.equal(reason)
+                    expect(claimEvent.Event).to.equal(overpaymentActionEnum.OVERPAID)
                   })
               })
           })
       })
   })
 
-  it('should set IsOverpaid to false', function () {
-    var isOverpaid = false
+  it(`should update remaining amount for overpayment (${overpaymentActionEnum.UPDATE})`, function () {
+    var remaining = '25'
+    var reason = 'Test Reason'
 
-    return knex('IntSchema.Claim').first().where('ClaimId', claimId)
-      .then(function (claimBefore) {
-        var overpaymentResponse = {
-          isOverpaid: isOverpaid
-        }
+    return knex('Claim').where('ClaimId', claimId).update({IsOverpaid: true})
+      .then(function () {
+        return knex('IntSchema.Claim').first().where('ClaimId', claimId)
+          .then(function (claimBefore) {
+            var overpaymentResponse = {
+              action: overpaymentActionEnum.UPDATE,
+              remaining: remaining,
+              amount: '',
+              reason: reason
+            }
 
-        return updateClaimOverpaymentStatus(claimBefore, overpaymentResponse)
-          .then(function () {
-            return knex('IntSchema.Claim').first().where('ClaimId', claimId)
-              .then(function (claimAfter) {
-                return knex('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
-                  .then(function (claimEvent) {
-                    expect(claimAfter.IsOverpaid).to.equal(isOverpaid)
-                    expect(claimEvent.Event).to.equal('OVERPAID-CLAIM-RESOLVED')
+            return updateClaimOverpaymentStatus(claimBefore, overpaymentResponse)
+              .then(function () {
+                return knex('IntSchema.Claim').first().where('ClaimId', claimId)
+                  .then(function (claimAfter) {
+                    return knex('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
+                      .then(function (claimEvent) {
+                        expect(claimAfter.IsOverpaid).to.be.true
+                        expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)
+                        expect(claimAfter.OverpaymentAmount).to.be.equal(claimBefore.OverpaymentAmount)
+                        expect(claimAfter.OverpaymentReason).to.not.equal(reason)
+                        expect(claimEvent.Note).to.equal(reason)
+                        expect(claimEvent.Event).to.equal(overpaymentActionEnum.UPDATE)
+                      })
                   })
               })
           })
       })
   })
 
-  after(function () {
+  it(`should mark an overpaid claim as no longer overpaid (${overpaymentActionEnum.RESOLVE})`, function () {
+    var remaining = '0'
+    var reason = 'Test Reason'
+
+    return knex('Claim').where('ClaimId', claimId).update({IsOverpaid: true})
+      .then(function () {
+        return knex('IntSchema.Claim').first().where('ClaimId', claimId)
+          .then(function (claimBefore) {
+            var overpaymentResponse = {
+              action: overpaymentActionEnum.RESOLVE,
+              remaining: remaining,
+              amount: '',
+              reason: reason
+            }
+
+            return updateClaimOverpaymentStatus(claimBefore, overpaymentResponse)
+              .then(function () {
+                return knex('IntSchema.Claim').first().where('ClaimId', claimId)
+                  .then(function (claimAfter) {
+                    return knex('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
+                      .then(function (claimEvent) {
+                        expect(claimAfter.IsOverpaid).to.be.false
+                        expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)
+                        expect(claimAfter.OverpaymentAmount).to.be.equal(claimBefore.OverpaymentAmount)
+                        expect(claimAfter.OverpaymentReason).to.not.equal(reason)
+                        expect(claimEvent.Note).to.contain(`Previous remaining amount: £${claimBefore.RemainingOverpaymentAmount}`)
+                        expect(claimEvent.Note).to.contain(`New remaining amount: £${remaining}`)
+                        expect(claimEvent.Note).to.contain(reason)
+                        expect(claimEvent.Event).to.equal(overpaymentActionEnum.RESOLVE)
+                      })
+                  })
+              })
+          })
+      })
+  })
+
+  afterEach(function () {
     return databaseHelper.deleteAll(reference)
   })
 })
