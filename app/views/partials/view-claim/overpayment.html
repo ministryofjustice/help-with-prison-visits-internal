@@ -1,5 +1,10 @@
-<h1 class="table-heading">Overpaid?</h1>
 <table>
+  <thead>
+    <th><h1 class="table-heading">Overpaid?</h1></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </thead>
   <tbody>
     <tr {% if errors['overpayment-amount'] %} class='warning' {% endif %}>
       <td>Overpaid?<input type='checkbox' name='is-overpaid' class='form-checkbox' id='is-overpaid' {% if Claim['IsOverpaid'] %} checked {% endif %}></td>
