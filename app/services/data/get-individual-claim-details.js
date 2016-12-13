@@ -77,6 +77,7 @@ function getClaimantDetails (claimId) {
       'Claim.IsOverpaid',
       'Claim.OverpaymentAmount',
       'Claim.RemainingOverpaymentAmount',
+      'Claim.OverpaymentReason',
       'Claim.DateSubmitted',
       'Claim.DateOfJourney',
       'Claim.AssistedDigitalCaseworker',
