@@ -46,15 +46,24 @@
             <option {% if expense['Status'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
             <option {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} selected {% endif %} value="APPROVED-DIFF-AMOUNT" >Approve different amount</option>
             <option {% if expense['Status'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+            {% if Claim['IsAdvanceClaim'] %}
+            <option {% if expense['Status'] == 'MANUALLY-PROCESSED' %} selected {% endif %} value="MANUALLY-PROCESSED">Process manually</option>
+            {% endif %}
             <option {% if expense['Status'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject claim</option>
           </select>
-          <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text" name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost"
-            class="form-control cost" value="{{ expense['ApprovedCost'] }}" {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} style="display: inline" {% endif %}>
+          <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text"
+            name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ expense['ApprovedCost'] }}"
+            class="form-control cost
+              {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' or expense['Status'] == 'MANUALLY-PROCESSED' %}
+                display-inline
+              {% else %}
+                display-none
+              {% endif %}">
         </td>
       </tr>
 
     {% endfor %}
-    
+
     {% for deduction in deductions %}
     <tr>
       <td>

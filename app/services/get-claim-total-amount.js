@@ -3,7 +3,7 @@ module.exports = function (claimExpenses, claimDeductions) {
 
   if (claimExpenses && claimExpenses.length > 0) {
     claimExpenses.forEach(function (claimExpense) {
-      total += claimExpense.Cost
+      total += claimExpense.ApprovedCost ? claimExpense.ApprovedCost : claimExpense.Cost
     })
   }
 

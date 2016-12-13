@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
@@ -11,10 +12,12 @@ const tasksEnum = require('../../../../app/constants/tasks-enum')
 
 var stubInsertClaimEvent = sinon.stub().resolves()
 var stubInsertTaskSendClaimNotification = sinon.stub().resolves()
+var stubUpdateRelatedClaimsRemainingOverpaymentAmount = sinon.stub().resolves()
 
-const submitClaimResponse = proxyquire('../../../../app/services/data/submit-claim-response', {
+var submitClaimResponse = proxyquire('../../../../app/services/data/submit-claim-response', {
   './insert-claim-event': stubInsertClaimEvent,
-  './insert-task-send-claim-notification': stubInsertTaskSendClaimNotification
+  './insert-task-send-claim-notification': stubInsertTaskSendClaimNotification,
+  './update-related-claims-remaining-overpayment-amount': stubUpdateRelatedClaimsRemainingOverpaymentAmount
 })
 
 var reference = 'SUBC456'
@@ -37,12 +40,32 @@ describe('services/data/submit-claim-response', function () {
     })
   })
 
+  it('should update remaining overpayment amounts if claim is approved', function () {
+    var claimId = newIds.claimId
+    var claimResponse = {
+      'caseworker': caseworker,
+      'decision': claimDecisionEnum.APPROVED,
+      'reason': 'No valid relationship to prisoner',
+      'note': 'Could not verify in NOMIS',
+      'nomisCheck': claimDecisionEnum.APPROVED,
+      'dwpCheck': claimDecisionEnum.APPROVED,
+      'claimExpenseResponses': [
+        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.APPROVED},
+        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
+      ]
+    }
+
+    return submitClaimResponse(claimId, claimResponse)
+      .then(function () {
+        expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.calledWith(claimId, reference)).to.be.true
+      })
+  })
+
   it('should update eligibility and claim then call to send notification', function () {
     var claimId = newIds.claimId
     var claimResponse = {
       'caseworker': caseworker,
       'decision': claimDecisionEnum.REJECTED,
-      'reason': 'No valid relationship to prisoner',
       'note': 'Could not verify in NOMIS',
       'nomisCheck': claimDecisionEnum.REJECTED,
       'dwpCheck': claimDecisionEnum.REJECTED,
@@ -66,7 +89,6 @@ describe('services/data/submit-claim-response', function () {
             expect(result.Caseworker).to.be.equal(caseworker)
             expect(result.Status[0]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Status[1]).to.be.equal(claimDecisionEnum.REJECTED)
-            expect(result.Reason).to.be.equal(claimResponse.reason)
             expect(result.Note).to.be.equal(claimResponse.note)
             expect(result.NomisCheck).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.DWPCheck).to.be.equal(claimDecisionEnum.REJECTED)
@@ -75,6 +97,7 @@ describe('services/data/submit-claim-response', function () {
 
             expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).to.be.true
             expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true
+            expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).to.be.true
 
             return knex('IntSchema.ClaimExpense').where('ClaimId', newIds.claimId).select()
               .then(function (claimExpenses) {
@@ -90,5 +113,9 @@ describe('services/data/submit-claim-response', function () {
 
   after(function () {
     return databaseHelper.deleteAll(reference)
+  })
+
+  afterEach(function () {
+    stubUpdateRelatedClaimsRemainingOverpaymentAmount = sinon.stub().resolves()
   })
 })

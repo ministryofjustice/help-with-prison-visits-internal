@@ -1,5 +1,5 @@
 module.exports = {
-  'reason': 'Reason',
+  'note': 'Additional information',
   'decision': 'Decision',
   'claim-expense': 'Claim expense status',
   'approve-cost': 'New approved cost',
@@ -9,6 +9,7 @@ module.exports = {
   'upload': 'A document upload',
   'deduction-type': 'A deduction type',
   'deduction-amount': 'A deduction amount',
+  'overpayment-amount': 'An overpayment amount',
   'auto-approval-enabled': 'Auto approval enabled',
   'cost-variance-percentage': 'Auto approval cost variance',
   'max-claim-total': 'Max claim total',
