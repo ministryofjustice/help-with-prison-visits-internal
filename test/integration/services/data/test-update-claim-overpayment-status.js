@@ -37,7 +37,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
                 return knex('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
                   .then(function (claimEvent) {
                     expect(claimAfter.IsOverpaid).to.equal(isOverpaid)
-                    expect(claimAfter.OverpaymentAmount).to.equal(amount)
+                    expect(claimAfter.OverpaymentAmount.toString()).to.equal(amount)
                     expect(claimAfter.OverpaymentReason).to.equal(overpaymentResponse.reason)
                     expect(claimEvent.Event).to.equal('OVERPAID-CLAIM')
                   })

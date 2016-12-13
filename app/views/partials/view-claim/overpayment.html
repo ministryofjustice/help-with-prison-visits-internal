@@ -4,7 +4,7 @@
     <tr {% if errors['overpayment-amount'] %} class='warning' {% endif %}>
       <td>Overpaid?<input type='checkbox' name='is-overpaid' class='form-checkbox' id='is-overpaid' {% if Claim['IsOverpaid'] %} checked {% endif %}></td>
       <td>Amount:<input type='text' name='overpayment-amount' id='overpayment-amount' class='form-control' {% if Claim['OverpaymentAmount'] %} value='{{ Claim['OverpaymentAmount'] }}' {% endif %}></td>
-      <td>Reason<textarea type='text' name='overpayment-reason' id='overpayment-reason'></td>
+      <td>Reason<textarea type='text' name='overpayment-reason' id='overpayment-reason'>{% if Claim['OverpaymentReason'] %}{{ Claim['OverpaymentReason'] }}{% endif %}</textarea></td>
       <td><input type="submit" class="button pull-right grey" name="update-overpayment-status" id="update-overpayment-status" value="Submit"></td>
     </tr>
   </tbody>
