@@ -2,7 +2,9 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const getIndividualClaimDetails = require('./get-individual-claim-details')
 const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference')
+const insertClaimEvent = require('./insert-claim-event')
 const deductionTypeEnum = require('../../constants/deduction-type-enum')
+const overpaymentActionEnum = require('../../constants/overpayment-action-enum')
 
 module.exports = function (currentClaimId, reference) {
   return getIndividualClaimDetails(currentClaimId)
@@ -38,6 +40,7 @@ function subtractTotalDeductionsFromRemainingOverpayments (overpaidClaims, deduc
     var overpaidClaim = overpaidClaims[index]
     var currentRemainingOverpaymentAmount = overpaidClaim.RemainingOverpaymentAmount
     var newRemainingBalance = currentRemainingOverpaymentAmount - deductionsToBeSubtracted
+    var amountToBeDeductedFromClaim = newRemainingBalance - currentRemainingOverpaymentAmount
 
     if (newRemainingBalance < 0) {
       deductionsToBeSubtracted = newRemainingBalance * -1
@@ -48,19 +51,25 @@ function subtractTotalDeductionsFromRemainingOverpayments (overpaidClaims, deduc
 
     var isOverpaid = newRemainingBalance > 0
 
-    updates.push(updateRemainingOverpaymentAmount(overpaidClaim.ClaimId, newRemainingBalance, isOverpaid))
+    updates.push(updateRemainingOverpaymentAmount(overpaidClaim, newRemainingBalance, amountToBeDeductedFromClaim.toFixed(2), isOverpaid))
     index++
   }
 
   return Promise.all(updates)
 }
 
-function updateRemainingOverpaymentAmount (claimId, newRemainingOverpaymentAmount, isOverpaid) {
+function updateRemainingOverpaymentAmount (claim, newRemainingOverpaymentAmount, deductionAmount, isOverpaid) {
   var updatedClaim = {
-    ClaimId: claimId,
+    ClaimId: claim.ClaimId,
     RemainingOverpaymentAmount: newRemainingOverpaymentAmount,
     IsOverpaid: isOverpaid
   }
 
-  return knex('Claim').where('ClaimId', claimId).update(updatedClaim)
+  var eventLabel = isOverpaid ? overpaymentActionEnum.UPDATE : overpaymentActionEnum.RESOLVE
+  var note = `Deduction of £${deductionAmount} applied on related claim`
+
+  return knex('Claim').where('ClaimId', claim.ClaimId).update(updatedClaim)
+    .then(function () {
+      return insertClaimEvent(claim.Reference, claim.EligibilityId, claim.ClaimId, eventLabel, null, note, null, true)
+    })
 }
