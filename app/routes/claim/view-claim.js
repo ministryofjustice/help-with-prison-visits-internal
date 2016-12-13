@@ -119,6 +119,33 @@ module.exports = function (router) {
         })
     }
   })
+
+  router.post('/claim/:claimId/overpayment', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    try {
+      return getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          var claim = data.claim
+
+          var overpaymentAmount = req.body['overpayment-amount']
+          var overpaymentRemaining = req.body['overpayment-remaining']
+          var overpaymentReason = req.body['overpayment-reason']
+
+          var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
+
+          return updateClaimOverpaymentStatus(claim, overpaymentResponse)
+            .then(function () {
+              return res.redirect(`/claim/${req.params.claimId}`)
+            })
+        })
+    } catch (error) {
+      getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          return renderErrors(data, req, res, error)
+        })
+    }
+  })
 }
 
 function removeDeduction (req, res, deductionId) {
