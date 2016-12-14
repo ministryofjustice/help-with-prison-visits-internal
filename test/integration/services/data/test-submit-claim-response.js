@@ -5,7 +5,7 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const claimDecisionEnum = require('../../../../app/constants/claim-decision-enum')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
@@ -26,7 +26,7 @@ var caseworker = 'adam@adams.gov'
 
 describe('services/data/submit-claim-response', function () {
   before(function () {
-    return databaseHelper.insertTestData(reference, moment().toDate(), 'NEW').then(function (ids) {
+    return databaseHelper.insertTestData(reference, dateFormatter.now().toDate(), 'NEW').then(function (ids) {
       newIds = {
         claimId: ids.claimId,
         eligibilityId: ids.eligibilityId,

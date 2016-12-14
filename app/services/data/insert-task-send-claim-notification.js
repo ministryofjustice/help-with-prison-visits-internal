@@ -1,6 +1,6 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 const tasksEnum = require('../../constants/tasks-enum')
 const taskStatusEnum = require('../../constants/task-status-enum')
 
@@ -19,7 +19,7 @@ module.exports = function (notificationType, reference, eligibilityId, claimId) 
       Reference: reference,
       ClaimId: claimId,
       AdditionalData: emailAddress,
-      DateCreated: moment().toDate(),
+      DateCreated: dateFormatter.now().toDate(),
       Status: taskStatusEnum.PENDING
     })
   })

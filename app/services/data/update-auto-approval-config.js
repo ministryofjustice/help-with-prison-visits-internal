@@ -1,6 +1,6 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 
 module.exports = function (autoApprovalConfig) {
   return knex('AutoApprovalConfig')
@@ -19,7 +19,7 @@ module.exports = function (autoApprovalConfig) {
       return knex('AutoApprovalConfig')
         .insert({
           Caseworker: autoApprovalConfig.caseworker,
-          DateCreated: moment().toDate(),
+          DateCreated: dateFormatter.now().toDate(),
           AutoApprovalEnabled: autoApprovalConfig.autoApprovalEnabled,
           CostVariancePercentage: autoApprovalConfig.costVariancePercentage,
           MaxClaimTotal: autoApprovalConfig.maxClaimTotal,

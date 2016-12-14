@@ -1,5 +1,5 @@
 var expect = require('chai').expect
-var moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 var getClaimLastUpdated = require('../../../../app/services/data/get-claim-last-updated')
@@ -10,7 +10,7 @@ var claimId
 describe('services/data/get-claim-last-updated', function () {
   describe('module', function () {
     before(function () {
-      date = moment()
+      date = dateFormatter.now()
       return databaseHelper.insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
       })

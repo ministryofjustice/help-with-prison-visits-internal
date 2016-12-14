@@ -1,8 +1,8 @@
 var expect = require('chai').expect
-var moment = require('moment')
 var sinon = require('sinon')
 var proxyquire = require('proxyquire')
 require('sinon-bluebird')
+var dateFormatter = require('../../../../app/services/date-formatter')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 var stubOverpaidClaimsData = {}
@@ -19,7 +19,7 @@ describe('services/data/get-individual-claim-details', function () {
   describe('get', function () {
     before(function () {
       testData = databaseHelper.getTestData(reference, 'Test')
-      date = moment().toDate()
+      date = dateFormatter.now().toDate()
       return databaseHelper.insertTestData(reference, date, 'Test').then(function (ids) {
         claimId = ids.claimId
       })

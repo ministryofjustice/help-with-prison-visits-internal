@@ -1,5 +1,5 @@
 var expect = require('chai').expect
-var moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
 var FileUpload = require('../../../../app/services/domain/file-upload')
@@ -15,7 +15,7 @@ describe('services/data/update-file-upload-details-for-claim', function () {
 
   before(function () {
     testData = databaseHelper.getTestData(REFERENCE, 'Test').ClaimDocument['visit-confirmation']
-    date = moment().toDate()
+    date = dateFormatter.now().toDate()
     return databaseHelper.insertTestData(REFERENCE, date, 'Test').then(function (ids) {
       claimDocumentId = ids.claimDocumentId1
       testFileUpload = new FileUpload({documentStatus: testData.DocumentStatus, path: 'testPath', dateSubmitted: date}, undefined, claimDocumentId, testData.Caseworker)
