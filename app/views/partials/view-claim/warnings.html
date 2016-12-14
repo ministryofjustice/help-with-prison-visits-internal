@@ -1,0 +1,27 @@
+{% if duplicates.length > 0 %} 
+  <div class="banner"> 
+    <p class="heading-small">This claim may be a duplicate</p> 
+    <ul class="list"> 
+    {% for duplicateClaim in duplicates %} 
+      <li><a href='/claim/{{ duplicateClaim.ClaimId }}'>{{ duplicateClaim.Reference }}</a></li> 
+    {% endfor %} 
+    </ul> 
+  </div> 
+{% endif %}
+
+{% if overpaidClaims.length > 0 %}
+  <div class="banner"> 
+    <p class="heading-small">This claim is for a claimant that has been overpaid</p> 
+    <ul class="list"> 
+    {% for overpaidClaim in overpaidClaims %} 
+      <li><a href='/claim/{{ overpaidClaim.ClaimId }}'>{{ getDateFormatted.shortDate(overpaidClaim.DateOfJourney) }} - Remaining: £{{ overpaidClaim.RemainingOverpaymentAmount }}</a></li> 
+    {% endfor %} 
+    </ul> 
+  </div> 
+{% endif %} 
+
+{% if Claim['IsOverpaid'] %}
+  <div class="banner"> 
+    <p class="heading-small">This claim has been marked as overpaid</p>
+  </div>
+{% endif %}

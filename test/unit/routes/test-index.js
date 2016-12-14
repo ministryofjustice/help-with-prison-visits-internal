@@ -3,6 +3,7 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const express = require('express')
 const mockViewEngine = require('./mock-view-engine')
+const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const sinon = require('sinon')
 require('sinon-bluebird')
 
@@ -76,7 +77,29 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith('NEW', true, 0, 10)).to.be.true
+          expect(getClaimsListAndCount.calledWith(claimStatusEnum.NEW.value, true, 0, 10)).to.be.true
+        })
+    })
+
+    it('should call for approved advance claims when status is ADVANCE-APPROVED', function () {
+      getClaimsListAndCount.resolves({claims: [RETURNED_CLAIM], total: {Count: 0}})
+
+      return supertest(app)
+        .get('/claims/ADVANCE-APPROVED?draw=1&start=0&length=10')
+        .expect(200)
+        .expect(function (response) {
+          expect(getClaimsListAndCount.calledWith(claimStatusEnum.APPROVED.value, true, 0, 10)).to.be.true
+        })
+    })
+
+    it('should call for updated advance claims when status is ADVANCE-UPDATED', function () {
+      getClaimsListAndCount.resolves({claims: [RETURNED_CLAIM], total: {Count: 0}})
+
+      return supertest(app)
+        .get('/claims/ADVANCE-UPDATED?draw=1&start=0&length=10')
+        .expect(200)
+        .expect(function (response) {
+          expect(getClaimsListAndCount.calledWith(claimStatusEnum.UPDATED.value, true, 0, 10)).to.be.true
         })
     })
   })

@@ -29,6 +29,11 @@ module.exports = {
     displayName: 'Claim submitted within time limit',
     description: 'Claim must be submitted within the specified time after the visit'
   },
+  IS_CLAIM_TOTAL_UNDER_LIMIT: {
+    value: 'is-claim-total-under-limit',
+    displayName: 'Claim total under limit',
+    description: 'The total amount of the claim must be under the set limit'
+  },
   IS_LATEST_MANUAL_CLAIM_APPROVED: {
     value: 'is-latest-manual-claim-approved',
     displayName: 'Latest manual claim approved',
@@ -45,13 +50,18 @@ module.exports = {
     description: 'Prison must not be in Guernsey or Jersey'
   },
   IS_VISIT_IN_THE_PAST: {
-    value: 'is-visit-in-the-past',
+    value: 'is-visit-in-past',
     displayName: 'Visit in the past',
     description: 'Visit must be in the past'
   },
   VISIT_DATE_DIFFERENT_TO_PREVIOUS_CLAIMS: {
-    value: 'is-visit-date-different-to-previous-claims',
+    value: 'visit-date-different-to-previous-claims',
     displayName: 'Visit date different to previous claims',
     description: 'The visit date must be different to the dates of previous claims'
+  },
+  CLAIMANT_HAS_NOT_OVERPAID: {
+    value: 'claimant-has-not-been-overpaid',
+    displayName: 'Claimant not overpaid on a previous claim',
+    description: 'Then claimant must not have an associated claim that has been flagged as overpaid'
   }
 }

@@ -5,6 +5,7 @@ const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const tasksEnum = require('../../constants/tasks-enum')
 const insertClaimEvent = require('./insert-claim-event')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
+const updateRelatedClaimRemainingOverpaymentAmount = require('./update-related-claims-remaining-overpayment-amount')
 
 module.exports = function (claimId, claimDecision) {
   return knex('Claim').where('ClaimId', claimId)
@@ -15,18 +16,18 @@ module.exports = function (claimId, claimDecision) {
       var reference = result.Reference
       var caseworker = claimDecision.caseworker
       var decision = claimDecision.decision
-      var reason = claimDecision.reason
       var note = claimDecision.note
       var nomisCheck = claimDecision.nomisCheck
       var dwpCheck = claimDecision.dwpCheck
       var visitConfirmationCheck = claimDecision.visitConfirmationCheck
 
       return Promise.all([updateEligibility(eligibilityId, decision),
-        updateClaim(claimId, caseworker, decision, reason, note, visitConfirmationCheck),
+        updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck),
         updateVisitor(eligibilityId, dwpCheck),
         updatePrisoner(eligibilityId, nomisCheck),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
         insertClaimEventForDecision(reference, eligibilityId, claimId, decision, note, caseworker),
+        updateRemainingOverpaymentAmounts(claimId, reference, decision),
         sendClaimNotification(reference, eligibilityId, claimId, decision)])
     })
 }
@@ -35,11 +36,10 @@ function updateEligibility (eligibilityId, decision) {
   return knex('Eligibility').where('EligibilityId', eligibilityId).update('Status', decision)
 }
 
-function updateClaim (claimId, caseworker, decision, reason, note, visitConfirmationCheck) {
+function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck) {
   return knex('Claim').where('ClaimId', claimId).update({
     'Caseworker': caseworker,
     'Status': decision,
-    'Reason': reason,
     'Note': note,
     'VisitConfirmationCheck': visitConfirmationCheck,
     'DateReviewed': dateFormatter.now().toDate(),
@@ -75,6 +75,14 @@ function updateClaimExpense (claimExpenseResponse) {
 function insertClaimEventForDecision (reference, eligibilityId, claimId, decision, note, caseworker) {
   const event = `CLAIM-${decision}`
   return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, caseworker, false)
+}
+
+function updateRemainingOverpaymentAmounts (claimId, reference, decision) {
+  if (decision === claimDecisionEnum.APPROVED) {
+    return updateRelatedClaimRemainingOverpaymentAmount(claimId, reference)
+  } else {
+    return Promise.resolve(null)
+  }
 }
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {

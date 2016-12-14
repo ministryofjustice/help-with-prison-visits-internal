@@ -19,7 +19,7 @@ exports.up = function (knex, Promise) {
         Caseworker: null,
         DateCreated: dateFormatter.now().toDate(),
         AutoApprovalEnabled: 'true',
-        CostVariancePercentage: '0.1',
+        CostVariancePercentage: '10',
         MaxClaimTotal: '250',
         MaxDaysAfterAPVUVisit: '28',
         MaxNumberOfClaimsPerYear: '26',

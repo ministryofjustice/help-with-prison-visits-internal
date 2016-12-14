@@ -56,7 +56,7 @@
       {% for document in Claim.benefitDocument %}
         <br>
         {% if document['DocumentStatus'] == 'uploaded' %}
-          <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ document['Filepath'] }}">View evidence</a>
+          <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ document['ClaimDocumentId'] }}">View evidence</a>
         {% elif document['DocumentStatus'] == 'upload-later' %}
           <span class="text-pending">To be uploaded later</span>
           <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-upload-later" class="button grey pull-right">Add</a>

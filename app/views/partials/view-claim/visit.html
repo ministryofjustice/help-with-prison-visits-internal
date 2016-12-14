@@ -5,7 +5,7 @@
       <td>{{ getDateFormatted.shortDate(Claim['DateOfJourney']) }}</td>
       <td>
         {% if Claim.visitConfirmation['DocumentStatus'] == 'uploaded' %}
-          <a href="/claim/{{ Claim['ClaimId'] }}/download?path={{ Claim.visitConfirmation['Filepath'] }}">View confirmation</a>
+          <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ Claim.visitConfirmation['ClaimDocumentId'] }}">View confirmation</a>
 
         {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
           <span class="text-pending">To be uploaded later</span>

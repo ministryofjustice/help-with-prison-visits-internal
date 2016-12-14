@@ -13,6 +13,20 @@ const claimExpenses = [
   }
 ]
 
+const claimExpensesApprovedCost = [
+  {
+    Cost: 5,
+    ApprovedCost: 3
+  },
+  {
+    Cost: 10,
+    ApprovedCost: null
+  },
+  {
+    Cost: 10
+  }
+]
+
 const claimDeductions = [
   {
     Amount: 5
@@ -33,5 +47,11 @@ describe('services/get-claim-total-amount', function () {
     var total = getClaimTotalAmount(claimExpenses, [])
 
     expect(total).to.equal('30.00')
+  })
+
+  it('should calculate the correct total value when approved cost is different from initial cost', function () {
+    var total = getClaimTotalAmount(claimExpensesApprovedCost, [])
+
+    expect(total).to.equal('23.00')
   })
 })

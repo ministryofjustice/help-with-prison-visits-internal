@@ -1,5 +1,6 @@
 const authorisation = require('../../services/authorisation')
 const getIndividualClaimDetails = require('../../services/data/get-individual-claim-details')
+const getClaimDocumentFilePath = require('../../services/data/get-claim-document-file-path')
 const getDateFormatted = require('../../views/helpers/date-helper')
 const getClaimExpenseDetailFormatted = require('../../views/helpers/claim-expense-helper')
 const getChildFormatted = require('../../views/helpers/child-helper')
@@ -18,6 +19,8 @@ const checkLastUpdated = require('../../services/check-last-updated')
 const insertDeduction = require('../../services/data/insert-deduction')
 const disableDeduction = require('../../services/data/disable-deduction')
 const ClaimDeduction = require('../../services/domain/claim-deduction')
+const updateClaimOverpaymentStatus = require('../../services/data/update-claim-overpayment-status')
+const OverpaymentResponse = require('../../services/domain/overpayment-response')
 
 var claimExpenses
 
@@ -63,19 +66,7 @@ module.exports = function (router) {
                 data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
                 data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
               }
-              return res.status(400).render('./claim/view-claim', {
-                title: 'APVS Claim',
-                Claim: data.claim,
-                Expenses: data.claimExpenses,
-                getDateFormatted: getDateFormatted,
-                getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
-                getDisplayFieldName: getDisplayFieldName,
-                prisonerRelationshipsEnum: prisonerRelationshipsEnum,
-                displayHelper: displayHelper,
-                claimDecision: req.body,
-                deductions: data.deductions,
-                errors: error.validationErrors
-              })
+              return renderErrors(data, req, res, error)
             })
         } else {
           throw error
@@ -87,11 +78,45 @@ module.exports = function (router) {
   router.get('/claim/:claimId/download', function (req, res) {
     authorisation.isCaseworker(req)
 
-    var path = req.query.path
-    if (path) {
-      res.download(path)
-    } else {
-      throw new Error('No path to file provided')
+    var claimDocumentId = req.query['claim-document-id']
+    if (!claimDocumentId) {
+      throw new Error('Invalid Document ID')
+    }
+
+    getClaimDocumentFilePath(claimDocumentId)
+      .then(function (document) {
+        if (document && document.Filepath) {
+          res.download(document.Filepath)
+        } else {
+          throw new Error('No path to file provided')
+        }
+      })
+  })
+
+  router.post('/claim/:claimId/overpayment', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    var isOverpaid = req.body['is-overpaid'] === 'on'
+    var overpaymentAmount = req.body['overpayment-amount']
+    var overpaymentReason = req.body['overpayment-reason']
+
+    try {
+      var overpaymentResponse = new OverpaymentResponse(isOverpaid, overpaymentAmount, overpaymentReason)
+
+      return getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          var claim = data.claim
+
+          return updateClaimOverpaymentStatus(claim, overpaymentResponse)
+            .then(function () {
+              return res.redirect(`/claim/${req.params.claimId}`)
+            })
+        })
+    } catch (error) {
+      getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          return renderErrors(data, req, res, error)
+        })
     }
   })
 }
@@ -130,8 +155,6 @@ function submitClaimDecision (req, res, claimExpenses) {
     req.user.email,
     req.body.assistedDigitalCaseworker,
     req.body.decision,
-    req.body.reasonRequest,
-    req.body.reasonReject,
     req.body.additionalInfoApprove,
     req.body.additionalInfoRequest,
     req.body.additionalInfoReject,
@@ -164,7 +187,24 @@ function renderViewClaimPage (claimId, res) {
         displayHelper: displayHelper,
         duplicates: data.duplicates,
         claimEvents: data.claimEvents,
-        deductions: data.deductions
+        deductions: data.deductions,
+        overpaidClaims: data.overpaidClaims
       })
     })
+}
+
+function renderErrors (data, req, res, error) {
+  res.status(400).render('./claim/view-claim', {
+    title: 'APVS Claim',
+    Claim: data.claim,
+    Expenses: data.claimExpenses,
+    getDateFormatted: getDateFormatted,
+    getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
+    getDisplayFieldName: getDisplayFieldName,
+    prisonerRelationshipsEnum: prisonerRelationshipsEnum,
+    displayHelper: displayHelper,
+    claimDecision: req.body,
+    deductions: data.deductions,
+    errors: error.validationErrors
+  })
 }
