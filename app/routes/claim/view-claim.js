@@ -157,42 +157,44 @@ function submitClaimDecision (req, res, claimExpenses) {
 }
 
 function updateOverpaymentStatus (req, res) {
-  try {
-    return getIndividualClaimDetails(req.params.claimId)
-      .then(function (data) {
-        var claim = data.claim
+  return getIndividualClaimDetails(req.params.claimId)
+    .then(function (data) {
+      var claim = data.claim
 
-        var overpaymentAmount = req.body['overpayment-amount']
-        var overpaymentRemaining = req.body['overpayment-remaining']
-        var overpaymentReason = req.body['overpayment-reason']
+      var overpaymentAmount = req.body['overpayment-amount']
+      var overpaymentRemaining = req.body['overpayment-remaining']
+      var overpaymentReason = req.body['overpayment-reason']
 
-        var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
+      var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
 
-        return updateClaimOverpaymentStatus(claim, overpaymentResponse)
-          .then(function () {
-            return res.redirect(`/claim/${req.params.claimId}`)
-          })
-      })
-  } catch (error) {
-    getIndividualClaimDetails(req.params.claimId)
-      .then(function (data) {
-        return renderErrors(data, req, res, error)
-      })
-  }
+      return updateClaimOverpaymentStatus(claim, overpaymentResponse)
+        .then(function () {
+          return res.redirect(`/claim/${req.params.claimId}`)
+        })
+    })
+  .catch(function (error) {
+    if (error instanceof ValidationError) {
+      getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          return renderErrors(data, req, res, error)
+        })
+    } else {
+      throw error
+    }
+  })
 }
 
 function setAdvanceClaimStatusToClosed (req, res) {
-  try {
-    return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
-      .then(function () {
-        return res.redirect(`/`)
-      })
-  } catch (error) {
+  return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
+    .then(function () {
+      return res.redirect(`/`)
+    })
+  .catch(function (error) {
     getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
         return renderErrors(data, req, res, error)
       })
-  }
+  })
 }
 
 function requestNewPaymentDetails (req, res) {
