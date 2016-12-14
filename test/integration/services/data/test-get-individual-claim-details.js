@@ -1,5 +1,4 @@
 var expect = require('chai').expect
-var moment = require('moment')
 var sinon = require('sinon')
 var proxyquire = require('proxyquire')
 require('sinon-bluebird')
