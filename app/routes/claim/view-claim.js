@@ -93,30 +93,13 @@ module.exports = function (router) {
       })
   })
 
-  router.post('/claim/:claimId/overpayment', function (req, res) {
+  router.post('/claim/:claimId/closed-claim-action', function (req, res) {
     authorisation.isCaseworker(req)
 
-    try {
-      return getIndividualClaimDetails(req.params.claimId)
-        .then(function (data) {
-          var claim = data.claim
-
-          var overpaymentAmount = req.body['overpayment-amount']
-          var overpaymentRemaining = req.body['overpayment-remaining']
-          var overpaymentReason = req.body['overpayment-reason']
-
-          var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
-
-          return updateClaimOverpaymentStatus(claim, overpaymentResponse)
-            .then(function () {
-              return res.redirect(`/claim/${req.params.claimId}`)
-            })
-        })
-    } catch (error) {
-      getIndividualClaimDetails(req.params.claimId)
-        .then(function (data) {
-          return renderErrors(data, req, res, error)
-        })
+    if (req.body['update-overpayment-status']) {
+      updateOverpaymentStatus(req, res)
+    } else if (req.body['close-advance-claim']) {
+      closeAdvanceClaim(req, res)
     }
   })
 }
@@ -170,9 +153,48 @@ function submitClaimDecision (req, res, claimExpenses) {
     })
 }
 
+function updateOverpaymentStatus (req, res) {
+  try {
+    return getIndividualClaimDetails(req.params.claimId)
+      .then(function (data) {
+        var claim = data.claim
+
+        var overpaymentAmount = req.body['overpayment-amount']
+        var overpaymentRemaining = req.body['overpayment-remaining']
+        var overpaymentReason = req.body['overpayment-reason']
+
+        var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
+
+        return updateClaimOverpaymentStatus(claim, overpaymentResponse)
+          .then(function () {
+            return res.redirect(`/claim/${req.params.claimId}`)
+          })
+      })
+  } catch (error) {
+    getIndividualClaimDetails(req.params.claimId)
+      .then(function (data) {
+        return renderErrors(data, req, res, error)
+      })
+  }
+}
+
+function closeAdvanceClaim (req, res) {
+  try {
+    // TODO: close claim
+    return res.redirect(`/`)
+  } catch (error) {
+    getIndividualClaimDetails(req.params.claimId)
+      .then(function (data) {
+        return renderErrors(data, req, res, error)
+      })
+  }
+}
+
 function renderViewClaimPage (claimId, res) {
   getIndividualClaimDetails(claimId)
     .then(function (data) {
+      console.log(data.claim.Status)
+      console.log(displayHelper.getClaimStatusClosed(data.claim.Status))
       return res.render('./claim/view-claim', {
         title: 'APVS Claim',
         Claim: data.claim,
