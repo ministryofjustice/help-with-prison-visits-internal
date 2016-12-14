@@ -5,11 +5,11 @@ const knex = require('knex')(config)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 const disableDeduction = require('../../../../app/services/data/disable-deduction')
-var reference = 'V123456'
+var reference = 'CCACTION'
 var date
 var claimDeductionId
 
-describe('services/data/disable-deduction', function () {
+describe('services/data/close-advance-claim', function () {
   describe('module', function () {
     before(function () {
       date = dateFormatter.now()

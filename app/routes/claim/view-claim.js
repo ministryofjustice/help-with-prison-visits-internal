@@ -21,6 +21,7 @@ const disableDeduction = require('../../services/data/disable-deduction')
 const ClaimDeduction = require('../../services/domain/claim-deduction')
 const updateClaimOverpaymentStatus = require('../../services/data/update-claim-overpayment-status')
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
+const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 
 var claimExpenses
 
@@ -96,10 +97,12 @@ module.exports = function (router) {
   router.post('/claim/:claimId/closed-claim-action', function (req, res) {
     authorisation.isCaseworker(req)
 
-    if (req.body['update-overpayment-status']) {
+    if (req.body['closed-claim-action'] === 'OVERPAYMENT') {
       updateOverpaymentStatus(req, res)
-    } else if (req.body['close-advance-claim']) {
-      closeAdvanceClaim(req, res)
+    } else if (req.body['closed-claim-action'] === 'CLOSE-ADVANCE-CLAIM') {
+      setAdvanceClaimStatusToClosed(req, res)
+    } else if (req.body['closed-claim-action'] === 'REQUEST-NEW-PAYMENT-DETAILS') {
+      requestNewPaymentDetails(req, res)
     }
   })
 }
@@ -178,9 +181,23 @@ function updateOverpaymentStatus (req, res) {
   }
 }
 
-function closeAdvanceClaim (req, res) {
+function setAdvanceClaimStatusToClosed (req, res) {
   try {
-    // TODO: close claim
+    return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
+      .then(function () {
+        return res.redirect(`/`)
+      })
+  } catch (error) {
+    getIndividualClaimDetails(req.params.claimId)
+      .then(function (data) {
+        return renderErrors(data, req, res, error)
+      })
+  }
+}
+
+function requestNewPaymentDetails (req, res) {
+  try {
+    // TODO: request new payment details
     return res.redirect(`/`)
   } catch (error) {
     getIndividualClaimDetails(req.params.claimId)
@@ -193,8 +210,6 @@ function closeAdvanceClaim (req, res) {
 function renderViewClaimPage (claimId, res) {
   getIndividualClaimDetails(claimId)
     .then(function (data) {
-      console.log(data.claim.Status)
-      console.log(displayHelper.getClaimStatusClosed(data.claim.Status))
       return res.render('./claim/view-claim', {
         title: 'APVS Claim',
         Claim: data.claim,

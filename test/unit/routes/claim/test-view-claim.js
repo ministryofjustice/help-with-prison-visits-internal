@@ -19,6 +19,7 @@ var stubClaimDeduction
 var stubGetClaimDocumentFilePath
 var stubUpdateClaimOverpaymentStatus
 var stubOverpaymentResponse
+var stubCloseAdvanceClaim
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 var bodyParser = require('body-parser')
@@ -38,10 +39,11 @@ const VALID_DATA_DISABLE_DEDUCTION = {
 const VALID_DATA_UPDATE_OVERPAYMENT_STATUS = {
   'overpayment-amount': '20',
   'overpayment-reason': 'cos',
-  'update-overpayment-status': 'Submit'
+  'closed-claim-action': 'OVERPAYMENT'
 }
 const VALID_DATA_CLOSE_ADVANCE_CLAIM = {
-  'close-advance-claim': 'Close'
+  'closed-claim-action': 'CLOSE-ADVANCE-CLAIM',
+  'close-advance-claim-reason': 'close advance claim reason'
 }
 const INCOMPLETE_DATA = {
   'decision': 'REJECTED',
@@ -66,6 +68,7 @@ describe('routes/claim/view-claim', function () {
     stubGetClaimDocumentFilePath = sinon.stub()
     stubUpdateClaimOverpaymentStatus = sinon.stub()
     stubOverpaymentResponse = sinon.stub()
+    stubCloseAdvanceClaim = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -80,7 +83,8 @@ describe('routes/claim/view-claim', function () {
       '../../services/domain/claim-deduction': stubClaimDeduction,
       '../../services/data/get-claim-document-file-path': stubGetClaimDocumentFilePath,
       '../../services/data/update-claim-overpayment-status': stubUpdateClaimOverpaymentStatus,
-      '../../services/domain/overpayment-response': stubOverpaymentResponse
+      '../../services/domain/overpayment-response': stubOverpaymentResponse,
+      '../../services/data/close-advance-claim': stubCloseAdvanceClaim
     })
     app = express()
     app.use(bodyParser.json())
@@ -227,7 +231,7 @@ describe('routes/claim/view-claim', function () {
   })
 
   describe('POST /claim/:claimId/close-claim-action', function () {
-    it('should responsd with 302 when valid data entered (add overpayment)', function () {
+    it('should respond with 302 when valid data entered (add overpayment)', function () {
       var claimData = { claim: { IsOverpaid: false } }
       var overpaymentResponse = {}
       stubGetIndividualClaimDetails.resolves(claimData)
@@ -243,13 +247,15 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
-    it('should responsd with 302 when valid data entered (close advance claim)', function () {
+    it('should respond with 302 when valid data entered (close advance claim)', function () {
+      stubCloseAdvanceClaim.resolves()
+
       return supertest(app)
         .post('/claim/123/closed-claim-action')
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(302)
         .expect(function () {
-          expect(stubUpdateClaimOverpaymentStatus.calledWith(claimData.claim, overpaymentResponse)).to.be.true
+          expect(stubCloseAdvanceClaim.calledWith('123', 'close advance claim reason')).to.be.true
         })
     })
   })
