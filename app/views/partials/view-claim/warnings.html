@@ -23,5 +23,8 @@
 {% if Claim['IsOverpaid'] %}
   <div class="banner"> 
     <p class="heading-small">This claim has been marked as overpaid</p>
+    <p>Total overpaid: £{{ Claim['OverpaymentAmount'] }}</p>
+    <p>Remaining: £{{ Claim['RemainingOverpaymentAmount'] }}</p>
+    <p>Reason: {{ Claim['OverpaymentReason'] }}</p>    
   </div>
 {% endif %}
