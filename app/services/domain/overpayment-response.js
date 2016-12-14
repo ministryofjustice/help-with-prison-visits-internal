@@ -37,15 +37,19 @@ class OverpaymentResponse {
 }
 
 function getOverpaymentStatus (amount, remaining, claimCurrentlyOverpaid) {
+  var result
+
   if (claimCurrentlyOverpaid) {
     if (remaining === '0') {
-      return overpaymentActionEnum.RESOLVE
+      result = overpaymentActionEnum.RESOLVE
     } else {
-      return overpaymentActionEnum.UPDATE
+      result = overpaymentActionEnum.UPDATE
     }
   } else {
-    return overpaymentActionEnum.OVERPAID
+    result = overpaymentActionEnum.OVERPAID
   }
+
+  return result
 }
 
 module.exports = OverpaymentResponse

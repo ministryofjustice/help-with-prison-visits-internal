@@ -95,7 +95,6 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/overpayment', function (req, res) {
     authorisation.isCaseworker(req)
-    console.dir(req.body)
 
     try {
       return getIndividualClaimDetails(req.params.claimId)
@@ -195,7 +194,6 @@ function renderViewClaimPage (claimId, res) {
 }
 
 function renderErrors (data, req, res, error) {
-  console.dir(error)
   res.status(400).render('./claim/view-claim', {
     title: 'APVS Claim',
     Claim: data.claim,
