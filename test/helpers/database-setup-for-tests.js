@@ -49,6 +49,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           VisitorId: uniqueId,
           EligibilityId: ids.eligibilityId,
           Reference: reference,
+          Title: data.Visitor.Title,
           FirstName: data.Visitor.FirstName,
           LastName: data.Visitor.LastName,
           NationalInsuranceNumber: data.Visitor.NationalInsuranceNumber,
@@ -288,6 +289,7 @@ module.exports.getTestData = function (reference, status) {
       NameOfPrison: 'Test'
     },
     Visitor: {
+      Title: 'Mr',
       FirstName: 'John',
       LastName: 'Smith',
       NationalInsuranceNumber: 'QQ123456C',
