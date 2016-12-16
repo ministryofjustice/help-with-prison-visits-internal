@@ -22,6 +22,7 @@ const ClaimDeduction = require('../../services/domain/claim-deduction')
 const updateClaimOverpaymentStatus = require('../../services/data/update-claim-overpayment-status')
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
 const closeAdvanceClaim = require('../../services/data/close-advance-claim')
+const Promise = require('bluebird')
 
 var claimExpenses
 
@@ -35,9 +36,11 @@ module.exports = function (router) {
   router.post('/claim/:claimId', function (req, res) {
     authorisation.isCaseworker(req)
 
-    getLastUpdated(req.params.claimId).then(function (lastUpdatedData) {
-      try {
-        var updateConflict = checkLastUpdated(lastUpdatedData.LastUpdated, req.body.lastUpdated)
+    var updateConflict
+
+    return Promise.try(function () {
+      return getLastUpdated(req.params.claimId).then(function (lastUpdatedData) {
+        updateConflict = checkLastUpdated(lastUpdatedData.LastUpdated, req.body.lastUpdated)
         if (updateConflict) {
           throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
         }
@@ -57,21 +60,22 @@ module.exports = function (router) {
           claimExpenses = getClaimExpenseResponses(req.body)
           return submitClaimDecision(req, res, claimExpenses)
         }
-      } catch (error) {
-        if (error instanceof ValidationError) {
-          getIndividualClaimDetails(req.params.claimId)
-            .then(function (data) {
-              if (data.claim && data.claimExpenses && !updateConflict) {
-                data.claim.NomisCheck = req.body.nomisCheck
-                data.claim.DWPCheck = req.body.dwpCheck
-                data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
-                data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
-              }
-              return renderErrors(data, req, res, error)
-            })
-        } else {
-          throw error
-        }
+      })
+    })
+    .catch(function (error) {
+      if (error instanceof ValidationError) {
+        return getIndividualClaimDetails(req.params.claimId)
+          .then(function (data) {
+            if (data.claim && data.claimExpenses && !updateConflict) {
+              data.claim.NomisCheck = req.body.nomisCheck
+              data.claim.DWPCheck = req.body.dwpCheck
+              data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
+              data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
+            }
+            return renderErrors(data, req, res, error)
+          })
+      } else {
+        throw error
       }
     })
   })
@@ -150,28 +154,30 @@ function submitClaimDecision (req, res, claimExpenses) {
     claimExpenses
   )
 
-  SubmitClaimResponse(req.params.claimId, claimDecision)
+  return SubmitClaimResponse(req.params.claimId, claimDecision)
     .then(function () {
       return res.redirect('/')
     })
 }
 
 function updateOverpaymentStatus (req, res) {
-  return getIndividualClaimDetails(req.params.claimId)
-    .then(function (data) {
-      var claim = data.claim
+  return Promise.try(function () {
+    return getIndividualClaimDetails(req.params.claimId)
+      .then(function (data) {
+        var claim = data.claim
 
-      var overpaymentAmount = req.body['overpayment-amount']
-      var overpaymentRemaining = req.body['overpayment-remaining']
-      var overpaymentReason = req.body['overpayment-reason']
+        var overpaymentAmount = req.body['overpayment-amount']
+        var overpaymentRemaining = req.body['overpayment-remaining']
+        var overpaymentReason = req.body['overpayment-reason']
 
-      var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
+        var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
 
-      return updateClaimOverpaymentStatus(claim, overpaymentResponse)
-        .then(function () {
-          return res.redirect(`/claim/${req.params.claimId}`)
-        })
-    })
+        return updateClaimOverpaymentStatus(claim, overpaymentResponse)
+          .then(function () {
+            return res.redirect(`/claim/${req.params.claimId}`)
+          })
+      })
+  })
   .catch(function (error) {
     if (error instanceof ValidationError) {
       getIndividualClaimDetails(req.params.claimId)
@@ -185,28 +191,39 @@ function updateOverpaymentStatus (req, res) {
 }
 
 function setAdvanceClaimStatusToClosed (req, res) {
-  return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
+  return Promise.try(function () {
+    return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
     .then(function () {
       return res.redirect(`/`)
     })
+  })
   .catch(function (error) {
-    getIndividualClaimDetails(req.params.claimId)
-      .then(function (data) {
-        return renderErrors(data, req, res, error)
-      })
+    if (error instanceof ValidationError) {
+      return getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          return renderErrors(data, req, res, error)
+        })
+    } else {
+      throw error
+    }
   })
 }
 
 function requestNewPaymentDetails (req, res) {
-  try {
+  return Promise.try(function () {
     // TODO: request new payment details
     return res.redirect(`/`)
-  } catch (error) {
-    getIndividualClaimDetails(req.params.claimId)
-      .then(function (data) {
-        return renderErrors(data, req, res, error)
-      })
-  }
+  })
+  .catch(function (error) {
+    if (error instanceof ValidationError) {
+      getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          return renderErrors(data, req, res, error)
+        })
+    } else {
+      throw error
+    }
+  })
 }
 
 function renderViewClaimPage (claimId, res) {
