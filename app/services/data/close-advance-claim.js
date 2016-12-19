@@ -1,0 +1,15 @@
+const config = require('../../../knexfile').intweb
+const knex = require('knex')(config)
+const insertClaimEvent = require('./insert-claim-event')
+const claimStatusEnum = require('../../constants/claim-status-enum')
+
+module.exports = function (claimId, note) {
+  return knex('Claim')
+    .where('ClaimId', claimId)
+    .returning(['Reference', 'EligibilityId'])
+    .update({ Status: claimStatusEnum.APPROVED_ADVANCE_CLOSED.value })
+      .then(function (updatedClaimData) {
+        var claim = updatedClaimData[0]
+        return insertClaimEvent(claim.Reference, claim.EligibilityId, claimId, 'CLOSE-ADVANCE-CLAIM', null, note, null, true)
+      })
+}

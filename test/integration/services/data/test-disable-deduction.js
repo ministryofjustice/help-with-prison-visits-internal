@@ -9,7 +9,7 @@ var reference = 'V123456'
 var date
 var claimDeductionId
 
-describe('services/data/insert-deduction', function () {
+describe('services/data/disable-deduction', function () {
   describe('module', function () {
     before(function () {
       date = dateFormatter.now()

@@ -1,0 +1,64 @@
+{% if displayHelper.getClaimStatusClosed(Claim['Status']) %}
+  <br >
+  <div id="closedClaimAction" class="form-group">
+    <fieldset id='closedClaimActions' >
+      <!-- Radio Buttons -->
+      <label for="overpayment-toggle" class="block-label inline" data-target="overpayment-input">
+        <input type="radio" name="closed-claim-action" value="OVERPAYMENT" id="overpayment-toggle">
+        <span>Manage Overpayment</span>
+      </label>
+
+      {% if Claim['Status'] == 'APPROVED' and Claim['IsAdvanceClaim'] == true %}
+      <label for="close-toggle" class="block-label inline" data-target="close-advanced-claim-input">
+        <input type="radio" name="closed-claim-action" value="CLOSE-ADVANCE-CLAIM" id="close-toggle">
+        <span>Close Advance Claim</span>
+      </label>
+      {% endif %}
+
+      <label for="request-new-payment-details-toggle" class="block-label inline" data-target="requestNewPaymentDetails-input">
+        <input type="radio" name="closed-claim-action" value="REQUEST-NEW-PAYMENT-DETAILS" id="request-new-payment-details-toggle">
+        <span>Request new payment details</span>
+      </label>
+      <!-- End of Radio Buttons -->
+
+      <!-- Manage Overpayments -->
+      <div class="panel js-hidden" id="overpayment-input">
+        {% if Claim['IsOverpaid'] != true %}
+        <div class="form-group" id='overpayment-amount-group' >
+          <label class="form-label-bold" for="overpayment-amount">Amount</label>
+          <input type='text' name='overpayment-amount' id='overpayment-amount' class='form-control'>
+        </div>
+        {% endif %}
+        {% if Claim['IsOverpaid'] == true %}
+        <div class="form-group" id='overpayment-remaining-group'>
+          <label class="form-label-bold" for="overpayment-remaining">Remaining</label>
+          <input type='text' name='overpayment-remaining' id='overpayment-remaining' class='form-control'>
+        </div>
+        {% endif %}
+        <div class="form-group" id='overpayment-reason-group'>
+          <label class="form-label-bold" for="overpayment-reason">Reason</label>
+          <textarea name='overpayment-reason' id='overpayment-reason'></textarea>
+        </div>
+        <input type="submit" class="button grey" name="update-overpayment-status" id="update-overpayment-status" value="Submit">
+      </div>
+      <!-- End of Manage Overpayments -->
+
+      <!-- Close Advance Claim -->
+      <div class="panel js-hidden" id="close-advanced-claim-input">
+        <div class="form-group">
+          <label class="form-label-bold" for="close-advance-claim-reason">Additional information (optional)</label>
+          <textarea id="close-advance-claim-reason" class="form-control" name="close-advance-claim-reason"></textarea>
+        </div>
+
+        <input type="submit" class="button" name="close-advance-claim" id="close-advance-claim-submit" value="Submit">
+      </div>
+      <!-- End of Close Advanced Claim -->
+
+      <!-- Request New Payment Details -->
+      <div class="panel js-hidden" id="requestNewPaymentDetails-input">
+        
+      </div>
+      <!--End of Request New Payment Details-->
+    </fieldset>
+  </div>
+{% endif %}
