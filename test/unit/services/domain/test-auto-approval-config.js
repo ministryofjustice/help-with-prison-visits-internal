@@ -10,6 +10,7 @@ describe('services/domain/auto-approve-config', function () {
   const VALID_MAX_CLAIM_TOTAL = '250'
   const VALID_MAX_DAYS_AFTER_APVU_VISIT = '28'
   const VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR = '26'
+  const VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH = '4'
   const VALID_RULES_DISABLED = ['visit-in-the-past', 'first-time-claim-approved']
 
   it('should contruct a domain object given valid input', function () {
@@ -20,6 +21,7 @@ describe('services/domain/auto-approve-config', function () {
       VALID_MAX_CLAIM_TOTAL,
       VALID_MAX_DAYS_AFTER_APVU_VISIT,
       VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+      VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
       VALID_RULES_DISABLED
     )
 
@@ -29,6 +31,7 @@ describe('services/domain/auto-approve-config', function () {
     expect(autoApprovalConfig.maxClaimTotal).to.equal(VALID_MAX_CLAIM_TOTAL)
     expect(autoApprovalConfig.maxDaysAfterAPVUVisit).to.equal(VALID_MAX_DAYS_AFTER_APVU_VISIT)
     expect(autoApprovalConfig.maxNumberOfClaimsPerYear).to.equal(VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR)
+    expect(autoApprovalConfig.maxNumberOfClaimsPerMonth).to.equal(VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH)
     expect(autoApprovalConfig.rulesDisabled).to.equal(VALID_RULES_DISABLED)
   })
 
@@ -41,6 +44,7 @@ describe('services/domain/auto-approve-config', function () {
         VALID_MAX_CLAIM_TOTAL,
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
     } catch (e) {
@@ -59,6 +63,7 @@ describe('services/domain/auto-approve-config', function () {
         VALID_MAX_CLAIM_TOTAL,
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
     } catch (e) {
@@ -77,6 +82,7 @@ describe('services/domain/auto-approve-config', function () {
         VALID_MAX_CLAIM_TOTAL,
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
     } catch (e) {
@@ -95,6 +101,7 @@ describe('services/domain/auto-approve-config', function () {
         '',
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
     } catch (e) {
@@ -113,6 +120,7 @@ describe('services/domain/auto-approve-config', function () {
         'invalid input',
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
     } catch (e) {
@@ -131,6 +139,7 @@ describe('services/domain/auto-approve-config', function () {
         VALID_MAX_CLAIM_TOTAL,
         '',
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
     } catch (e) {
@@ -149,6 +158,7 @@ describe('services/domain/auto-approve-config', function () {
         VALID_MAX_CLAIM_TOTAL,
         'invalid input',
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
     } catch (e) {
@@ -167,11 +177,31 @@ describe('services/domain/auto-approve-config', function () {
         VALID_MAX_CLAIM_TOTAL,
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         '',
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['max-number-of-claims-per-year'][0]).to.equal('Max number of claims per year is required')
+      done()
+    }
+  })
+
+  it('should throw an isRequired error for maxNumberOfClaimsPerMonth given an empty string', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        VALID_COST_VARIANCE_PERCENTAGE,
+        VALID_MAX_CLAIM_TOTAL,
+        VALID_MAX_DAYS_AFTER_APVU_VISIT,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        '',
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['max-number-of-claims-per-month'][0]).to.equal('Max number of claims per month is required')
       done()
     }
   })
@@ -185,11 +215,31 @@ describe('services/domain/auto-approve-config', function () {
         VALID_MAX_CLAIM_TOTAL,
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         'invalid input',
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['max-number-of-claims-per-year'][0]).to.equal('Max number of claims per year must only contain numbers')
+      done()
+    }
+  })
+
+  it('should throw an isNumeric error for maxNumberOfClaimsPerMonth given an alpha input', function (done) {
+    try {
+      autoApprovalConfig = new AutoApprovalConfig(
+        VALID_CASEWORKER,
+        VALID_AUTO_APPROVAL_ENABLED,
+        VALID_COST_VARIANCE_PERCENTAGE,
+        VALID_MAX_CLAIM_TOTAL,
+        VALID_MAX_DAYS_AFTER_APVU_VISIT,
+        VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
+        'invalid input',
+        VALID_RULES_DISABLED
+      )
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['max-number-of-claims-per-month'][0]).to.equal('Max number of claims per month must only contain numbers')
       done()
     }
   })

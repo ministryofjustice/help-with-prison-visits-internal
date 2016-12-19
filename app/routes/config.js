@@ -27,7 +27,6 @@ module.exports = function (router) {
     authorisation.isAdmin(req)
 
     var rulesDisabled = generateRulesDisabled(req.body.rulesEnabled || [])
-
     try {
       var autoApprovalConfig = new AutoApprovalConfig(
         req.user.email,
@@ -36,6 +35,7 @@ module.exports = function (router) {
         req.body.MaxClaimTotal,
         req.body.MaxDaysAfterAPVUVisit,
         req.body.MaxNumberOfClaimsPerYear,
+        req.body.MaxNumberOfClaimsPerMonth,
         rulesDisabled
       )
 

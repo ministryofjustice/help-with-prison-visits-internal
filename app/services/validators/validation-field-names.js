@@ -15,5 +15,6 @@ module.exports = {
   'cost-variance-percentage': 'Auto approval cost variance',
   'max-claim-total': 'Max claim total',
   'max-days-after-apvu-visit': 'Max days after APVU visit',
-  'max-number-of-claims-per-year': 'Max number of claims per year'
+  'max-number-of-claims-per-year': 'Max number of claims per year',
+  'max-number-of-claims-per-month': 'Max number of claims per month'
 }
