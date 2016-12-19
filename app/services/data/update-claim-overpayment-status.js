@@ -4,7 +4,7 @@ const knex = require('knex')(config)
 const insertClaimEvent = require('./insert-claim-event')
 const overpaymentActionEnum = require('../../constants/overpayment-action-enum')
 
-const newLine = '\r\n'
+const newLine = '<br >'
 
 module.exports = function (claim, overpaymentResponse) {
   var eventLabel = overpaymentResponse.action
@@ -40,7 +40,6 @@ module.exports = function (claim, overpaymentResponse) {
 function buildUpdateNote (previousRemainingAmount, newRemainingAmount, note) {
   var result = []
   result.push(note)
-  result.push(newLine)
   result.push(`Previous remaining amount: £${previousRemainingAmount}`)
   result.push(`New remaining amount: £${newRemainingAmount}`)
 
