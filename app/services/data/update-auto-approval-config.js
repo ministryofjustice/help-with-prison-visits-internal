@@ -25,6 +25,7 @@ module.exports = function (autoApprovalConfig) {
           MaxClaimTotal: autoApprovalConfig.maxClaimTotal,
           MaxDaysAfterAPVUVisit: autoApprovalConfig.maxDaysAfterAPVUVisit,
           MaxNumberOfClaimsPerYear: autoApprovalConfig.maxNumberOfClaimsPerYear,
+          MaxNumberOfClaimsPerMonth: autoApprovalConfig.maxNumberOfClaimsPerMonth,
           RulesDisabled: rulesDisabledJoined,
           IsEnabled: 'true'
         })

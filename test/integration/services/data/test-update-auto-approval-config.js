@@ -17,6 +17,7 @@ describe('services/data/update-auto-approval-config', function () {
         MaxClaimTotal: '100.00',
         MaxDaysAfterAPVUVisit: '28',
         MaxNumberOfClaimsPerYear: '10',
+        MaxNumberOfClaimsPerMonth: '2',
         RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
         IsEnabled: 'true'
       })
@@ -34,6 +35,7 @@ describe('services/data/update-auto-approval-config', function () {
       maxClaimTotal: null,
       maxDaysAfterAPVUVisit: null,
       maxNumberOfClaimsPerYear: null,
+      MaxNumberOfClaimsPerMonth: null,
       rulesDisabled: ['auto-approval-rule-1', 'auto-approval-rule-2']
     }
     return updateAutoApprovalConfig(AutoApprovalConfig)
@@ -60,6 +62,7 @@ describe('services/data/update-auto-approval-config', function () {
       maxClaimTotal: null,
       maxDaysAfterAPVUVisit: null,
       maxNumberOfClaimsPerYear: null,
+      MaxNumberOfClaimsPerMonth: null,
       rulesDisabled: null
     }
     return updateAutoApprovalConfig(AutoApprovalConfig)

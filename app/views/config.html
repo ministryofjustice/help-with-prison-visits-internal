@@ -100,6 +100,19 @@
               <label>claims</label>
             </td>
           </tr>
+
+          <tr {% if errors['max-number-of-claims-per-month'][0] %} class="warning" {% endif %}>
+            <td>
+              Max number of claims per month
+            </td>
+            <td>
+              Controls the maximum number of claims that can be auto-approved per month (e.g. 4)
+            </td>
+            <td>
+              <input id="max-number-of-claims-per-month" type="text" name="MaxNumberOfClaimsPerMonth" class="form-control" value="{{ autoApprovalConfig.MaxNumberOfClaimsPerMonth }}">
+              <label>claims</label>
+            </td>
+          </tr>
         </thead>
         </tbody>
       </table>

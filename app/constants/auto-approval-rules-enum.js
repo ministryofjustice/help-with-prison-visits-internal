@@ -63,5 +63,10 @@ module.exports = {
     value: 'claimant-has-not-been-overpaid',
     displayName: 'Claimant not overpaid on a previous claim',
     description: 'Then claimant must not have an associated claim that has been flagged as overpaid'
+  },
+  HAS_CLAIMED_LESS_THAN_MAX_TIMES_THIS_MONTH: {
+    value: 'has-claimed-less-than-max-times-this-month',
+    displayName: 'Has claimed less than max times this month',
+    description: 'Claimant has not claimed more than the maximum number of claims in a month'
   }
 }

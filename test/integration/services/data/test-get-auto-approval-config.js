@@ -17,6 +17,7 @@ describe('services/data/get-auto-approval-config', function () {
         MaxClaimTotal: '100.00',
         MaxDaysAfterAPVUVisit: '28',
         MaxNumberOfClaimsPerYear: '10',
+        MaxNumberOfClaimsPerMonth: '2',
         RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
         IsEnabled: 'true'
       },
@@ -28,6 +29,7 @@ describe('services/data/get-auto-approval-config', function () {
         MaxClaimTotal: '100.00',
         MaxDaysAfterAPVUVisit: '28',
         MaxNumberOfClaimsPerYear: '10',
+        MaxNumberOfClaimsPerMonth: '2',
         RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-3',
         IsEnabled: 'false'
       }])
