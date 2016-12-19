@@ -39,4 +39,8 @@ exports.down = function (knex, Promise) {
     .then(function () {
       return knex.schema.dropTable('AutoApprovalConfig')
     })
+    .catch(function (error) {
+      console.log(error)
+      throw error
+    })
 }
