@@ -5,6 +5,10 @@ exports.up = function (knex, Promise) {
     table.decimal('RemainingOverpaymentAmount')
     table.string('OverpaymentReason', 250)
   })
+  .catch(function (error) {
+    console.log(error)
+    throw error
+  })
 }
 
 exports.down = function (knex, Promise) {
@@ -13,5 +17,9 @@ exports.down = function (knex, Promise) {
     table.dropColumn('OverpaymentAmount')
     table.dropColumn('RemainingOverpaymentAmount')
     table.dropColumn('OverpaymentReason')
+  })
+  .catch(function (error) {
+    console.log(error)
+    throw error
   })
 }
