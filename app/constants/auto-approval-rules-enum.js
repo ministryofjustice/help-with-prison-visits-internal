@@ -68,5 +68,10 @@ module.exports = {
     value: 'has-claimed-less-than-max-times-this-month',
     displayName: 'Has claimed less than max times this month',
     description: 'Claimant has not claimed more than the maximum number of claims in a month'
+  },
+  IS_CLAIMANT_TRUSTED: {
+    value: 'is-claimant-trusted',
+    displayName: 'Is the claimant trusted?',
+    description: 'Claimant has been marked as untrusted by a case worker'
   }
 }
