@@ -8,7 +8,7 @@
         <span>Manage Overpayment</span>
       </label>
 
-      {% if Claim['Status'] == 'APPROVED' and Claim['IsAdvanceClaim'] == true %}
+      {% if Claim['IsAdvanceClaim'] == true %}
       <label for="close-toggle" class="block-label inline" data-target="close-advanced-claim-input">
         <input type="radio" name="closed-claim-action" value="CLOSE-ADVANCE-CLAIM" id="close-toggle">
         <span>Close Advance Claim</span>
