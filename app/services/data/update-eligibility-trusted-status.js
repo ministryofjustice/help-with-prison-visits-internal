@@ -1,25 +1,33 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
+const moment = require('moment')
 const insertClaimEvent = require('./insert-claim-event')
 
-module.exports = function (claimId, isUntrusted, untrustedReason) {
+module.exports = function (claimId, isTrusted, untrustedReason) {
   return getEligibilityData(claimId)
     .then(function (eligibilityData) {
-      return knex('Eligibility')
-        .where('EligibilityId', eligibilityData.EligibilityId)
-        .update({
-          IsUntrusted: isUntrusted,
-          UntrustedReason: untrustedReason
-        })
-        .then(function () {
-          return insertClaimEvent(eligibilityData.Reference, eligibilityData.EligibilityId, claimId, 'UPDATE-CLAIM-TRUSTED-STATUS', null, untrustedReason, null, true)
-        })
+      if (isTrusted !== eligibilityData.IsTrusted) {
+        var updateObject = {
+          isTrusted: isTrusted,
+          UntrustedDate: !isTrusted ? moment().toDate() : null,
+          UntrustedReason: !isTrusted ? untrustedReason : null
+        }
+
+        return knex('Eligibility')
+          .where('EligibilityId', eligibilityData.EligibilityId)
+          .update(updateObject)
+          .then(function () {
+            var event = isTrusted ? 'ALLOW-AUTO-APPROVAL' : 'DISABLE-AUTO-APPROVAL'
+            return insertClaimEvent(eligibilityData.Reference, eligibilityData.EligibilityId, claimId, event, null, untrustedReason, null, true)
+          })
+      }
     })
 }
 
 function getEligibilityData (claimId) {
   return knex('Claim')
+    .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .where('ClaimId', claimId)
     .first()
-    .select('EligibilityId', 'Reference')
+    .select('Eligibility.EligibilityId', 'Eligibility.Reference', 'Eligibility.IsTrusted')
 }

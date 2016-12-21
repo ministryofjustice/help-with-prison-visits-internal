@@ -72,6 +72,6 @@ module.exports = {
   IS_CLAIMANT_TRUSTED: {
     value: 'is-claimant-trusted',
     displayName: 'Is the claimant trusted?',
-    description: 'Claimant has been marked as untrusted by a case worker'
+    description: 'Auto-approval has been disabled for this Claimant by a case worker'
   }
 }

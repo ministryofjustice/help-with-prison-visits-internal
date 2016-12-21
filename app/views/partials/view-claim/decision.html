@@ -23,6 +23,18 @@
         <textarea type="text" class="form-control" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
       </div>
 
+      <div class="form-group">
+        <label for='is-trusted' class="block-label" data-target="untrusted-reason-section">
+          <input type="checkbox" name='is-trusted' id='is-trusted' {% if Claim['IsTrusted'] === true %} checked {% endif %} />
+          <span>Allow auto-approval</span>
+        </label>
+        <div id='untrusted-reason-section' class='form-group {% if Claim['IsTrusted'] === true %} js-hidden {% endif %}'>
+          <br >
+          <label class='form-label-bold'>Reason for disabling auto-approval for this claimant</label>
+          <textarea type="text" class='form-control ' name="untrusted-reason" id='untrusted-reason'></textarea>
+        </div>
+      </div>
+
       <input type="submit" class="button" name="approve" id="approve-submit" value="Send confirmation email to claimant">
     </div>
 
