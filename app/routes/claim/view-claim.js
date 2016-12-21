@@ -239,7 +239,6 @@ function requestNewPaymentDetails (req, res) {
 function renderViewClaimPage (claimId, res) {
   getIndividualClaimDetails(claimId)
     .then(function (data) {
-      console.dir(data)
       return res.render('./claim/view-claim', {
         title: 'APVS Claim',
         Claim: data.claim,
