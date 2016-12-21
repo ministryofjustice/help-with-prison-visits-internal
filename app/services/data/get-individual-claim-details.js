@@ -71,6 +71,9 @@ function getClaimantDetails (claimId) {
     .first(
       'Eligibility.Reference',
       'Eligibility.EligibilityId',
+      'Eligibility.IsTrusted',
+      'Eligibility.UntrustedReason',
+      'Eligibility.UntrustedDate',
       'Claim.ClaimId',
       'Claim.ClaimType',
       'Claim.IsAdvanceClaim',

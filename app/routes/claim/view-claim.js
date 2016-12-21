@@ -22,6 +22,8 @@ const ClaimDeduction = require('../../services/domain/claim-deduction')
 const updateClaimOverpaymentStatus = require('../../services/data/update-claim-overpayment-status')
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
 const closeAdvanceClaim = require('../../services/data/close-advance-claim')
+const updateEligibilityTrustedStatus = require('../../services/data/update-eligibility-trusted-status')
+const claimDecisionEnum = require('../../../app/constants/claim-decision-enum')
 const Promise = require('bluebird')
 
 var claimExpenses
@@ -155,6 +157,14 @@ function submitClaimDecision (req, res, claimExpenses) {
   )
 
   return SubmitClaimResponse(req.params.claimId, claimDecision)
+    .then(function () {
+      if (claimDecision.decision === claimDecisionEnum.APPROVED) {
+        var isTrusted = req.body['is-trusted'] === 'on'
+        var untrustedReason = req.body['untrusted-reason']
+
+        return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
+      }
+    })
     .then(function () {
       return res.redirect('/')
     })
