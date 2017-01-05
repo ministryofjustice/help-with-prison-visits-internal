@@ -10,15 +10,13 @@
 
   {% include "includes/phase_banner_beta.html" %}
 
-  <div class="row">
-    <div class="search">
-      <form action="/search">
-        <label for="input-search-query">
-          <input id="input-search-query" type="text" name="q" class="form-control" value="{{ query }}">
-        </label>
-        <input type="submit" class="button" value="Search"></a>
-      </form>
-    </div>
+  <div class="search">
+    <form action="/search">
+      <label for="input-search-query">
+        <input id="input-search-query" type="text" name="q" class="form-control" value="{{ query }}">
+      </label>
+      <input type="submit" class="button" value="Search"></a>
+    </form>
   </div>
 
   <h2 class="heading-medium">Search results</h2>
