@@ -1,8 +1,6 @@
 var expect = require('chai').expect
 var dateFormatter = require('../../../../app/services/date-formatter')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
-var config = require('../../../../knexfile').migrations
-var knex = require('knex')(config)
 
 var testData
 var reference = 'SEARCH1'
