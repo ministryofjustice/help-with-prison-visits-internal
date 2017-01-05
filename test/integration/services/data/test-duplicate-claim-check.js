@@ -20,6 +20,7 @@ var claimIds = []
 
 describe('services/data/duplicate-claim-check', function () {
   describe('module', function () {
+    this.timeout(10000)
     before(function () {
       // Insert two duplicate claims, and a third unique claim
       testData = databaseHelper.getTestData(REFERENCE1, 'Test')
