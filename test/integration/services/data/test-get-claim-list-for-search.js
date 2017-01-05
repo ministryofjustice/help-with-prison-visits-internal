@@ -20,33 +20,33 @@ describe('services/data/get-claim-list-for-search', function () {
       })
   })
 
-  it('should return correct number of claims when a reference number is provided', function () {
+  it('should return inserted claim when a reference number is provided', function () {
     return getClaimsListForSearch(reference, 0, 10)
       .then(function (result) {
-        expect(result.claims.length, 'length should equal 1').to.equal(1)
-        expect(result.claims[0].Reference).to.equal(reference)
-        expect(result.claims[0].ClaimId).to.equal(claimId)
-        expect(result.total.Count, 'count should equal 1').to.equal(1)
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference
+        })
+        expect(claimsWithCurrentReference.length).to.equal(1)
       })
   })
 
-  it('should return correct number of claims when a NI number is provided', function () {
+  it('should return inserted claim when a NI number is provided', function () {
     return getClaimsListForSearch(testData.Visitor.NationalInsuranceNumber, 0, 10)
       .then(function (result) {
-        expect(result.claims.length, 'length should equal 1').to.equal(1)
-        expect(result.claims[0].Reference).to.equal(reference)
-        expect(result.claims[0].ClaimId).to.equal(claimId)
-        expect(result.total.Count, 'count should equal 1').to.equal(1)
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference
+        })
+        expect(claimsWithCurrentReference.length).to.equal(1)
       })
   })
 
-  it('should return correct number of claims when a Prison Number is provided', function () {
+  it('should return inserted claim when a Prison Number is provided', function () {
     return getClaimsListForSearch(testData.Prisoner.PrisonNumber, 0, 10)
       .then(function (result) {
-        expect(result.claims.length, 'length should equal 1').to.equal(1)
-        expect(result.claims[0].Reference).to.equal(reference)
-        expect(result.claims[0].ClaimId).to.equal(claimId)
-        expect(result.total.Count, 'count should equal 1').to.equal(1)
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference
+        })
+        expect(claimsWithCurrentReference.length).to.equal(1)
       })
   })
 
