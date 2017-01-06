@@ -540,3 +540,52 @@ ul.sub-tabs li a.active span.badge {
     margin-top: 1.0526315789em;
   }
 }
+
+#sub-nav {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-bottom: 1px solid #bfc1c3;
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
+  padding: 0;
+  z-index: 999;
+}
+
+#sub-nav li {
+  position: relative;
+  display: inline;
+}
+
+#sub-nav li img {
+  position: relative;
+  top: 2px;
+  right: 8px;
+}
+
+#sub-nav li a.active {
+  font-weight: bold;
+  background-color: #004A83;
+  color: #fff;
+}
+
+#sub-nav a {
+  display: inline-block;
+  font-weight: bold;
+  margin: 0;
+  outline: 0;
+  padding: 15px 30px;
+  text-decoration: none;
+}
+
+#dashboard .number {
+  font-size: 65px;
+  font-weight: bold;
+}
+
+#dashboard h2 {
+  border-top: 2px solid #bfc1c3;
+  font-size: 30px;
+  font-weight: bold;
+  margin: 30px 0 5px 0;
+  padding: 15px 0 0 0;
+}
