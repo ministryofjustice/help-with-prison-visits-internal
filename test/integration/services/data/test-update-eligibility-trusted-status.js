@@ -31,7 +31,7 @@ describe('services/data/update-eligibility-trusted-status', function () {
       claimId1 = ids.claimId
       eligibilityId1 = ids.eligibilityId
 
-      return databaseHelper.insertTestData(REFERENCE, dateFormatter.now().toDate(), 'Test').then(function (ids2) {
+      return databaseHelper.insertTestData(REFERENCE, dateFormatter.now().toDate(), 'Test', dateFormatter.now().toDate(), 10).then(function (ids2) {
         claimId2 = ids2.claimId
         eligibilityId2 = ids2.eligibilityId
       })
