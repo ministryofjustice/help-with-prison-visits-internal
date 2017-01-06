@@ -115,7 +115,7 @@ describe('services/data/dashboard/get-rejected-claim-count', function () {
     })
 
     after(function () {
-      // return databaseHelper.deleteAll(reference)
+      return databaseHelper.deleteAll(reference)
     })
   })
 })
