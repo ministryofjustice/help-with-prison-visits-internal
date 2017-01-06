@@ -24,9 +24,21 @@
     <td>Eligible for visitation?</td>
     <td>
       {% if Claim['NomisCheck'] != 'APPROVED' %}
-      <span class="text-warning">NOMIS check required</span>
+      <span class="text-warning">
+        {% if displayHelper.getPrisonRegion(Claim['NameOfPrison']) != 'NI' %}
+          NOMIS check required
+        {% else %}
+          NI prisoner check required
+        {% endif %}
+      </span>
       {% else %}
-      <span class="text-success">NOMIS check confirmed</span>
+      <span class="text-success">
+        {% if displayHelper.getPrisonRegion(Claim['NameOfPrison']) != 'NI' %}
+          NOMIS check confirmed
+        {% else %}
+          NI prisoner check confirmed
+        {% endif %}
+      </span>
       {% endif %}
 
       <select class="form-control action-select" id="nomis-check" name="nomisCheck">
