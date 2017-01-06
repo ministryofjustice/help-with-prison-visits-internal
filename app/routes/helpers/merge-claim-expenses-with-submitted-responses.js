@@ -20,7 +20,6 @@ module.exports = function (oldData, nonPersistedData) {
       }
     }
   })
-  
   newClaimExpenseData = oldData
   return newClaimExpenseData
 }
