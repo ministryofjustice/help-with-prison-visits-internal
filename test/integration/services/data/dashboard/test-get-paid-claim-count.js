@@ -6,7 +6,8 @@ const getPaidClaimCount = require('../../../../../app/services/data/dashboard/ge
 const claimStatusEnum = require('../../../../../app/constants/claim-status-enum')
 const dashboardFilterEnum = require('../../../../../app/constants/dashboard-filter-enum')
 
-var reference = 'PAID'
+const reference = 'PAID'
+const paymentStatusProcessed = 'PROCESSED'
 var claimId2
 var claimId3
 var claimId4
@@ -43,22 +44,22 @@ describe('services/data/dashboard/get-paid-claim-count', function () {
 
           var promises = []
 
-          promises.push(databaseHelper.insertClaim(claimId2, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, true))
-          promises.push(databaseHelper.insertClaim(claimId3, eligibilityId, reference, lastWeek, claimStatusEnum.AUTOAPPROVED.value, false, null, null, false))
-          promises.push(databaseHelper.insertClaim(claimId4, eligibilityId, reference, oneMonthAgo, claimStatusEnum.APPROVED.value, false, null, null, false))
-          promises.push(databaseHelper.insertClaim(claimId5, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, true))
-          promises.push(databaseHelper.insertClaim(claimId6, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false, null, null, false))
-          promises.push(databaseHelper.insertClaim(claimId7, eligibilityId, reference, fourMonthsAgo, claimStatusEnum.APPROVED.value, false, null, null, false))
-          promises.push(databaseHelper.insertClaim(claimId8, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, false))
-          promises.push(databaseHelper.insertClaim(claimId9, eligibilityId, reference, oneMonthAgo, claimStatusEnum.REJECTED.value, false, null, null, false))
-          promises.push(databaseHelper.insertClaim(claimId10, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.PENDING.value, false, null, null, false))
+          promises.push(databaseHelper.insertClaim(claimId2, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, true, null))
+          promises.push(databaseHelper.insertClaim(claimId3, eligibilityId, reference, lastWeek, claimStatusEnum.AUTOAPPROVED.value, false, null, null, false, paymentStatusProcessed))
+          promises.push(databaseHelper.insertClaim(claimId4, eligibilityId, reference, oneMonthAgo, claimStatusEnum.APPROVED.value, false, null, null, false, paymentStatusProcessed))
+          promises.push(databaseHelper.insertClaim(claimId5, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, true, null))
+          promises.push(databaseHelper.insertClaim(claimId6, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false, null, null, false, paymentStatusProcessed))
+          promises.push(databaseHelper.insertClaim(claimId7, eligibilityId, reference, fourMonthsAgo, claimStatusEnum.APPROVED.value, false, null, null, false, paymentStatusProcessed))
+          promises.push(databaseHelper.insertClaim(claimId8, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, false, null))
+          promises.push(databaseHelper.insertClaim(claimId9, eligibilityId, reference, oneMonthAgo, claimStatusEnum.REJECTED.value, false, null, null, false, null))
+          promises.push(databaseHelper.insertClaim(claimId10, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.PENDING.value, false, null, null, false, null))
 
           return Promise.all(promises)
         })
     })
 
     it('should return the correct number of Paid claims submitted today', function () {
-      return checkCount(dashboardFilterEnum.TODAY, 1)
+      return checkCount(dashboardFilterEnum.TODAY, 0)
     })
 
     it('should return the correct number of Paid claims submitted yesterday', function () {
@@ -66,7 +67,7 @@ describe('services/data/dashboard/get-paid-claim-count', function () {
     })
 
     it('should return the correct number of Paid claims submitted in the last 7 days', function () {
-      return checkCount(dashboardFilterEnum.LAST_7_DAYS, 3)
+      return checkCount(dashboardFilterEnum.LAST_7_DAYS, 2)
     })
 
     it('should return the correct number of Paid claims submitted in the previous calendar month', function () {
@@ -111,4 +112,5 @@ function checkCount (filter, expectedCount) {
     .catch(function (error) {
       throw error
     })
+  // console.log(getPaidClaimCount(filter))
 }
