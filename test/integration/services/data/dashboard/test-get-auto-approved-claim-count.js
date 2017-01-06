@@ -79,7 +79,7 @@ describe('services/data/dashboard/get-auto-approved-claim-count', function () {
     })
 
     it('should return the correct number of Auto-Approved claims submitted in the last 7 days', function () {
-      var expectedResult = last7DaysCount + 1
+      var expectedResult = last7DaysCount + 3
       return checkCount(dashboardFilterEnum.LAST_7_DAYS, expectedResult)
     })
 
@@ -100,7 +100,7 @@ describe('services/data/dashboard/get-auto-approved-claim-count', function () {
     })
 
     it('should return the correct number of Auto-Approved claims submitted in the calendar month before the previous month', function () {
-      var expectedResult = todayCount + 1
+      var expectedResult = twoMonthsAgoCount + 1
       return checkCount(dashboardFilterEnum.TWO_MONTHS_AGO, expectedResult)
     })
 

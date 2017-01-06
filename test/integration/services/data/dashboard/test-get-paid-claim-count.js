@@ -18,7 +18,6 @@ var claimId8
 var claimId9
 var claimId10
 
-
 var date = moment().toDate()
 var yesterday = moment().subtract(1, 'days').toDate()
 var lastWeek = moment().subtract(7, 'days').toDate()
