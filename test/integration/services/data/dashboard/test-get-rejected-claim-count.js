@@ -7,7 +7,6 @@ const claimStatusEnum = require('../../../../../app/constants/claim-status-enum'
 const dashboardFilterEnum = require('../../../../../app/constants/dashboard-filter-enum')
 
 var reference = 'PENDING'
-var claimId1
 var claimId2
 var claimId3
 var claimId4
@@ -26,13 +25,12 @@ var twoMonthsAgo = moment().subtract(2, 'months').toDate()
 var threeMonthsAgo = moment().subtract(3, 'months').toDate()
 var fourMonthsAgo = moment().subtract(4, 'months').toDate()
 
-describe('services/data/dashboard/get-pending-claim-count', function () {
+describe('services/data/dashboard/get-rejected-claim-count', function () {
   describe('module', function () {
     before(function () {
       return databaseHelper.insertTestData(reference, date, claimStatusEnum.REJECTED.value)
         .then(function (ids) {
           var eligibilityId = ids.eligibilityId
-          claimId1 = ids.claimId
           claimId2 = ids.claimId + 1
           claimId3 = ids.claimId + 2
           claimId4 = ids.claimId + 3
@@ -59,10 +57,6 @@ describe('services/data/dashboard/get-pending-claim-count', function () {
         })
     })
 
-    it('should return the correct total number of Pending claims in the system', function () {
-      return checkCount(null, 7)
-    })
-
     it('should return the correct number of Pending claims submitted today', function () {
       return checkCount(dashboardFilterEnum.TODAY, 1)
     })
@@ -72,7 +66,7 @@ describe('services/data/dashboard/get-pending-claim-count', function () {
     })
 
     it('should return the correct number of Pending claims submitted in the last 7 days', function () {
-      return checkCount(dashboardFilterEnum.LAST_WEEK, 3)
+      return checkCount(dashboardFilterEnum.LAST_7_DAYS, 3)
     })
 
     it('should return the correct number of Pending claims submitted in the previous calendar month', function () {

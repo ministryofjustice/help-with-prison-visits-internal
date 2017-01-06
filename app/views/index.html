@@ -10,6 +10,15 @@
 
   {% include "includes/phase_banner_beta.html" %}
 
+  <ul id="sub-nav">
+    <li>
+      <a href="/dashboard">Dashboard</a>
+    </li>
+    <li>
+      <a href="/" class="active">Claims</a>
+    </li>
+  </ul>
+
   <ul class="sub-tabs">
     <li><a href="/" {% if active == undefined %} class="active">New <span class="badge"></span>{% else %}>New{% endif %}</a></li>
     <li><a href="/?status=UPDATED"{% if active == 'UPDATED' %} %} class="active">Updated <span class="badge"></span>{% else %}>Updated{% endif %}</a></li>

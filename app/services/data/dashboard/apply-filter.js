@@ -7,7 +7,7 @@ module.exports = function (query, filter) {
       return applyTodayFilter(query, filter)
     case dashboardFilterEnum.YESTERDAY:
       return applyYesterdayFilter(query, filter)
-    case dashboardFilterEnum.LAST_WEEK:
+    case dashboardFilterEnum.LAST_7_DAYS:
       return applyLastWeekFilter(query, filter)
     case dashboardFilterEnum.ONE_MONTH_AGO:
       return applyOneMonthAgoFilter(query, filter)
@@ -18,7 +18,7 @@ module.exports = function (query, filter) {
     case dashboardFilterEnum.FOUR_MONTHS_AGO:
       return applyFourMonthsAgoFilter(query, filter)
     default:
-      return query
+      throw new Error('No filter specified for dashboard')
   }
 }
 

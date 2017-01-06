@@ -4,6 +4,7 @@
 
 var routes = [
   require('./index'),
+  require('./dashboard'),
   require('./claim/view-claim'),
   require('./claim/file-upload'),
 
