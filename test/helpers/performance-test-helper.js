@@ -24,29 +24,31 @@ module.exports.deleteAll = function () {
 }
 
 module.exports.insertTestDataBatch = function (status) {
-  return generateEligibilityData(status).then(function () {
-    console.log('Execute bulk insert')
-    return knex.batchInsert('IntSchema.Eligibility', eligibilityData, 10)
-      .returning('EligibilityId')
-      .then(function (ids) {
-        console.log('Eligibility records inserted: ' + ids.length)
-      })
-  })
+  // Set up test data
+  generateEligibilityData(status)
+
+  return knex.batchInsert('IntSchema.Eligibility', eligibilityData, 10)
+    .returning('EligibilityId')
+    .then(function (ids) {
+      console.log('Eligibility records inserted: ' + ids.length)
+    })
+    .catch(function (error) {
+      console.log('DISASTER')
+      console.log(error)
+    })
 }
 
 function generateEligibilityData (status) {
-  return new Promise(function () {
-    for (let i = 0; i < DEFAULT_CHUNK_SIZE; i++) {
-      var reference = databaseHelper.generateReference()
-      var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + i
-      eligibilityData.push(getEligibility(reference, uniqueId, status))
-    }
-  })
+  for (let i = 0; i < DEFAULT_CHUNK_SIZE; i++) {
+    var reference = databaseHelper.generateReference()
+    var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + i
+    eligibilityData.push(getEligibility(reference, uniqueId, status))
+  }
 }
 
 function getEligibility (reference, id, status) {
-  console.log('Adding id ' + id)
   return {
+    EligibilityId: id,
     Reference: reference,
     DateCreated: DATE,
     DateSubmitted: DATE,
