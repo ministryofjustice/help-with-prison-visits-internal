@@ -1,5 +1,6 @@
 var config = require('../../knexfile').migrations
 var knex = require('knex')(config)
+const bases = require('bases')
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
 module.exports.insertTestData = function (reference, date, status, visitDate, increment) {
@@ -267,7 +268,7 @@ function deleteByReference (schemaTable, reference) {
 }
 
 module.exports.deleteAll = function (reference) {
-  return deleteByReference('IntSchema.Task', reference)
+  return deleteByReference('IntSchema.Task')
     .then(function () { return deleteByReference('IntSchema.ClaimEvent', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimBankDetail', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimDocument', reference) })
@@ -410,3 +411,16 @@ function insertClaimDeduction (claimId, reference, eligibilityId, deductionType,
 }
 
 module.exports.insertClaimDeduction = insertClaimDeduction
+
+const VALID_CHARACTERS = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'
+
+function generateReference () {
+  var min = 1073741824  // 1000000
+  var max = 34359738367 // VVVVVVV
+  var random = Math.floor(Math.random() * (max - min) + min)
+  // use Base-32 reference http://www.crockford.com/wrmg/base32.html
+  return bases.toAlphabet(random, VALID_CHARACTERS)
+}
+
+
+module.exports.generateReference = generateReference

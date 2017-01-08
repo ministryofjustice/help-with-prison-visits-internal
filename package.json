@@ -22,6 +22,7 @@
     "test-e2e-ie8-jenkins": "wdio test/wdio.conf.sauce.ie8.jenkins.js",
     "test-e2e-firefox-jenkins": "wdio test/wdio.conf.sauce.firefox.jenkins.js",
     "test-e2e-chrome-jenkins": "wdio test/wdio.conf.sauce.chrome.jenkins.js",
+    "test-perf": "mocha --recursive -u exports test/performance/ --timeout 30000",
     "migrations": "knex migrate:latest --env migrations",
     "rollback": "knex migrate:rollback --env migrations"
   },
@@ -78,6 +79,7 @@
   },
   "devDependencies": {
     "assert": "^1.4.1",
+    "bases": "^0.2.1",
     "chai": "^3.5.0",
     "debug": "~2.2.0",
     "gulp-webdriver": "^2.0.2",
