@@ -22,7 +22,7 @@
     "test-e2e-ie8-jenkins": "wdio test/wdio.conf.sauce.ie8.jenkins.js",
     "test-e2e-firefox-jenkins": "wdio test/wdio.conf.sauce.firefox.jenkins.js",
     "test-e2e-chrome-jenkins": "wdio test/wdio.conf.sauce.chrome.jenkins.js",
-    "test-perf": "mocha --recursive -u exports test/performance/ --timeout 30000",
+    "test-perf": "mocha --recursive -u exports test/performance/ --timeout 60000",
     "migrations": "knex migrate:latest --env migrations",
     "rollback": "knex migrate:rollback --env migrations"
   },

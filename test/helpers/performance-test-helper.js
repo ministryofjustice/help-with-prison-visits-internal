@@ -8,6 +8,8 @@ const DATE = moment('20010101').toDate()
 
 var eligibilityData = []
 var prisonerData = []
+var visitorData = []
+var claimData = []
 
 module.exports.deleteAll = function () {
   return deleteTable('IntSchema.Task')
@@ -23,13 +25,15 @@ module.exports.deleteAll = function () {
     .then(function () { return deleteTable('IntSchema.Eligibility') })
 }
 
-module.exports.insertTestDataBatch = function (status, batchSize) {
+module.exports.insertTestDataBatch = function (status, batchSize, isAdvance, isOverpaid) {
   // Set up test data
   generateEligibilityData(status, batchSize)
-  generateClaimData()
+  generateClaimData(isAdvance, isOverpaid)
 
   return knex.batchInsert('IntSchema.Eligibility', eligibilityData, DEFAULT_CHUNK_SIZE)
     .then(function () { return knex.batchInsert('IntSchema.Prisoner', prisonerData, DEFAULT_CHUNK_SIZE) })
+    .then(function () { return knex.batchInsert('IntSchema.Visitor', visitorData, DEFAULT_CHUNK_SIZE) })
+    .then(function () { return knex.batchInsert('IntSchema.Claim', claimData, DEFAULT_CHUNK_SIZE, isAdvance, isOverpaid) })
 }
 
 function generateEligibilityData (status, batchSize) {
@@ -40,9 +44,11 @@ function generateEligibilityData (status, batchSize) {
   }
 }
 
-function generateClaimData () {
+function generateClaimData (isAdvance, isOverpaid) {
   eligibilityData.forEach(function (eligibility) {
     prisonerData.push(getPrisoner(eligibility.Reference, eligibility.EligibilityId, eligibility.EligibilityId))
+    visitorData.push(getVisitor(eligibility.Reference, eligibility.EligibilityId, eligibility.EligibilityId))
+    claimData.push(getClaim(eligibility.Reference, eligibility.EligibilityId, eligibility.EligibilityId, eligibility.Status, isAdvance, isOverpaid))
   })
 }
 
@@ -62,10 +68,50 @@ function getPrisoner (reference, eligibilityId, id) {
     EligibilityId: eligibilityId,
     Reference: reference,
     FirstName: 'Test',
-    LastName: 'Testing',
+    LastName: 'Testing' + reference,
     DateOfBirth: moment('19840101').toDate(),
     PrisonNumber: 'A123456',
     NameOfPrison: 'Hewell'
+  }
+}
+
+function getVisitor (reference, eligibilityId, id) {
+  return {
+    VisitorId: id,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    FirstName: 'John',
+    LastName: 'PerfTester' + reference,
+    NationalInsuranceNumber: 'ZZ123456C',
+    HouseNumberAndStreet: '123 Performance Testing Road',
+    Town: 'Performance Town',
+    County: 'Performance County',
+    PostCode: 'BT111BT',
+    Country: 'England',
+    EmailAddress: 'donotsend@apvs.com',
+    PhoneNumber: '07911111199',
+    DateOfBirth: moment('19830404').toDate(),
+    Relationship: 'partner',
+    Benefit: 'income-support',
+    DWPBenefitCheckerResult: 'UNDETERMINED'
+  }
+}
+
+function getClaim (reference, eligibilityId, id, status, isAdvance, isOverPaid) {
+  var visitDate = moment().subtract(Math.floor(Math.random() * 20) + 1, 'd')
+
+  return {
+    ClaimId: id,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    DateOfJourney: visitDate.toDate(),
+    DateCreated: DATE,
+    DateSubmitted: DATE,
+    ClaimType: 'first-time',
+    IsAdvanceClaim: isAdvance,
+    IsOverpaid: isOverPaid,
+    OverpaymentAmount: isOverPaid ? (Math.floor(Math.random() * 30) + 1) : 0,
+    Status: status
   }
 }
 
