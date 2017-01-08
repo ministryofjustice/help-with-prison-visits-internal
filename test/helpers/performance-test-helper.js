@@ -7,6 +7,7 @@ const DEFAULT_CHUNK_SIZE = 100
 const DATE = moment('20010101').toDate()
 
 var eligibilityData = []
+var prisonerData = []
 
 module.exports.deleteAll = function () {
   return deleteTable('IntSchema.Task')
@@ -25,16 +26,24 @@ module.exports.deleteAll = function () {
 module.exports.insertTestDataBatch = function (status, batchSize) {
   // Set up test data
   generateEligibilityData(status, batchSize)
+  generateClaimData()
 
   return knex.batchInsert('IntSchema.Eligibility', eligibilityData, DEFAULT_CHUNK_SIZE)
+    .then(function () { return knex.batchInsert('IntSchema.Prisoner', prisonerData, DEFAULT_CHUNK_SIZE) })
 }
 
-function generateEligibilityData (status, batchData) {
-  for (let i = 0; i < batchData; i++) {
+function generateEligibilityData (status, batchSize) {
+  for (let i = 0; i < batchSize; i++) {
     var reference = databaseHelper.generateReference()
     var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + i
     eligibilityData.push(getEligibility(reference, uniqueId, status))
   }
+}
+
+function generateClaimData () {
+  eligibilityData.forEach(function (eligibility) {
+    prisonerData.push(getPrisoner(eligibility.Reference, eligibility.EligibilityId, eligibility.EligibilityId))
+  })
 }
 
 function getEligibility (reference, id, status) {
@@ -44,6 +53,19 @@ function getEligibility (reference, id, status) {
     DateCreated: DATE,
     DateSubmitted: DATE,
     Status: status
+  }
+}
+
+function getPrisoner (reference, eligibilityId, id) {
+  return {
+    PrisonerId: id,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    FirstName: 'Test',
+    LastName: 'Testing',
+    DateOfBirth: moment('19840101').toDate(),
+    PrisonNumber: 'A123456',
+    NameOfPrison: 'Hewell'
   }
 }
 
