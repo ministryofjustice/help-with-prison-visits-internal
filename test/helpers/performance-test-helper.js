@@ -3,7 +3,7 @@ const knex = require('knex')(config)
 const moment = require('moment')
 const databaseHelper = require('../helpers/database-setup-for-tests')
 
-const DEFAULT_CHUNK_SIZE = 100
+const DEFAULT_CHUNK_SIZE = 115
 const DATE = moment('20010101').toDate()
 
 var eligibilityData = []

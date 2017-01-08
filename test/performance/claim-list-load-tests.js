@@ -16,5 +16,8 @@ describe('Test performance of claim list queries under a known high load', () =>
   })
 
   after(function () {
+    return perfTestHelper.deleteAll().then(function () {
+      console.log('Tear down of performance test data complete')
+    })
   })
 })
