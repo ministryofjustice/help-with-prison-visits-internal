@@ -2,7 +2,6 @@ const config = require('../../knexfile').migrations
 const knex = require('knex')(config)
 const moment = require('moment')
 const databaseHelper = require('../helpers/database-setup-for-tests')
-const Promise = require('bluebird').Promise
 
 const DEFAULT_CHUNK_SIZE = 100
 const DATE = moment('20010101').toDate()
@@ -23,23 +22,15 @@ module.exports.deleteAll = function () {
     .then(function () { return deleteTable('IntSchema.Eligibility') })
 }
 
-module.exports.insertTestDataBatch = function (status) {
+module.exports.insertTestDataBatch = function (status, batchSize) {
   // Set up test data
-  generateEligibilityData(status)
+  generateEligibilityData(status, batchSize)
 
-  return knex.batchInsert('IntSchema.Eligibility', eligibilityData, 10)
-    .returning('EligibilityId')
-    .then(function (ids) {
-      console.log('Eligibility records inserted: ' + ids.length)
-    })
-    .catch(function (error) {
-      console.log('DISASTER')
-      console.log(error)
-    })
+  return knex.batchInsert('IntSchema.Eligibility', eligibilityData, DEFAULT_CHUNK_SIZE)
 }
 
-function generateEligibilityData (status) {
-  for (let i = 0; i < DEFAULT_CHUNK_SIZE; i++) {
+function generateEligibilityData (status, batchData) {
+  for (let i = 0; i < batchData; i++) {
     var reference = databaseHelper.generateReference()
     var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + i
     eligibilityData.push(getEligibility(reference, uniqueId, status))
@@ -55,7 +46,6 @@ function getEligibility (reference, id, status) {
     Status: status
   }
 }
-
 
 function deleteTable (schemaTable) {
   return knex(schemaTable).del()
