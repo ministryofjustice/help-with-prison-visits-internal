@@ -23,6 +23,7 @@ const updateClaimOverpaymentStatus = require('../../services/data/update-claim-o
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
 const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 const updateEligibilityTrustedStatus = require('../../services/data/update-eligibility-trusted-status')
+const requestNewBankDetails = require('../../services/data/request-new-bank-details')
 const claimDecisionEnum = require('../../../app/constants/claim-decision-enum')
 const Promise = require('bluebird')
 
@@ -132,6 +133,7 @@ module.exports = function (router) {
       }
     })
   })
+}
 
 function removeDeduction (req, res, deductionId) {
   return disableDeduction(deductionId)
@@ -241,8 +243,13 @@ function setAdvanceClaimStatusToClosed (req, res) {
 
 function requestNewPaymentDetails (req, res) {
   return Promise.try(function () {
-    // TODO: request new payment details
-    return res.redirect(`/`)
+    return getIndividualClaimDetails(req.params.claimId)
+      .then(function (data) {
+        requestNewPaymentDetails(data.claim.Reference, data.claim.EligibilityId, data.claim.ClaimId, req.body['payment-details-additional-information'], req.user.email)
+          .then(function () {
+            return res.redirect(`/`)
+          })
+      })
   })
   .catch(function (error) {
     if (error instanceof ValidationError) {
