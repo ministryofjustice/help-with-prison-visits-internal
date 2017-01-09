@@ -9,6 +9,7 @@ const closeAdvanceClaim = require('../../../../app/services/data/close-advance-c
 var reference = 'CCACTION'
 var date
 var claimId
+var previousLastUpdated
 
 describe('services/data/close-advance-claim', function () {
   describe('module', function () {
@@ -16,6 +17,7 @@ describe('services/data/close-advance-claim', function () {
       date = dateFormatter.now()
       return databaseHelper.insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
+        previousLastUpdated = ids.lastUpdated
       })
     })
 
@@ -27,7 +29,7 @@ describe('services/data/close-advance-claim', function () {
           return knex('Claim').first().where('ClaimId', claimId)
             .then(function (claim) {
               expect(claim.Status).to.equal(claimStatusEnum.APPROVED_ADVANCE_CLOSED.value)
-
+              expect(claim.lastUpdated).to.not.equal(previousLastUpdated)
               return knex('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
             })
             .then(function (claimEvent) {

@@ -11,12 +11,14 @@ const overpaymentActionEnum = require('../../../../app/constants/overpayment-act
 var date
 var reference = 'OVERPAY'
 var claimId
+var previousLastUpdated
 
 describe('services/data/test-update-claim-overpayment-status', function () {
   beforeEach(function () {
     date = moment().toDate()
     return databaseHelper.insertTestData(reference, date, 'Test').then(function (ids) {
       claimId = ids.claimId
+      previousLastUpdated = ids.previousLastUpdated
     })
   })
 
@@ -42,6 +44,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
                     expect(claimAfter.IsOverpaid).to.be.true
                     expect(claimAfter.OverpaymentAmount.toString()).to.equal(amount)
                     expect(claimAfter.OverpaymentReason).to.equal(reason)
+                    expect(claimAfter.LastUpdated).to.not.equal(previousLastUpdated)
                     expect(claimEvent.Event).to.equal(overpaymentActionEnum.OVERPAID)
                   })
               })
@@ -74,6 +77,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
                         expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)
                         expect(claimAfter.OverpaymentAmount).to.be.equal(claimBefore.OverpaymentAmount)
                         expect(claimAfter.OverpaymentReason).to.not.equal(reason)
+                        expect(claimAfter.LastUpdated).to.not.equal(previousLastUpdated)
                         expect(claimEvent.Note).to.contain(`Previous remaining amount: £${claimBefore.RemainingOverpaymentAmount}`)
                         expect(claimEvent.Note).to.contain(`New remaining amount: £${remaining}`)
                         expect(claimEvent.Note).to.contain(reason)
@@ -110,6 +114,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
                         expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)
                         expect(claimAfter.OverpaymentAmount).to.be.equal(claimBefore.OverpaymentAmount)
                         expect(claimAfter.OverpaymentReason).to.not.equal(reason)
+                        expect(claimAfter.LastUpdated).to.not.equal(previousLastUpdated)
                         expect(claimEvent.Note).to.contain(reason)
                         expect(claimEvent.Event).to.equal(overpaymentActionEnum.RESOLVE)
                       })
