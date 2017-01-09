@@ -377,7 +377,7 @@ module.exports.getTestData = function (reference, status) {
   }
 }
 
-module.exports.insertClaim = function (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount, remainingOverpaymentAmount) {
+module.exports.insertClaim = function (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount, remainingOverpaymentAmount, isAdvanceClaim, paymentStatus) {
   return knex('Claim')
     .returning('ClaimId')
     .insert({
@@ -390,7 +390,9 @@ module.exports.insertClaim = function (claimId, eligibilityId, reference, date, 
       Status: status,
       IsOverpaid: isOverpaid,
       OverpaymentAmount: overpaymentAmount,
-      RemainingOverpaymentAmount: remainingOverpaymentAmount
+      RemainingOverpaymentAmount: remainingOverpaymentAmount,
+      IsAdvanceClaim: isAdvanceClaim,
+      PaymentStatus: paymentStatus
     })
 }
 
