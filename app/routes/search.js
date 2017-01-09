@@ -1,6 +1,7 @@
 const authorisation = require('../services/authorisation')
 const getClaimListForSearch = require('../services/data/get-claim-list-for-search')
 const displayHelper = require('../views/helpers/display-helper')
+const exportSearchResults = require('../services/export-search-results')
 
 module.exports = function (router) {
   router.get('/search', function (req, res) {
@@ -37,4 +38,19 @@ module.exports = function (router) {
         })
     }
   })
+
+  router.get('/export-search-results', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    res.set('Content-Type', 'text/csv')
+    res.set('Content-Disposition', 'attachment; filename="claims.csv"')
+
+    return exportSearchResults('')
+      .then(function (csvString) {
+        res.write(csvString)
+        res.end()
+      })
+  })
 }
+
+
