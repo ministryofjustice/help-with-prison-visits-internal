@@ -245,21 +245,14 @@ function requestNewPaymentDetails (req, res) {
   return Promise.try(function () {
     return getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
-        requestNewPaymentDetails(data.claim.Reference, data.claim.EligibilityId, data.claim.ClaimId, req.body['payment-details-additional-information'], req.user.email)
+        requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
           .then(function () {
             return res.redirect(`/`)
           })
       })
   })
   .catch(function (error) {
-    if (error instanceof ValidationError) {
-      getIndividualClaimDetails(req.params.claimId)
-        .then(function (data) {
-          return renderErrors(data, req, res, error)
-        })
-    } else {
-      throw error
-    }
+    throw error
   })
 }
 

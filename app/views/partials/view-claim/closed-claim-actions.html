@@ -2,6 +2,8 @@
   <br >
   <div id="closedClaimAction" class="form-group">
     <fieldset id='closedClaimActions' >
+      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+
       <!-- Radio Buttons -->
       <label for="overpayment-toggle" class="block-label inline" data-target="overpayment-input">
         <input type="radio" name="closed-claim-action" value="OVERPAYMENT" id="overpayment-toggle">

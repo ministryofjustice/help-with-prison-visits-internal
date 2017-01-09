@@ -19,12 +19,12 @@ describe('services/data/request-new-bank-details', function () {
     var reference = 'NEWBANK'
     var eligibilityId = 1
     var claimId = 1
-    var note = 'note'
+    var additionalInformaiton = 'additionalInformaiton'
     var user = 'user'
-    return requestNewBankDetails(reference, eligibilityId, claimId, note, user)
+    return requestNewBankDetails(reference, eligibilityId, claimId, additionalInformaiton, user)
       .then(function (result) {
         expect(updateClaimStatusRequestingBankDetailsStub.calledWith(reference, claimId)).to.be.true
-        expect(insertClaimEventStub.calledWith(reference, eligibilityId, claimId, 'Request new bank details', '', note, user, true)).to.be.true
+        expect(insertClaimEventStub.calledWith(reference, eligibilityId, claimId, 'Request new bank details', additionalInformaiton, '', user, false)).to.be.true
         expect(insertTaskSendClaimNotificationStub.calledWith(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION, reference, eligibilityId, claimId)).to.be.true
       })
   })
