@@ -1,5 +1,5 @@
-const transform = require('stream-transform')
-const stringify = require('csv-stringify')
+const Promise = require('bluebird')
+const generateCsvString = Promise.promisify(require('csv-stringify'))
 const getClaimListForSearch = require('../services/data/get-claim-list-for-search')
 
 // const displayHelper = require('../views/helpers/display-helper')
@@ -23,89 +23,39 @@ const DATE_REVIEWED_BY_CASEWORKER_HEADER = 'Date Reviewed by Caseworker'
 const IS_ADVANCE_CLAIM_HEADER = 'Is Advance Claim'
 const TOTAL_AMOUNT_PAID_HEADER = 'Total amount paid'
 
-var csvString = ''
-
 module.exports = function (searchCriteria) {
-  return getClaimListForSearch(searchCriteria, 0, 10000)
+  return getClaimListForSearch(searchCriteria, 0, Number.MAX_SAFE_INTEGER)
     .then(function (data) {
-      var transformedData = []
-      var stringifier = getStringifier()
-      var transformer = getTransformer(data, stringifier, transformedData)
-
-      writeToTransformer(data.claims, transformer)
-      generateCsvString(transformedData, stringifier)
-
+      return transformData(data.claims)
+    })
+    .then(function (transformedData) {
+      return generateCsvString(transformedData, {header: true})
+    })
+    .then(function (csvString) {
       return csvString
     })
 }
 
-function getStringifier () {
-  var stringifier = stringify({header: true})
-
-  stringifier.on('readable', function () {
-    var row
-    while (row = stringifier.read()) {
-      csvString += row.toString()
-    }
-  })
-
-  return stringifier
-}
-
-function getTransformer (claimData, stringifier, output) {
-  var transformer = transform(function (data) {
+function transformData (data) {
+  return Promise.resolve(data.map(function (claim) {
     var returnValue = {}
-    returnValue[NAME_HEADER] = data.Name
-    // returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(data.NameOfPrison)
-    // returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[data.Relationship].displayName
+    returnValue[NAME_HEADER] = claim.Name
+    // returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
+    // returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[claim.Relationship].displayName
     // returnValue[CHILD_COUNT_HEADER] = getChildCount(),
     // returnValue[HAS_MEDICAL_ESCORT_HEADER] = hasEscort() ? 'Y' : 'N'
-    returnValue[VISIT_DATE_HEADER] = dateHelper.shortDate(data.DateOfJourney)
-    returnValue[CLAIM_SUBMISSION_DATE_HEADER] = dateHelper.shortDate(data.DateSubmitted)
-    // returnValue[PRISON_REGION_HEADER] = displayHelper.getPrisonRegion(data.NameOfPrison)
-    // returnValue[CLAIMED_HEADER] = data.PaymentStatus === 'PROCESSED' ? 'Y' : 'N'
-    // returnValue[ASSISTED_DIGITAL_CASEWORKER_HEADER] = data.AssistedDigitalCaseworker
-    // returnValue[CASEWORKER_HEADER] = data.Caseworker
-    // returnValue[IS_TRUSTED_HEADER] = data.IsTrusted ? 'Y' : 'N'
-    // returnValue[CLAIM_STATUS_HEADER] = data.Status
-    // returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = dateHelper.shortDate(data.DateReviewed)
-    // returnValue[IS_ADVANCE_CLAIM_HEADER] = data.IsAdvanceClaim ? 'Y' : 'N'
-    // returnValue[TOTAL_AMOUNT_PAID_HEADER] = data.BankPaymentAmount
+    returnValue[VISIT_DATE_HEADER] = dateHelper.shortDate(claim.DateOfJourney)
+    returnValue[CLAIM_SUBMISSION_DATE_HEADER] = dateHelper.shortDate(claim.DateSubmitted)
+    // returnValue[PRISON_REGION_HEADER] = displayHelper.getPrisonRegion(claim.NameOfPrison)
+    // returnValue[CLAIMED_HEADER] = claim.PaymentStatus === 'PROCESSED' ? 'Y' : 'N'
+    // returnValue[ASSISTED_DIGITAL_CASEWORKER_HEADER] = claim.AssistedDigitalCaseworker
+    // returnValue[CASEWORKER_HEADER] = claim.Caseworker
+    // returnValue[IS_TRUSTED_HEADER] = claim.IsTrusted ? 'Y' : 'N'
+    // returnValue[CLAIM_STATUS_HEADER] = claim.Status
+    // returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = dateHelper.shortDate(claim.DateReviewed)
+    // returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
+    // returnValue[TOTAL_AMOUNT_PAID_HEADER] = claim.BankPaymentAmount
 
     return returnValue
-  })
-
-  transformer.on('readable', function () {
-    var row
-    while (row = transformer.read()) {
-      output.push(row)
-    }
-  })
-
-  transformer.on('error', function (err) {
-    console.log(err.message)
-  })
-
-  transformer.on('finish', function () {
-    output.forEach(function (claim) {
-      stringifier.write(claim)
-    })
-    stringifier.end()
-  })
-
-  return transformer
-}
-
-function writeToTransformer (data, transformer) {
-  data.forEach(function (claim) {
-    transformer.write(claim)
-  })
-}
-
-function generateCsvString (data, stringifier) {
-  data.forEach(function (claim) {
-    stringifier.write(claim)
-  })
-
-  stringifier.end()
+  }))
 }
