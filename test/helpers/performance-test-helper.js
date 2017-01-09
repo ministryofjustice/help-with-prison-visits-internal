@@ -6,11 +6,6 @@ const databaseHelper = require('../helpers/database-setup-for-tests')
 const DEFAULT_CHUNK_SIZE = 115
 const DATE = moment('20010101').toDate()
 
-var eligibilityData = []
-var prisonerData = []
-var visitorData = []
-var claimData = []
-
 module.exports.deleteAll = function () {
   return deleteTable('IntSchema.Task')
     .then(function () { return deleteTable('IntSchema.ClaimEvent') })
@@ -25,26 +20,41 @@ module.exports.deleteAll = function () {
     .then(function () { return deleteTable('IntSchema.Eligibility') })
 }
 
-module.exports.insertTestDataBatch = function (status, batchSize, isAdvance, isOverpaid) {
-  // Set up test data
-  generateEligibilityData(status, batchSize)
-  generateClaimData(isAdvance, isOverpaid)
+module.exports.insertTestDataBatch = function (maxId, status, batchSize, isAdvance, isOverpaid) {
+  var eligibilityData = []
+  var prisonerData = []
+  var visitorData = []
+  var claimData = []
 
-  return knex.batchInsert('IntSchema.Eligibility', eligibilityData, DEFAULT_CHUNK_SIZE)
-    .then(function () { return knex.batchInsert('IntSchema.Prisoner', prisonerData, DEFAULT_CHUNK_SIZE) })
-    .then(function () { return knex.batchInsert('IntSchema.Visitor', visitorData, DEFAULT_CHUNK_SIZE) })
-    .then(function () { return knex.batchInsert('IntSchema.Claim', claimData, DEFAULT_CHUNK_SIZE, isAdvance, isOverpaid) })
+  generateEligibilityData(eligibilityData, maxId, status, batchSize)
+  generateClaimData(eligibilityData, prisonerData, visitorData, claimData, isAdvance, isOverpaid)
+
+  return knex.transaction(function (tr) {
+    return knex.batchInsert('IntSchema.Eligibility', eligibilityData, DEFAULT_CHUNK_SIZE)
+      .transacting(tr)
+      .then(function () { return knex.batchInsert('IntSchema.Prisoner', prisonerData, DEFAULT_CHUNK_SIZE).transacting(tr) })
+      .then(function () { return knex.batchInsert('IntSchema.Visitor', visitorData, DEFAULT_CHUNK_SIZE).transacting(tr) })
+      .then(function () { return knex.batchInsert('IntSchema.Claim', claimData, DEFAULT_CHUNK_SIZE, isAdvance, isOverpaid).transacting(tr) })
+      .then(function () {
+        var max = 0
+        eligibilityData.map(function (eligibility) {
+          if (eligibility.EligibilityId > max) max = eligibility.EligibilityId
+        })
+
+        return max
+      })
+  })
 }
 
-function generateEligibilityData (status, batchSize) {
+function generateEligibilityData (eligibilityData, maxId, status, batchSize) {
   for (let i = 0; i < batchSize; i++) {
     var reference = databaseHelper.generateReference()
-    var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + i
+    var uniqueId = maxId > 0 ? (maxId + i + 1) : Math.floor(Date.now() / 100) - 14000000000 + i
     eligibilityData.push(getEligibility(reference, uniqueId, status))
   }
 }
 
-function generateClaimData (isAdvance, isOverpaid) {
+function generateClaimData (eligibilityData, prisonerData, visitorData, claimData, isAdvance, isOverpaid) {
   eligibilityData.forEach(function (eligibility) {
     prisonerData.push(getPrisoner(eligibility.Reference, eligibility.EligibilityId, eligibility.EligibilityId))
     visitorData.push(getVisitor(eligibility.Reference, eligibility.EligibilityId, eligibility.EligibilityId))
@@ -99,14 +109,15 @@ function getVisitor (reference, eligibilityId, id) {
 
 function getClaim (reference, eligibilityId, id, status, isAdvance, isOverPaid) {
   var visitDate = moment().subtract(Math.floor(Math.random() * 20) + 1, 'd')
+  var claimDate = randomDate(new Date(2010, 1, 1), new Date())
 
   return {
     ClaimId: id,
     EligibilityId: eligibilityId,
     Reference: reference,
     DateOfJourney: visitDate.toDate(),
-    DateCreated: DATE,
-    DateSubmitted: DATE,
+    DateCreated: claimDate,
+    DateSubmitted: claimDate,
     ClaimType: 'first-time',
     IsAdvanceClaim: isAdvance,
     IsOverpaid: isOverPaid,
@@ -117,4 +128,8 @@ function getClaim (reference, eligibilityId, id, status, isAdvance, isOverPaid) 
 
 function deleteTable (schemaTable) {
   return knex(schemaTable).del()
+}
+
+function randomDate (start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
 }
