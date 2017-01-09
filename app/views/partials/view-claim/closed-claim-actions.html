@@ -15,7 +15,7 @@
       </label>
       {% endif %}
 
-      <label for="request-new-payment-details-toggle" class="block-label inline" data-target="requestNewPaymentDetails-input">
+      <label for="request-new-payment-details-toggle" class="block-label inline" data-target="request-new-payment-details-input">
         <input type="radio" name="closed-claim-action" value="REQUEST-NEW-PAYMENT-DETAILS" id="request-new-payment-details-toggle">
         <span>Request new payment details</span>
       </label>
@@ -55,8 +55,18 @@
       <!-- End of Close Advanced Claim -->
 
       <!-- Request New Payment Details -->
-      <div class="panel js-hidden" id="requestNewPaymentDetails-input">
-        
+      <div class="panel js-hidden" id="request-new-payment-details-input">
+        {% if Claim[Status] == 'REJECTED' %}
+        <p>New bank details can not be requested on a rejected claim</p>
+
+        {% else %}
+        <div class="form-group" id='new-payment-details'>
+          <label class="form-label-bold" for="payment-details-additional-information">Additional Information (optional)</label>
+          <textarea type='text' name='payment-details-request' id='payment-details-additional-information' class='form-control'></textarea>
+        </div>
+        <input type="submit" class="button grey" name="request-new-payment-details" id="request-new-payment-details" value="Submit">
+
+        {% endif %}
       </div>
       <!--End of Request New Payment Details-->
     </fieldset>
