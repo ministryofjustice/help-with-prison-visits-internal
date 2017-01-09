@@ -50,7 +50,7 @@ npm run-script test-coverage    # unit tests and generates code coverage using I
 npm run-script test-unit        # unit tests
 npm run-script test-integration # integration tests
 npm run-script test-e2e         # e2e tests using selenium standalone against local
-npm run-script test-perf        # performance integration tests
+npm run-script test-perf        # performance integration tests (typically takes +10 mins when run locally)
 ```
 
 Run e2e tests with [saucelabs](https://saucelabs.com)
