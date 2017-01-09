@@ -71,7 +71,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function () {
       return knex('IntSchema.Claim')
-        .returning('ClaimId')
+        .returning(['ClaimId', 'LastUpdated'])
         .insert({
           ClaimId: uniqueId,
           EligibilityId: ids.eligibilityId,
@@ -87,7 +87,8 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
         })
     })
     .then(function (result) {
-      ids.claimId = result[0]
+      ids.claimId = result[0].ClaimId
+      ids.lastUpdated = result[0].LastUpdated
     })
     .then(function () {
       return knex('IntSchema.ClaimExpense')

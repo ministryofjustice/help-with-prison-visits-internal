@@ -103,15 +103,35 @@ module.exports = function (router) {
   router.post('/claim/:claimId/closed-claim-action', function (req, res) {
     authorisation.isCaseworker(req)
 
-    if (req.body['closed-claim-action'] === 'OVERPAYMENT') {
-      updateOverpaymentStatus(req, res)
-    } else if (req.body['closed-claim-action'] === 'CLOSE-ADVANCE-CLAIM') {
-      setAdvanceClaimStatusToClosed(req, res)
-    } else if (req.body['closed-claim-action'] === 'REQUEST-NEW-PAYMENT-DETAILS') {
-      requestNewPaymentDetails(req, res)
-    }
+    var updateConflict
+
+    return Promise.try(function () {
+      return getLastUpdated(req.params.claimId).then(function (lastUpdatedData) {
+        updateConflict = checkLastUpdated(lastUpdatedData.LastUpdated, req.body.lastUpdated)
+        if (updateConflict) {
+          throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
+        }
+
+        if (req.body['closed-claim-action'] === 'OVERPAYMENT') {
+          updateOverpaymentStatus(req, res)
+        } else if (req.body['closed-claim-action'] === 'CLOSE-ADVANCE-CLAIM') {
+          setAdvanceClaimStatusToClosed(req, res)
+        } else if (req.body['closed-claim-action'] === 'REQUEST-NEW-PAYMENT-DETAILS') {
+          requestNewPaymentDetails(req, res)
+        }
+      })
+    })
+    .catch(function (error) {
+      if (error instanceof ValidationError) {
+        return getIndividualClaimDetails(req.params.claimId)
+          .then(function (data) {
+            return renderErrors(data, req, res, error)
+          })
+      } else {
+        throw error
+      }
+    })
   })
-}
 
 function removeDeduction (req, res, deductionId) {
   return disableDeduction(deductionId)
