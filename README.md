@@ -67,6 +67,8 @@ npm run-script test-e2e-firefox
 
 The application requires a MS SQL database instance, configured with an internal web user and a migration user. See [here](https://github.com/ministryofjustice/apvs/tree/develop/database) for details.
 
+The External Web relies on table functions defined in the Internal Web application to access claim details that have already been submitted.
+
 To run the [knex](http://knexjs.org/) database migrations:
 
 ```
@@ -75,7 +77,7 @@ npm run-script migrations
 
 To rollback the last batch of changes:
 ```
-./node_modules/.bin/knex migrate:rollback --env migrations
+npm run-script rollback
 ```
 
 ## Security
