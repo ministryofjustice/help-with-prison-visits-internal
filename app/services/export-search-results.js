@@ -49,8 +49,9 @@ function transformData (data) {
       .then(function (result) {
         var returnValue = {}
 
+        console.dir(result)
         var childCount = result[0][0].Count
-        var claimEscortCount = result[1][0].Count
+        var claimEscortCount = result[1].length
 
         returnValue[NAME_HEADER] = claim.Name
         returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
