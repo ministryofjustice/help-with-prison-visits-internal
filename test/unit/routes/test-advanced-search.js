@@ -6,20 +6,20 @@ const mockViewEngine = require('./mock-view-engine')
 const sinon = require('sinon')
 require('sinon-bluebird')
 
-var getClaimListForSearch
+var getClaimListForAdvancedSearch
 var displayHelperStub
 var authorisation
 var isCaseworkerStub
 
 const RETURNED_CLAIM = {
   Reference: 'SEARCH1',
-  FirstName: 'Joe',
-  LastName: 'Bloggs',
+  FirstName: 'John',
+  LastName: 'Smith',
   DateSubmitted: '2016-11-29T00:00:00.000Z',
   ClaimType: 'first-time',
   ClaimId: 1,
   DateSubmittedFormatted: '28-11-2016 00:00',
-  Name: 'Joe Bloggs'
+  Name: 'John Smith'
 }
 
 describe('routes/index', function () {
@@ -28,13 +28,13 @@ describe('routes/index', function () {
   beforeEach(function () {
     isCaseworkerStub = sinon.stub()
     authorisation = { isCaseworker: isCaseworkerStub }
-    getClaimListForSearch = sinon.stub()
+    getClaimListForAdvancedSearch = sinon.stub()
     displayHelperStub = sinon.stub({ 'getClaimTypeDisplayName': function () {} })
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
 
-    var route = proxyquire('../../../app/routes/search', {
+    var route = proxyquire('../../../app/routes/advanced-search', {
       '../services/authorisation': authorisation,
-      '../services/data/get-claim-list-for-search': getClaimListForSearch,
+      '../services/data/get-claim-list-for-advanced-search': getClaimListForAdvancedSearch,
       '../views/helpers/display-helper': displayHelperStub
     })
 
@@ -43,10 +43,10 @@ describe('routes/index', function () {
     route(app)
   })
 
-  describe('GET /search', function () {
+  describe('GET /advanced-search-input', function () {
     it('should respond with a 200', function () {
       return supertest(app)
-        .get('/search')
+        .get('/advanced-search-input')
         .expect(200)
         .expect(function () {
           expect(isCaseworkerStub.calledOnce).to.be.true
@@ -54,32 +54,36 @@ describe('routes/index', function () {
     })
   })
 
-  describe('GET /search-results', function () {
+  describe('GET /advanced-search', function () {
+    it('should respond with a 200', function () {
+      return supertest(app)
+        .get('/advanced-search')
+        .expect(200)
+        .expect(function () {
+          expect(isCaseworkerStub.calledOnce).to.be.true
+        })
+    })
+  })
+
+  describe('GET /advanced-search-results', function () {
     var draw = 1
     var start = 0
     var length = 10
 
-    it('should respond with a 200 and pass query string to data object', function () {
-      var searchQuery = 'Joe Bloggs'
-      getClaimListForSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
+    it('should respond with a 200 and pass query object to data layer', function () {
+      var searchCriteria = {
+        reference: 'A123456',
+        name: 'John Smith'
+      }
+      getClaimListForAdvancedSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
       return supertest(app)
-        .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
+        .get(`/advanced-search-results?reference=${searchCriteria.reference}&name=${searchCriteria.name}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
           expect(isCaseworkerStub.calledOnce).to.be.true
-          expect(getClaimListForSearch.calledWith(searchQuery, start, length)).to.be.true
+          expect(getClaimListForAdvancedSearch.calledWith(searchCriteria, start, length), 'expected data method to be called with parameters').to.be.true
           expect(response.body.recordsTotal).to.equal(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
-        })
-    })
-
-    it('should not call data object when provided an empty query', function () {
-      var searchQuery = ''
-      return supertest(app)
-        .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
-        .expect(200)
-        .expect(function (response) {
-          expect(getClaimListForSearch.notCalled).to.be.true
         })
     })
   })
