@@ -28,7 +28,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
     return databaseHelper.insertTestData(reference1, date.toDate(), 'TESTING')
       .then(function (ids) {
         claimId = ids.claimId
-        return databaseHelper.insertTestData(reference2, date.toDate(), 'TESTING')
+        return databaseHelper.insertTestData(reference2, date.toDate(), 'TESTING', dateFormatter.now().toDate(), 10)
           .then(function () {
             return knex('Visitor')
               .update({
