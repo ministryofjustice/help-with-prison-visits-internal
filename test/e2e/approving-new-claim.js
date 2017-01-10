@@ -31,7 +31,7 @@ describe('First time claim viewing flow', () => {
     })
   })
 
-  it('should display a list of claims and select the one to view details', () => {
+  it('should display a list of claims and approve a claim', () => {
     return browser.url('/')
 
       // Index
@@ -57,16 +57,7 @@ describe('First time claim viewing flow', () => {
       .setValue('#input-search-query', '1111111')
       .click('#search')
 
-      // Go to approved claim and request new bank details
-      .waitForExist('#claim' + claimId)
-      .click('#claim' + claimId)
-      .waitForExist('#reference')
-      .click('[for="request-new-payment-details-toggle"]')
-      .setValue('#payment-details-additional-information', 'TESTING')
-      .click('#request-new-payment-details')
-
-      // Check that claim is pending new bank details
-      .url('/?status=REQUEST-INFO-PAYMENT')
+      // Check claim is found
       .waitForExist('#claim' + claimId)
   })
 
