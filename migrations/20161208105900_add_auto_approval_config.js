@@ -10,6 +10,7 @@ exports.up = function (knex, Promise) {
     table.decimal('MaxClaimTotal')
     table.integer('MaxDaysAfterAPVUVisit')
     table.integer('MaxNumberOfClaimsPerYear')
+    table.integer('MaxNumberOfClaimsPerMonth')
     table.string('RulesDisabled', 4000)
     table.boolean('IsEnabled')
   })
