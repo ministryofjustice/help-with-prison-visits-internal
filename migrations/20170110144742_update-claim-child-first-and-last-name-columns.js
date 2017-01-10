@@ -4,10 +4,10 @@ exports.up = function (knex, Promise) {
     table.string('FirstName', 50).notNullable()
     table.string('LastName', 50).notNullable()
   })
-  .catch(function (error) {
-    console.log(error)
-    throw error
-  })
+    .catch(function (error) {
+      console.log(error)
+      throw error
+    })
 }
 
 exports.down = function (knex, Promise) {
@@ -16,8 +16,8 @@ exports.down = function (knex, Promise) {
     table.dropColumn('LastName')
     table.string('Name', 100).notNullable()
   })
-  .catch(function (error) {
-    console.log(error)
-    throw error
-  })
+    .catch(function (error) {
+      console.log(error)
+      throw error
+    })
 }
