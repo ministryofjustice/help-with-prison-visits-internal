@@ -10,7 +10,8 @@ var validSearchOptions = [
   'name',
   'ninumber',
   'prisonerNumber',
-  'prison'
+  'prison',
+  'assistedDigital'
 ]
 
 module.exports = function (searchCriteria, offset, limit) {
@@ -58,6 +59,11 @@ module.exports = function (searchCriteria, offset, limit) {
     applyPrisonFilter(selectQuery, searchCriteria.prison)
   }
 
+  if (searchCriteria.assistedDigital) {
+    applyAssistedDigitalFilter(countQuery)
+    applyAssistedDigitalFilter(selectQuery)
+  }
+
   return countQuery
     .then(function (count) {
       return selectQuery
@@ -91,6 +97,10 @@ module.exports = function (searchCriteria, offset, limit) {
 
   function applyPrisonFilter (query, prison) {
     query.where('Prisoner.NameOfPrison', 'like', `%${prison}%`)
+  }
+
+  function applyAssistedDigitalFilter (query) {
+    query.whereNotNull('Claim.AssistedDigitalCaseworker')
   }
 
   function createBaseQueries (limit, offset) {

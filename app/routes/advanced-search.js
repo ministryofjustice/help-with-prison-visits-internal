@@ -64,6 +64,9 @@ function extractSearchCriteria (query) {
   if (query.prison) {
     searchCriteria.prison = query.prison || ''
   }
+  if (query.assistedDigital) {
+    searchCriteria.assistedDigital = true
+  }
 
   return searchCriteria
 }

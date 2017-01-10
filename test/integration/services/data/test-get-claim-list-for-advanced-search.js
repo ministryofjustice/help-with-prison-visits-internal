@@ -30,21 +30,27 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         claimId = ids.claimId
         return databaseHelper.insertTestData(reference2, date.toDate(), 'TESTING', dateFormatter.now().toDate(), 10)
           .then(function () {
-            return knex('Visitor')
+            var claimUpdate = knex('Claim')
+              .update({
+                'AssistedDigitalCaseworker': 'test@test.com'
+              })
+              .where('Reference', reference1)
+            var visitorUpdate = knex('Visitor')
               .update({
                 'FirstName': 'Ref2FirstName',
                 'LastName': 'Ref2LastName',
                 'NationalInsuranceNumber': 'Ref2NINum'
               })
               .where('Reference', reference2)
-              .then(function () {
-                return knex('Prisoner')
-                  .update({
-                    PrisonNumber: 'REF2PNO',
-                    NameOfPrison: 'Ref2Prison'
-                  })
-                  .where('Reference', reference2)
+            var prisonerUpdate = knex('Prisoner')
+              .update({
+                PrisonNumber: 'REF2PNO',
+                NameOfPrison: 'Ref2Prison'
               })
+              .where('Reference', reference2)
+            var updates = []
+            updates.push(claimUpdate, visitorUpdate, prisonerUpdate)
+            return Promise.all(updates)
           })
       })
   })
@@ -203,6 +209,32 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
     var searchCriteria = {
       prison: prison
     }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithReference2 = result.claims.filter(function (claim) {
+          return claim.Reference === reference2
+        })
+        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the assisted digital field', function () {
+    var searchCriteria = {
+      assistedDigital: true
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong assisted digital value', function () {
+    var searchCriteria = {}
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
       .then(function (result) {
