@@ -96,4 +96,14 @@
   </tr>
   {% endfor %}
 
+  {% if Escort %}
+  <tr>
+    <td>Escort</td>
+    <td>
+      {{ Escort['FirstName'] + ' ' + Escort['LastName'] }} <br>
+      {{ getDateFormatted.shortDate(Escort['DateOfBirth']) }} <br>
+    </td>
+  </tr>
+  {% endif %}
+
 </table>
