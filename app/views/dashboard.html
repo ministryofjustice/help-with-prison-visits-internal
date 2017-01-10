@@ -1,0 +1,77 @@
+{% extends "includes/layout.html" %}
+
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<main id="content" role="main">
+
+  {% include "includes/phase_banner_beta.html" %}
+
+  <ul id="sub-nav">
+    <li>
+      <a href="/dashboard" class="active">Dashboard</a>
+    </li>
+    <li>
+      <a href="/">Claims</a>
+    </li>
+  </ul>
+
+  <div class="grid-row">
+    <div class="column-one-third">
+      <form action='/dashboard' method="GET">
+        <label class="form-label-bold">Filter by</label>
+        <select class="form-control full" id="filter" name="filter">
+          <option value="TODAY" {% if activeFilter == 'TODAY' or activeFilter == null %}selected=""{% endif %}>Today</option>
+          <option value="YESTERDAY" {% if activeFilter == 'YESTERDAY' %}selected=""{% endif %}>Yesterday</option>
+          <option value="LAST_7_DAYS" {% if activeFilter == 'LAST_7_DAYS' %}selected=""{% endif %}>Last 7 days</option>
+          <option value="ONE_MONTH_AGO" {% if activeFilter == 'ONE_MONTH_AGO' %}selected=""{% endif %}>{{ filterMonths.oneMonthAgo }}</option>
+          <option value="TWO_MONTHS_AGO" {% if activeFilter == 'TWO_MONTHS_AGO' %}selected=""{% endif %}>{{ filterMonths.twoMonthsAgo }}</option>
+          <option value="THREE_MONTHS_AGO" {% if activeFilter == 'THREE_MONTHS_AGO' %}selected=""{% endif %}>{{ filterMonths.threeMonthsAgo }}</option>
+          <option value="FOUR_MONTHS_AGO" {% if activeFilter == 'FOUR_MONTHS_AGO' %}selected=""{% endif %}>{{ filterMonths.fourMonthsAgo }}</option>
+        </select>
+      </form>
+    </div>
+  </div>
+
+  <div id="dashboard" class="grid-row">
+    <div class="column-one-third">
+        <h2 class="heading-medium">Pending</h2>
+        <span class="number">{{ pendingCount }}</span>
+    </div>
+
+    <div class="column-one-third">
+        <h2 class="heading-medium">In Progress</h2>
+        <span class="number">{{ inProgressCount }}</span>
+    </div>
+
+    <div class="column-one-third">
+        <h2 class="heading-medium">Paid</h2>
+        <span class="number">{{ paidCount }}</span>
+    </div>
+
+    <div class="column-one-third">
+        <h2 class="heading-medium">Auto approved</h2>
+        <span class="number">{{ autoApprovedCount }}</span>
+    </div>
+
+    <div class="column-one-third">
+        <h2 class="heading-medium">Manually approved</h2>
+        <span class="number">{{ manuallyApprovedCount }}</span>
+    </div>
+
+    <div class="column-one-third">
+        <h2 class="heading-medium">Rejected</h2>
+        <span class="number">{{ rejectedCount }}</span>
+    </div>
+  </div>
+
+</main>
+
+{% endblock %}
+
+{% block body_end %}
+  {% include "includes/dashboard-scripts.html" %}
+{% endblock %}

@@ -3,11 +3,12 @@ exports.up = function (knex, Promise) {
     table.integer('ClaimDocumentId').unsigned().primary()
     table.integer('EligibilityId').unsigned().notNullable()
     table.string('Reference', 10).notNullable().index()
-    table.integer('ClaimId').unsigned().notNullable().references('Claim.ClaimId')
+    table.integer('ClaimId').unsigned().notNullable()
     table.string('DocumentType', 20).notNullable()
-    table.integer('ClaimExpenseId').unsigned().references('ClaimExpense.ClaimExpenseId')
+    table.integer('ClaimExpenseId').unsigned()
     table.string('DocumentStatus', 20).notNullable()
     table.string('Filepath', 250)
+    table.string('Caseworker', 100)
     table.dateTime('DateSubmitted')
     table.boolean('IsEnabled')
     table.string('Status', 20)
@@ -15,8 +16,8 @@ exports.up = function (knex, Promise) {
   .then(function () {
     return knex.schema.alterTable('ClaimDocument', function (table) {
       table
-        .foreign(['ClaimId', 'EligibilityId', 'Reference'])
-        .references(['Claim.ClaimId', 'Claim.EligibilityId', 'Claim.Reference'])
+        .foreign(['ClaimId', 'EligibilityId', 'Reference', 'ClaimExpenseId'])
+        .references(['Claim.ClaimId', 'Claim.EligibilityId', 'Claim.Reference', 'ClaimExpense.ClaimExpenseId'])
     })
   })
   .catch(function (error) {

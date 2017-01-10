@@ -2,6 +2,9 @@ exports.up = function (knex, Promise) {
   return knex.schema.createTable('Eligibility', function (table) {
     table.integer('EligibilityId').unsigned().primary()
     table.string('Reference', 10).notNullable().index()
+    table.boolean('IsTrusted').defaultTo(true)
+    table.string('UntrustedReason')
+    table.dateTime('UntrustedDate')
     table.dateTime('DateCreated').notNullable()
     table.dateTime('DateSubmitted')
     table.string('Status', 20).notNullable()
