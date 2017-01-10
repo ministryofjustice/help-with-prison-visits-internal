@@ -27,7 +27,7 @@ exports.seed = function (knex, Promise) {
                 ClaimExpense.IsReturn,
                 ClaimExpense.DurationOfTravel,
                 ClaimExpense.TicketType,
-                ClaimExpense.IsChild,
+                ClaimExpense.TicketOwner,
                 ClaimExpense.Status
               FROM IntSchema.ClaimExpense AS ClaimExpense
               WHERE
