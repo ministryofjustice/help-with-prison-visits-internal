@@ -78,7 +78,7 @@ module.exports = function (searchCriteria, offset, limit) {
   }
 
   function applyNameFilter (query, name) {
-    query.whereRaw(`CONCAT(Visitor.FirstName, ' ', Visitor.LastName) like '%${name}%'`)
+    query.whereRaw(`CONCAT(Visitor.FirstName, ' ', Visitor.LastName) like ?`, [`%${name}%`])
   }
 
   function applyNINumberFilter (query, ninumber) {
