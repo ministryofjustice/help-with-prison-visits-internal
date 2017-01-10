@@ -50,6 +50,12 @@ $(document).ready(function () {
       drawCallback: function () {
         var total = $('#advanced-search-results_info').text().split(' ')[5]
         $('.badge').text(total)
+      },
+
+      language: {
+        info: 'Showing _START_ to _END_ of _TOTAL_ claims',
+        infoEmpty: 'Showing 0 to 0 of 0 claims',
+        emptyTable: 'No claims found'
       }
     })
   }
