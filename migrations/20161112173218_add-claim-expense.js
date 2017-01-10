@@ -12,7 +12,7 @@ exports.up = function (knex, Promise) {
     table.boolean('IsReturn')
     table.integer('DurationOfTravel')
     table.string('TicketType', 100)
-    table.boolean('IsChild')
+    table.string('TicketOwner', 10)
     table.boolean('IsEnabled')
     table.decimal('ApprovedCost')
     table.string('Note', 250)
