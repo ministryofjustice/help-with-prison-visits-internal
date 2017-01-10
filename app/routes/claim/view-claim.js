@@ -264,6 +264,7 @@ function renderViewClaimPage (claimId, res) {
         Claim: data.claim,
         Expenses: data.claimExpenses,
         Children: data.claimChild,
+        Escort: data.claimEscort,
         getDateFormatted: getDateFormatted,
         getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
         getChildFormatted: getChildFormatted,
