@@ -34,11 +34,11 @@ const EXPORT_CLAIMS_FIELDS = [
   'Claim.ClaimType',
   'Claim.AssistedDigitalCaseworker',
   'Claim.Caseworker',
-  'Eligibility.IsTrusted',
   'Claim.IsAdvanceClaim',
   'Claim.Status',
   'Claim.BankPaymentAmount',
   'Claim.ClaimId',
+  'Eligibility.IsTrusted',
   'Prisoner.NameOfPrison'
 ]
 
