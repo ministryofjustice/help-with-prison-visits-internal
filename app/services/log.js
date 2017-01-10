@@ -19,7 +19,8 @@ var log = bunyan.createLogger({
   serializers: {
     'request': requestSerializer,
     'response': responseSerializer,
-    'error': errorSerializer
+    'error': errorSerializer,
+    'user': userSerializer
   }
 })
 
@@ -58,7 +59,8 @@ function requestSerializer (request) {
   return {
     url: request.url,
     method: request.method,
-    params: request.params
+    params: request.params,
+    user: request.user ? request.user.email : 'n/a'
   }
 }
 
@@ -72,8 +74,13 @@ function errorSerializer (error) {
   return {
     message: error.message,
     name: error.name,
+    status: error.status,
     stack: error.stack
   }
+}
+
+function userSerializer (user) {
+  return user ? user.email : 'n/a'
 }
 
 module.exports = log
