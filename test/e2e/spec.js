@@ -52,8 +52,21 @@ describe('First time claim viewing flow', () => {
       .click('[for="approve"]')
       .click('#approve-submit')
 
-      // Check that claim has been rejected
-      .url('/?status=APPROVED')
+      // Search for approved claim
+      .waitForExist('#input-search-query')
+      .setValue('#input-search-query', '1111111')
+      .click('#search')
+
+      // Go to approved claim and request new bank details
+      .waitForExist('#claim' + claimId)
+      .click('#claim' + claimId)
+      .waitForExist('#reference')
+      .click('[for="request-new-payment-details-toggle"]')
+      .setValue('#payment-details-additional-information', 'TESTING')
+      .click('#request-new-payment-details')
+
+      // Check that claim is pending new bank details
+      .url('/?status=REQUEST-INFO-PAYMENT')
       .waitForExist('#claim' + claimId)
   })
 
