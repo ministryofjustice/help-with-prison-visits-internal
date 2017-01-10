@@ -1,10 +1,12 @@
 const Promise = require('bluebird')
 const generateCsvString = Promise.promisify(require('csv-stringify'))
 const getClaimListForSearch = require('../services/data/get-claim-list-for-search')
+const getClaimEscort = require('../services/data/get-claim-escort')
+const getClaimChildCount = require('../services/data/get-claim-child-count')
 
-// const displayHelper = require('../views/helpers/display-helper')
+const displayHelper = require('../views/helpers/display-helper')
 const dateHelper = require('../views/helpers/date-helper')
-// const prisonerRelationshipEnum = require('../../app/constants/prisoner-relationships-enum')
+const prisonerRelationshipEnum = require('../../app/constants/prisoner-relationships-enum')
 
 const NAME_HEADER = 'Name'
 const PRISON_NAME_HEADER = 'Prison Name'
@@ -37,25 +39,37 @@ module.exports = function (searchCriteria) {
 }
 
 function transformData (data) {
-  return Promise.resolve(data.map(function (claim) {
-    var returnValue = {}
-    returnValue[NAME_HEADER] = claim.Name
-    // returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
-    // returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[claim.Relationship].displayName
-    // returnValue[CHILD_COUNT_HEADER] = getChildCount(),
-    // returnValue[HAS_MEDICAL_ESCORT_HEADER] = hasEscort() ? 'Y' : 'N'
-    returnValue[VISIT_DATE_HEADER] = dateHelper.shortDate(claim.DateOfJourney)
-    returnValue[CLAIM_SUBMISSION_DATE_HEADER] = dateHelper.shortDate(claim.DateSubmitted)
-    // returnValue[PRISON_REGION_HEADER] = displayHelper.getPrisonRegion(claim.NameOfPrison)
-    // returnValue[CLAIMED_HEADER] = claim.PaymentStatus === 'PROCESSED' ? 'Y' : 'N'
-    // returnValue[ASSISTED_DIGITAL_CASEWORKER_HEADER] = claim.AssistedDigitalCaseworker
-    // returnValue[CASEWORKER_HEADER] = claim.Caseworker
-    // returnValue[IS_TRUSTED_HEADER] = claim.IsTrusted ? 'Y' : 'N'
-    // returnValue[CLAIM_STATUS_HEADER] = claim.Status
-    // returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = dateHelper.shortDate(claim.DateReviewed)
-    // returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
-    // returnValue[TOTAL_AMOUNT_PAID_HEADER] = claim.BankPaymentAmount
+  return Promise.map(data, function (claim) {
+    var promises = []
 
-    return returnValue
-  }))
+    promises.push(getClaimChildCount(claim.ClaimId))
+    // promises.push(getClaimEscort(claim.ClaimId))
+
+    return Promise.all(promises)
+      .then(function (result) {
+        var returnValue = {}
+
+        var childCount = result[0][0].Count
+        var claimEscort = result[1][0]
+
+        returnValue[NAME_HEADER] = claim.Name
+        // returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
+        // returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[claim.Relationship].displayName
+        returnValue[CHILD_COUNT_HEADER] = childCount
+        // returnValue[HAS_MEDICAL_ESCORT_HEADER] = getClaimEscort(claim.ClaimId).length > 0 ? 'Y' : 'N'
+        returnValue[VISIT_DATE_HEADER] = dateHelper.shortDate(claim.DateOfJourney)
+        returnValue[CLAIM_SUBMISSION_DATE_HEADER] = dateHelper.shortDate(claim.DateSubmitted)
+        // returnValue[PRISON_REGION_HEADER] = displayHelper.getPrisonRegion(claim.NameOfPrison)
+        returnValue[CLAIMED_HEADER] = claim.PaymentStatus === 'PROCESSED' ? 'Y' : 'N'
+        returnValue[ASSISTED_DIGITAL_CASEWORKER_HEADER] = claim.AssistedDigitalCaseworker
+        returnValue[CASEWORKER_HEADER] = claim.Caseworker
+        returnValue[IS_TRUSTED_HEADER] = claim.IsTrusted ? 'Y' : 'N'
+        returnValue[CLAIM_STATUS_HEADER] = claim.Status
+        // returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = dateHelper.shortDate(claim.DateReviewed)
+        returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
+        returnValue[TOTAL_AMOUNT_PAID_HEADER] = claim.BankPaymentAmount
+
+        return returnValue
+      })
+  })
 }
