@@ -9,6 +9,7 @@ module.exports = function (claimId) {
   var claim
   var claimExpenses
   var claimChildren
+  var claimEscort
   var claimDeductions
   var claimDuplicatesExist
   var claimDetails
@@ -37,6 +38,10 @@ module.exports = function (claimId) {
     })
     .then(function (claimChildData) {
       claimChildren = claimChildData
+      return getClaimEscort(claimId)
+    })
+    .then(function (claimEscortData) {
+      claimEscort = claimEscortData
       return duplicateClaimCheck(claimId, claim.NationalInsuranceNumber, claim.PrisonNumber, claim.DateOfJourney)
     })
     .then(function (result) {
@@ -52,6 +57,7 @@ module.exports = function (claimId) {
         claim: claim,
         claimExpenses: setClaimExpenseStatusForCarJourneys(claimExpenses),
         claimChild: claimChildren,
+        claimEscort: claimEscort,
         claimEvents: claimEvents,
         deductions: claimDeductions,
         duplicates: claimDuplicatesExist,
@@ -146,6 +152,14 @@ function getClaimChildren (claimId) {
     .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
     .select()
     .orderBy('ClaimChild.Name')
+}
+
+function getClaimEscort (claimId) {
+  return knex('ClaimEscort')
+    .first()
+    .where({ 'ClaimId': claimId, 'IsEnabled': true })
+    .select()
+    .orderBy('FirstName')
 }
 
 function getClaimEvents (claimId) {
