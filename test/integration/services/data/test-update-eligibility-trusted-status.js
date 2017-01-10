@@ -14,7 +14,8 @@ const updateEligibilityTrustedStatus = proxyquire('../../../../app/services/data
   './insert-claim-event': stubInsertClaimEvent
 })
 
-const REFERENCE = 'UNTRUSTED'
+const REFERENCE_ONE = 'REF12345'
+const REFERENCE_TWO = 'REF67891'
 
 var eligibilityId1
 var eligibilityId2
@@ -27,11 +28,11 @@ describe('services/data/update-eligibility-trusted-status', function () {
   })
 
   before(function () {
-    return databaseHelper.insertTestData(REFERENCE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
+    return databaseHelper.insertTestData(REFERENCE_ONE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
       claimId1 = ids.claimId
       eligibilityId1 = ids.eligibilityId
 
-      return databaseHelper.insertTestData(REFERENCE, dateFormatter.now().toDate(), 'Test', dateFormatter.now().toDate(), 10).then(function (ids2) {
+      return databaseHelper.insertTestData(REFERENCE_TWO, dateFormatter.now().toDate(), 'Test', dateFormatter.now().toDate(), 10).then(function (ids2) {
         claimId2 = ids2.claimId
         eligibilityId2 = ids2.eligibilityId
       })
@@ -91,7 +92,10 @@ describe('services/data/update-eligibility-trusted-status', function () {
   })
 
   after(function () {
-    return databaseHelper.deleteAll(REFERENCE)
+    return Promise.all([
+      databaseHelper.deleteAll(REFERENCE_ONE),
+      databaseHelper.deleteAll(REFERENCE_TWO)
+    ])
   })
 })
 
