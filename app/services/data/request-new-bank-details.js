@@ -7,7 +7,7 @@ module.exports = function (reference, eligibilityId, claimId, additionalInformat
   var promises = []
 
   promises.push(updateClaimStatusRequestingBankDetails(reference, claimId))
-  promises.push(insertClaimEvent(reference, eligibilityId, claimId, 'Request new bank details', additionalInformation, '', user, false))
+  promises.push(insertClaimEvent(reference, eligibilityId, claimId, 'REQUEST-NEW-BANK-DETAILS', additionalInformation, '', user, false))
   promises.push(insertTaskSendClaimNotification(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION, reference, eligibilityId, claimId))
 
   return Promise.all(promises)
