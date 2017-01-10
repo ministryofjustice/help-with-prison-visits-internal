@@ -26,5 +26,9 @@ module.exports = {
   NEW: {
     value: 'NEW',
     closed: false
+  },
+  REQUEST_INFO_PAYMENT: {
+    value: 'REQUEST-INFO-PAYMENT',
+    closed: false
   }
 }
