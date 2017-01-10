@@ -12,7 +12,6 @@ $('.claim-expense-status').change(function () {
     hide(`#claim-expense-${id}-approvedcost`)
     $(this).parent().parent().find('td.cost').addClass('approved-amount')
     $(this).next('input').on('input').removeClass('approved-amount')
-    // totalApproved()
   } else {
     hide(`#claim-expense-${id}-approvedcost`)
     $(this).parent().parent().find('td.cost').removeClass('approved-amount')
