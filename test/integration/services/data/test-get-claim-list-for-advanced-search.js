@@ -16,7 +16,7 @@ var ninumber
 var prisonerNumber
 var prison
 
-describe('services/data/advanced-search/search-query-builder', function () {
+describe('services/data/get-claim-list-for-advanced-search', function () {
   before(function () {
     date = dateFormatter.now()
     testData = databaseHelper.getTestData(reference1, 'TESTING')
