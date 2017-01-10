@@ -1,8 +1,6 @@
 const authorisation = require('../services/authorisation')
 const getClaimListForSearch = require('../services/data/get-claim-list-for-search')
 const displayHelper = require('../views/helpers/display-helper')
-const dateFormatter = require('../services/date-formatter')
-const exportSearchResults = require('../services/export-search-results')
 
 module.exports = function (router) {
   router.get('/search', function (req, res) {
@@ -38,25 +36,5 @@ module.exports = function (router) {
           })
         })
     }
-  })
-
-  router.get('/export-search-results', function (req, res) {
-    authorisation.isCaseworker(req)
-
-    var timestamp = dateFormatter.now().toDate().toISOString()
-      .replace('Z', '')
-      .replace('T', '_')
-      .replace('.', '-')
-
-    var filename = `claims_export_${timestamp}`
-
-    res.set('Content-Type', 'text/csv')
-    res.set('Content-Disposition', `attachment; filename="${filename}.csv"`)
-
-    return exportSearchResults('')
-      .then(function (csvString) {
-        res.write(csvString)
-        res.end()
-      })
   })
 }

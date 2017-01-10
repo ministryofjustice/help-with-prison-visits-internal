@@ -1,6 +1,6 @@
 const Promise = require('bluebird')
 const generateCsvString = Promise.promisify(require('csv-stringify'))
-const getClaimListForSearch = require('../services/data/get-claim-list-for-search')
+const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-for-advanced-search')
 const getClaimEscort = require('../services/data/get-claim-escort')
 const getClaimChildCount = require('../services/data/get-claim-child-count')
 
@@ -26,7 +26,7 @@ const IS_ADVANCE_CLAIM_HEADER = 'Is Advance Claim?'
 const TOTAL_AMOUNT_PAID_HEADER = 'Total amount paid'
 
 module.exports = function (searchCriteria) {
-  return getClaimListForSearch(searchCriteria, 0, Number.MAX_SAFE_INTEGER)
+  return getClaimListForAdvancedSearch(searchCriteria, 0, Number.MAX_SAFE_INTEGER, true)
     .then(function (data) {
       return transformData(data.claims)
     })
