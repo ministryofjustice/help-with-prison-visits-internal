@@ -17,7 +17,8 @@ exports.seed = function (knex, Promise) {
             RETURN
             (
               SELECT
-                ClaimChild.Name,
+                ClaimChild.FirstName,
+                ClaimChild.LastName,
                 ClaimChild.DateOfBirth,
                 ClaimChild.Relationship
               FROM IntSchema.ClaimChild AS ClaimChild
