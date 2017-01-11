@@ -1,6 +1,8 @@
 const authorisation = require('../services/authorisation')
 const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-for-advanced-search')
+const exportSearchResults = require('../services/export-search-results')
 const displayHelper = require('../views/helpers/display-helper')
+const dateFormatter = require('../services/date-formatter')
 
 module.exports = function (router) {
   router.get('/advanced-search-input', function (req, res) {
@@ -13,7 +15,35 @@ module.exports = function (router) {
     authorisation.isCaseworker(req)
     var searchCriteria = extractSearchCriteria(req.query)
 
-    return res.render('advanced-search', { query: searchCriteria })
+    var queryIndex = req.url.indexOf('?')
+    var rawQueryString = queryIndex > -1 ? req.url.substr(queryIndex + 1) : ''
+
+    return res.render('advanced-search', {
+      query: searchCriteria,
+      rawQuery: rawQueryString
+    })
+  })
+
+  router.get('/advanced-search-results/export', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    var searchCriteria = extractSearchCriteria(req.query)
+
+    var timestamp = dateFormatter.now().toDate().toISOString()
+      .replace('Z', '')
+      .replace('T', '_')
+      .replace('.', '-')
+
+    var filename = `claims_export_${timestamp}`
+
+    res.set('Content-Type', 'text/csv')
+    res.set('Content-Disposition', `attachment; filename="${filename}.csv"`)
+
+    return exportSearchResults(searchCriteria)
+      .then(function (csvString) {
+        res.write(csvString)
+        res.end()
+      })
   })
 
   router.get('/advanced-search-results', function (req, res) {
