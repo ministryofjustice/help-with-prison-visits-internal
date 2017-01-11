@@ -13,7 +13,7 @@ module.exports = {
   },
   REJECTED: {
     value: 'REJECTED',
-    closed: false
+    closed: true
   },
   UPDATED: {
     value: 'UPDATED',
