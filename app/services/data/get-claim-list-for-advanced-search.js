@@ -139,7 +139,11 @@ module.exports = function (searchCriteria, offset, limit) {
 
   function applyClaimStatusFilter (query, claimStatus) {
     var value = claimStatusEnum[claimStatus] ? claimStatusEnum[claimStatus].value : null
-    query.where('Claim.Status', value)
+    if (value === claimStatusEnum.APPROVED.value) {
+      query.whereIn('Claim.Status', [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.AUTOAPPROVED.value ])
+    } else {
+      query.where('Claim.Status', value)
+    }
   }
 
   function applyInProgressClaimStatusFilter (query) {
