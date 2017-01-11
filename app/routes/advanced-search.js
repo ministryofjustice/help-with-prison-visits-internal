@@ -14,7 +14,6 @@ module.exports = function (router) {
   router.get('/advanced-search', function (req, res) {
     authorisation.isCaseworker(req)
     var searchCriteria = extractSearchCriteria(req.query)
-    console.dir(req.url)
 
     var queryIndex = req.url.indexOf('?')
     var rawQueryString = queryIndex > -1 ? req.url.substr(queryIndex + 1) : ''

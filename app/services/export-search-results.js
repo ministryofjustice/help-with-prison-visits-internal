@@ -49,7 +49,6 @@ function transformData (data) {
       .then(function (result) {
         var returnValue = {}
 
-        console.dir(result)
         var childCount = result[0][0].Count
         var claimEscortCount = result[1].length
 
