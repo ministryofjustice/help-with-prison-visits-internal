@@ -4,7 +4,7 @@
       <a href="/" id="proposition-name">{% if serviceName %} {{ serviceName }} {% endif %}</a>
       <ul id="proposition-links">
         {% if user %}
-        <li>Singed in as {{ user.email }}</li>
+        <li>Signed in as {{ user.email }}</li>
         <li>{% if user.roles.includes('admin') %} <a href="/config" id="config">Config</a>  {% endif %}</li>
         <li>{% if user.roles.includes('sscl') %} <a href="/download-payment-files" id="sscl">SSCL</a>  {% endif %}</li>
         <li><a href="/logout" id="logout">Sign Out</a></li>
