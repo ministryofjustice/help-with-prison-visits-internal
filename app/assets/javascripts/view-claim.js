@@ -41,11 +41,3 @@ function totalApproved () {
 
   $('.claim-expense-approvedCostText').text('£' + (approvedCost + manuallyProcessed).toFixed(2))
 }
-
-function hide (element) {
-  $(element).hide()
-}
-
-function show (element) {
-  $(element).show()
-}
