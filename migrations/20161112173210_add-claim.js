@@ -1,8 +1,8 @@
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('Claim', function (table) {
-    table.integer('ClaimId').unsigned().primary()
+    table.integer('ClaimId').unsigned().primary().unique()
     table.integer('EligibilityId').unsigned().notNullable() // NO FOREIGN KEY FOR REPEAT CLAIMS WHEN NO ELIGIBILITY IN EXTSCHEMA
-    table.string('Reference', 10).notNullable().index() // NO FOREIGN KEY FOR REPEAT CLAIMS WHEN NO ELIGIBILITY IN EXTSCHEMA
+    table.string('Reference', 10).notNullable().index()     // NO FOREIGN KEY FOR REPEAT CLAIMS WHEN NO ELIGIBILITY IN EXTSCHEMA
     table.string('VisitConfirmationCheck', 20)
     table.string('AssistedDigitalCaseworker', 100)
     table.string('Caseworker', 100)
@@ -24,11 +24,6 @@ exports.up = function (knex, Promise) {
     table.dateTime('DateSubmitted')
     table.dateTime('DateReviewed')
     table.timestamp('LastUpdated').defaultTo(knex.fn.now())
-  })
-  .then(function () {
-    return knex.schema.alterTable('Claim', function (table) {
-      table.unique(['ClaimId', 'EligibilityId', 'Reference'])
-    })
   })
   .catch(function (error) {
     console.log(error)

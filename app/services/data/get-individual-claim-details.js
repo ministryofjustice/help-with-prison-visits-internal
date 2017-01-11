@@ -151,7 +151,7 @@ function getClaimChildren (claimId) {
     .join('ClaimChild', 'Claim.ClaimId', '=', 'ClaimChild.ClaimId')
     .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
     .select()
-    .orderBy('ClaimChild.Name')
+    .orderBy('ClaimChild.FirstName')
 }
 
 function getClaimEscort (claimId) {
