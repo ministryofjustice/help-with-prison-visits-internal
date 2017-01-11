@@ -261,6 +261,10 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimDeductionId2 = result[0]
+      return insertClaimEscort(uniqueId, reference, ids.eligibilityId, data.ClaimEscort)
+    })
+    .then(function (result) {
+      ids.claimEscortId = result[0]
       return ids
     })
 }
@@ -277,6 +281,7 @@ module.exports.deleteAll = function (reference) {
     .then(function () { return deleteByReference('IntSchema.ClaimExpense', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimChild', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimDeduction', reference) })
+    .then(function () { return deleteByReference('IntSchema.ClaimEscort', reference) })
     .then(function () { return deleteByReference('IntSchema.Claim', reference) })
     .then(function () { return deleteByReference('IntSchema.Visitor', reference) })
     .then(function () { return deleteByReference('IntSchema.Prisoner', reference) })
@@ -378,6 +383,12 @@ module.exports.getTestData = function (reference, status) {
         DeductionType: 'hc3',
         IsEnabled: true
       }
+    },
+    ClaimEscort: {
+      FirstName: 'Escort',
+      LastName: 'Person',
+      DateOfBirth: '01-01-1990',
+      NationalInsuranceNumber: 'AB123456A'
     }
   }
 }
@@ -410,6 +421,22 @@ function insertClaimDeduction (claimId, reference, eligibilityId, deductionType,
       ClaimId: claimId,
       DeductionType: deductionType,
       Amount: amount,
+      IsEnabled: true
+    })
+}
+
+function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
+  return knex('ClaimEscort')
+    .returning('ClaimEscortId')
+    .insert({
+      ClaimEscortId: claimId,
+      ClaimId: claimId,
+      EligibilityId: eligibilityId,
+      Reference: reference,
+      FirstName: escortData.FirstName,
+      LastName: escortData.LastName,
+      DateOfBirth: escortData.DateOfBirth,
+      NationalInsuranceNumber: escortData.NationalInsuranceNumber,
       IsEnabled: true
     })
 }
