@@ -7,6 +7,7 @@ var routes = [
 
   require('./dashboard'),
   require('./search'),
+  require('./advanced-search'),
   require('./claim/view-claim'),
   require('./claim/file-upload'),
 

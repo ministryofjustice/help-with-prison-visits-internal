@@ -1,20 +1,14 @@
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('ClaimChild', function (table) {
     table.integer('ClaimChildId').unsigned().primary()
-    table.integer('EligibilityId').unsigned().notNullable()
-    table.string('Reference', 10).notNullable().index()
+    table.integer('EligibilityId').unsigned().notNullable().references('Eligibility.EligibilityId')
+    table.string('Reference', 10).notNullable().index().references('Eligibility.Reference')
     table.integer('ClaimId').unsigned().notNullable().references('Claim.ClaimId')
-    table.string('Name', 100).notNullable()
+    table.string('FirstName', 50).notNullable()
+    table.string('LastName', 50).notNullable()
     table.dateTime('DateOfBirth').notNullable()
     table.string('Relationship', 100).notNullable()
     table.boolean('IsEnabled')
-  })
-  .then(function () {
-    return knex.schema.alterTable('ClaimChild', function (table) {
-      table
-        .foreign(['ClaimId', 'EligibilityId', 'Reference'])
-        .references(['Claim.ClaimId', 'Claim.EligibilityId', 'Claim.Reference'])
-    })
   })
   .catch(function (error) {
     console.log(error)

@@ -1,5 +1,6 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
+const dateFormatter = require('../date-formatter')
 
 const insertClaimEvent = require('./insert-claim-event')
 const overpaymentActionEnum = require('../../constants/overpayment-action-enum')
@@ -14,7 +15,8 @@ module.exports = function (claim, overpaymentResponse) {
   var toBeUpdated = overpaymentResponse.action === overpaymentActionEnum.UPDATE
 
   var updateClaim = {
-    IsOverpaid: toBeMarkedAsOverpaid || toBeUpdated
+    IsOverpaid: toBeMarkedAsOverpaid || toBeUpdated,
+    LastUpdated: dateFormatter.now().toDate()
   }
 
   if (toBeMarkedAsOverpaid) {

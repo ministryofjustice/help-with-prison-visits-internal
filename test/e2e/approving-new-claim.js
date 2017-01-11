@@ -31,7 +31,7 @@ describe('First time claim viewing flow', () => {
     })
   })
 
-  it('should display a list of claims and select the one to view details', () => {
+  it('should display a list of claims and approve a claim', () => {
     return browser.url('/')
 
       // Index
@@ -52,8 +52,12 @@ describe('First time claim viewing flow', () => {
       .click('[for="approve"]')
       .click('#approve-submit')
 
-      // Check that claim has been rejected
-      .url('/?status=APPROVED')
+      // Search for approved claim
+      .waitForExist('#input-search-query')
+      .setValue('#input-search-query', '1111111')
+      .click('#search')
+
+      // Check claim is found
       .waitForExist('#claim' + claimId)
   })
 

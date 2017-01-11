@@ -87,7 +87,7 @@
   <tr>
     <td>Child {{ childNum }}</td>
     <td>
-      {{ child['Name'] }} <br>
+      {{ child['FirstName'] }} {{ child['LastName'] }}<br>
       {{ getDateFormatted.shortDate(child['DateOfBirth']) }} <br>
       {{ getChildFormatted(child['Relationship']) }}
     </td>
@@ -95,5 +95,15 @@
     {% set childNum = childNum + 1 %}
   </tr>
   {% endfor %}
+
+  {% if Escort %}
+  <tr>
+    <td>Escort</td>
+    <td>
+      {{ Escort['FirstName'] + ' ' + Escort['LastName'] }} <br>
+      {{ getDateFormatted.shortDate(Escort['DateOfBirth']) }} <br>
+    </td>
+  </tr>
+  {% endif %}
 
 </table>

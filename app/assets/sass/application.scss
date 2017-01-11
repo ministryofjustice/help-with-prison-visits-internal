@@ -43,6 +43,20 @@ table.no-pad-right td {
     width: 200px;
 }
 
+.margin-left {
+    margin-left: 20px;
+}
+
+.margin-top label {
+    margin-top: 25px;
+    display: inline-block;
+}
+
+.margin-top.link {
+    margin-top: 7px;
+    display: inline-block;
+}
+
 .pound-wrapper span {
     font-size: 19px;
     background-color: #dee0e2;

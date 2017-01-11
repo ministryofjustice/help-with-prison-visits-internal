@@ -72,7 +72,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function () {
       return knex('IntSchema.Claim')
-        .returning('ClaimId')
+        .returning(['ClaimId', 'LastUpdated'])
         .insert({
           ClaimId: uniqueId,
           EligibilityId: ids.eligibilityId,
@@ -88,7 +88,8 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
         })
     })
     .then(function (result) {
-      ids.claimId = result[0]
+      ids.claimId = result[0].ClaimId
+      ids.lastUpdated = result[0].LastUpdated
     })
     .then(function () {
       return knex('IntSchema.ClaimExpense')
@@ -130,7 +131,8 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           EligibilityId: ids.eligibilityId,
           Reference: reference,
           ClaimId: ids.claimId,
-          Name: data.ClaimChild[0].Name,
+          FirstName: data.ClaimChild[0].FirstName,
+          LastName: data.ClaimChild[0].LastName,
           DateOfBirth: date,
           Relationship: data.ClaimChild[0].Relationship,
           IsEnabled: true
@@ -145,7 +147,8 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           EligibilityId: ids.eligibilityId,
           Reference: reference,
           ClaimId: ids.claimId,
-          Name: data.ClaimChild[1].Name,
+          FirstName: data.ClaimChild[1].FirstName,
+          LastName: data.ClaimChild[1].LastName,
           DateOfBirth: date,
           Relationship: data.ClaimChild[1].Relationship,
           IsEnabled: true
@@ -322,12 +325,14 @@ module.exports.getTestData = function (reference, status) {
       DurationOfTravel: 1
     }],
     ClaimChild: [{
-      Name: 'Jane Bloggs',
+      FirstName: 'Jane',
+      LastName: 'Bloggs',
       DateOfBirth: '01-09-2005',
       Relationship: 'prisoners-child'
     },
     {
-      Name: 'Michael Bloggs',
+      FirstName: 'Michael',
+      LastName: 'Bloggs',
       DateOfBirth: '15-10-2010',
       Relationship: 'claimants-child'
     }],

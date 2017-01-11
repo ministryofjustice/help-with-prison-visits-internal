@@ -1,11 +1,14 @@
 exports.up = function (knex, Promise) {
-  return knex.schema.createTable('ClaimBankDetail', function (table) {
-    table.integer('ClaimBankDetailId').unsigned().primary()
+  return knex.schema.createTable('ClaimEscort', function (table) {
+    table.integer('ClaimEscortId').unsigned().primary()
     table.integer('EligibilityId').unsigned().notNullable().references('Eligibility.EligibilityId')
     table.string('Reference', 10).notNullable().index().references('Eligibility.Reference')
     table.integer('ClaimId').unsigned().notNullable().references('Claim.ClaimId')
-    table.string('AccountNumber', 8)
-    table.string('SortCode', 6)
+    table.string('FirstName', 100).notNullable()
+    table.string('LastName', 100).notNullable()
+    table.dateTime('DateOfBirth').notNullable()
+    table.string('NationalInsuranceNumber', 10).notNullable()
+    table.boolean('IsEnabled')
   })
   .catch(function (error) {
     console.log(error)
@@ -14,9 +17,5 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  return knex.schema.dropTable('ClaimBankDetail')
-    .catch(function (error) {
-      console.log(error)
-      throw error
-    })
+  return knex.schema.dropTable('ClaimEscort')
 }
