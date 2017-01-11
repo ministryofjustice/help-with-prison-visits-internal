@@ -2,6 +2,7 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const moment = require('moment')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
+const prisonsEnum = require('../../../app/constants/prisons-enum')
 
 var countQuery
 var selectQuery
@@ -13,7 +14,10 @@ var validSearchOptions = [
   'prisonerNumber',
   'prison',
   'assistedDigital',
-  'claimStatus'
+  'claimStatus',
+  'modeOfApproval',
+  'pastOrFuture',
+  'visitRules'
 ]
 
 module.exports = function (searchCriteria, offset, limit) {
@@ -66,17 +70,32 @@ module.exports = function (searchCriteria, offset, limit) {
     applyAssistedDigitalFilter(selectQuery)
   }
 
-  if (searchCriteria.claimStatus && searchCriteria.claimStatus.indexOf('all') === -1) {
-    if (searchCriteria.claimStatus.indexOf('paid') !== -1) {
+  if (searchCriteria.claimStatus && searchCriteria.claimStatus !== 'all') {
+    if (searchCriteria.claimStatus === 'paid') {
       applyPaidClaimStatusFilter(countQuery)
       applyPaidClaimStatusFilter(selectQuery)
-    }
-    if (searchCriteria.claimStatus.indexOf('inProgress') !== -1) {
+    } else if (searchCriteria.claimStatus === 'inProgress') {
       applyInProgressClaimStatusFilter(countQuery)
       applyInProgressClaimStatusFilter(selectQuery)
+    } else {
+      applyClaimStatusFilter(countQuery, searchCriteria.claimStatus)
+      applyClaimStatusFilter(selectQuery, searchCriteria.claimStatus)
     }
-    applyClaimStatusFilter(countQuery, searchCriteria.claimStatus)
-    applyClaimStatusFilter(selectQuery, searchCriteria.claimStatus)
+  }
+
+  if (searchCriteria.modeOfApproval) {
+    applyModeOfApprovalFilter(countQuery, searchCriteria.modeOfApproval)
+    applyModeOfApprovalFilter(selectQuery, searchCriteria.modeOfApproval)
+  }
+
+  if (searchCriteria.pastOrFuture) {
+    applyPastOrFutureFilter(countQuery, searchCriteria.pastOrFuture)
+    applyPastOrFutureFilter(selectQuery, searchCriteria.pastOrFuture)
+  }
+
+  if (searchCriteria.visitRules) {
+    applyVisitRulesFilter(countQuery, searchCriteria.visitRules)
+    applyVisitRulesFilter(selectQuery, searchCriteria.visitRules)
   }
 
   return countQuery
@@ -119,14 +138,8 @@ module.exports = function (searchCriteria, offset, limit) {
   }
 
   function applyClaimStatusFilter (query, claimStatus) {
-    var claimStatusValues = []
-    claimStatus.forEach(function (status) {
-      var value = claimStatusEnum[status] ? claimStatusEnum[status].value : null
-      if (value) {
-        claimStatusValues.push(value)
-      }
-    })
-    query.whereIn('Claim.Status', claimStatusValues)
+    var value = claimStatusEnum[claimStatus] ? claimStatusEnum[claimStatus].value : null
+    query.where('Claim.Status', value)
   }
 
   function applyInProgressClaimStatusFilter (query) {
@@ -137,13 +150,44 @@ module.exports = function (searchCriteria, offset, limit) {
     query.where(function () {
       this.where('Claim.PaymentStatus', 'PROCESSED')
         .orWhere(function () {
-          // For Advance Claims
           this.where({
             'IsAdvanceClaim': true,
             'Status': claimStatusEnum.APPROVED_ADVANCE_CLOSED.value
           })
         })
     })
+  }
+
+  function applyModeOfApprovalFilter (query, modeOfApproval) {
+    modeOfApproval = claimStatusEnum[modeOfApproval] ? claimStatusEnum[modeOfApproval].value : null
+    query.where('Claim.Status', modeOfApproval)
+  }
+
+  function applyPastOrFutureFilter (query, pastOrFuture) {
+    if (pastOrFuture === 'past') {
+      query.where('Claim.IsAdvanceClaim', 'false')
+    } else {
+      query.where('Claim.IsAdvanceClaim', 'true')
+    }
+  }
+
+  function applyVisitRulesFilter (query, visitRules) {
+    var nonEnglandScotlandWalesPrisons = []
+    var northernIrelandPrisons = []
+    for (var prison in prisonsEnum) {
+      if (prisonsEnum[prison].region !== 'ENG/WAL' && prisonsEnum[prison].region !== 'SCO') {
+        nonEnglandScotlandWalesPrisons.push(prisonsEnum[prison].value)
+        if (prisonsEnum[prison].region === 'NI') {
+          northernIrelandPrisons.push(prisonsEnum[prison].value)
+        }
+      }
+    }
+
+    if (visitRules === 'englandScotlandWales') {
+      query.whereNotIn('Prisoner.NameOfPrison', nonEnglandScotlandWalesPrisons)
+    } else {
+      query.whereIn('Prisoner.NameOfPrison', northernIrelandPrisons)
+    }
   }
 
   function createBaseQueries (limit, offset) {

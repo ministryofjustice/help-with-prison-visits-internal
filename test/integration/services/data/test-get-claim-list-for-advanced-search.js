@@ -247,7 +247,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
   it('should return the correct claim given the claim status', function () {
     var searchCriteria = {
-      claimStatus: ['APPROVED', 'REJECTED']
+      claimStatus: 'APPROVED'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
@@ -261,7 +261,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
   it('should return the correct claim given all claim statuses', function () {
     var searchCriteria = {
-      claimStatus: ['all', 'REJECTED']
+      claimStatus: 'all'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
@@ -275,7 +275,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
   it('should not return claims with the wrong claim status', function () {
     var searchCriteria = {
-      claimStatus: ['APPROVED', 'REJECTED']
+      claimStatus: 'REJECTED'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
@@ -284,6 +284,90 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
           return claim.Reference === reference2
         })
         expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the mode of approval', function () {
+    var searchCriteria = {
+      modeOfApproval: 'APPROVED'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong mode of approval', function () {
+    var searchCriteria = {
+      modeOfApproval: 'AUTOAPPROVED'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given whether the visit was in the past or future', function () {
+    var searchCriteria = {
+      pastOrFuture: 'past'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong value for past or future', function () {
+    var searchCriteria = {
+      pastOrFuture: 'future'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the visit rules', function () {
+    var searchCriteria = {
+      visitRules: 'englandScotlandWales'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong value for visit rules', function () {
+    var searchCriteria = {
+      pastOrFuture: 'northernIreland'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
       })
   })
 

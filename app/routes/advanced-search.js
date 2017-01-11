@@ -67,37 +67,41 @@ function extractSearchCriteria (query) {
     searchCriteria.assistedDigital = true
   }
   if (query.claimStatus) {
-    var claimStatusProcessed = []
-    if (!Array.isArray(query.claimStatus)) {
-      query.claimStatus = [query.claimStatus]
+    var claimStatus = null
+    switch (query.claimStatus) {
+      case 'all':
+        claimStatus = 'all'
+        break
+      case 'new':
+        claimStatus = 'NEW'
+        break
+      case 'pending':
+        claimStatus = 'PENDING'
+        break
+      case 'approved':
+        claimStatus = 'APPROVED'
+        break
+      case 'rejected':
+        claimStatus = 'REJECTED'
+        break
+      case 'inProgress':
+        claimStatus = 'inProgress'
+        break
+      case 'paid':
+        claimStatus = 'paid'
+        break
     }
 
-    query.claimStatus.forEach(function (status) {
-      switch (status) {
-        case 'all':
-          claimStatusProcessed.push('all')
-          break
-        case 'new':
-          claimStatusProcessed.push('NEW')
-          break
-        case 'pending':
-          claimStatusProcessed.push('PENDING')
-          break
-        case 'approved':
-          claimStatusProcessed.push('APPROVED')
-          break
-        case 'rejected':
-          claimStatusProcessed.push('REJECTED')
-          break
-        case 'inProgress':
-          claimStatusProcessed.push('inProgress')
-          break
-        case 'paid':
-          claimStatusProcessed.push('paid')
-          break
-      }
-    })
-    searchCriteria.claimStatus = claimStatusProcessed
+    searchCriteria.claimStatus = claimStatus
+  }
+  if (query.modeOfApproval) {
+    searchCriteria.modeOfApproval = query.modeOfApproval === 'auto' ? 'AUTOAPPROVED' : 'APPROVED'
+  }
+  if (query.pastOrFuture) {
+    searchCriteria.pastOrFuture = query.pastOrFuture
+  }
+  if (query.visitRules) {
+    searchCriteria.visitRules = query.visitRules
   }
 
   return searchCriteria
