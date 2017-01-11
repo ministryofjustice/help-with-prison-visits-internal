@@ -90,7 +90,7 @@
           <div class="form-group">
               <label class="block-label inline selection-button-checkbox">
                   All
-                  <input type="checkbox" name="claimStatus" value="all">
+                  <input type="checkbox" name="claimStatus" value="all" {% if query.claimStatus %} {% if "all" in query.claimStatus %} checked {% endif %} {% endif %}>
               </label>
             </div>
       </div>
@@ -99,7 +99,7 @@
           <div class="form-group">
               <label class="block-label inline selection-button-checkbox">
                   New
-                  <input type="checkbox" name="claimStatus" value="new">
+                  <input type="checkbox" name="claimStatus" value="new" {% if query.claimStatus %} {% if "new" in query.claimStatus %} checked {% endif %} {% endif %}>
               </label>
             </div>
       </div>
@@ -108,7 +108,7 @@
           <div class="form-group">
               <label class="block-label inline selection-button-checkbox">
                   Pending
-                  <input type="checkbox" name="claimStatus" value="pending">
+                  <input type="checkbox" name="claimStatus" value="pending" {% if query.claimStatus %} {% if "pending" in query.claimStatus %} checked {% endif %} {% endif %}>
               </label>
             </div>
       </div>
@@ -117,7 +117,7 @@
           <div class="form-group">
               <label class="block-label inline selection-button-checkbox">
                   In progress
-                  <input type="checkbox" name="claimStatus" value="inProgress">
+                  <input type="checkbox" name="claimStatus" value="inProgress" {% if query.claimStatus %} {% if "inProgress" in query.claimStatus %} checked {% endif %} {% endif %}>
               </label>
             </div>
       </div>
@@ -126,7 +126,7 @@
           <div class="form-group">
               <label class="block-label inline selection-button-checkbox">
                   Approved
-                  <input type="checkbox" name="claimStatus" value="approved">
+                  <input type="checkbox" name="claimStatus" value="approved" {% if query.claimStatus %} {% if "approved" in query.claimStatus %} checked {% endif %} {% endif %}>
               </label>
             </div>
       </div>
@@ -135,7 +135,7 @@
           <div class="form-group">
               <label class="block-label inline selection-button-checkbox">
                   Paid
-                  <input type="checkbox" name="claimStatus" value="paid">
+                  <input type="checkbox" name="claimStatus" value="paid" {% if query.claimStatus %} {% if "paid" in query.claimStatus %} checked {% endif %} {% endif %}>
               </label>
             </div>
       </div>
@@ -144,7 +144,7 @@
           <div class="form-group">
               <label class="block-label inline selection-button-checkbox">
                   Rejected
-                  <input type="checkbox" name="claimStatus" value="rejected">
+                  <input type="checkbox" name="claimStatus" value="rejected" {% if query.claimStatus %} {% if "rejected" in query.claimStatus %} checked {% endif %} {% endif %}>
               </label>
             </div>
       </div>

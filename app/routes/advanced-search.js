@@ -11,9 +11,8 @@ module.exports = function (router) {
 
   router.get('/advanced-search', function (req, res) {
     authorisation.isCaseworker(req)
-    var searchCriteria = extractSearchCriteria(req.query)
 
-    return res.render('advanced-search', { query: searchCriteria })
+    return res.render('advanced-search', { query: req.query })
   })
 
   router.get('/advanced-search-results', function (req, res) {
@@ -59,10 +58,10 @@ function extractSearchCriteria (query) {
     searchCriteria.ninumber = query.ninumber
   }
   if (query.prisonerNumber) {
-    searchCriteria.prisonerNumber = query.prisonerNumber || ''
+    searchCriteria.prisonerNumber = query.prisonerNumber
   }
   if (query.prison) {
-    searchCriteria.prison = query.prison || ''
+    searchCriteria.prison = query.prison
   }
   if (query.assistedDigital) {
     searchCriteria.assistedDigital = true
