@@ -1,6 +1,7 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const moment = require('moment')
+const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 
 var countQuery
 var selectQuery
@@ -11,7 +12,8 @@ var validSearchOptions = [
   'ninumber',
   'prisonerNumber',
   'prison',
-  'assistedDigital'
+  'assistedDigital',
+  'claimStatus'
 ]
 
 module.exports = function (searchCriteria, offset, limit) {
@@ -64,6 +66,19 @@ module.exports = function (searchCriteria, offset, limit) {
     applyAssistedDigitalFilter(selectQuery)
   }
 
+  if (searchCriteria.claimStatus && searchCriteria.claimStatus.indexOf('all') === -1) {
+    if (searchCriteria.claimStatus.indexOf('paid') !== -1) {
+      applyPaidClaimStatusFilter(countQuery)
+      applyPaidClaimStatusFilter(selectQuery)
+    }
+    if (searchCriteria.claimStatus.indexOf('inProgress') !== -1) {
+      applyInProgressClaimStatusFilter(countQuery)
+      applyInProgressClaimStatusFilter(selectQuery)
+    }
+    applyClaimStatusFilter(countQuery, searchCriteria.claimStatus)
+    applyClaimStatusFilter(selectQuery, searchCriteria.claimStatus)
+  }
+
   return countQuery
     .then(function (count) {
       return selectQuery
@@ -101,6 +116,34 @@ module.exports = function (searchCriteria, offset, limit) {
 
   function applyAssistedDigitalFilter (query) {
     query.whereNotNull('Claim.AssistedDigitalCaseworker')
+  }
+
+  function applyClaimStatusFilter (query, claimStatus) {
+    var claimStatusValues = []
+    claimStatus.forEach(function (status) {
+      var value = claimStatusEnum[status] ? claimStatusEnum[status].value : null
+      if (value) {
+        claimStatusValues.push(value)
+      }
+    })
+    query.whereIn('Claim.Status', claimStatusValues)
+  }
+
+  function applyInProgressClaimStatusFilter (query) {
+    query.whereIn('Claim.Status', [ claimStatusEnum.NEW.value, claimStatusEnum.UPDATED.value ])
+  }
+
+  function applyPaidClaimStatusFilter (query) {
+    query.where(function () {
+      this.where('Claim.PaymentStatus', 'PROCESSED')
+        .orWhere(function () {
+          // For Advance Claims
+          this.where({
+            'IsAdvanceClaim': true,
+            'Status': claimStatusEnum.APPROVED_ADVANCE_CLOSED.value
+          })
+        })
+    })
   }
 
   function createBaseQueries (limit, offset) {

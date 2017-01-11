@@ -19,16 +19,16 @@ var prison
 describe('services/data/get-claim-list-for-advanced-search', function () {
   before(function () {
     date = dateFormatter.now()
-    testData = databaseHelper.getTestData(reference1, 'TESTING')
+    testData = databaseHelper.getTestData(reference1, 'APPROVED')
     name = testData.Visitor.FirstName + ' ' + testData.Visitor.LastName
     ninumber = testData.Visitor.NationalInsuranceNumber
     prisonerNumber = testData.Prisoner.PrisonNumber
     prison = testData.Prisoner.NameOfPrison
 
-    return databaseHelper.insertTestData(reference1, date.toDate(), 'TESTING')
+    return databaseHelper.insertTestData(reference1, date.toDate(), 'APPROVED')
       .then(function (ids) {
         claimId = ids.claimId
-        return databaseHelper.insertTestData(reference2, date.toDate(), 'TESTING', dateFormatter.now().toDate(), 10)
+        return databaseHelper.insertTestData(reference2, date.toDate(), 'PENDING', dateFormatter.now().toDate(), 10)
           .then(function () {
             var claimUpdate = knex('Claim')
               .update({
@@ -235,6 +235,48 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
   it('should not return claims with the wrong assisted digital value', function () {
     var searchCriteria = {}
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithReference2 = result.claims.filter(function (claim) {
+          return claim.Reference === reference2
+        })
+        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the claim status', function () {
+    var searchCriteria = {
+      claimStatus: ['APPROVED', 'REJECTED']
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should return the correct claim given all claim statuses', function () {
+    var searchCriteria = {
+      claimStatus: ['all', 'REJECTED']
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong claim status', function () {
+    var searchCriteria = {
+      claimStatus: ['APPROVED', 'REJECTED']
+    }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
       .then(function (result) {

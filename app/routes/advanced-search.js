@@ -67,6 +67,39 @@ function extractSearchCriteria (query) {
   if (query.assistedDigital) {
     searchCriteria.assistedDigital = true
   }
+  if (query.claimStatus) {
+    var claimStatusProcessed = []
+    if (!Array.isArray(query.claimStatus)) {
+      query.claimStatus = [query.claimStatus]
+    }
+
+    query.claimStatus.forEach(function (status) {
+      switch (status) {
+        case 'all':
+          claimStatusProcessed.push('all')
+          break
+        case 'new':
+          claimStatusProcessed.push('NEW')
+          break
+        case 'pending':
+          claimStatusProcessed.push('PENDING')
+          break
+        case 'approved':
+          claimStatusProcessed.push('APPROVED')
+          break
+        case 'rejected':
+          claimStatusProcessed.push('REJECTED')
+          break
+        case 'inProgress':
+          claimStatusProcessed.push('inProgress')
+          break
+        case 'paid':
+          claimStatusProcessed.push('paid')
+          break
+      }
+    })
+    searchCriteria.claimStatus = claimStatusProcessed
+  }
 
   return searchCriteria
 }
