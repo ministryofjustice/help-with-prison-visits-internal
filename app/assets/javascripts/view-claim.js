@@ -19,12 +19,19 @@ $('.claim-expense-status').change(function () {
   } totalApproved()
 })
 
+$(function () {
+  $('.claim-expense-status').next('input').addClass('approved-amount')
+  $('input.approved-amount').on('input', function () {
+    totalApproved()
+  })
+})
+
 function totalApproved () {
   var approvedCost = 0
   var manuallyProcessed = 0
   $('input.approved-amount').each(function () {
     if (!isNaN(this.value) && this.value.length !== 0) {
-      manuallyProcessed += parseInt(this.value)
+      manuallyProcessed += parseFloat(this.value)
     }
   })
 
@@ -32,7 +39,7 @@ function totalApproved () {
     approvedCost += +$(this).text().replace('£', '')
   })
 
-  $('.claim-expense-approvedCostText').text('Total Approved Cost: £' + (approvedCost + manuallyProcessed))
+  $('.claim-expense-approvedCostText').text('£' + (approvedCost + manuallyProcessed).toFixed(2))
 }
 
 function hide (element) {

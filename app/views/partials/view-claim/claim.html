@@ -78,9 +78,15 @@
     {% endfor %}
 
     <tr class="no-border">
-      <td class="text-right"><h3 class="heading-small space-right">Total Expense Cost:</h3></td>
+      <td class="text-left"><h3 class="heading-small space-right">Total Expense Cost:</h3></td>
       <td><h3 class="heading-small">£{{ Claim.Total }}</h3></td>
-      <td><h3 class="heading-small space-right claim-expense-approvedCostText">Total Approved Cost: £0</h3></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr class="no-border">
+      <td class="text-left"><h3 class="heading-small space-right">Total Approved Cost:</h3></td>
+      <td><h3 class="heading-small claim-expense-approvedCostText">£0.00</h3></td>
+      <td></td>
       <td></td>
     </tr>
 
