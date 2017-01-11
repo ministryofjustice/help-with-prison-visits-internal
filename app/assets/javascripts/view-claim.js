@@ -2,18 +2,18 @@ $('.claim-expense-status').change(function () {
   var id = $(this).attr('data-id')
   var value = $(this).val()
   if (value === 'APPROVED-DIFF-AMOUNT' || value === 'MANUALLY-PROCESSED') {
-    show(`#claim-expense-${id}-approvedcost`)
+    $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-hidden').addClass('visibility-visible')
     $(this).next('input').on('input').addClass('approved-amount')
     $(this).parent().parent().find('td.cost').removeClass('approved-amount')
     $('input.approved-amount').on('input', function () {
       totalApproved()
     })
   } else if (value === 'APPROVED') {
-    hide(`#claim-expense-${id}-approvedcost`)
+    $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
     $(this).parent().parent().find('td.cost').addClass('approved-amount')
     $(this).next('input').on('input').removeClass('approved-amount')
   } else {
-    hide(`#claim-expense-${id}-approvedcost`)
+    $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
     $(this).parent().parent().find('td.cost').removeClass('approved-amount')
     $(this).next('input').on('input').removeClass('approved-amount')
   } totalApproved()
