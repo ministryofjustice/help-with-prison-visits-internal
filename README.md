@@ -1,6 +1,6 @@
 # apvs-internal-web
 
-[![Build Status](https://travis-ci.org/ministryofjustice/apvs-internal-web.svg?branch=develop)](https://travis-ci.org/ministryofjustice/apvs-internal-web?branch=develop) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![Build Status](https://travis-ci.org/ministryofjustice/apvs-internal-web.svg?branch=develop)](https://travis-ci.org/ministryofjustice/apvs-internal-web?branch=develop) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/) [![NSP Status](https://nodesecurity.io/orgs/ministry-of-justice-digital/projects/92b355c7-1691-4c4d-8d3a-80a95d0cccef/badge)](https://nodesecurity.io/orgs/ministry-of-justice-digital/projects/92b355c7-1691-4c4d-8d3a-80a95d0cccef)
 
 Beta implementation of the Assisted Prison Visits Scheme internal web application.
 
