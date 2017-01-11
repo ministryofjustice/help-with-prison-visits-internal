@@ -40,12 +40,10 @@ module.exports = function (searchCriteria) {
 
 function transformData (data) {
   return Promise.map(data, function (claim) {
-    var promises = []
-
-    promises.push(getClaimChildCount(claim.ClaimId))
-    promises.push(getClaimEscort(claim.ClaimId))
-
-    return Promise.all(promises)
+    return Promise.all([
+      getClaimChildCount(claim.ClaimId),
+      getClaimEscort(claim.ClaimId)
+    ])
       .then(function (result) {
         var returnValue = {}
 
