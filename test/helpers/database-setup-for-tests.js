@@ -422,5 +422,4 @@ function generateReference () {
   return bases.toAlphabet(random, VALID_CHARACTERS)
 }
 
-
 module.exports.generateReference = generateReference
