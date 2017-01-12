@@ -359,7 +359,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
   it('should not return claims with the wrong value for visit rules', function () {
     var searchCriteria = {
-      pastOrFuture: 'northernIreland'
+      visitRules: 'northernIreland'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
