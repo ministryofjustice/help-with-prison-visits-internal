@@ -17,7 +17,11 @@ var validSearchOptions = [
   'claimStatus',
   'modeOfApproval',
   'pastOrFuture',
-  'visitRules'
+  'visitRules',
+  'visitDateFrom',
+  'visitDateTo',
+  'dateSubmittedFrom',
+  'dateSubmittedTo'
 ]
 
 module.exports = function (searchCriteria, offset, limit) {
@@ -96,6 +100,26 @@ module.exports = function (searchCriteria, offset, limit) {
   if (searchCriteria.visitRules) {
     applyVisitRulesFilter(countQuery, searchCriteria.visitRules)
     applyVisitRulesFilter(selectQuery, searchCriteria.visitRules)
+  }
+
+  if (searchCriteria.visitDateFrom) {
+    applyVisitDateFromFilter(countQuery, searchCriteria.visitDateFrom)
+    applyVisitDateFromFilter(selectQuery, searchCriteria.visitDateFrom)
+  }
+
+  if (searchCriteria.visitDateTo) {
+    applyVisitDateToFilter(countQuery, searchCriteria.visitDateTo)
+    applyVisitDateToFilter(selectQuery, searchCriteria.visitDateTo)
+  }
+
+  if (searchCriteria.dateSubmittedFrom) {
+    applyDateSubmittedFromFilter(countQuery, searchCriteria.dateSubmittedFrom)
+    applyDateSubmittedFromFilter(selectQuery, searchCriteria.dateSubmittedFrom)
+  }
+
+  if (searchCriteria.dateSubmittedTo) {
+    applyDateSubmittedToFilter(countQuery, searchCriteria.dateSubmittedTo)
+    applyDateSubmittedToFilter(selectQuery, searchCriteria.dateSubmittedTo)
   }
 
   return countQuery
@@ -192,6 +216,22 @@ module.exports = function (searchCriteria, offset, limit) {
     } else {
       query.whereIn('Prisoner.NameOfPrison', northernIrelandPrisons)
     }
+  }
+
+  function applyVisitDateFromFilter (query, visitDateFrom) {
+    query.where('Claim.DateOfJourney', '>=', visitDateFrom)
+  }
+
+  function applyVisitDateToFilter (query, visitDateTo) {
+    query.where('Claim.DateOfJourney', '<=', visitDateTo)
+  }
+
+  function applyDateSubmittedFromFilter (query, dateSubmittedFrom) {
+    query.where('Claim.DateSubmitted', '>=', dateSubmittedFrom)
+  }
+
+  function applyDateSubmittedToFilter (query, dateSubmittedTo) {
+    query.where('Claim.DateSubmitted', '<=', dateSubmittedTo)
   }
 
   function createBaseQueries (limit, offset) {

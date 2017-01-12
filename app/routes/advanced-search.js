@@ -1,6 +1,8 @@
 const authorisation = require('../services/authorisation')
 const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-for-advanced-search')
 const displayHelper = require('../views/helpers/display-helper')
+const dateFormatter = require('../services/date-formatter')
+const MIN_YEAR = 1900
 
 module.exports = function (router) {
   router.get('/advanced-search-input', function (req, res) {
@@ -103,6 +105,46 @@ function extractSearchCriteria (query) {
   if (query.visitRules) {
     searchCriteria.visitRules = query.visitRules
   }
+  var visitDateFrom = processDate(
+    query.visitDateFromDay,
+    query.visitDateFromMonth,
+    query.visitDateFromYear
+  )
+  if (visitDateFrom) {
+    searchCriteria.visitDateFrom = visitDateFrom
+  }
+  var visitDateTo = processDate(
+    query.visitDateToDay,
+    query.visitDateToMonth,
+    query.visitDateToYear
+  )
+  if (visitDateTo) {
+    searchCriteria.visitDateTo = visitDateTo
+  }
+  var dateSubmittedFrom = processDate(
+    query.dateSubmittedFromDay,
+    query.dateSubmittedFromMonth,
+    query.dateSubmittedFromYear
+  )
+  if (dateSubmittedFrom) {
+    searchCriteria.dateSubmittedFrom = dateSubmittedFrom
+  }
+  var dateSubmittedTo = processDate(
+    query.dateSubmittedToDay,
+    query.dateSubmittedToMonth,
+    query.dateSubmittedToYear
+  )
+  if (dateSubmittedTo) {
+    searchCriteria.dateSubmittedTo = dateSubmittedTo
+  }
 
   return searchCriteria
+}
+
+function processDate (day, month, year) {
+  var date = dateFormatter.build(day, month, year)
+  if (year >= MIN_YEAR && date.isValid()) {
+    return date.toDate()
+  }
+  return false
 }
