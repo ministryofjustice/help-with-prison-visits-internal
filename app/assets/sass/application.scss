@@ -192,12 +192,11 @@ span.bold {
     padding-right:20px;
 }
 
-.display-inline {
-  display: inline;
+.visibility-visible {
+  visibility: visible;
 }
-
-.display-none { 
-  display: none;
+.visibility-hidden {
+  visibility: hidden;
 }
 
 .form-control.action-select{
@@ -410,11 +409,7 @@ label.custom-file-upload {
     color: #0b0c0c;
 }
 
-#login-details {
-    float: right;
-    color: white!important;
-}
-#logout, #config, #sscl {
+#proposition-links li {
     color: white!important;
 }
 

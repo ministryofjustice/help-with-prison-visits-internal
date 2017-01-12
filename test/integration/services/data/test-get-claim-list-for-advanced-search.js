@@ -19,32 +19,38 @@ var prison
 describe('services/data/get-claim-list-for-advanced-search', function () {
   before(function () {
     date = dateFormatter.now()
-    testData = databaseHelper.getTestData(reference1, 'TESTING')
+    testData = databaseHelper.getTestData(reference1, 'APPROVED')
     name = testData.Visitor.FirstName + ' ' + testData.Visitor.LastName
     ninumber = testData.Visitor.NationalInsuranceNumber
     prisonerNumber = testData.Prisoner.PrisonNumber
     prison = testData.Prisoner.NameOfPrison
 
-    return databaseHelper.insertTestData(reference1, date.toDate(), 'TESTING')
+    return databaseHelper.insertTestData(reference1, date.toDate(), 'APPROVED')
       .then(function (ids) {
         claimId = ids.claimId
-        return databaseHelper.insertTestData(reference2, date.toDate(), 'TESTING', dateFormatter.now().toDate(), 10)
+        return databaseHelper.insertTestData(reference2, date.toDate(), 'PENDING', dateFormatter.now().toDate(), 10)
           .then(function () {
-            return knex('Visitor')
+            var claimUpdate = knex('Claim')
+              .update({
+                'AssistedDigitalCaseworker': 'test@test.com'
+              })
+              .where('Reference', reference1)
+            var visitorUpdate = knex('Visitor')
               .update({
                 'FirstName': 'Ref2FirstName',
                 'LastName': 'Ref2LastName',
                 'NationalInsuranceNumber': 'Ref2NINum'
               })
               .where('Reference', reference2)
-              .then(function () {
-                return knex('Prisoner')
-                  .update({
-                    PrisonNumber: 'REF2PNO',
-                    NameOfPrison: 'Ref2Prison'
-                  })
-                  .where('Reference', reference2)
+            var prisonerUpdate = knex('Prisoner')
+              .update({
+                PrisonNumber: 'REF2PNO',
+                NameOfPrison: 'Ref2Prison'
               })
+              .where('Reference', reference2)
+            var updates = []
+            updates.push(claimUpdate, visitorUpdate, prisonerUpdate)
+            return Promise.all(updates)
           })
       })
   })
@@ -210,6 +216,158 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
           return claim.Reference === reference2
         })
         expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the assisted digital field', function () {
+    var searchCriteria = {
+      assistedDigital: true
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong assisted digital value', function () {
+    var searchCriteria = {}
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithReference2 = result.claims.filter(function (claim) {
+          return claim.Reference === reference2
+        })
+        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the claim status', function () {
+    var searchCriteria = {
+      claimStatus: 'APPROVED'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should return the correct claim given all claim statuses', function () {
+    var searchCriteria = {
+      claimStatus: 'all'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong claim status', function () {
+    var searchCriteria = {
+      claimStatus: 'REJECTED'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithReference2 = result.claims.filter(function (claim) {
+          return claim.Reference === reference2
+        })
+        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the mode of approval', function () {
+    var searchCriteria = {
+      modeOfApproval: 'APPROVED'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong mode of approval', function () {
+    var searchCriteria = {
+      modeOfApproval: 'AUTOAPPROVED'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given whether the visit was in the past or future', function () {
+    var searchCriteria = {
+      pastOrFuture: 'past'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong value for past or future', function () {
+    var searchCriteria = {
+      pastOrFuture: 'future'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the visit rules', function () {
+    var searchCriteria = {
+      visitRules: 'englandScotlandWales'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong value for visit rules', function () {
+    var searchCriteria = {
+      pastOrFuture: 'northernIreland'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
       })
   })
 
