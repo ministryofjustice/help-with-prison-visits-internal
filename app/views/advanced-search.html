@@ -309,6 +309,113 @@
 
     </div>
 
+    <div class="grid-row">
+      <div class="column-one-half">
+        <h3 class="heading-small">Date claim approved</h3>
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            <div class="form-group">
+              <label class="form-label-bold">
+                From
+              </label>
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateApprovedFromDay">Day</label>
+                  <input id="dateApprovedFromDay" name="dateApprovedFromDay" value="{{ query.dateApprovedFromDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateApprovedFromMonth">Month</label>
+                  <input id="dateApprovedFromMonth" name="dateApprovedFromMonth" value="{{ query.dateApprovedFromMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateApprovedFromYear">Year</label>
+                  <input id="dateApprovedFromYear" name="dateApprovedFromYear" value="{{ query.dateApprovedFromYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column-one-half">
+            <div class="form-group">
+              <label class="form-label-bold">
+                To
+              </label>
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateApprovedToDay">Day</label>
+                  <input id="dateApprovedToDay" name="dateApprovedToDay" value="{{ query.dateApprovedToDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateApprovedToMonth">Month</label>
+                  <input id="dateApprovedToMonth" name="dateApprovedToMonth" value="{{ query.dateApprovedToMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateApprovedToYear">Year</label>
+                  <input id="dateApprovedToYear" name="dateApprovedToYear" value="{{ query.dateApprovedToYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column-one-half">
+        <h3 class="heading-small">Date claim rejected</h3>
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            <div class="form-group">
+              <label class="form-label-bold">
+                From
+              </label>
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateRejectedFromDay">Day</label>
+                  <input id="dateRejectedFromDay" name="dateRejectedFromDay" value="{{ query.dateRejectedFromDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateRejectedFromMonth">Month</label>
+                  <input id="dateRejectedFromMonth" name="dateRejectedFromMonth" value="{{ query.dateRejectedFromMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateRejectedFromYear">Year</label>
+                  <input id="dateRejectedFromYear" name="dateRejectedFromYear" value="{{ query.dateRejectedFromYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column-one-half">
+            <div class="form-group">
+              <label class="form-label-bold">
+                To
+              </label>
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateRejectedToDay">Day</label>
+                  <input id="dateRejectedToDay" name="dateRejectedToDay" value="{{ query.dateRejectedToDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateRejectedToMonth">Month</label>
+                  <input id="dateRejectedToMonth" name="dateRejectedToMonth" value="{{ query.dateRejectedToMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateRejectedToYear">Year</label>
+                  <input id="dateRejectedToYear" name="dateRejectedToYear" value="{{ query.dateRejectedToYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
     <div class="form-group">
       <a href="/advanced-search" class="link">Clear search</a>
     </div>

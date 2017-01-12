@@ -111,7 +111,7 @@ function extractSearchCriteria (query) {
     query.visitDateFromYear
   )
   if (visitDateFrom) {
-    searchCriteria.visitDateFrom = visitDateFrom
+    searchCriteria.visitDateFrom = visitDateFrom.startOf('day').toDate()
   }
   var visitDateTo = processDate(
     query.visitDateToDay,
@@ -119,7 +119,7 @@ function extractSearchCriteria (query) {
     query.visitDateToYear
   )
   if (visitDateTo) {
-    searchCriteria.visitDateTo = visitDateTo
+    searchCriteria.visitDateTo = visitDateTo.endOf('day').toDate()
   }
   var dateSubmittedFrom = processDate(
     query.dateSubmittedFromDay,
@@ -127,7 +127,7 @@ function extractSearchCriteria (query) {
     query.dateSubmittedFromYear
   )
   if (dateSubmittedFrom) {
-    searchCriteria.dateSubmittedFrom = dateSubmittedFrom
+    searchCriteria.dateSubmittedFrom = dateSubmittedFrom.startOf('day').toDate()
   }
   var dateSubmittedTo = processDate(
     query.dateSubmittedToDay,
@@ -135,7 +135,39 @@ function extractSearchCriteria (query) {
     query.dateSubmittedToYear
   )
   if (dateSubmittedTo) {
-    searchCriteria.dateSubmittedTo = dateSubmittedTo
+    searchCriteria.dateSubmittedTo = dateSubmittedTo.endOf('day').toDate()
+  }
+  var dateApprovedFrom = processDate(
+    query.dateApprovedFromDay,
+    query.dateApprovedFromMonth,
+    query.dateApprovedFromYear
+  )
+  if (dateApprovedFrom) {
+    searchCriteria.dateApprovedFrom = dateApprovedFrom.startOf('day').toDate()
+  }
+  var dateApprovedTo = processDate(
+    query.dateApprovedToDay,
+    query.dateApprovedToMonth,
+    query.dateApprovedToYear
+  )
+  if (dateApprovedTo) {
+    searchCriteria.dateApprovedTo = dateApprovedTo.endOf('day').toDate()
+  }
+  var dateRejectedFrom = processDate(
+    query.dateRejectedFromDay,
+    query.dateRejectedFromMonth,
+    query.dateRejectedFromYear
+  )
+  if (dateRejectedFrom) {
+    searchCriteria.dateRejectedFrom = dateRejectedFrom.startOf('day').toDate()
+  }
+  var dateRejectedTo = processDate(
+    query.dateRejectedToDay,
+    query.dateRejectedToMonth,
+    query.dateRejectedToYear
+  )
+  if (dateRejectedTo) {
+    searchCriteria.dateRejectedTo = dateRejectedTo.endOf('day').toDate()
   }
 
   return searchCriteria
@@ -144,7 +176,7 @@ function extractSearchCriteria (query) {
 function processDate (day, month, year) {
   var date = dateFormatter.build(day, month, year)
   if (year >= MIN_YEAR && date.isValid()) {
-    return date.toDate()
+    return date
   }
   return false
 }

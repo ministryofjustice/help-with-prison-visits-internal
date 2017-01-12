@@ -4,6 +4,8 @@ const moment = require('moment')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const prisonsEnum = require('../../../app/constants/prisons-enum')
 
+const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.AUTOAPPROVED.value ]
+
 var countQuery
 var selectQuery
 
@@ -21,7 +23,11 @@ var validSearchOptions = [
   'visitDateFrom',
   'visitDateTo',
   'dateSubmittedFrom',
-  'dateSubmittedTo'
+  'dateSubmittedTo',
+  'dateApprovedFrom',
+  'dateApprovedTo',
+  'dateRejectedFrom',
+  'dateRejectedTo'
 ]
 
 module.exports = function (searchCriteria, offset, limit) {
@@ -122,6 +128,26 @@ module.exports = function (searchCriteria, offset, limit) {
     applyDateSubmittedToFilter(selectQuery, searchCriteria.dateSubmittedTo)
   }
 
+  if (searchCriteria.dateApprovedFrom) {
+    applyDateApprovedFromFilter(countQuery, searchCriteria.dateApprovedFrom)
+    applyDateApprovedFromFilter(selectQuery, searchCriteria.dateApprovedFrom)
+  }
+
+  if (searchCriteria.dateApprovedTo) {
+    applyDateApprovedToFilter(countQuery, searchCriteria.dateApprovedTo)
+    applyDateApprovedToFilter(selectQuery, searchCriteria.dateApprovedTo)
+  }
+
+  if (searchCriteria.dateRejectedFrom) {
+    applyDateRejectedFromFilter(countQuery, searchCriteria.dateRejectedFrom)
+    applyDateRejectedFromFilter(selectQuery, searchCriteria.dateRejectedFrom)
+  }
+
+  if (searchCriteria.dateRejectedTo) {
+    applyDateRejectedToFilter(countQuery, searchCriteria.dateRejectedTo)
+    applyDateRejectedToFilter(selectQuery, searchCriteria.dateRejectedTo)
+  }
+
   return countQuery
     .then(function (count) {
       return selectQuery
@@ -164,7 +190,7 @@ module.exports = function (searchCriteria, offset, limit) {
   function applyClaimStatusFilter (query, claimStatus) {
     var value = claimStatusEnum[claimStatus] ? claimStatusEnum[claimStatus].value : null
     if (value === claimStatusEnum.APPROVED.value) {
-      query.whereIn('Claim.Status', [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.AUTOAPPROVED.value ])
+      query.whereIn('Claim.Status', APPROVED_STATUS_VALUES)
     } else {
       query.where('Claim.Status', value)
     }
@@ -232,6 +258,26 @@ module.exports = function (searchCriteria, offset, limit) {
 
   function applyDateSubmittedToFilter (query, dateSubmittedTo) {
     query.where('Claim.DateSubmitted', '<=', dateSubmittedTo)
+  }
+
+  function applyDateApprovedFromFilter (query, dateApprovedFrom) {
+    query.where('Claim.DateReviewed', '>=', dateApprovedFrom)
+      .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
+  }
+
+  function applyDateApprovedToFilter (query, dateApprovedTo) {
+    query.where('Claim.DateReviewed', '<=', dateApprovedTo)
+      .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
+  }
+
+  function applyDateRejectedFromFilter (query, dateRejectedFrom) {
+    query.where('Claim.DateReviewed', '>=', dateRejectedFrom)
+      .where('Claim.Status', 'REJECTED')
+  }
+
+  function applyDateRejectedToFilter (query, dateRejectedTo) {
+    query.where('Claim.DateReviewed', '<=', dateRejectedTo)
+      .where('Claim.Status', 'REJECTED')
   }
 
   function createBaseQueries (limit, offset) {
