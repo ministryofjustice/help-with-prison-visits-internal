@@ -55,9 +55,9 @@
             name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ expense['ApprovedCost'] }}"
             class="form-control cost
               {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' or expense['Status'] == 'MANUALLY-PROCESSED' %}
-                display-inline
+                visibility-visible
               {% else %}
-                display-none
+                visibility-hidden
               {% endif %}">
         </td>
       </tr>
@@ -85,7 +85,7 @@
     </tr>
     <tr class="no-border">
       <td class="text-left"><h3 class="heading-small space-right">Total Approved Cost:</h3></td>
-      <td><h3 class="heading-small claim-expense-approvedCostText">£0.00</h3></td>
+      <td><h3 class="heading-small claim-expense-approvedCostText">£0.0</h3></td>
       <td></td>
       <td></td>
     </tr>

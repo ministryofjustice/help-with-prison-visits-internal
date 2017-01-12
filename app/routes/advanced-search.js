@@ -11,9 +11,8 @@ module.exports = function (router) {
 
   router.get('/advanced-search', function (req, res) {
     authorisation.isCaseworker(req)
-    var searchCriteria = extractSearchCriteria(req.query)
 
-    return res.render('advanced-search', { query: searchCriteria })
+    return res.render('advanced-search', { query: req.query })
   })
 
   router.get('/advanced-search-results', function (req, res) {
@@ -59,10 +58,50 @@ function extractSearchCriteria (query) {
     searchCriteria.ninumber = query.ninumber
   }
   if (query.prisonerNumber) {
-    searchCriteria.prisonerNumber = query.prisonerNumber || ''
+    searchCriteria.prisonerNumber = query.prisonerNumber
   }
   if (query.prison) {
-    searchCriteria.prison = query.prison || ''
+    searchCriteria.prison = query.prison
+  }
+  if (query.assistedDigital) {
+    searchCriteria.assistedDigital = true
+  }
+  if (query.claimStatus) {
+    var claimStatus = null
+    switch (query.claimStatus) {
+      case 'all':
+        claimStatus = 'all'
+        break
+      case 'new':
+        claimStatus = 'NEW'
+        break
+      case 'pending':
+        claimStatus = 'PENDING'
+        break
+      case 'approved':
+        claimStatus = 'APPROVED'
+        break
+      case 'rejected':
+        claimStatus = 'REJECTED'
+        break
+      case 'inProgress':
+        claimStatus = 'inProgress'
+        break
+      case 'paid':
+        claimStatus = 'paid'
+        break
+    }
+
+    searchCriteria.claimStatus = claimStatus
+  }
+  if (query.modeOfApproval) {
+    searchCriteria.modeOfApproval = query.modeOfApproval === 'auto' ? 'AUTOAPPROVED' : 'APPROVED'
+  }
+  if (query.pastOrFuture) {
+    searchCriteria.pastOrFuture = query.pastOrFuture
+  }
+  if (query.visitRules) {
+    searchCriteria.visitRules = query.visitRules
   }
 
   return searchCriteria
