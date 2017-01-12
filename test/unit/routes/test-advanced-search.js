@@ -3,6 +3,7 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const express = require('express')
 const mockViewEngine = require('./mock-view-engine')
+const queryString = require('querystring');
 const sinon = require('sinon')
 require('sinon-bluebird')
 
@@ -70,20 +71,48 @@ describe('routes/index', function () {
     var start = 0
     var length = 10
 
-    it('should respond with a 200 and pass query object to data layer', function () {
-      var searchCriteria = {
-        reference: 'A123456',
-        name: 'John Smith'
-      }
+    it('should respond with a 200 and call data method', function () {
       getClaimListForAdvancedSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
       return supertest(app)
-        .get(`/advanced-search-results?reference=${searchCriteria.reference}&name=${searchCriteria.name}&draw=${draw}&start=${start}&length=${length}`)
+        .get(`/advanced-search-results?&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
           expect(isCaseworkerStub.calledOnce).to.be.true
-          expect(getClaimListForAdvancedSearch.calledWith(searchCriteria, start, length), 'expected data method to be called with parameters').to.be.true
           expect(response.body.recordsTotal).to.equal(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
+        })
+    })
+
+    it('should extract search criteria correctly', function () {
+      getClaimListForAdvancedSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
+      var searchCriteria = {
+        reference: 'APVS123',
+        name: 'testName',
+        ninumber: 'apvs1234',
+        prisonerNumber: 'apvs12345',
+        prison: 'hewell',
+        assistedDigital: 'true',
+        claimStatus: 'pending',
+        modeOfApproval: 'auto',
+        pastOrFuture: 'past',
+        visitRules: 'englandScotlandWales'
+      }
+
+      var processedSearchCriteria = {}
+      for (var prop in searchCriteria) {
+        processedSearchCriteria[prop] = searchCriteria[prop]
+      }
+
+      processedSearchCriteria.assistedDigital = true
+      processedSearchCriteria.claimStatus = 'PENDING'
+      processedSearchCriteria.modeOfApproval = 'AUTOAPPROVED'
+
+      var searchQueryString = queryString.stringify(searchCriteria)
+
+      return supertest(app)
+        .get(`/advanced-search-results?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)
+        .expect(function (response) {
+          expect(getClaimListForAdvancedSearch.calledWith(sinon.match(processedSearchCriteria), start, length), 'expected data method to be called with processed search criteria').to.be.true
         })
     })
   })
