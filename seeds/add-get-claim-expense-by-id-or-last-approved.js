@@ -20,8 +20,8 @@ exports.seed = function (knex, Promise) {
               SELECT
                 ClaimExpense.ClaimExpenseId,
                 ClaimExpense.ExpenseType,
-                ClaimExpense.Cost,
-                ClaimExpense.ApprovedCost,
+                ClaimExpense.Cost AS RequestedCost,
+                ClaimExpense.ApprovedCost AS Cost,
                 ClaimExpense.TravelTime,
                 ClaimExpense.[From],
                 ClaimExpense.[To],
