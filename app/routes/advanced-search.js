@@ -18,7 +18,7 @@ module.exports = function (router) {
     var rawQueryString = queryIndex > -1 ? req.url.substr(queryIndex + 1) : ''
 
     return res.render('advanced-search', {
-      query: searchCriteria,
+      query: req.query,
       rawQuery: rawQueryString
     })
   })
