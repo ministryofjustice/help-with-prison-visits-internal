@@ -139,6 +139,13 @@ function getClaimExpenses (claimId) {
         .on('ClaimExpense.IsEnabled', 'ClaimDocument.IsEnabled')
     })
     .orderBy('ClaimExpense.ClaimExpenseId')
+    .then(function (claimExpenses) {
+      claimExpenses.forEach(function (claimExpense) {
+        claimExpense.Cost = Number(claimExpense.Cost).toFixed(2)
+      })
+
+      return claimExpenses
+    })
 }
 
 function getClaimDeductions (claimId) {
