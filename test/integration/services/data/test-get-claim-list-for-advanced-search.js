@@ -34,7 +34,8 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
               .update({
                 'AssistedDigitalCaseworker': 'test@test.com',
                 'DateOfJourney': date.toDate(),
-                'DateReviewed': date.toDate()
+                'DateReviewed': date.toDate(),
+                'BankPaymentAmount': '12'
               })
               .where('Reference', reference1)
             var reference2ClaimUpdate = knex('Claim')
@@ -58,14 +59,6 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
             var updates = []
             updates.push(reference1ClaimUpdate, reference2ClaimUpdate, visitorUpdate, prisonerUpdate)
             return Promise.all(updates)
-              .then(function () {
-                return knex('Claim')
-                  .select()
-                  .where('Reference', reference2)
-                    .then(function (results) {
-                      console.dir(results)
-                    })
-              })
           })
       })
   })
@@ -593,6 +586,118 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
           return claim.Reference === reference1
         })
         expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the date rejected upper bound', function () {
+    var dateRejectedTo = dateFormatter.now().add(1, 'day').toDate()
+    var searchCriteria = {
+      dateRejectedTo: dateRejectedTo
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithReference2 = result.claims.filter(function (claim) {
+          return claim.Reference === reference2
+        })
+        expect(claimsWithReference2.length, `Claims with reference2 length should equal 1`).to.equal(1)
+      })
+  })
+
+  it('should not return claims with the wrong value for date rejected upper bound', function () {
+    var dateRejectedTo = dateFormatter.now().subtract(1, 'day').toDate()
+    var searchCriteria = {
+      dateRejectedTo: dateRejectedTo
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithCurrentReference = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the approved claim amount lower bound', function () {
+    var approvedClaimAmountFrom = 10
+    var searchCriteria = {
+      approvedClaimAmountFrom: approvedClaimAmountFrom
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithReference1 = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithReference1[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong value for approved claim amount lower bound', function () {
+    var approvedClaimAmountFrom = 20
+    var searchCriteria = {
+      approvedClaimAmountFrom: approvedClaimAmountFrom
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithReference1 = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithReference1.length, `Claims with reference1 length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given the approved claim amount upper bound', function () {
+    var approvedClaimAmountTo = 20
+    var searchCriteria = {
+      approvedClaimAmountTo: approvedClaimAmountTo
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithReference1 = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithReference1[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+      })
+  })
+
+  it('should not return claims with the wrong value for approved claim amount upper bound', function () {
+    var approvedClaimAmountTo = 10
+    var searchCriteria = {
+      approvedClaimAmountTo: approvedClaimAmountTo
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        var claimsWithReference1 = result.claims.filter(function (claim) {
+          return claim.Reference === reference1
+        })
+        expect(claimsWithReference1.length, `Claims with reference1 length should equal 0`).to.equal(0)
+      })
+  })
+
+  it('should return the correct claim given multiple search criteria', function () {
+    var searchCriteria = {
+      reference: reference1,
+      name: name,
+      ninumber: ninumber,
+      prisonerNumber: prisonerNumber,
+      prison: prison,
+      claimStatus: 'APPROVED',
+      dateSubmittedFrom: date.subtract(1, 'day').toDate(),
+      dateSubmittedTo: date.add(1, 'day').toDate(),
+      approvedClaimAmountFrom: '11.50',
+      approvedClaimAmountTo: '13'
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+      .then(function (result) {
+        expect(result.claims[0].Reference, `Reference should equal ${reference1}`).to.equal(reference1)
+        expect(result.claims[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
+        expect(result.claims.length, 'Claims length should equal 1').to.equal(1)
       })
   })
 

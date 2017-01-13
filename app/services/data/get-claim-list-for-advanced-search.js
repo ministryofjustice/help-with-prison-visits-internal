@@ -27,7 +27,9 @@ var validSearchOptions = [
   'dateApprovedFrom',
   'dateApprovedTo',
   'dateRejectedFrom',
-  'dateRejectedTo'
+  'dateRejectedTo',
+  'approvedClaimAmountFrom',
+  'approvedClaimAmountTo'
 ]
 
 module.exports = function (searchCriteria, offset, limit) {
@@ -146,6 +148,16 @@ module.exports = function (searchCriteria, offset, limit) {
   if (searchCriteria.dateRejectedTo) {
     applyDateRejectedToFilter(countQuery, searchCriteria.dateRejectedTo)
     applyDateRejectedToFilter(selectQuery, searchCriteria.dateRejectedTo)
+  }
+
+  if (searchCriteria.approvedClaimAmountFrom) {
+    applyApprovedClaimAmountFromFilter(countQuery, searchCriteria.approvedClaimAmountFrom)
+    applyApprovedClaimAmountFromFilter(selectQuery, searchCriteria.approvedClaimAmountFrom)
+  }
+
+  if (searchCriteria.approvedClaimAmountTo) {
+    applyApprovedClaimAmountToFilter(countQuery, searchCriteria.approvedClaimAmountTo)
+    applyApprovedClaimAmountToFilter(selectQuery, searchCriteria.approvedClaimAmountTo)
   }
 
   return countQuery
@@ -272,12 +284,22 @@ module.exports = function (searchCriteria, offset, limit) {
 
   function applyDateRejectedFromFilter (query, dateRejectedFrom) {
     query.where('Claim.DateReviewed', '>=', dateRejectedFrom)
-      .where('Claim.Status', 'REJECTED')
+      .where('Claim.Status', claimStatusEnum.REJECTED.value)
   }
 
   function applyDateRejectedToFilter (query, dateRejectedTo) {
     query.where('Claim.DateReviewed', '<=', dateRejectedTo)
-      .where('Claim.Status', 'REJECTED')
+      .where('Claim.Status', claimStatusEnum.REJECTED.value)
+  }
+
+  function applyApprovedClaimAmountFromFilter (query, approvedClaimAmountFrom) {
+    query.where('Claim.BankPaymentAmount', '>=', approvedClaimAmountFrom)
+      .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
+  }
+
+  function applyApprovedClaimAmountToFilter (query, approvedClaimAmountTo) {
+    query.where('Claim.BankPaymentAmount', '<=', approvedClaimAmountTo)
+      .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
   }
 
   function createBaseQueries (limit, offset) {

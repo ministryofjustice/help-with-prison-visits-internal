@@ -3,7 +3,8 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const express = require('express')
 const mockViewEngine = require('./mock-view-engine')
-const queryString = require('querystring');
+const queryString = require('querystring')
+const dateFormatter = require('../../../app/services/date-formatter')
 const sinon = require('sinon')
 require('sinon-bluebird')
 
@@ -11,6 +12,48 @@ var getClaimListForAdvancedSearch
 var displayHelperStub
 var authorisation
 var isCaseworkerStub
+
+const INPUT_SEARCH_CRITERIA = {
+  reference: 'APVS123',
+  name: 'testName',
+  ninumber: 'apvs1234',
+  prisonerNumber: 'apvs12345',
+  prison: 'hewell',
+  assistedDigital: 'true',
+  claimStatus: 'pending',
+  modeOfApproval: 'auto',
+  pastOrFuture: 'past',
+  visitRules: 'englandScotlandWales',
+  approvedClaimAmountFrom: '12',
+  approvedClaimAmountTo: '12'
+}
+
+const INPUT_DATE_FIELDS = {
+  visitDateFromDay: '12',
+  visitDateFromMonth: '12',
+  visitDateFromYear: '2016',
+  visitDateToDay: '12',
+  visitDateToMonth: '12',
+  visitDateToYear: '2016',
+  dateSubmittedFromDay: '12',
+  dateSubmittedFromMonth: '12',
+  dateSubmittedFromYear: '2016',
+  dateSubmittedToDay: '12',
+  dateSubmittedToMonth: '12',
+  dateSubmittedToYear: '2016',
+  dateApprovedFromDay: '12',
+  dateApprovedFromMonth: '12',
+  dateApprovedFromYear: '2016',
+  dateApprovedToDay: '12',
+  dateApprovedToMonth: '12',
+  dateApprovedToYear: '2016',
+  dateRejectedFromDay: '12',
+  dateRejectedFromMonth: '12',
+  dateRejectedFromYear: '2016',
+  dateRejectedToDay: '12',
+  dateRejectedToMonth: '12',
+  dateRejectedToYear: '2016',
+}
 
 const RETURNED_CLAIM = {
   Reference: 'SEARCH1',
@@ -22,6 +65,9 @@ const RETURNED_CLAIM = {
   DateSubmittedFormatted: '28-11-2016 00:00',
   Name: 'John Smith'
 }
+
+const EXPECTED_DATE_FROM = dateFormatter.build('12', '12', '2016').startOf('day').toDate()
+const EXPECTED_DATE_TO = dateFormatter.build('12', '12', '2016').endOf('day').toDate()
 
 describe('routes/index', function () {
   var app
@@ -85,29 +131,25 @@ describe('routes/index', function () {
 
     it('should extract search criteria correctly', function () {
       getClaimListForAdvancedSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
-      var searchCriteria = {
-        reference: 'APVS123',
-        name: 'testName',
-        ninumber: 'apvs1234',
-        prisonerNumber: 'apvs12345',
-        prison: 'hewell',
-        assistedDigital: 'true',
-        claimStatus: 'pending',
-        modeOfApproval: 'auto',
-        pastOrFuture: 'past',
-        visitRules: 'englandScotlandWales'
-      }
 
       var processedSearchCriteria = {}
-      for (var prop in searchCriteria) {
-        processedSearchCriteria[prop] = searchCriteria[prop]
+      for (var prop in INPUT_SEARCH_CRITERIA) {
+        processedSearchCriteria[prop] = INPUT_SEARCH_CRITERIA[prop]
       }
 
       processedSearchCriteria.assistedDigital = true
       processedSearchCriteria.claimStatus = 'PENDING'
       processedSearchCriteria.modeOfApproval = 'AUTOAPPROVED'
+      processedSearchCriteria.visitDateFrom = EXPECTED_DATE_FROM
+      processedSearchCriteria.visitDateTo = EXPECTED_DATE_TO
+      processedSearchCriteria.dateSubmittedFrom = EXPECTED_DATE_FROM
+      processedSearchCriteria.dateSubmittedTo = EXPECTED_DATE_TO
+      processedSearchCriteria.dateApprovedFrom = EXPECTED_DATE_FROM
+      processedSearchCriteria.dateApprovedTo = EXPECTED_DATE_TO
+      processedSearchCriteria.dateRejectedFrom = EXPECTED_DATE_FROM
+      processedSearchCriteria.dateRejectedTo = EXPECTED_DATE_TO
 
-      var searchQueryString = queryString.stringify(searchCriteria)
+      var searchQueryString = `${queryString.stringify(INPUT_SEARCH_CRITERIA)}&${queryString.stringify(INPUT_DATE_FIELDS)}`
 
       return supertest(app)
         .get(`/advanced-search-results?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)

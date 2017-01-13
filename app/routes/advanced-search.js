@@ -3,6 +3,7 @@ const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-f
 const displayHelper = require('../views/helpers/display-helper')
 const dateFormatter = require('../services/date-formatter')
 const MIN_YEAR = 1900
+const VALID_AMOUNT_EXPRESSION = new RegExp(/^(\d+\.?\d{0,9}|\d{1,9})$/)
 
 module.exports = function (router) {
   router.get('/advanced-search-input', function (req, res) {
@@ -43,6 +44,9 @@ module.exports = function (router) {
           recordsFiltered: data.total.Count,
           claims: claims
         })
+      })
+      .catch(function (error) {
+        res.status(500).send(error)
       })
   })
 }
@@ -168,6 +172,16 @@ function extractSearchCriteria (query) {
   )
   if (dateRejectedTo) {
     searchCriteria.dateRejectedTo = dateRejectedTo.endOf('day').toDate()
+  }
+  if (query.approvedClaimAmountFrom) {
+    if (query.approvedClaimAmountFrom.match(VALID_AMOUNT_EXPRESSION)) {
+      searchCriteria.approvedClaimAmountFrom = query.approvedClaimAmountFrom
+    }
+  }
+  if (query.approvedClaimAmountTo) {
+    if (query.approvedClaimAmountTo.match(VALID_AMOUNT_EXPRESSION)) {
+      searchCriteria.approvedClaimAmountTo = query.approvedClaimAmountTo
+    }
   }
 
   return searchCriteria
