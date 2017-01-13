@@ -55,8 +55,8 @@ describe('services/data/dashboard/get-in-progress-claim-count', function () {
 
               promises.push(databaseHelper.insertClaim(claimId2, eligibilityId, reference, yesterday, claimStatusEnum.NEW.value, false))
               promises.push(databaseHelper.insertClaim(claimId3, eligibilityId, reference, lastWeek, claimStatusEnum.UPDATED.value, false))
-              promises.push(databaseHelper.insertClaim(claimId4, eligibilityId, reference, oneMonthAgo, claimStatusEnum.NEW.value, false))
-              promises.push(databaseHelper.insertClaim(claimId5, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.UPDATED.value, false))
+              promises.push(databaseHelper.insertClaim(claimId4, eligibilityId, reference, oneMonthAgo, claimStatusEnum.REQUEST_INFORMATION.value, false))
+              promises.push(databaseHelper.insertClaim(claimId5, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.REQUEST_INFO_PAYMENT.value, false))
               promises.push(databaseHelper.insertClaim(claimId6, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.NEW.value, false))
               promises.push(databaseHelper.insertClaim(claimId7, eligibilityId, reference, fourMonthsAgo, claimStatusEnum.UPDATED.value, false))
               promises.push(databaseHelper.insertClaim(claimId8, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED.value, false))
