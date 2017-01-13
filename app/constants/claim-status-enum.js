@@ -30,5 +30,9 @@ module.exports = {
   REQUEST_INFO_PAYMENT: {
     value: 'REQUEST-INFO-PAYMENT',
     closed: false
+  },
+  REQUEST_INFORMATION: {
+    value: 'REQUEST-INFORMATION',
+    closed: false
   }
 }
