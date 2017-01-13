@@ -17,7 +17,7 @@ module.exports = function (router) {
     csrfToken = generateCSRFToken(req)
 
     if (DocumentTypeEnum.hasOwnProperty(req.params.documentType)) {
-      DirectoryCheck(`${req.params.referenceId}-${req.query.eligibilityId}`, req.params.claimId, req.query.claimExpenseId, req.params.documentType)
+      DirectoryCheck(`${req.params.referenceId}-${req.query.eligibilityId}`, req.query.claimExpenseId, req.params.documentType)
       return res.render('claim/file-upload', {
         claimType: req.params.claimType,
         document: req.params.documentType,

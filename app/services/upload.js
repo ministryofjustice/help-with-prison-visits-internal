@@ -11,9 +11,9 @@ const allowedFileTypes = [ 'image/png', 'image/jpeg', 'application/pdf' ]
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (req.query.claimExpenseId) {
-      cb(null, `${config.FILE_UPLOAD_LOCATION}/${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.query.claimExpenseId}/${req.params.documentType}`)
+      cb(null, `${config.FILE_UPLOAD_LOCATION}/${req.params.referenceId}-${req.query.eligibilityId}/${req.query.claimExpenseId}/${req.params.documentType}`)
     } else {
-      cb(null, `${config.FILE_UPLOAD_LOCATION}/${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.params.documentType}`)
+      cb(null, `${config.FILE_UPLOAD_LOCATION}/${req.params.referenceId}-${req.query.eligibilityId}/${req.params.documentType}`)
     }
   },
   filename: function (req, file, cb) {
