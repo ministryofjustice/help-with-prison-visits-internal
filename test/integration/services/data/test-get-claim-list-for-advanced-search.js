@@ -709,6 +709,53 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       })
   })
 
+  it('should return the correct fields when returning export data', function () {
+    var searchCriteria = {
+      prison: prison
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000, true)
+      .then(function (result) {
+        var claim = result.claims[0]
+
+        expect(claim.hasOwnProperty('FirstName')).to.be.true
+        expect(claim.hasOwnProperty('LastName')).to.be.true
+        expect(claim.hasOwnProperty('Benefit')).to.be.true
+        expect(claim.hasOwnProperty('Relationship')).to.be.true
+        expect(claim.hasOwnProperty('DateSubmitted')).to.be.true
+        expect(claim.hasOwnProperty('DateOfJourney')).to.be.true
+        expect(claim.hasOwnProperty('DateReviewed')).to.be.true
+        expect(claim.hasOwnProperty('ClaimType')).to.be.true
+        expect(claim.hasOwnProperty('AssistedDigitalCaseworker')).to.be.true
+        expect(claim.hasOwnProperty('Caseworker')).to.be.true
+        expect(claim.hasOwnProperty('IsAdvanceClaim')).to.be.true
+        expect(claim.hasOwnProperty('Status')).to.be.true
+        expect(claim.hasOwnProperty('BankPaymentAmount')).to.be.true
+        expect(claim.hasOwnProperty('ClaimId')).to.be.true
+        expect(claim.hasOwnProperty('IsTrusted')).to.be.true
+        expect(claim.hasOwnProperty('NameOfPrison')).to.be.true
+      })
+  })
+
+  it('should return the correct fields when returning advanced search data', function () {
+    var searchCriteria = {
+      prison: prison
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000, false)
+      .then(function (result) {
+        var claim = result.claims[0]
+
+        expect(claim.hasOwnProperty('Reference')).to.be.true
+        expect(claim.hasOwnProperty('FirstName')).to.be.true
+        expect(claim.hasOwnProperty('LastName')).to.be.true
+        expect(claim.hasOwnProperty('DateSubmitted')).to.be.true
+        expect(claim.hasOwnProperty('DateOfJourney')).to.be.true
+        expect(claim.hasOwnProperty('ClaimType')).to.be.true
+        expect(claim.hasOwnProperty('ClaimId')).to.be.true
+      })
+  })
+
   after(function () {
     var promises = []
 

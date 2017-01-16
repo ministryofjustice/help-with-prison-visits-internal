@@ -12,6 +12,7 @@ var getClaimListForAdvancedSearch
 var displayHelperStub
 var authorisation
 var isCaseworkerStub
+var exportSearchResultsStub
 
 const INPUT_SEARCH_CRITERIA = {
   reference: 'APVS123',
@@ -129,11 +130,13 @@ describe('routes/index', function () {
     getClaimListForAdvancedSearch = sinon.stub()
     displayHelperStub = sinon.stub({ 'getClaimTypeDisplayName': function () {} })
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
+    exportSearchResultsStub = sinon.stub().resolves('')
 
     var route = proxyquire('../../../app/routes/advanced-search', {
       '../services/authorisation': authorisation,
       '../services/data/get-claim-list-for-advanced-search': getClaimListForAdvancedSearch,
-      '../views/helpers/display-helper': displayHelperStub
+      '../views/helpers/display-helper': displayHelperStub,
+      '../services/export-search-results': exportSearchResultsStub
     })
 
     app = express()
@@ -221,6 +224,18 @@ describe('routes/index', function () {
         .get(`/advanced-search-results?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)
         .expect(function (response) {
           expect(getClaimListForAdvancedSearch.calledWith(sinon.match(processedSearchCriteria), start, length), 'expected data method to be called with processed search criteria').to.be.true
+        })
+    })
+  })
+
+  describe('GET /advanced-search-results/export', function () {
+    it('should respond with a 200', function () {
+      return supertest(app)
+        .get('/advanced-search-results/export?')
+        .expect(200)
+        .expect(function () {
+          expect(isCaseworkerStub.calledOnce).to.be.true
+          expect(exportSearchResultsStub.calledOnce).to.be.true
         })
     })
   })
