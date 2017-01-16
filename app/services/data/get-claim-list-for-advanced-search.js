@@ -5,6 +5,7 @@ const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const prisonsEnum = require('../../../app/constants/prisons-enum')
 
 const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.AUTOAPPROVED.value ]
+const IN_PROGRESS_STATUS_VALUES = [ claimStatusEnum.NEW.value, claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value ]
 
 var countQuery
 var selectQuery
@@ -209,7 +210,7 @@ module.exports = function (searchCriteria, offset, limit) {
   }
 
   function applyInProgressClaimStatusFilter (query) {
-    query.whereIn('Claim.Status', [ claimStatusEnum.NEW.value, claimStatusEnum.UPDATED.value ])
+    query.whereIn('Claim.Status', IN_PROGRESS_STATUS_VALUES)
   }
 
   function applyPaidClaimStatusFilter (query) {
