@@ -37,6 +37,7 @@ class ClaimDecision {
       } else if (expense.status !== claimDecisionEnum.APPROVED_DIFF_AMOUNT &&
                  expense.status !== claimDecisionEnum.MANUALLY_PROCESSED) {
         expense.approvedCost = null
+      } else if (expense.status !== claimDecisionEnum.REQUEST_INFORMATION) {
       }
     })
     this.IsValid()
@@ -60,7 +61,6 @@ class ClaimDecision {
     this.claimExpenseResponses.forEach(function (expense) {
       FieldValidator(expense.status, 'claim-expense', errors)
         .isRequired()
-
       if (expense.approvedCost != null) {
         FieldValidator(expense.approvedCost, 'approve-cost', errors)
           .isRequired()
@@ -69,6 +69,23 @@ class ClaimDecision {
           .isLessThanMaximumDifferentApprovedAmount()
       }
     })
+    var check = false
+    this.claimExpenseResponses.forEach(function (expense) {
+      if (expense.status.includes(claimDecisionEnum.APPROVED)) {
+        check = true
+      } else if (expense.status.includes(claimDecisionEnum.APPROVED_DIFF_AMOUNT)) {
+        check = true
+      } else if (expense.status.includes(claimDecisionEnum.MANUALLY_PROCESSED)) {
+        check = true
+      } else if (expense.status.includes(claimDecisionEnum.REQUEST_INFORMATION)) {
+        check = true
+      }
+    })
+
+    if (check === false) {
+      FieldValidator(this.approvedCost, 'approve-cost', errors)
+        .isRequired('', check)
+    }
 
     FieldValidator(this.nomisCheck, 'nomis-check', errors)
       .isRequired()
