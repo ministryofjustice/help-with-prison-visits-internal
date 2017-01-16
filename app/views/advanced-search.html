@@ -28,55 +28,54 @@
       <div class="column-one-third">
         <div class="form-group">
           <label class="form-label-bold">
-                  Reference number
-                  <input type="text" name="reference" value="{{ query.reference }}" class="form-control full">
-              </label>
+            Reference number
+            <input id="reference" type="text" name="reference" value="{{ query.reference }}" class="form-control full">
+          </label>
         </div>
       </div>
 
       <div class="column-one-third">
         <div class="form-group">
           <label class="form-label-bold">
-                  Name
-                  <input type="text" name="name" value="{{ query.name }}" class="form-control full">
-              </label>
+            Name
+            <input id="name" type="text" name="name" value="{{ query.name }}" class="form-control full">
+          </label>
         </div>
       </div>
 
       <div class="column-one-third">
         <div class="form-group">
           <label class="form-label-bold">
-                  National Insurance Number
-                  <input type="text" name="ninumber" value="{{ query.ninumber }}" class="form-control full">
-              </label>
-        </div>
-      </div>
-
-
-      <div class="column-one-third">
-        <div class="form-group">
-          <label class="form-label-bold">
-                  Prisoner number
-                  <input type="text" name="prisonerNumber" value="{{ query.prisonerNumber }}" class="form-control full">
-              </label>
+            National Insurance Number
+            <input id="ninumber" type="text" name="ninumber" value="{{ query.ninumber }}" class="form-control full">
+          </label>
         </div>
       </div>
 
       <div class="column-one-third">
         <div class="form-group">
           <label class="form-label-bold">
-                  Prison
-                  <input type="text" name="prison" value="{{ query.prison }}" class="form-control full">
-              </label>
+            Prisoner number
+            <input id="prisonerNumber" type="text" name="prisonerNumber" value="{{ query.prisonerNumber }}" class="form-control full">
+          </label>
+        </div>
+      </div>
+
+      <div class="column-one-third">
+        <div class="form-group">
+          <label class="form-label-bold">
+            Prison
+            <input id="prison" type="text" name="prison" value="{{ query.prison }}" class="form-control full">
+          </label>
         </div>
       </div>
 
       <div class="column-one-third">
         <div class="form-group margin-top">
-          <label class="block-label inline selection-button-checkbox">
-                  Assisted Digital Claim
-                  <input type="checkbox" name="assistedDigital" {% if query.assistedDigital %} checked {% endif %}>
-              </label>
+          <label for="assistedDigital" class="block-label inline selection-button-checkbox">
+            Assisted Digital Claim
+            <input id="assistedDigital" type="checkbox" name="assistedDigital" {% if query.assistedDigital %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
@@ -88,64 +87,64 @@
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label class="block-label inline">
-                  All
-                  <input type="radio" name="claimStatus" value="all" {% if query.claimStatus == 'all' %} checked {% endif %}>
-              </label>
+          <label for="claimStatusAll" class="block-label inline">
+            All
+            <input id="claimStatusAll" type="radio" name="claimStatus" value="all" {% if query.claimStatus == 'all' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label class="block-label inline">
-                  New
-                  <input type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
-              </label>
+          <label for="claimStatusNew" class="block-label inline">
+            New
+            <input id="claimStatusNew" type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label class="block-label inline">
-                  Pending
-                  <input type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
-              </label>
+          <label for="claimStatusPending" class="block-label inline">
+            Pending
+            <input id="claimStatusPending" type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label class="block-label inline">
-                  In progress
-                  <input type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
-              </label>
+          <label for="claimStatusInProgress" class="block-label inline">
+            In progress
+            <input id="claimStatusInProgress" type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label class="block-label inline">
-                  Approved
-                  <input type="radio" name="claimStatus" value="approved" {% if query.claimStatus == 'approved' %} checked {% endif %}>
-              </label>
+          <label for="claimStatusApproved" class="block-label inline">
+            Approved
+            <input id="claimStatusApproved" type="radio" name="claimStatus" value="approved" {% if query.claimStatus == 'approved' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label class="block-label inline">
-                  Paid
-                  <input type="radio" name="claimStatus" value="paid" {% if query.claimStatus == 'paid' %} checked {% endif %}>
-              </label>
+          <label for="claimStatusPaid" class="block-label inline">
+            Paid
+            <input id="claimStatusPaid" type="radio" name="claimStatus" value="paid" {% if query.claimStatus == 'paid' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label class="block-label inline">
-                  Rejected
-                  <input type="radio" name="claimStatus" value="rejected" {% if query.claimStatus == 'rejected' %} checked {% endif %}>
-              </label>
+          <label for="claimStatusRejected" class="block-label inline">
+            Rejected
+            <input id="claimStatusRejected" type="radio" name="claimStatus" value="rejected" {% if query.claimStatus == 'rejected' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
@@ -155,48 +154,48 @@
       <div class="column-one-third">
         <h3 class="heading-small">Mode of approval</h3>
         <div class="form-group">
-          <label class="block-label inline">
-                  Auto
-                  <input type="radio" name="modeOfApproval" value="auto" {% if query.modeOfApproval == 'auto' %} checked {% endif %}>
-              </label>
+          <label for="modeOfApprovalAuto" class="block-label inline">
+            Auto
+            <input id="modeOfApprovalAuto" type="radio" name="modeOfApproval" value="auto" {% if query.modeOfApproval == 'auto' %} checked {% endif %}>
+          </label>
         </div>
         <div class="form-group">
-          <label class="block-label inline">
-                  Manual
-                  <input type="radio" name="modeOfApproval" value="manual" {% if query.modeOfApproval == 'manual' %} checked {% endif %}>
-              </label>
+          <label for="modeOfApprovalManual" class="block-label inline">
+            Manual
+            <input id="modeOfApprovalManual"type="radio" name="modeOfApproval" value="manual" {% if query.modeOfApproval == 'manual' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
       <div class="column-one-third">
         <h3 class="heading-small">Type of claim</h3>
         <div class="form-group">
-          <label class="block-label inline">
-                  Visit in past
-                  <input type="radio" name="pastOrFuture" value="past" {% if query.pastOrFuture == 'past' %} checked {% endif %}>
-              </label>
+          <label for="typeOfClaimPast" class="block-label inline">
+            Visit in past
+            <input id="typeOfClaimPast" type="radio" name="pastOrFuture" value="past" {% if query.pastOrFuture == 'past' %} checked {% endif %}>
+          </label>
         </div>
         <div class="form-group">
-          <label class="block-label inline">
-                  Visit in future
-                  <input type="radio" name="pastOrFuture" value="future" {% if query.pastOrFuture == 'future' %} checked {% endif %}>
-              </label>
+          <label for="typeOfClaimFuture" class="block-label inline">
+            Visit in future
+            <input id="typeOfClaimFuture" type="radio" name="pastOrFuture" value="future" {% if query.pastOrFuture == 'future' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
       <div class="column-one-third">
         <h3 class="heading-small">Visit rules</h3>
         <div class="form-group">
-          <label class="block-label inline">
-                  England/Scotland/Wales
-                  <input type="radio" name="visitRules" value="englandScotlandWales" {% if query.visitRules == 'englandScotlandWales' %} checked {% endif %}>
-              </label>
+          <label for="visitRulesEnglandScotlandWales" class="block-label inline">
+            England/Scotland/Wales
+            <input id="visitRulesEnglandScotlandWales" type="radio" name="visitRules" value="englandScotlandWales" {% if query.visitRules == 'englandScotlandWales' %} checked {% endif %}>
+          </label>
         </div>
         <div class="form-group">
-          <label class="block-label inline">
-                  Northern Ireland
-                  <input type="radio" name="visitRules" value="northernIreland" {% if query.visitRules == 'northernIreland' %} checked {% endif %}>
-              </label>
+          <label for="visitRulesNorthernIreland" class="block-label inline">
+            Northern Ireland
+            <input id="visitRulesNorthernIreland" type="radio" name="visitRules" value="northernIreland" {% if query.visitRules == 'northernIreland' %} checked {% endif %}>
+          </label>
         </div>
       </div>
 
@@ -418,29 +417,29 @@
 
     <div class="grid-row">
       <div class="column-one-third">
-          <div class="form-group pound-wrapper">
-            <label class="form-label-bold">Approved claim amount from</label>
-              <span>£</span>
-              <input id="approvedClaimAmountFrom" type="text" class="form-control full" name="approvedClaimAmountFrom" value="{{ query.approvedClaimAmountFrom }}">
-          </div>
+        <div class="form-group pound-wrapper">
+          <label class="form-label-bold">Approved claim amount from</label>
+          <span>£</span>
+          <input id="approvedClaimAmountFrom" type="text" class="form-control full" name="approvedClaimAmountFrom" value="{{ query.approvedClaimAmountFrom }}">
+        </div>
       </div>
 
       <div class="column-one-third">
-          <div class="form-group pound-wrapper">
-            <label class="form-label-bold">Approved claim amount to</label>
-              <span>£</span>
-              <input id="approvedClaimAmountTo" type="text" class="form-control full" name="approvedClaimAmountTo" value="{{ query.approvedClaimAmountTo }}">
-          </div>
+        <div class="form-group pound-wrapper">
+          <label class="form-label-bold">Approved claim amount to</label>
+          <span>£</span>
+          <input id="approvedClaimAmountTo" type="text" class="form-control full" name="approvedClaimAmountTo" value="{{ query.approvedClaimAmountTo }}">
+        </div>
       </div>
 
     </div>
 
     <div class="form-group">
-      <a href="/advanced-search" class="link">Clear search</a>
+      <a id="clear-search" href="/advanced-search" class="link">Clear search</a>
     </div>
 
     <div class="form-group">
-      <input type="submit" class="button" value="Search">
+      <input id="advanced-search-submit" type="submit" class="button" value="Search">
       <a href="/" class="link margin-left margin-top">Cancel</a>
     </div>
 
