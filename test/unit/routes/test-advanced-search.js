@@ -52,7 +52,7 @@ const INPUT_DATE_FIELDS = {
   dateRejectedFromYear: '2016',
   dateRejectedToDay: '12',
   dateRejectedToMonth: '12',
-  dateRejectedToYear: '2016',
+  dateRejectedToYear: '2016'
 }
 
 const RETURNED_CLAIM = {
