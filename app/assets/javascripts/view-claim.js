@@ -24,6 +24,12 @@ $(function () {
   $('input.approved-amount').on('input', function () {
     totalApproved()
   })
+  $('.claim-expense-status').each(function () {
+    if (this[this.selectedIndex].value === 'APPROVED') {
+      $('.claim-expense-status').parent().parent().find('td.cost').addClass('approved-amount')
+      totalApproved()
+    }
+  })
 })
 
 function totalApproved () {
