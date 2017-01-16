@@ -3,13 +3,13 @@ module.exports = function (claimExpenses, claimDeductions) {
 
   if (claimExpenses && claimExpenses.length > 0) {
     claimExpenses.forEach(function (claimExpense) {
-      total += claimExpense.ApprovedCost ? claimExpense.ApprovedCost : claimExpense.Cost
+      total += claimExpense.ApprovedCost ? parseFloat(claimExpense.ApprovedCost) : parseFloat(claimExpense.Cost)
     })
   }
 
   if (claimDeductions && claimDeductions.length > 0) {
     claimDeductions.forEach(function (claimDeduction) {
-      total -= claimDeduction.Amount
+      total -= parseFloat(claimDeduction.Amount)
     })
   }
 
