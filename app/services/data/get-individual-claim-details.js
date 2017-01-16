@@ -21,7 +21,7 @@ module.exports = function (claimId) {
       claim = claimData
       reference = claim.Reference
       claim.lastUpdatedHidden = moment(claim.LastUpdated)
-      return getClaimDocuments(claimId)
+      return getClaimDocuments(claimId, reference, claim.EligibilityId)
     })
     .then(function (claimDocumentData) {
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
@@ -116,9 +116,15 @@ function getClaimantDetails (claimId) {
       'Prisoner.NomisCheck')
 }
 
-function getClaimDocuments (claimId) {
+function getClaimDocuments (claimId, reference, eligibilityId) {
   return knex('ClaimDocument')
     .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null})
+    .orWhere({
+      'ClaimDocument.ClaimId': null,
+      'ClaimDocument.Reference': reference,
+      'ClaimDocument.EligibilityId': eligibilityId,
+      'ClaimDocument.IsEnabled': true,
+      'ClaimDocument.ClaimExpenseId': null})
     .select(
       'ClaimDocument.ClaimDocumentId',
       'ClaimDocument.DocumentStatus',
