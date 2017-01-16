@@ -21,38 +21,31 @@ module.exports = function (claimId) {
       claim = claimData
       reference = claim.Reference
       claim.lastUpdatedHidden = moment(claim.LastUpdated)
-      return getClaimDocuments(claimId)
+
+      return Promise.all([
+        getClaimDocuments(claimId),
+        getClaimExpenses(claimId),
+        getClaimDeductions(claimId),
+        getClaimChildren(claimId),
+        getClaimEscort(claimId),
+        duplicateClaimCheck(claimId, claim.NationalInsuranceNumber, claim.PrisonNumber, claim.DateOfJourney),
+        getClaimEvents(claimId),
+        getOverpaidClaimsByReference(reference, claimId)
+      ])
     })
-    .then(function (claimDocumentData) {
+    .then(function (results) {
+      var claimDocumentData = results[0]
+      claimExpenses = results[1]
+      claimDeductions = results[2]
+      claimChildren = results[3]
+      claimEscort = results[4]
+      claimDuplicatesExist = results[5]
+      claimEvents = results[6]
+      var overpaidClaimData = results[7]
+
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
-      return getClaimExpenses(claimId)
-    })
-    .then(function (claimExpenseData) {
-      claimExpenses = claimExpenseData
-      return getClaimDeductions(claimId)
-    })
-    .then(function (claimDeductionData) {
-      claimDeductions = claimDeductionData
-      claim.Total = getClaimTotalAmount(claimExpenses, claimDeductionData)
-      return getClaimChildren(claimId)
-    })
-    .then(function (claimChildData) {
-      claimChildren = claimChildData
-      return getClaimEscort(claimId)
-    })
-    .then(function (claimEscortData) {
-      claimEscort = claimEscortData
-      return duplicateClaimCheck(claimId, claim.NationalInsuranceNumber, claim.PrisonNumber, claim.DateOfJourney)
-    })
-    .then(function (result) {
-      claimDuplicatesExist = result
-      return getClaimEvents(claimId)
-    })
-    .then(function (claimEventData) {
-      claimEvents = claimEventData
-      return getOverpaidClaimsByReference(reference, claimId)
-    })
-    .then(function (overpaidClaimData) {
+      claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
+
       claimDetails = {
         claim: claim,
         claimExpenses: setClaimExpenseStatusForCarJourneys(claimExpenses),
