@@ -32,20 +32,26 @@ exports.seed = function (knex, Promise) {
                 ClaimExpense.Status
               FROM IntSchema.ClaimExpense AS ClaimExpense
               WHERE
-                (ClaimExpense.ClaimId = @claimId AND
+              (
+                ClaimExpense.ClaimId = @claimId AND
                 ClaimExpense.Reference = @reference
                 OR
-                (@claimId IS NULL AND
-                ClaimExpense.ClaimId IN (
-                  SELECT TOP(1) Claim.ClaimId
-                  FROM IntSchema.Claim AS Claim
-                  WHERE
-                    Claim.Reference = @reference AND
-                    Claim.EligibilityId = @eligibiltyId AND
-                    Claim.Status = 'APPROVED'
-                  ORDER BY Claim.DateSubmitted DESC
-                ))) AND
-                ClaimExpense.IsEnabled = 1
+                  (
+                    @claimId IS NULL AND
+                    ClaimExpense.ClaimId IN 
+                    (
+                      SELECT TOP(1) Claim.ClaimId
+                      FROM IntSchema.Claim AS Claim
+                      WHERE
+                        Claim.Reference = @reference AND
+                        Claim.EligibilityId = @eligibiltyId AND
+                        Claim.Status = 'APPROVED'
+                      ORDER BY Claim.DateSubmitted DESC
+                    )
+                  )
+              ) 
+              AND ClaimExpense.IsEnabled = 1
+              AND ClaimExpense.Status != 'REJECTED'
             )
           `
         )
