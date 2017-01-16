@@ -19,6 +19,8 @@
     </li>
   </ul>
 
+  {% include "includes/validation-error-messages.html" %}
+
   <h2 class="heading-medium">Advanced search</h2>
 
   <form action="/advanced-search">
@@ -208,9 +210,13 @@
         <div class="grid-row">
           <div class="column-one-half">
             <div class="form-group">
-              <label class="form-label-bold">
+              <label id="visitDateFrom" class="form-label-bold">
                 From
               </label>
+
+              {% if errors['visitDateFrom'][0] %}
+                <span class="error-message">{{ errors['visitDateFrom'][0] }}</span>
+              {% endif %}
 
               <div class="form-date advanced-search-date">
                 <div class="form-group form-group-day">
@@ -231,9 +237,13 @@
 
           <div class="column-one-half">
             <div class="form-group">
-              <label class="form-label-bold">
+              <label id="visitDateTo" class="form-label-bold">
                 To
               </label>
+
+              {% if errors['visitDateTo'][0] %}
+                <span class="error-message">{{ errors['visitDateTo'][0] }}</span>
+              {% endif %}
 
               <div class="form-date advanced-search-date">
                 <div class="form-group form-group-day">
@@ -260,9 +270,13 @@
         <div class="grid-row">
           <div class="column-one-half">
             <div class="form-group">
-              <label class="form-label-bold">
+              <label id="dateSubmittedFrom" class="form-label-bold">
                 From
               </label>
+
+              {% if errors['dateSubmittedFrom'][0] %}
+                <span class="error-message">{{ errors['dateSubmittedFrom'][0] }}</span>
+              {% endif %}
 
               <div class="form-date advanced-search-date">
                 <div class="form-group form-group-day">
@@ -283,9 +297,13 @@
 
           <div class="column-one-half">
             <div class="form-group">
-              <label class="form-label-bold">
+              <label id="dateSubmittedTo" class="form-label-bold">
                 To
               </label>
+
+              {% if errors['dateSubmittedTo'][0] %}
+                <span class="error-message">{{ errors['dateSubmittedTo'][0] }}</span>
+              {% endif %}
 
               <div class="form-date advanced-search-date">
                 <div class="form-group form-group-day">
@@ -315,9 +333,13 @@
         <div class="grid-row">
           <div class="column-one-half">
             <div class="form-group">
-              <label class="form-label-bold">
+              <label id="dateApprovedFrom" class="form-label-bold">
                 From
               </label>
+
+              {% if errors['dateApprovedFrom'][0] %}
+                <span class="error-message">{{ errors['dateApprovedFrom'][0] }}</span>
+              {% endif %}
 
               <div class="form-date advanced-search-date">
                 <div class="form-group form-group-day">
@@ -338,9 +360,13 @@
 
           <div class="column-one-half">
             <div class="form-group">
-              <label class="form-label-bold">
+              <label id="dateApprovedTo" class="form-label-bold">
                 To
               </label>
+
+              {% if errors['dateApprovedTo'][0] %}
+                <span class="error-message">{{ errors['dateApprovedTo'][0] }}</span>
+              {% endif %}
 
               <div class="form-date advanced-search-date">
                 <div class="form-group form-group-day">
@@ -367,9 +393,13 @@
         <div class="grid-row">
           <div class="column-one-half">
             <div class="form-group">
-              <label class="form-label-bold">
+              <label id="dateRejectedFrom" class="form-label-bold">
                 From
               </label>
+
+              {% if errors['dateRejectedFrom'][0] %}
+                <span class="error-message">{{ errors['dateRejectedFrom'][0] }}</span>
+              {% endif %}
 
               <div class="form-date advanced-search-date">
                 <div class="form-group form-group-day">
@@ -390,9 +420,13 @@
 
           <div class="column-one-half">
             <div class="form-group">
-              <label class="form-label-bold">
+              <label id="dateRejectedTo" class="form-label-bold">
                 To
               </label>
+
+              {% if errors['dateRejectedTo'][0] %}
+                <span class="error-message">{{ errors['dateRejectedTo'][0] }}</span>
+              {% endif %}
 
               <div class="form-date advanced-search-date">
                 <div class="form-group form-group-day">
@@ -413,155 +447,28 @@
         </div>
       </div>
 
-      <div class="column-one-third">
-          <div class="form-group margin-top">
-              <label class="block-label inline selection-button-checkbox">
-                  Assisted Digital Claim
-                  <input type="checkbox" name="assistedDigital" {% if query.assistedDigital %} checked {% endif %}>
-              </label>
-          </div>
-      </div>
-
-    </div>
-
-    <h3 class="heading-small">Claim status</h3>
-
-    <div class="grid-row">
-
-      <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  All
-                  <input type="radio" name="claimStatus" value="all" {% if query.claimStatus == 'all' %} checked {% endif %}>
-              </label>
-            </div>
-      </div>
-
-      <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  New
-                  <input type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
-              </label>
-            </div>
-      </div>
-
-      <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  Pending
-                  <input type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
-              </label>
-            </div>
-      </div>
-
-      <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  In progress
-                  <input type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
-              </label>
-            </div>
-      </div>
-
-      <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  Approved
-                  <input type="radio" name="claimStatus" value="approved" {% if query.claimStatus == 'approved' %} checked {% endif %}>
-              </label>
-            </div>
-      </div>
-
-      <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  Paid
-                  <input type="radio" name="claimStatus" value="paid" {% if query.claimStatus == 'paid' %} checked {% endif %}>
-              </label>
-            </div>
-      </div>
-
-      <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  Rejected
-                  <input type="radio" name="claimStatus" value="rejected" {% if query.claimStatus == 'rejected' %} checked {% endif %}>
-              </label>
-            </div>
-      </div>
-
-    </div>
-
-    <div class="grid-row">
-      <div class="column-one-third">
-      <h3 class="heading-small">Mode of approval</h3>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Auto
-                  <input type="radio" name="modeOfApproval" value="auto" {% if query.modeOfApproval == 'auto' %} checked {% endif %}>
-              </label>
-          </div>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Manual
-                  <input type="radio" name="modeOfApproval" value="manual" {% if query.modeOfApproval == 'manual' %} checked {% endif %}>
-              </label>
-          </div>
-      </div>
-
-      <div class="column-one-third">
-      <h3 class="heading-small">Type of claim</h3>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Visit in past
-                  <input type="radio" name="pastOrFuture" value="past" {% if query.pastOrFuture == 'past' %} checked {% endif %}>
-              </label>
-          </div>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Visit in future
-                  <input type="radio" name="pastOrFuture" value="future" {% if query.pastOrFuture == 'future' %} checked {% endif %}>
-              </label>
-          </div>
-      </div>
-
-      <div class="column-one-third">
-      <h3 class="heading-small">Visit rules</h3>
-          <div class="form-group">
-              <label class="block-label inline">
-                  England/Scotland/Wales
-                  <input type="radio" name="visitRules" value="englandScotlandWales" {% if query.visitRules == 'englandScotlandWales' %} checked {% endif %}>
-              </label>
-          </div>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Northern Ireland
-                  <input type="radio" name="visitRules" value="northernIreland" {% if query.visitRules == 'northernIreland' %} checked {% endif %}>
-              </label>
-          </div>
-      </div>
-
-    </div>
-
-    <div class="form-group">
-        <a href="/advanced-search" class="link">Clear search</a>
     </div>
 
     <div class="grid-row">
       <div class="column-one-third">
         <div class="form-group pound-wrapper">
-          <label class="form-label-bold">Approved claim amount from</label>
-          <span>£</span>
-          <input id="approvedClaimAmountFrom" type="text" class="form-control full" name="approvedClaimAmountFrom" value="{{ query.approvedClaimAmountFrom }}">
+          <label id="approvedClaimAmountFrom" class="form-label-bold">Approved claim amount from</label>
+          {% if errors['approvedClaimAmountFrom'][0] %}
+            <span class="error-message">{{ errors['approvedClaimAmountFrom'][0] }}</span>
+          {% endif %}
+          <span class="pound-symbol">£</span>
+          <input id="approvedClaimAmountFromInput" type="text" class="form-control full" name="approvedClaimAmountFrom" value="{{ query.approvedClaimAmountFrom }}">
         </div>
       </div>
 
       <div class="column-one-third">
         <div class="form-group pound-wrapper">
-          <label class="form-label-bold">Approved claim amount to</label>
-          <span>£</span>
-          <input id="approvedClaimAmountTo" type="text" class="form-control full" name="approvedClaimAmountTo" value="{{ query.approvedClaimAmountTo }}">
+          <label id="approvedClaimAmountTo" class="form-label-bold">Approved claim amount to</label>
+          {% if errors['approvedClaimAmountTo'][0] %}
+            <span class="error-message">{{ errors['approvedClaimAmountTo'][0] }}</span>
+          {% endif %}
+          <span class="pound-symbol">£</span>
+          <input id="approvedClaimAmountToInput" type="text" class="form-control full" name="approvedClaimAmountTo" value="{{ query.approvedClaimAmountTo }}">
         </div>
       </div>
 

@@ -2,8 +2,10 @@ const authorisation = require('../services/authorisation')
 const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-for-advanced-search')
 const displayHelper = require('../views/helpers/display-helper')
 const dateFormatter = require('../services/date-formatter')
+const validationFieldNames = require('../services/validators/validation-field-names')
 const MIN_YEAR = 1900
 const VALID_AMOUNT_EXPRESSION = new RegExp(/^(\d+\.?\d{0,9}|\d{1,9})$/)
+var validationErrors
 
 module.exports = function (router) {
   router.get('/advanced-search-input', function (req, res) {
@@ -14,6 +16,16 @@ module.exports = function (router) {
 
   router.get('/advanced-search', function (req, res) {
     authorisation.isCaseworker(req)
+    validationErrors = {}
+    extractSearchCriteria(req.query)
+
+    for (var field in validationErrors) {
+      if (validationErrors.hasOwnProperty(field)) {
+        if (validationErrors[ field ].length > 0) {
+          return res.status(400).render('advanced-search', { query: req.query, errors: validationErrors })
+        }
+      }
+    }
 
     return res.render('advanced-search', { query: req.query })
   })
@@ -110,6 +122,7 @@ function extractSearchCriteria (query) {
     searchCriteria.visitRules = query.visitRules
   }
   var visitDateFrom = processDate(
+    'visitDateFrom',
     query.visitDateFromDay,
     query.visitDateFromMonth,
     query.visitDateFromYear
@@ -118,6 +131,7 @@ function extractSearchCriteria (query) {
     searchCriteria.visitDateFrom = visitDateFrom.startOf('day').toDate()
   }
   var visitDateTo = processDate(
+    'visitDateTo',
     query.visitDateToDay,
     query.visitDateToMonth,
     query.visitDateToYear
@@ -126,6 +140,7 @@ function extractSearchCriteria (query) {
     searchCriteria.visitDateTo = visitDateTo.endOf('day').toDate()
   }
   var dateSubmittedFrom = processDate(
+    'dateSubmittedFrom',
     query.dateSubmittedFromDay,
     query.dateSubmittedFromMonth,
     query.dateSubmittedFromYear
@@ -134,6 +149,7 @@ function extractSearchCriteria (query) {
     searchCriteria.dateSubmittedFrom = dateSubmittedFrom.startOf('day').toDate()
   }
   var dateSubmittedTo = processDate(
+    'dateSubmittedTo',
     query.dateSubmittedToDay,
     query.dateSubmittedToMonth,
     query.dateSubmittedToYear
@@ -142,6 +158,7 @@ function extractSearchCriteria (query) {
     searchCriteria.dateSubmittedTo = dateSubmittedTo.endOf('day').toDate()
   }
   var dateApprovedFrom = processDate(
+    'dateApprovedFrom',
     query.dateApprovedFromDay,
     query.dateApprovedFromMonth,
     query.dateApprovedFromYear
@@ -150,6 +167,7 @@ function extractSearchCriteria (query) {
     searchCriteria.dateApprovedFrom = dateApprovedFrom.startOf('day').toDate()
   }
   var dateApprovedTo = processDate(
+    'dateApprovedTo',
     query.dateApprovedToDay,
     query.dateApprovedToMonth,
     query.dateApprovedToYear
@@ -158,6 +176,7 @@ function extractSearchCriteria (query) {
     searchCriteria.dateApprovedTo = dateApprovedTo.endOf('day').toDate()
   }
   var dateRejectedFrom = processDate(
+    'dateRejectedFrom',
     query.dateRejectedFromDay,
     query.dateRejectedFromMonth,
     query.dateRejectedFromYear
@@ -166,6 +185,7 @@ function extractSearchCriteria (query) {
     searchCriteria.dateRejectedFrom = dateRejectedFrom.startOf('day').toDate()
   }
   var dateRejectedTo = processDate(
+    'dateRejectedTo',
     query.dateRejectedToDay,
     query.dateRejectedToMonth,
     query.dateRejectedToYear
@@ -174,12 +194,12 @@ function extractSearchCriteria (query) {
     searchCriteria.dateRejectedTo = dateRejectedTo.endOf('day').toDate()
   }
   if (query.approvedClaimAmountFrom) {
-    if (query.approvedClaimAmountFrom.match(VALID_AMOUNT_EXPRESSION)) {
+    if (processAmount('approvedClaimAmountFrom', query.approvedClaimAmountFrom)) {
       searchCriteria.approvedClaimAmountFrom = query.approvedClaimAmountFrom
     }
   }
   if (query.approvedClaimAmountTo) {
-    if (query.approvedClaimAmountTo.match(VALID_AMOUNT_EXPRESSION)) {
+    if (processAmount('approvedClaimAmountTo', query.approvedClaimAmountTo)) {
       searchCriteria.approvedClaimAmountTo = query.approvedClaimAmountTo
     }
   }
@@ -187,10 +207,27 @@ function extractSearchCriteria (query) {
   return searchCriteria
 }
 
-function processDate (day, month, year) {
-  var date = dateFormatter.build(day, month, year)
-  if (year >= MIN_YEAR && date.isValid()) {
-    return date
+function processDate (fieldName, day, month, year) {
+  if (day || month || year) {
+    var date = dateFormatter.build(day, month, year)
+    if (year >= MIN_YEAR && date.isValid()) {
+      return date
+    } else {
+      var validationFieldName = validationFieldNames[fieldName] || 'Date'
+      validationErrors[fieldName] = [validationFieldName + ' is invalid']
+      return false
+    }
+  } else {
+    return false
   }
-  return false
+}
+
+function processAmount (fieldName, amount) {
+  if (amount.match(VALID_AMOUNT_EXPRESSION)) {
+    return true
+  } else {
+    var validationFieldName = validationFieldNames[fieldName] || 'Amount'
+    validationErrors[fieldName] = [validationFieldName + ' is invalid']
+    return false
+  }
 }

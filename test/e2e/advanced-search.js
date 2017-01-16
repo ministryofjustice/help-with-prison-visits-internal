@@ -95,8 +95,8 @@ describe('Advanced search flow', () => {
       .setValue('#dateApprovedToMonth', tomorrow.month() + 1)
       .setValue('#dateApprovedToYear', tomorrow.year())
 
-      .setValue('#approvedClaimAmountFrom', 11)
-      .setValue('#approvedClaimAmountTo', 13)
+      .setValue('#approvedClaimAmountFromInput', 11)
+      .setValue('#approvedClaimAmountToInput', 13)
 
       .click('#advanced-search-submit')
 
