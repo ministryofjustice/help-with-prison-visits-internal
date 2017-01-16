@@ -124,6 +124,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function (response) {
           expect(isCaseworkerStub.calledOnce).to.be.true
+          expect(getClaimListForAdvancedSearch.calledWith({}, start, length), 'expected data method to be called with empty search criteria').to.be.true
           expect(response.body.recordsTotal).to.equal(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
         })
