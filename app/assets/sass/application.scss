@@ -196,12 +196,11 @@ span.bold {
     padding-right:20px;
 }
 
-.display-inline {
-  display: inline;
+.visibility-visible {
+  visibility: visible;
 }
-
-.display-none {
-  display: none;
+.visibility-hidden {
+  visibility: hidden;
 }
 
 .form-control.action-select{
