@@ -12,6 +12,9 @@
 
   {% include "includes/validation-error-messages.html" %}
 
+  {% import 'partials/navigation.html' as nav %}
+    {{nav.active('')}}
+
   <form action="/config" method="post">
   <h1 class="table-heading">Auto Approval Configuration</h1>
     <div class="form-group">
