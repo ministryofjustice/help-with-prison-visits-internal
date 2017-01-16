@@ -686,9 +686,17 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       ninumber: ninumber,
       prisonerNumber: prisonerNumber,
       prison: prison,
+      assistedDigital: true,
       claimStatus: 'APPROVED',
+      modeOfApproval: 'APPROVED',
+      pastOrFuture: 'past',
+      visitRules: 'englandScotlandWales',
+      visitDateFrom: date.subtract(1, 'day').toDate(),
+      visitDateTo: date.add(1, 'day').toDate(),
       dateSubmittedFrom: date.subtract(1, 'day').toDate(),
       dateSubmittedTo: date.add(1, 'day').toDate(),
+      dateApprovedFrom: date.subtract(1, 'day').toDate(),
+      dateApprovedTo: date.add(1, 'day').toDate(),
       approvedClaimAmountFrom: '11.50',
       approvedClaimAmountTo: '13'
     }
