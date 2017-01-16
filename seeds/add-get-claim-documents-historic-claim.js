@@ -24,7 +24,8 @@ exports.seed = function (knex, Promise) {
               WHERE
                 ClaimDocument.Reference = @reference AND
                 ClaimDocument.EligibilityId = @eligibilityId AND
-                ClaimDocument.ClaimId = @claimId
+                (ClaimDocument.ClaimId = @claimId OR
+                ClaimDocument.ClaimId IS NULL)
             )
           `
         )
