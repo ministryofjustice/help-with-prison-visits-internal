@@ -6,6 +6,7 @@ const prisonsEnum = require('../../../app/constants/prisons-enum')
 
 var countQuery
 var selectQuery
+var selectFields
 
 var validSearchOptions = [
   'reference',
@@ -20,7 +21,41 @@ var validSearchOptions = [
   'visitRules'
 ]
 
-module.exports = function (searchCriteria, offset, limit) {
+const ADVANCED_SEARCH_FIELDS = [
+  'Claim.Reference',
+  'Visitor.FirstName',
+  'Visitor.LastName',
+  'Claim.DateSubmitted',
+  'Claim.DateOfJourney',
+  'Claim.ClaimType',
+  'Claim.ClaimId'
+]
+const EXPORT_CLAIMS_FIELDS = [
+  'Visitor.FirstName',
+  'Visitor.LastName',
+  'Visitor.Benefit',
+  'Visitor.Relationship',
+  'Claim.DateSubmitted',
+  'Claim.DateOfJourney',
+  'Claim.DateReviewed',
+  'Claim.ClaimType',
+  'Claim.AssistedDigitalCaseworker',
+  'Claim.Caseworker',
+  'Claim.IsAdvanceClaim',
+  'Claim.Status',
+  'Claim.BankPaymentAmount',
+  'Claim.ClaimId',
+  'Eligibility.IsTrusted',
+  'Prisoner.NameOfPrison'
+]
+
+module.exports = function (searchCriteria, offset, limit, isExport) {
+  if (isExport) {
+    selectFields = EXPORT_CLAIMS_FIELDS
+  } else {
+    selectFields = ADVANCED_SEARCH_FIELDS
+  }
+
   var validSearchOptionFound = false
 
   for (var option in searchCriteria) {
@@ -198,12 +233,14 @@ module.exports = function (searchCriteria, offset, limit) {
     countQuery = knex('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
       .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
+      .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
       .count('Claim.ClaimId AS Count')
 
     selectQuery = knex('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
       .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
-      .select('Claim.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Claim.ClaimType', 'Claim.ClaimId')
+      .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
+      .select(selectFields)
       .orderBy('Claim.DateSubmitted', 'asc')
       .limit(limit)
       .offset(offset)

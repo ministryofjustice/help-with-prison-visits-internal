@@ -214,6 +214,9 @@
   </form>
 
   <h2 id="search-results-header" class="heading-medium" hidden>Search results</h2>
+  {% if rawQuery != '' %}
+  <a href="/advanced-search-results/export?{{ rawQuery }}" class="link export">Export search results (CSV file)</a>
+  {% endif %}
 
   <table id="advanced-search-results" class="table" hidden>
   	<thead>
