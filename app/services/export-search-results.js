@@ -3,11 +3,9 @@ const generateCsvString = Promise.promisify(require('csv-stringify'))
 const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-for-advanced-search')
 const getClaimEscort = require('../services/data/get-claim-escort')
 const getClaimChildCount = require('../services/data/get-claim-child-count')
-const getClaimExpenses = require('../services/data/get-claim-expenses')
 
 const displayHelper = require('../views/helpers/display-helper')
 const dateHelper = require('../views/helpers/date-helper')
-const claimExpenseTypes = require('../views/helpers/display-field-names')
 const prisonerRelationshipEnum = require('../../app/constants/prisoner-relationships-enum')
 
 const NAME_HEADER = 'Name'
@@ -26,7 +24,6 @@ const CLAIM_STATUS_HEADER = 'Status'
 const DATE_REVIEWED_BY_CASEWORKER_HEADER = 'Date Reviewed by Caseworker'
 const IS_ADVANCE_CLAIM_HEADER = 'Is Advance Claim?'
 const TOTAL_AMOUNT_PAID_HEADER = 'Total amount paid'
-const CLAIM_EXPENSE_HEADER = 'Claim Expenses'
 
 module.exports = function (searchCriteria) {
   return getClaimListForAdvancedSearch(searchCriteria, 0, Number.MAX_SAFE_INTEGER, true)
@@ -45,15 +42,13 @@ function transformData (data) {
   return Promise.map(data, function (claim) {
     return Promise.all([
       getClaimChildCount(claim.ClaimId),
-      getClaimEscort(claim.ClaimId),
-      getClaimExpenses(claim.ClaimId)
+      getClaimEscort(claim.ClaimId)
     ])
       .then(function (result) {
         var returnValue = {}
 
         var childCount = result[0][0].Count
         var claimEscortCount = result[1].length
-        var claimExpenses = result[2]
 
         returnValue[NAME_HEADER] = claim.Name
         returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
@@ -71,20 +66,8 @@ function transformData (data) {
         returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = claim.DateReviewed ? dateHelper.shortDate(claim.DateReviewed) : null
         returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = claim.BankPaymentAmount || 0
-        returnValue[CLAIM_EXPENSE_HEADER] = getClaimExpenseString(claimExpenses)
 
         return returnValue
       })
   })
-}
-
-function getClaimExpenseString (claimExpenses) {
-  var claimExpenseStrings = []
-
-  claimExpenses.forEach(function (claimExpense) {
-    var claimExpenseString = `${claimExpenseTypes[claimExpense.ExpenseType]}: ${claimExpense.ApprovedCost || 0}`
-    claimExpenseStrings.push(claimExpenseString)
-  })
-
-  return claimExpenseStrings.join('|')
 }
