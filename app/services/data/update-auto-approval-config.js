@@ -9,29 +9,21 @@ module.exports = function (autoApprovalConfig) {
     .first('AutoApprovalConfigId')
     .then(function (result) {
       if (result) {
-        return updateExistingConfig(result.AutoApprovalConfigId, autoApprovalConfig)
+        return insertConfigData(autoApprovalConfig)
+        .then(function (result) {
+          // only disable current config if new config was set successfully
+          var insertResult = result
+          return knex('AutoApprovalConfig')
+            .where('AutoApprovalConfigId', result.AutoApprovalConfigId)
+            .update('IsEnabled', 'false')
+            .then(function () {
+              return insertResult
+            })
+        })
       } else {
-        return createNewConfig(autoApprovalConfig)
+        return insertConfigData(autoApprovalConfig)
       }
     })
-}
-
-function updateExistingConfig (currentConfigId, autoApprovalConfig) {
-  return insertConfigData(autoApprovalConfig)
-    .then(function (result) {
-      // only disable current config if new config was set successfully
-      var insertResult = result
-      return knex('AutoApprovalConfig')
-        .where('AutoApprovalConfigId', currentConfigId)
-        .update('IsEnabled', 'false')
-        .then(function () {
-          return insertResult
-        })
-    })
-}
-
-function createNewConfig (autoApprovalConfig) {
-  return insertConfigData(autoApprovalConfig)
 }
 
 function insertConfigData (autoApprovalConfig) {
