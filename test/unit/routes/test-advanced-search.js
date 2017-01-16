@@ -182,7 +182,6 @@ describe('routes/index', function () {
   })
 
   describe('GET /advanced-search-results', function () {
-
     it('should respond with a 200 and call data method', function () {
       getClaimListForAdvancedSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
       return supertest(app)
