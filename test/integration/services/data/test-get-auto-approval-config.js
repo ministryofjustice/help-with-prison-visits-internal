@@ -5,8 +5,22 @@ var knex = require('knex')(knexConfig)
 var config = require('../../../../config')
 var dateFormatter = require('../../../../app/services/date-formatter')
 
+var insertedIds
+
 describe('services/data/get-auto-approval-config', function () {
-  var insertedIds
+  var existingAutoApprovalId
+
+  before(function () {
+    return getCurrentAutoApprovalConfigId()
+      .then(function (currentAutoApprovalConfigId) {
+        if (currentAutoApprovalConfigId) {
+          existingAutoApprovalId = currentAutoApprovalConfigId.AutoApprovalConfigId
+          return setIsEnabled(existingAutoApprovalId, false)
+        } else {
+          return Promise.resolve()
+        }
+      })
+  })
 
   it('should return auto approval config defaults when no auto approval config data is found', function () {
     return getAutoApprovalConfig()
@@ -23,14 +37,13 @@ describe('services/data/get-auto-approval-config', function () {
 
   it('should return the latest auto approval config record', function () {
     return insertTestData()
-      .then(function (result) {
-        insertedIds = result
+      .then(function () {
         return getAutoApprovalConfig()
-      })
-      .then(function (result) {
-        expect(result.Caseworker).to.equal('caseworker1@test.com')
-        expect(result.RulesDisabled).to.deep.equal(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
-        expect(result.IsEnabled).to.equal(true)
+          .then(function (result) {
+            expect(result.Caseworker).to.equal('caseworker1@test.com')
+            expect(result.RulesDisabled).to.deep.equal(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
+            expect(result.IsEnabled).to.equal(true)
+          })
       })
   })
 
@@ -38,6 +51,11 @@ describe('services/data/get-auto-approval-config', function () {
     return knex('AutoApprovalConfig')
       .whereIn('AutoApprovalConfigId', insertedIds)
       .del()
+      .then(function () {
+        if (existingAutoApprovalId) {
+          return setIsEnabled(existingAutoApprovalId, true)
+        }
+      })
   })
 })
 
@@ -68,4 +86,22 @@ function insertTestData () {
       IsEnabled: 'false'
     }])
     .returning('AutoApprovalConfigId')
+    .then(function (result) {
+      insertedIds = result
+    })
+}
+
+function setIsEnabled (autoApprovalConfigId, isEnabled) {
+  return knex('IntSchema.AutoApprovalConfig')
+    .where('AutoApprovalConfigId', autoApprovalConfigId)
+    .update({
+      IsEnabled: isEnabled
+    })
+}
+
+function getCurrentAutoApprovalConfigId () {
+  return knex('IntSchema.AutoApprovalConfig')
+    .first()
+    .where('IsEnabled', true)
+    .select('AutoApprovalConfigId')
 }
