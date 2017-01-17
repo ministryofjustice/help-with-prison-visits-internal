@@ -25,8 +25,12 @@ $(function () {
     totalApproved()
   })
   $('.claim-expense-status').each(function () {
-    if (this[this.selectedIndex].value === 'APPROVED') {
+    var value = this[this.selectedIndex].value
+    if (value === 'APPROVED') {
       $('.claim-expense-status').parent().parent().find('td.cost').addClass('approved-amount')
+      totalApproved()
+    } else if (value === 'APPROVED-DIFF-AMOUNT' || value === 'MANUALLY-PROCESSED') {
+      $('.claim-expense-status').next('input').addClass('approved-amount')
       totalApproved()
     }
   })
