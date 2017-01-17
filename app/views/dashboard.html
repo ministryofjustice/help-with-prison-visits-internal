@@ -10,14 +10,8 @@
 
   {% include "includes/phase_banner_beta.html" %}
 
-  <ul id="sub-nav">
-    <li>
-      <a href="/dashboard" class="active">Dashboard</a>
-    </li>
-    <li>
-      <a href="/">Claims</a>
-    </li>
-  </ul>
+  {% import 'partials/navigation.html' as nav %}
+    {{nav.active('dashboard')}}
 
   <div class="grid-row">
     <div class="column-one-third">

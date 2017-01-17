@@ -51,7 +51,11 @@ exports.seed = function (knex, Promise) {
                   )
               ) 
               AND ClaimExpense.IsEnabled = 1
-              AND ClaimExpense.Status != 'REJECTED'
+              AND
+                (
+                  ClaimExpense.Status IS NULL OR
+                  ClaimExpense.Status != 'REJECTED'
+                )
             )
           `
         )
