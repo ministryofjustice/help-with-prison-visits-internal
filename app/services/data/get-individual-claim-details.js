@@ -145,12 +145,12 @@ function getClaimDeductions (claimId) {
   return knex('ClaimDeduction')
     .where({'ClaimId': claimId, 'IsEnabled': true})
     .then(function (claimDeductions) {
-    claimDeductions.forEach(function (claimDeductions) {
-      claimDeductions.Amount = Number(claimDeductions.Amount).toFixed(2)
-    })
+      claimDeductions.forEach(function (claimDeductions) {
+        claimDeductions.Amount = Number(claimDeductions.Amount).toFixed(2)
+      })
 
-    return claimDeductions
-  })
+      return claimDeductions
+    })
 }
 
 function getClaimChildren (claimId) {
