@@ -77,7 +77,7 @@ class ClaimDecision {
     })
 
     if (check === false) {
-      throw new ValidationError({'claim-expenses': [ERROR_MESSAGES.getNonRejectedClaimExpenseResponse]})
+      errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
     }
 
     FieldValidator(this.nomisCheck, 'nomis-check', errors)
