@@ -1,8 +1,10 @@
 const Promise = require('bluebird')
 const generateCsvString = Promise.promisify(require('csv-stringify'))
+const getFormattedClaimExpenseString = require('../services/get-formatted-claim-expense-string')
 const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-for-advanced-search')
 const getClaimEscort = require('../services/data/get-claim-escort')
 const getClaimChildCount = require('../services/data/get-claim-child-count')
+const getClaimExpenses = require('../services/data/get-claim-expenses')
 
 const displayHelper = require('../views/helpers/display-helper')
 const dateHelper = require('../views/helpers/date-helper')
@@ -24,6 +26,8 @@ const CLAIM_STATUS_HEADER = 'Status'
 const DATE_REVIEWED_BY_CASEWORKER_HEADER = 'Date Reviewed by Caseworker'
 const IS_ADVANCE_CLAIM_HEADER = 'Is Advance Claim?'
 const TOTAL_AMOUNT_PAID_HEADER = 'Total amount paid'
+const CLAIM_EXPENSES_HEADER = 'Claim Expenses'
+const PAYMENT_METHOD_HEADER = 'Payment Method'
 
 module.exports = function (searchCriteria) {
   return getClaimListForAdvancedSearch(searchCriteria, 0, Number.MAX_SAFE_INTEGER, true)
@@ -42,19 +46,21 @@ function transformData (data) {
   return Promise.map(data, function (claim) {
     return Promise.all([
       getClaimChildCount(claim.ClaimId),
-      getClaimEscort(claim.ClaimId)
+      getClaimEscort(claim.ClaimId),
+      getClaimExpenses(claim.ClaimId)
     ])
       .then(function (result) {
         var returnValue = {}
 
         var childCount = result[0][0].Count
-        var claimEscortCount = result[1].length
+        var hasEscort = result[1].length > 0
+        var claimExpenses = result[2]
 
         returnValue[NAME_HEADER] = claim.Name
         returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
         returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[claim.Relationship].displayName
         returnValue[CHILD_COUNT_HEADER] = childCount
-        returnValue[HAS_ESCORT_HEADER] = claimEscortCount > 0 ? 'Y' : 'N'
+        returnValue[HAS_ESCORT_HEADER] = hasEscort ? 'Y' : 'N'
         returnValue[VISIT_DATE_HEADER] = dateHelper.shortDate(claim.DateOfJourney)
         returnValue[CLAIM_SUBMISSION_DATE_HEADER] = dateHelper.shortDate(claim.DateSubmitted)
         returnValue[PRISON_REGION_HEADER] = displayHelper.getPrisonRegion(claim.NameOfPrison)
@@ -66,6 +72,8 @@ function transformData (data) {
         returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = claim.DateReviewed ? dateHelper.shortDate(claim.DateReviewed) : null
         returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = claim.BankPaymentAmount || 0
+        returnValue[CLAIM_EXPENSES_HEADER] = getFormattedClaimExpenseString(claimExpenses)
+        returnValue[PAYMENT_METHOD_HEADER] = displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod)
 
         return returnValue
       })

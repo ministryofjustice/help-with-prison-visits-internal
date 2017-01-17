@@ -57,6 +57,7 @@ const EXPORT_CLAIMS_FIELDS = [
   'Claim.IsAdvanceClaim',
   'Claim.Status',
   'Claim.BankPaymentAmount',
+  'Claim.PaymentMethod',
   'Claim.ClaimId',
   'Eligibility.IsTrusted',
   'Prisoner.NameOfPrison'

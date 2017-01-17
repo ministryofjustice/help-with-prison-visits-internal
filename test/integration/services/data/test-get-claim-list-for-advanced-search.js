@@ -734,6 +734,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         expect(claim.hasOwnProperty('ClaimId')).to.be.true
         expect(claim.hasOwnProperty('IsTrusted')).to.be.true
         expect(claim.hasOwnProperty('NameOfPrison')).to.be.true
+        expect(claim.hasOwnProperty('PaymentMethod')).to.be.true
       })
   })
 
