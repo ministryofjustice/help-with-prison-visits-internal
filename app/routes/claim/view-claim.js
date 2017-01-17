@@ -155,7 +155,7 @@ function getClaimDeductionId (requestBody) {
 
 function addDeduction (req, res) {
   var deductionType = req.body.deductionType
-  var amount = req.body.deductionAmount
+  var amount = Number(req.body.deductionAmount).toFixed(2)
   var claimDeduction = new ClaimDeduction(deductionType, amount)
 
   return insertDeduction(req.params.claimId, claimDeduction)
