@@ -37,7 +37,6 @@ class ClaimDecision {
       } else if (expense.status !== claimDecisionEnum.APPROVED_DIFF_AMOUNT &&
                  expense.status !== claimDecisionEnum.MANUALLY_PROCESSED) {
         expense.approvedCost = null
-      } else if (expense.status !== claimDecisionEnum.REQUEST_INFORMATION) {
       }
     })
     this.IsValid()
@@ -61,6 +60,7 @@ class ClaimDecision {
     this.claimExpenseResponses.forEach(function (expense) {
       FieldValidator(expense.status, 'claim-expense', errors)
         .isRequired()
+
       if (expense.approvedCost != null) {
         FieldValidator(expense.approvedCost, 'approve-cost', errors)
           .isRequired()
