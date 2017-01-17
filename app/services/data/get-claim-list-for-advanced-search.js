@@ -4,6 +4,9 @@ const moment = require('moment')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const prisonsEnum = require('../../../app/constants/prisons-enum')
 
+const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.AUTOAPPROVED.value ]
+const IN_PROGRESS_STATUS_VALUES = [ claimStatusEnum.NEW.value, claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value ]
+
 var countQuery
 var selectQuery
 var selectFields
@@ -18,7 +21,17 @@ var validSearchOptions = [
   'claimStatus',
   'modeOfApproval',
   'pastOrFuture',
-  'visitRules'
+  'visitRules',
+  'visitDateFrom',
+  'visitDateTo',
+  'dateSubmittedFrom',
+  'dateSubmittedTo',
+  'dateApprovedFrom',
+  'dateApprovedTo',
+  'dateRejectedFrom',
+  'dateRejectedTo',
+  'approvedClaimAmountFrom',
+  'approvedClaimAmountTo'
 ]
 
 const ADVANCED_SEARCH_FIELDS = [
@@ -133,6 +146,56 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     applyVisitRulesFilter(selectQuery, searchCriteria.visitRules)
   }
 
+  if (searchCriteria.visitDateFrom) {
+    applyVisitDateFromFilter(countQuery, searchCriteria.visitDateFrom)
+    applyVisitDateFromFilter(selectQuery, searchCriteria.visitDateFrom)
+  }
+
+  if (searchCriteria.visitDateTo) {
+    applyVisitDateToFilter(countQuery, searchCriteria.visitDateTo)
+    applyVisitDateToFilter(selectQuery, searchCriteria.visitDateTo)
+  }
+
+  if (searchCriteria.dateSubmittedFrom) {
+    applyDateSubmittedFromFilter(countQuery, searchCriteria.dateSubmittedFrom)
+    applyDateSubmittedFromFilter(selectQuery, searchCriteria.dateSubmittedFrom)
+  }
+
+  if (searchCriteria.dateSubmittedTo) {
+    applyDateSubmittedToFilter(countQuery, searchCriteria.dateSubmittedTo)
+    applyDateSubmittedToFilter(selectQuery, searchCriteria.dateSubmittedTo)
+  }
+
+  if (searchCriteria.dateApprovedFrom) {
+    applyDateApprovedFromFilter(countQuery, searchCriteria.dateApprovedFrom)
+    applyDateApprovedFromFilter(selectQuery, searchCriteria.dateApprovedFrom)
+  }
+
+  if (searchCriteria.dateApprovedTo) {
+    applyDateApprovedToFilter(countQuery, searchCriteria.dateApprovedTo)
+    applyDateApprovedToFilter(selectQuery, searchCriteria.dateApprovedTo)
+  }
+
+  if (searchCriteria.dateRejectedFrom) {
+    applyDateRejectedFromFilter(countQuery, searchCriteria.dateRejectedFrom)
+    applyDateRejectedFromFilter(selectQuery, searchCriteria.dateRejectedFrom)
+  }
+
+  if (searchCriteria.dateRejectedTo) {
+    applyDateRejectedToFilter(countQuery, searchCriteria.dateRejectedTo)
+    applyDateRejectedToFilter(selectQuery, searchCriteria.dateRejectedTo)
+  }
+
+  if (searchCriteria.approvedClaimAmountFrom) {
+    applyApprovedClaimAmountFromFilter(countQuery, searchCriteria.approvedClaimAmountFrom)
+    applyApprovedClaimAmountFromFilter(selectQuery, searchCriteria.approvedClaimAmountFrom)
+  }
+
+  if (searchCriteria.approvedClaimAmountTo) {
+    applyApprovedClaimAmountToFilter(countQuery, searchCriteria.approvedClaimAmountTo)
+    applyApprovedClaimAmountToFilter(selectQuery, searchCriteria.approvedClaimAmountTo)
+  }
+
   return countQuery
     .then(function (count) {
       return selectQuery
@@ -175,14 +238,14 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   function applyClaimStatusFilter (query, claimStatus) {
     var value = claimStatusEnum[claimStatus] ? claimStatusEnum[claimStatus].value : null
     if (value === claimStatusEnum.APPROVED.value) {
-      query.whereIn('Claim.Status', [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.AUTOAPPROVED.value ])
+      query.whereIn('Claim.Status', APPROVED_STATUS_VALUES)
     } else {
       query.where('Claim.Status', value)
     }
   }
 
   function applyInProgressClaimStatusFilter (query) {
-    query.whereIn('Claim.Status', [ claimStatusEnum.NEW.value, claimStatusEnum.UPDATED.value ])
+    query.whereIn('Claim.Status', IN_PROGRESS_STATUS_VALUES)
   }
 
   function applyPaidClaimStatusFilter (query) {
@@ -227,6 +290,52 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     } else {
       query.whereIn('Prisoner.NameOfPrison', northernIrelandPrisons)
     }
+  }
+
+  function applyVisitDateFromFilter (query, visitDateFrom) {
+    query.where('Claim.DateOfJourney', '>=', visitDateFrom)
+  }
+
+  function applyVisitDateToFilter (query, visitDateTo) {
+    query.where('Claim.DateOfJourney', '<=', visitDateTo)
+  }
+
+  function applyDateSubmittedFromFilter (query, dateSubmittedFrom) {
+    query.where('Claim.DateSubmitted', '>=', dateSubmittedFrom)
+  }
+
+  function applyDateSubmittedToFilter (query, dateSubmittedTo) {
+    query.where('Claim.DateSubmitted', '<=', dateSubmittedTo)
+  }
+
+  function applyDateApprovedFromFilter (query, dateApprovedFrom) {
+    query.where('Claim.DateReviewed', '>=', dateApprovedFrom)
+      .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
+  }
+
+  function applyDateApprovedToFilter (query, dateApprovedTo) {
+    query.where('Claim.DateReviewed', '<=', dateApprovedTo)
+      .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
+  }
+
+  function applyDateRejectedFromFilter (query, dateRejectedFrom) {
+    query.where('Claim.DateReviewed', '>=', dateRejectedFrom)
+      .where('Claim.Status', claimStatusEnum.REJECTED.value)
+  }
+
+  function applyDateRejectedToFilter (query, dateRejectedTo) {
+    query.where('Claim.DateReviewed', '<=', dateRejectedTo)
+      .where('Claim.Status', claimStatusEnum.REJECTED.value)
+  }
+
+  function applyApprovedClaimAmountFromFilter (query, approvedClaimAmountFrom) {
+    query.where('Claim.BankPaymentAmount', '>=', approvedClaimAmountFrom)
+      .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
+  }
+
+  function applyApprovedClaimAmountToFilter (query, approvedClaimAmountTo) {
+    query.where('Claim.BankPaymentAmount', '<=', approvedClaimAmountTo)
+      .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
   }
 
   function createBaseQueries (limit, offset) {
