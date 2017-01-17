@@ -71,20 +71,13 @@ class ClaimDecision {
     })
     var check = false
     this.claimExpenseResponses.forEach(function (expense) {
-      if (expense.status.includes(claimDecisionEnum.APPROVED)) {
-        check = true
-      } else if (expense.status.includes(claimDecisionEnum.APPROVED_DIFF_AMOUNT)) {
-        check = true
-      } else if (expense.status.includes(claimDecisionEnum.MANUALLY_PROCESSED)) {
-        check = true
-      } else if (expense.status.includes(claimDecisionEnum.REQUEST_INFORMATION)) {
+      if (expense.status !== claimDecisionEnum.REJECTED) {
         check = true
       }
     })
 
     if (check === false) {
-      FieldValidator(this.approvedCost, 'approve-cost', errors)
-        .isRequired('', check)
+      throw new ValidationError({'claim-expenses': [ERROR_MESSAGES.getNonRejectedClaimExpenseResponse]})
     }
 
     FieldValidator(this.nomisCheck, 'nomis-check', errors)

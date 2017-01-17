@@ -15,7 +15,7 @@ class FieldValidator {
     this.errors = errors
   }
 
-  isRequired (questionType, checkAllRejected) {
+  isRequired (questionType) {
     if (validator.isNullOrUndefined(this.data)) {
       if (questionType === 'radio') {
         this.errors.add(this.fieldName, ERROR_MESSAGES.getRadioQuestionIsRequired)
@@ -23,8 +23,6 @@ class FieldValidator {
         this.errors.add(this.fieldName, ERROR_MESSAGES.getIsRequired)
       }
     } else if (this.data === 'Select') {
-      this.errors.add(this.fieldName, ERROR_MESSAGES.getDropboxIsRequired)
-    } else if (checkAllRejected === false) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getDropboxIsRequired)
     }
     return this
