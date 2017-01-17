@@ -69,7 +69,7 @@ module.exports = function (router) {
       if (error instanceof ValidationError) {
         return getIndividualClaimDetails(req.params.claimId)
           .then(function (data) {
-            if (data.claim && data.claimExpenses && !updateConflict) {
+            if (data.claim && data.claimExpenses && !updateConflict && claimExpenses) {
               data.claim.NomisCheck = req.body.nomisCheck
               data.claim.DWPCheck = req.body.dwpCheck
               data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
