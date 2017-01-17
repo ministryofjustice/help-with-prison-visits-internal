@@ -10,7 +10,8 @@
 
   {% include "includes/phase_banner_beta.html" %}
 
-  {% include "partials/navigation.html" %}
+  {% import 'partials/navigation.html' as nav %}
+    {{nav.active('')}}
 
   <div class="search">
     <form action="/search">
