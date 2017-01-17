@@ -144,8 +144,7 @@ function getClaimExpenses (claimId) {
 function getClaimDeductions (claimId) {
   return knex('ClaimDeduction')
     .where({'ClaimId': claimId, 'IsEnabled': true})
-
-  .then(function (claimDeductions) {
+    .then(function (claimDeductions) {
     claimDeductions.forEach(function (claimDeductions) {
       claimDeductions.Amount = Number(claimDeductions.Amount).toFixed(2)
     })
