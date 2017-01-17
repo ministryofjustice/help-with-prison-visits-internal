@@ -7,14 +7,14 @@ module.exports = function (autoApprovalConfig) {
     .where('IsEnabled', 'true')
     .orderBy('DateCreated', 'desc')
     .first('AutoApprovalConfigId')
-    .then(function (result) {
-      if (result) {
+    .then(function (currentAutoApprovalConfig) {
+      if (currentAutoApprovalConfig) {
         return insertConfigData(autoApprovalConfig)
         .then(function (result) {
           // only disable current config if new config was set successfully
-          var insertResult = result
+          var insertResult = result[0]
           return knex('AutoApprovalConfig')
-            .where('AutoApprovalConfigId', result.AutoApprovalConfigId)
+            .where('AutoApprovalConfigId', currentAutoApprovalConfig.AutoApprovalConfigId)
             .update('IsEnabled', 'false')
             .then(function () {
               return insertResult
