@@ -16,5 +16,15 @@ module.exports = {
   'max-claim-total': 'Max claim total',
   'max-days-after-apvu-visit': 'Max days after APVU visit',
   'max-number-of-claims-per-year': 'Max number of claims per year',
-  'max-number-of-claims-per-month': 'Max number of claims per month'
+  'max-number-of-claims-per-month': 'Max number of claims per month',
+  'visitDateFrom': 'Visit date (from)',
+  'visitDateTo': 'Visit date (to)',
+  'dateSubmittedFrom': 'Date submitted (from)',
+  'dateSubmittedTo': 'Date submitted (to)',
+  'dateApprovedFrom': 'Date approved (from)',
+  'dateApprovedTo': 'Date approved (to)',
+  'dateRejectedFrom': 'Date rejected (from)',
+  'dateRejectedTo': 'Date rejected (to)',
+  'approvedClaimAmountFrom': 'Approved claim amount (from)',
+  'approvedClaimAmountTo': 'Approved claim amount (to)'
 }

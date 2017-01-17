@@ -19,6 +19,8 @@
     </li>
   </ul>
 
+  {% include "includes/validation-error-messages.html" %}
+
   <h2 class="heading-medium">Advanced search</h2>
 
   <form action="/advanced-search">
@@ -26,58 +28,57 @@
     <div class="grid-row">
 
       <div class="column-one-third">
-          <div class="form-group">
-              <label class="form-label-bold">
-                  Reference number
-                  <input type="text" name="reference" value="{{ query.reference }}" class="form-control full">
-              </label>
-          </div>
+        <div class="form-group">
+          <label class="form-label-bold">
+            Reference number
+            <input id="reference" type="text" name="reference" value="{{ query.reference }}" class="form-control full">
+          </label>
+        </div>
       </div>
 
       <div class="column-one-third">
-          <div class="form-group">
-              <label class="form-label-bold">
-                  Name
-                  <input type="text" name="name" value="{{ query.name }}" class="form-control full">
-              </label>
-          </div>
+        <div class="form-group">
+          <label class="form-label-bold">
+            Name
+            <input id="name" type="text" name="name" value="{{ query.name }}" class="form-control full">
+          </label>
+        </div>
       </div>
 
       <div class="column-one-third">
-          <div class="form-group">
-              <label class="form-label-bold">
-                  National Insurance Number
-                  <input type="text" name="ninumber" value="{{ query.ninumber }}" class="form-control full">
-              </label>
-          </div>
-      </div>
-
-
-      <div class="column-one-third">
-          <div class="form-group">
-              <label class="form-label-bold">
-                  Prisoner number
-                  <input type="text" name="prisonerNumber" value="{{ query.prisonerNumber }}" class="form-control full">
-              </label>
-          </div>
+        <div class="form-group">
+          <label class="form-label-bold">
+            National Insurance Number
+            <input id="ninumber" type="text" name="ninumber" value="{{ query.ninumber }}" class="form-control full">
+          </label>
+        </div>
       </div>
 
       <div class="column-one-third">
-          <div class="form-group">
-              <label class="form-label-bold">
-                  Prison
-                  <input type="text" name="prison" value="{{ query.prison }}" class="form-control full">
-              </label>
-          </div>
+        <div class="form-group">
+          <label class="form-label-bold">
+            Prisoner number
+            <input id="prisonerNumber" type="text" name="prisonerNumber" value="{{ query.prisonerNumber }}" class="form-control full">
+          </label>
+        </div>
       </div>
 
       <div class="column-one-third">
-          <div class="form-group margin-top">
-              <label class="block-label inline selection-button-checkbox">
-                  Assisted Digital Claim
-                  <input type="checkbox" name="assistedDigital" {% if query.assistedDigital %} checked {% endif %}>
-              </label>
-          </div>
+        <div class="form-group">
+          <label class="form-label-bold">
+            Prison
+            <input id="prison" type="text" name="prison" value="{{ query.prison }}" class="form-control full">
+          </label>
+        </div>
+      </div>
+
+      <div class="column-one-third">
+        <div class="form-group margin-top">
+          <label for="assistedDigital" class="block-label inline selection-button-checkbox">
+            Assisted Digital Claim
+            <input id="assistedDigital" type="checkbox" name="assistedDigital" {% if query.assistedDigital %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
     </div>
@@ -87,128 +88,399 @@
     <div class="grid-row">
 
       <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  All
-                  <input type="radio" name="claimStatus" value="all" {% if query.claimStatus == 'all' %} checked {% endif %}>
-              </label>
-            </div>
+        <div class="form-group">
+          <label for="claimStatusAll" class="block-label inline">
+            All
+            <input id="claimStatusAll" type="radio" name="claimStatus" value="all" {% if query.claimStatus == 'all' %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
       <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  New
-                  <input type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
-              </label>
-            </div>
+        <div class="form-group">
+          <label for="claimStatusNew" class="block-label inline">
+            New
+            <input id="claimStatusNew" type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
       <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  Pending
-                  <input type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
-              </label>
-            </div>
+        <div class="form-group">
+          <label for="claimStatusPending" class="block-label inline">
+            Pending
+            <input id="claimStatusPending" type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
       <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  In progress
-                  <input type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
-              </label>
-            </div>
+        <div class="form-group">
+          <label for="claimStatusInProgress" class="block-label inline">
+            In progress
+            <input id="claimStatusInProgress" type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
       <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  Approved
-                  <input type="radio" name="claimStatus" value="approved" {% if query.claimStatus == 'approved' %} checked {% endif %}>
-              </label>
-            </div>
+        <div class="form-group">
+          <label for="claimStatusApproved" class="block-label inline">
+            Approved
+            <input id="claimStatusApproved" type="radio" name="claimStatus" value="approved" {% if query.claimStatus == 'approved' %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
       <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  Paid
-                  <input type="radio" name="claimStatus" value="paid" {% if query.claimStatus == 'paid' %} checked {% endif %}>
-              </label>
-            </div>
+        <div class="form-group">
+          <label for="claimStatusPaid" class="block-label inline">
+            Paid
+            <input id="claimStatusPaid" type="radio" name="claimStatus" value="paid" {% if query.claimStatus == 'paid' %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
       <div class="column-one-quarter">
-          <div class="form-group">
-              <label class="block-label inline">
-                  Rejected
-                  <input type="radio" name="claimStatus" value="rejected" {% if query.claimStatus == 'rejected' %} checked {% endif %}>
-              </label>
-            </div>
+        <div class="form-group">
+          <label for="claimStatusRejected" class="block-label inline">
+            Rejected
+            <input id="claimStatusRejected" type="radio" name="claimStatus" value="rejected" {% if query.claimStatus == 'rejected' %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
     </div>
 
     <div class="grid-row">
       <div class="column-one-third">
-      <h3 class="heading-small">Mode of approval</h3>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Auto
-                  <input type="radio" name="modeOfApproval" value="auto" {% if query.modeOfApproval == 'auto' %} checked {% endif %}>
-              </label>
-          </div>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Manual
-                  <input type="radio" name="modeOfApproval" value="manual" {% if query.modeOfApproval == 'manual' %} checked {% endif %}>
-              </label>
-          </div>
+        <h3 class="heading-small">Mode of approval</h3>
+        <div class="form-group">
+          <label for="modeOfApprovalAuto" class="block-label inline">
+            Auto
+            <input id="modeOfApprovalAuto" type="radio" name="modeOfApproval" value="auto" {% if query.modeOfApproval == 'auto' %} checked {% endif %}>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="modeOfApprovalManual" class="block-label inline">
+            Manual
+            <input id="modeOfApprovalManual"type="radio" name="modeOfApproval" value="manual" {% if query.modeOfApproval == 'manual' %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
       <div class="column-one-third">
-      <h3 class="heading-small">Type of claim</h3>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Visit in past
-                  <input type="radio" name="pastOrFuture" value="past" {% if query.pastOrFuture == 'past' %} checked {% endif %}>
-              </label>
-          </div>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Visit in future
-                  <input type="radio" name="pastOrFuture" value="future" {% if query.pastOrFuture == 'future' %} checked {% endif %}>
-              </label>
-          </div>
+        <h3 class="heading-small">Type of claim</h3>
+        <div class="form-group">
+          <label for="typeOfClaimPast" class="block-label inline">
+            Visit in past
+            <input id="typeOfClaimPast" type="radio" name="pastOrFuture" value="past" {% if query.pastOrFuture == 'past' %} checked {% endif %}>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="typeOfClaimFuture" class="block-label inline">
+            Visit in future
+            <input id="typeOfClaimFuture" type="radio" name="pastOrFuture" value="future" {% if query.pastOrFuture == 'future' %} checked {% endif %}>
+          </label>
+        </div>
       </div>
 
       <div class="column-one-third">
-      <h3 class="heading-small">Visit rules</h3>
-          <div class="form-group">
-              <label class="block-label inline">
-                  England/Scotland/Wales
-                  <input type="radio" name="visitRules" value="englandScotlandWales" {% if query.visitRules == 'englandScotlandWales' %} checked {% endif %}>
+        <h3 class="heading-small">Visit rules</h3>
+        <div class="form-group">
+          <label for="visitRulesEnglandScotlandWales" class="block-label inline">
+            England/Scotland/Wales
+            <input id="visitRulesEnglandScotlandWales" type="radio" name="visitRules" value="englandScotlandWales" {% if query.visitRules == 'englandScotlandWales' %} checked {% endif %}>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="visitRulesNorthernIreland" class="block-label inline">
+            Northern Ireland
+            <input id="visitRulesNorthernIreland" type="radio" name="visitRules" value="northernIreland" {% if query.visitRules == 'northernIreland' %} checked {% endif %}>
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="grid-row">
+      <div class="column-one-half">
+        <h3 class="heading-small">Date of visit</h3>
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            <div class="form-group">
+              <label id="visitDateFrom" class="form-label-bold">
+                From
               </label>
+
+              {% if errors['visitDateFrom'][0] %}
+                <span class="error-message">{{ errors['visitDateFrom'][0] }}</span>
+              {% endif %}
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="visitDateFromDay">Day</label>
+                  <input id="visitDateFromDay" name="visitDateFromDay" value="{{ query.visitDateFromDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="visitDateFromMonth">Month</label>
+                  <input id="visitDateFromMonth" name="visitDateFromMonth" value="{{ query.visitDateFromMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="visitDateFromYear">Year</label>
+                  <input id="visitDateFromYear" name="visitDateFromYear" value="{{ query.visitDateFromYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-              <label class="block-label inline">
-                  Northern Ireland
-                  <input type="radio" name="visitRules" value="northernIreland" {% if query.visitRules == 'northernIreland' %} checked {% endif %}>
+
+          <div class="column-one-half">
+            <div class="form-group">
+              <label id="visitDateTo" class="form-label-bold">
+                To
               </label>
+
+              {% if errors['visitDateTo'][0] %}
+                <span class="error-message">{{ errors['visitDateTo'][0] }}</span>
+              {% endif %}
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="visitDateToDay">Day</label>
+                  <input id="visitDateToDay" name="visitDateToDay" value="{{ query.visitDateToDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="visitDateToMonth">Month</label>
+                  <input id="visitDateToMonth" name="visitDateToMonth" value="{{ query.visitDateToMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="visitDateToYear">Year</label>
+                  <input id="visitDateToYear" name="visitDateToYear" value="{{ query.visitDateToYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
+
+      <div class="column-one-half">
+        <h3 class="heading-small">Date claim submitted</h3>
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            <div class="form-group">
+              <label id="dateSubmittedFrom" class="form-label-bold">
+                From
+              </label>
+
+              {% if errors['dateSubmittedFrom'][0] %}
+                <span class="error-message">{{ errors['dateSubmittedFrom'][0] }}</span>
+              {% endif %}
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateSubmittedFromDay">Day</label>
+                  <input id="dateSubmittedFromDay" name="dateSubmittedFromDay" value="{{ query.dateSubmittedFromDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateSubmittedFromMonth">Month</label>
+                  <input id="dateSubmittedFromMonth" name="dateSubmittedFromMonth" value="{{ query.dateSubmittedFromMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateSubmittedFromYear">Year</label>
+                  <input id="dateSubmittedFromYear" name="dateSubmittedFromYear" value="{{ query.dateSubmittedFromYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column-one-half">
+            <div class="form-group">
+              <label id="dateSubmittedTo" class="form-label-bold">
+                To
+              </label>
+
+              {% if errors['dateSubmittedTo'][0] %}
+                <span class="error-message">{{ errors['dateSubmittedTo'][0] }}</span>
+              {% endif %}
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateSubmittedToDay">Day</label>
+                  <input id="dateSubmittedToDay" name="dateSubmittedToDay" value="{{ query.dateSubmittedToDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateSubmittedToMonth">Month</label>
+                  <input id="dateSubmittedToMonth" name="dateSubmittedToMonth" value="{{ query.dateSubmittedToMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateSubmittedToYear">Year</label>
+                  <input id="dateSubmittedToYear" name="dateSubmittedToYear" value="{{ query.dateSubmittedToYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="grid-row">
+      <div class="column-one-half">
+        <h3 class="heading-small">Date claim approved</h3>
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            <div class="form-group">
+              <label id="dateApprovedFrom" class="form-label-bold">
+                From
+              </label>
+
+              {% if errors['dateApprovedFrom'][0] %}
+                <span class="error-message">{{ errors['dateApprovedFrom'][0] }}</span>
+              {% endif %}
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateApprovedFromDay">Day</label>
+                  <input id="dateApprovedFromDay" name="dateApprovedFromDay" value="{{ query.dateApprovedFromDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateApprovedFromMonth">Month</label>
+                  <input id="dateApprovedFromMonth" name="dateApprovedFromMonth" value="{{ query.dateApprovedFromMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateApprovedFromYear">Year</label>
+                  <input id="dateApprovedFromYear" name="dateApprovedFromYear" value="{{ query.dateApprovedFromYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column-one-half">
+            <div class="form-group">
+              <label id="dateApprovedTo" class="form-label-bold">
+                To
+              </label>
+
+              {% if errors['dateApprovedTo'][0] %}
+                <span class="error-message">{{ errors['dateApprovedTo'][0] }}</span>
+              {% endif %}
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateApprovedToDay">Day</label>
+                  <input id="dateApprovedToDay" name="dateApprovedToDay" value="{{ query.dateApprovedToDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateApprovedToMonth">Month</label>
+                  <input id="dateApprovedToMonth" name="dateApprovedToMonth" value="{{ query.dateApprovedToMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateApprovedToYear">Year</label>
+                  <input id="dateApprovedToYear" name="dateApprovedToYear" value="{{ query.dateApprovedToYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column-one-half">
+        <h3 class="heading-small">Date claim rejected</h3>
+
+        <div class="grid-row">
+          <div class="column-one-half">
+            <div class="form-group">
+              <label id="dateRejectedFrom" class="form-label-bold">
+                From
+              </label>
+
+              {% if errors['dateRejectedFrom'][0] %}
+                <span class="error-message">{{ errors['dateRejectedFrom'][0] }}</span>
+              {% endif %}
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateRejectedFromDay">Day</label>
+                  <input id="dateRejectedFromDay" name="dateRejectedFromDay" value="{{ query.dateRejectedFromDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateRejectedFromMonth">Month</label>
+                  <input id="dateRejectedFromMonth" name="dateRejectedFromMonth" value="{{ query.dateRejectedFromMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateRejectedFromYear">Year</label>
+                  <input id="dateRejectedFromYear" name="dateRejectedFromYear" value="{{ query.dateRejectedFromYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="column-one-half">
+            <div class="form-group">
+              <label id="dateRejectedTo" class="form-label-bold">
+                To
+              </label>
+
+              {% if errors['dateRejectedTo'][0] %}
+                <span class="error-message">{{ errors['dateRejectedTo'][0] }}</span>
+              {% endif %}
+
+              <div class="form-date advanced-search-date">
+                <div class="form-group form-group-day">
+                  <label for="dateRejectedToDay">Day</label>
+                  <input id="dateRejectedToDay" name="dateRejectedToDay" value="{{ query.dateRejectedToDay }}" class="form-control">
+                </div>
+                <div class="form-group form-group-month">
+                  <label for="dateRejectedToMonth">Month</label>
+                  <input id="dateRejectedToMonth" name="dateRejectedToMonth" value="{{ query.dateRejectedToMonth }}" class="form-control">
+                </div>
+                <div class="form-group form-group-year">
+                  <label for="dateRejectedToYear">Year</label>
+                  <input id="dateRejectedToYear" name="dateRejectedToYear" value="{{ query.dateRejectedToYear }}" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="grid-row">
+      <div class="column-one-third">
+        <div class="form-group pound-wrapper">
+          <label id="approvedClaimAmountFrom" class="form-label-bold">Approved claim amount from</label>
+          {% if errors['approvedClaimAmountFrom'][0] %}
+            <span class="error-message">{{ errors['approvedClaimAmountFrom'][0] }}</span>
+          {% endif %}
+          <span class="pound-symbol">£</span>
+          <input id="approvedClaimAmountFromInput" type="text" class="form-control full" name="approvedClaimAmountFrom" value="{{ query.approvedClaimAmountFrom }}">
+        </div>
+      </div>
+
+      <div class="column-one-third">
+        <div class="form-group pound-wrapper">
+          <label id="approvedClaimAmountTo" class="form-label-bold">Approved claim amount to</label>
+          {% if errors['approvedClaimAmountTo'][0] %}
+            <span class="error-message">{{ errors['approvedClaimAmountTo'][0] }}</span>
+          {% endif %}
+          <span class="pound-symbol">£</span>
+          <input id="approvedClaimAmountToInput" type="text" class="form-control full" name="approvedClaimAmountTo" value="{{ query.approvedClaimAmountTo }}">
+        </div>
       </div>
 
     </div>
 
     <div class="form-group">
-        <a href="/advanced-search" class="link">Clear search</a>
+      <a id="clear-search" href="/advanced-search" class="link">Clear search</a>
     </div>
 
     <div class="form-group">
-        <input type="submit" class="button" value="Search">
-        <a href="/" class="link margin-left margin-top">Cancel</a>
+      <input id="advanced-search-submit" type="submit" class="button" value="Search">
+      <a href="/" class="link margin-left margin-top">Cancel</a>
     </div>
 
   </form>
@@ -219,15 +491,15 @@
   {% endif %}
 
   <table id="advanced-search-results" class="table" hidden>
-  	<thead>
-	  <tr>
-		<th>Ref No.</th>
-		<th>Name</th>
-		<th>Submitted</th>
-		<th>Claim Type</th>
-		<th></th>
-	  </tr>
-  	</thead>
+    <thead>
+      <tr>
+        <th>Ref No.</th>
+        <th>Name</th>
+        <th>Submitted</th>
+        <th>Claim Type</th>
+        <th></th>
+      </tr>
+    </thead>
   </table>
 
 </main>
