@@ -1,4 +1,4 @@
-const knexConfig = require('../../knexfile').intweb
+const knexConfig = require('../../knexfile').migrations
 const knex = require('knex')(knexConfig)
 const config = require('../../config')
 
@@ -23,7 +23,7 @@ describe('Advanced search flow', () => {
       .then(function (ids) {
         reference1ClaimId = ids.claimId
 
-        var reference1Update = knex('Claim')
+        var reference1Update = knex('IntSchema.Claim')
           .update({
             'AssistedDigitalCaseworker': 'test@test.com',
             'DateOfJourney': date.toDate(),
@@ -39,10 +39,11 @@ describe('Advanced search flow', () => {
 
         return Promise.all([reference1Update, reference2Insert])
           .then(function () {
-            return knex('Claim')
+            return knex('IntSchema.Claim')
               .update({
                 'DateReviewed': date.toDate()
               })
+              .where('Reference', reference2)
           })
       })
     .then(function () {
@@ -58,8 +59,8 @@ describe('Advanced search flow', () => {
   })
 
   it('should display the advanced search page and return existing claims', () => {
-    return browser.url('/advanced-search-input')
-
+    return browser.url('/')
+      .click('#advanced-search')
       .waitForExist('#advanced-search-submit')
 
       .setValue('#reference', '333333')
