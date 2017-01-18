@@ -1,4 +1,4 @@
-const knexConfig = require('../../knexfile').intweb
+const knexConfig = require('../../knexfile').migrations
 const knex = require('knex')(knexConfig)
 const config = require('../../config')
 
@@ -13,52 +13,49 @@ var reference1ClaimId
 var reference2ClaimId
 var yesterday
 var tomorrow
-var promises = []
 
 describe('Advanced search flow', () => {
   before(function () {
     date = dateFormatter.now()
     yesterday = moment(date).subtract(1, 'day')
     tomorrow = moment(date).add(1, 'day')
-    if (config.AUTHENTICATION_ENABLED === 'true') {
-      promises.push(
-        browser.url(config.TOKEN_HOST)
+    return databaseHelper.insertTestData(reference1, date.toDate(), 'APPROVED')
+      .then(function (ids) {
+        reference1ClaimId = ids.claimId
+
+        var reference1Update = knex('Claim')
+          .update({
+            'AssistedDigitalCaseworker': 'test@test.com',
+            'DateOfJourney': date.toDate(),
+            'DateReviewed': date.toDate(),
+            'BankPaymentAmount': '12'
+          })
+          .where('Reference', reference1)
+
+        var reference2Insert = databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED')
+          .then(function (ids) {
+            reference2ClaimId = ids.claimId
+          })
+
+        return Promise.all([reference1Update, reference2Insert])
+          .then(function () {
+            return knex('Claim')
+              .update({
+                'DateReviewed': date.toDate()
+              })
+              .where('Reference', reference1)
+          })
+      })
+    .then(function () {
+      if (config.AUTHENTICATION_ENABLED === 'true') {
+        return browser.url(config.TOKEN_HOST)
           .waitForExist('#user_email')
           .setValue('#user_email', config.TEST_SSO_EMAIL)
           .setValue('#user_password', config.TEST_SSO_PASSWORD)
           .click('[name="commit"]')
           .waitForExist('[href="/users/sign_out"]')
-      )
-    }
-    promises.push(
-      databaseHelper.insertTestData(reference1, date.toDate(), 'APPROVED')
-        .then(function (ids) {
-          reference1ClaimId = ids.claimId
-
-          var reference1Update = knex('Claim')
-            .update({
-              'AssistedDigitalCaseworker': 'test@test.com',
-              'DateOfJourney': date.toDate(),
-              'DateReviewed': date.toDate(),
-              'BankPaymentAmount': '12'
-            })
-            .where('Reference', reference1)
-
-          var reference2Insert = databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED')
-            .then(function (ids) {
-              reference2ClaimId = ids.claimId
-            })
-
-          return Promise.all([reference1Update, reference2Insert])
-            .then(function () {
-              return knex('Claim')
-                .update({
-                  'DateReviewed': date.toDate()
-                })
-            })
-        })
-    )
-    return Promise.all(promises)
+      }
+    })
   })
 
   it('should display the advanced search page and return existing claims', () => {
