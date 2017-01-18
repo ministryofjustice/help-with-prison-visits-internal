@@ -92,12 +92,12 @@ describe('services/domain/auto-approve-config', function () {
     }
   })
 
-  it('should throw an isGreaterThanZero error for costVariancePercentage given a negative input', function (done) {
+  it('should throw an isGreaterThanZero error for costVariancePercentage given 0 as input', function (done) {
     try {
       autoApprovalConfig = new AutoApprovalConfig(
         VALID_CASEWORKER,
         VALID_AUTO_APPROVAL_ENABLED,
-        '-1',
+        '0',
         VALID_MAX_CLAIM_TOTAL,
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
@@ -149,13 +149,13 @@ describe('services/domain/auto-approve-config', function () {
     }
   })
 
-  it('should throw an isGreaterThanZero error for maxClaimTotal given a negative input', function (done) {
+  it('should throw an isGreaterThanZero error for maxClaimTotal given 0 as input', function (done) {
     try {
       autoApprovalConfig = new AutoApprovalConfig(
         VALID_CASEWORKER,
         VALID_AUTO_APPROVAL_ENABLED,
         VALID_COST_VARIANCE_PERCENTAGE,
-        '-1',
+        '0',
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
@@ -206,14 +206,14 @@ describe('services/domain/auto-approve-config', function () {
     }
   })
 
-  it('should throw an isGreaterThanZero error for maxDaysAfterAPVUVisit given a negative input', function (done) {
+  it('should throw an isGreaterThanZero error for maxDaysAfterAPVUVisit given 0 as input', function (done) {
     try {
       autoApprovalConfig = new AutoApprovalConfig(
         VALID_CASEWORKER,
         VALID_AUTO_APPROVAL_ENABLED,
         VALID_COST_VARIANCE_PERCENTAGE,
         VALID_MAX_CLAIM_TOTAL,
-        '-1',
+        '0',
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
@@ -301,7 +301,7 @@ describe('services/domain/auto-approve-config', function () {
     }
   })
 
-  it('should throw an isGreaterThanZero error for maxNumberOfClaimsPerYear given a negative input', function (done) {
+  it('should throw an isGreaterThanZero error for maxNumberOfClaimsPerYear given a 0 as input', function (done) {
     try {
       autoApprovalConfig = new AutoApprovalConfig(
         VALID_CASEWORKER,
@@ -309,7 +309,7 @@ describe('services/domain/auto-approve-config', function () {
         VALID_COST_VARIANCE_PERCENTAGE,
         VALID_MAX_CLAIM_TOTAL,
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
-        '-1',
+        '0',
         VALID_MAX_NUMBER_OF_CLAIMS_PER_MONTH,
         VALID_RULES_DISABLED
       )
@@ -320,7 +320,7 @@ describe('services/domain/auto-approve-config', function () {
     }
   })
 
-  it('should throw an isGreaterThanZero error for maxNumberOfClaimsPerMonth given a negative input', function (done) {
+  it('should throw an isGreaterThanZero error for maxNumberOfClaimsPerMonth given 0 as input', function (done) {
     try {
       autoApprovalConfig = new AutoApprovalConfig(
         VALID_CASEWORKER,
@@ -329,7 +329,7 @@ describe('services/domain/auto-approve-config', function () {
         VALID_MAX_CLAIM_TOTAL,
         VALID_MAX_DAYS_AFTER_APVU_VISIT,
         VALID_MAX_NUMBER_OF_CLAIMS_PER_YEAR,
-        '-1',
+        '0',
         VALID_RULES_DISABLED
       )
     } catch (e) {
