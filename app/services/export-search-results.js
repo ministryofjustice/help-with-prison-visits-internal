@@ -73,7 +73,7 @@ function transformData (data) {
         returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = claim.BankPaymentAmount || 0
         returnValue[CLAIM_EXPENSES_HEADER] = getFormattedClaimExpenseString(claimExpenses)
-        returnValue[PAYMENT_METHOD_HEADER] = displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod)
+        returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
 
         return returnValue
       })
