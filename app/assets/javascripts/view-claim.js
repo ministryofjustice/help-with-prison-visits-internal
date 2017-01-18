@@ -33,7 +33,6 @@ $(function () {
 function totalApproved () {
   var approvedCost = 0
   var manuallyProcessed = 0
-  var deductions = 0
   $('input.approved-amount').each(function () {
     if (!isNaN(this.value) && this.value.length !== 0) {
       manuallyProcessed += parseFloat(this.value)
@@ -44,5 +43,5 @@ function totalApproved () {
     approvedCost += +$(this).text().replace('£', '')
   })
 
-  $('.claim-expense-approvedCostText').text('£' + (approvedCost + manuallyProcessed + deductions).toFixed(2))
+  $('.claim-expense-approvedCostText').text('£' + (approvedCost + manuallyProcessed).toFixed(2))
 }
