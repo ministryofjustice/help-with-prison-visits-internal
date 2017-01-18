@@ -44,3 +44,13 @@ module.exports.getClaimStatusClosed = function (claimStatusValue) {
   var element = enumHelper.getKeyByValue(claimStatusEnum, claimStatusValue)
   return element.closed
 }
+
+module.exports.processDeductionAmounts = function (deductions) {
+  if (deductions) {
+    deductions.forEach(function (deduction) {
+      deduction.Amount = Number(deduction.Amount).toFixed(2)
+    })
+
+    return deductions
+  }
+}
