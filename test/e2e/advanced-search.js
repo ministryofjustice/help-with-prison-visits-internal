@@ -23,7 +23,7 @@ describe('Advanced search flow', () => {
       .then(function (ids) {
         reference1ClaimId = ids.claimId
 
-        var reference1Update = knex('Claim')
+        var reference1Update = knex('IntSchema.Claim')
           .update({
             'AssistedDigitalCaseworker': 'test@test.com',
             'DateOfJourney': date.toDate(),
@@ -39,11 +39,11 @@ describe('Advanced search flow', () => {
 
         return Promise.all([reference1Update, reference2Insert])
           .then(function () {
-            return knex('Claim')
+            return knex('IntSchema.Claim')
               .update({
                 'DateReviewed': date.toDate()
               })
-              .where('Reference', reference1)
+              .where('Reference', reference2)
           })
       })
     .then(function () {
