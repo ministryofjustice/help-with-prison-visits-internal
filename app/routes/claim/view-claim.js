@@ -274,7 +274,7 @@ function renderViewClaimPage (claimId, res) {
         displayHelper: displayHelper,
         duplicates: data.duplicates,
         claimEvents: data.claimEvents,
-        deductions: data.deductions,
+        deductions: displayHelper.processDeductionAmounts(data.deductions),
         overpaidClaims: data.overpaidClaims
       })
     })
@@ -291,7 +291,7 @@ function renderErrors (data, req, res, error) {
     prisonerRelationshipsEnum: prisonerRelationshipsEnum,
     displayHelper: displayHelper,
     claimDecision: req.body,
-    deductions: data.deductions,
+    deductions: displayHelper.processDeductionAmounts(data.deductions),
     errors: error.validationErrors
   })
 }
