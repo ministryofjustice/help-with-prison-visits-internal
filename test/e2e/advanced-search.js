@@ -32,7 +32,7 @@ describe('Advanced search flow', () => {
           })
           .where('Reference', reference1)
 
-        var reference2Insert = databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED')
+        var reference2Insert = databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
           .then(function (ids) {
             reference2ClaimId = ids.claimId
           })
