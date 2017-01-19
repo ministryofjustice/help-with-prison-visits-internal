@@ -9,6 +9,7 @@ const dateFormatter = require('../../../../app/services/date-formatter')
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const claimDecisionEnum = require('../../../../app/constants/claim-decision-enum')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
+const paymentMethodEnum = require('../../../../app/constants/payment-method-enum')
 
 var stubInsertClaimEvent = sinon.stub().resolves()
 var stubInsertTaskSendClaimNotification = sinon.stub().resolves()
@@ -108,6 +109,30 @@ describe('services/data/submit-claim-response', function () {
                 expect(claimExpenses[1].ApprovedCost).to.be.equal(20)
               })
           })
+      })
+  })
+
+  it('should set payment method to manually processed if all claim expenses have been manually processed', function () {
+    var claimId = newIds.claimId
+    var claimResponse = {
+      'caseworker': caseworker,
+      'decision': claimDecisionEnum.APPROVED,
+      'reason': 'No valid relationship to prisoner',
+      'note': 'Could not verify in NOMIS',
+      'nomisCheck': claimDecisionEnum.APPROVED,
+      'dwpCheck': claimDecisionEnum.APPROVED,
+      'claimExpenseResponses': [
+        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.MANUALLY_PROCESSED},
+        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.MANUALLY_PROCESSED}
+      ]
+    }
+
+    return submitClaimResponse(claimId, claimResponse)
+      .then(function (result) {
+        return knex('IntSchema.Claim').where('ClaimId', claimId).first()
+      })
+      .then(function (claim) {
+        expect(claim.PaymentMethod).to.equal(paymentMethodEnum.MANUALLY_PROCESSED.value)
       })
   })
 

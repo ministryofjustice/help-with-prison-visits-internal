@@ -3,6 +3,7 @@ const knex = require('knex')(config)
 const dateFormatter = require('../date-formatter')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const tasksEnum = require('../../constants/tasks-enum')
+const paymentMethodEnum = require('../../constants/payment-method-enum')
 const insertClaimEvent = require('./insert-claim-event')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 const updateRelatedClaimRemainingOverpaymentAmount = require('./update-related-claims-remaining-overpayment-amount')
@@ -20,9 +21,10 @@ module.exports = function (claimId, claimDecision) {
       var nomisCheck = claimDecision.nomisCheck
       var dwpCheck = claimDecision.dwpCheck
       var visitConfirmationCheck = claimDecision.visitConfirmationCheck
+      var allExpensesManuallyProcessed = areAllExpensesManuallyProcessed(claimDecision.claimExpenseResponses)
 
       return Promise.all([updateEligibility(eligibilityId, decision),
-        updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck),
+        updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed),
         updateVisitor(eligibilityId, dwpCheck),
         updatePrisoner(eligibilityId, nomisCheck),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
@@ -36,15 +38,21 @@ function updateEligibility (eligibilityId, decision) {
   return knex('Eligibility').where('EligibilityId', eligibilityId).update('Status', decision)
 }
 
-function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck) {
-  return knex('Claim').where('ClaimId', claimId).update({
+function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed) {
+  var updateObject = {
     'Caseworker': caseworker,
     'Status': decision,
     'Note': note,
     'VisitConfirmationCheck': visitConfirmationCheck,
     'DateReviewed': dateFormatter.now().toDate(),
     'LastUpdated': dateFormatter.now().toDate()
-  })
+  }
+
+  if (allExpensesManuallyProcessed) {
+    updateObject.PaymentMethod = paymentMethodEnum.MANUALLY_PROCESSED.value
+  }
+
+  return knex('Claim').where('ClaimId', claimId).update(updateObject)
 }
 
 function updateVisitor (eligibilityId, dwpCheck) {
@@ -96,4 +104,16 @@ function sendClaimNotification (reference, eligibilityId, claimId, decision) {
   }
 
   return insertTaskSendClaimNotification(notificationType, reference, eligibilityId, claimId)
+}
+
+function areAllExpensesManuallyProcessed (claimExpenseResponses) {
+  var result = true
+
+  claimExpenseResponses.forEach(function (claimExpenseResponse) {
+    if (claimExpenseResponse.status !== claimDecisionEnum.MANUALLY_PROCESSED) {
+      result = false
+    }
+  })
+
+  return result
 }

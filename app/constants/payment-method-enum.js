@@ -1,6 +1,10 @@
 module.exports = {
   DIRECT_BANK_PAYMENT: {
-    value: 'direct-bank-payment',
+    value: 'bank',
     displayName: 'Direct Bank Payment'
+  },
+  MANUALLY_PROCESSED: {
+    value: 'manual',
+    displayName: 'Manually Processed Payment'
   }
 }
