@@ -40,7 +40,7 @@ const TEST_CLAIM_DATA_BANK = [
   {
     ClaimId: 1,
     BankPaymentAmount: 26.50,
-    ManuallyProcessedAmount: 0,
+    ManuallyProcessedAmount: null,
     Name: 'Test Claimant',
     NameOfPrison: prisonsEnum.MAGHABERRY.value,
     Relationship: 'partner',
@@ -60,7 +60,7 @@ const TEST_CLAIM_DATA_BANK = [
 const TEST_CLAIM_DATA_MANUAL = [
   {
     ClaimId: 1,
-    BankPaymentAmount: 0,
+    BankPaymentAmount: null,
     ManuallyProcessedAmount: 25.50,
     Name: 'Test Claimant',
     NameOfPrison: prisonsEnum.MAGHABERRY.value,
