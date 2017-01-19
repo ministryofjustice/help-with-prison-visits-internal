@@ -3,6 +3,7 @@ const benefitsEnum = require('../../constants/benefits-enum')
 const claimStatusEnum = require('../../constants/claim-status-enum')
 const claimTypeEnum = require('../../constants/claim-type-enum')
 const deductionTypeEnum = require('../../constants/deduction-type-enum')
+const paymentMethodEnum = require('../../constants/payment-method-enum')
 const enumHelper = require('../../constants/helpers/enum-helper')
 
 module.exports.getBenefitDisplayName = function (value) {
@@ -43,6 +44,11 @@ module.exports.getDeductionTypeDisplayName = function (value) {
 module.exports.getClaimStatusClosed = function (claimStatusValue) {
   var element = enumHelper.getKeyByValue(claimStatusEnum, claimStatusValue)
   return element.closed
+}
+
+module.exports.getPaymentMethodDisplayName = function (paymentMethodValue) {
+  var element = enumHelper.getKeyByValue(paymentMethodEnum, paymentMethodValue)
+  return element.displayName
 }
 
 module.exports.processDeductionAmounts = function (deductions) {
