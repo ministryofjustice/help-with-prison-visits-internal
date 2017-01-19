@@ -55,6 +55,7 @@ function transformData (data) {
         var childCount = result[0][0].Count
         var hasEscort = result[1].length > 0
         var claimExpenses = result[2]
+        var totalAmountPaid = (claim.BankPaymentAmount || 0) + (claim.ManuallyProcessedAmount || 0)
 
         returnValue[NAME_HEADER] = claim.Name
         returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
@@ -71,7 +72,7 @@ function transformData (data) {
         returnValue[CLAIM_STATUS_HEADER] = claim.Status
         returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = claim.DateReviewed ? dateHelper.shortDate(claim.DateReviewed) : null
         returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
-        returnValue[TOTAL_AMOUNT_PAID_HEADER] = claim.BankPaymentAmount || 0
+        returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
         returnValue[CLAIM_EXPENSES_HEADER] = getFormattedClaimExpenseString(claimExpenses)
         returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
 
