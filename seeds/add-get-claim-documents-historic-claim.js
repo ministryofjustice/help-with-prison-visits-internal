@@ -1,7 +1,7 @@
 const config = require('../config')
 
 /**
- * Adds a table function to the IntSchema that retrieves all claim documents by reference and claimId and grants the
+ * Adds a table function to the IntSchema that retrieves all claim documents by reference, eligibilityId and claimId and grants the
  * external web user permissions to call it.
  */
 exports.seed = function (knex, Promise) {
@@ -11,7 +11,7 @@ exports.seed = function (knex, Promise) {
       return knex.schema
         .raw(
           `
-            CREATE FUNCTION IntSchema.getClaimDocumentsHistoricClaim(@reference varchar(7), @claimId int)
+            CREATE FUNCTION IntSchema.getClaimDocumentsHistoricClaim(@reference varchar(7), @eligibilityId int, @claimId int)
             RETURNS TABLE
             AS
             RETURN
@@ -23,7 +23,9 @@ exports.seed = function (knex, Promise) {
               FROM IntSchema.ClaimDocument AS ClaimDocument
               WHERE
                 ClaimDocument.Reference = @reference AND
-                ClaimDocument.ClaimId = @claimId
+                ClaimDocument.EligibilityId = @eligibilityId AND
+                (ClaimDocument.ClaimId = @claimId OR
+                ClaimDocument.ClaimId IS NULL)
             )
           `
         )

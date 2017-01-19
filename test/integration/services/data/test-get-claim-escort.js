@@ -7,7 +7,7 @@ var reference = 'GETESCORT'
 var claimId
 var claimEscortId
 
-describe('services/data/get-claim-child-count', function () {
+describe('services/data/get-claim-escort', function () {
   before(function () {
     return databaseHelper.insertTestData(reference, moment().toDate(), 'TESTING')
       .then(function (ids) {

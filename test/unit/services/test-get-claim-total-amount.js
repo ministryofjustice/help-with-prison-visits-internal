@@ -3,27 +3,27 @@ const getClaimTotalAmount = require('../../../app/services/get-claim-total-amoun
 
 const claimExpenses = [
   {
-    Cost: 5
+    Cost: '5'
   },
   {
-    Cost: 10
+    Cost: '10'
   },
   {
-    Cost: 15
+    Cost: '15'
   }
 ]
 
 const claimExpensesApprovedCost = [
   {
-    Cost: 5,
-    ApprovedCost: 3
+    Cost: '5',
+    ApprovedCost: 3.49
   },
   {
-    Cost: 10,
+    Cost: '10',
     ApprovedCost: null
   },
   {
-    Cost: 10
+    Cost: '10.50'
   }
 ]
 
@@ -52,6 +52,6 @@ describe('services/get-claim-total-amount', function () {
   it('should calculate the correct total value when approved cost is different from initial cost', function () {
     var total = getClaimTotalAmount(claimExpensesApprovedCost, [])
 
-    expect(total).to.equal('23.00')
+    expect(total).to.equal('23.99')
   })
 })

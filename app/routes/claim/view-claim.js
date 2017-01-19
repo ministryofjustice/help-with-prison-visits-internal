@@ -69,7 +69,7 @@ module.exports = function (router) {
       if (error instanceof ValidationError) {
         return getIndividualClaimDetails(req.params.claimId)
           .then(function (data) {
-            if (data.claim && data.claimExpenses && !updateConflict) {
+            if (data.claim && data.claimExpenses && !updateConflict && claimExpenses) {
               data.claim.NomisCheck = req.body.nomisCheck
               data.claim.DWPCheck = req.body.dwpCheck
               data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
@@ -155,7 +155,7 @@ function getClaimDeductionId (requestBody) {
 
 function addDeduction (req, res) {
   var deductionType = req.body.deductionType
-  var amount = req.body.deductionAmount
+  var amount = Number(req.body.deductionAmount).toFixed(2)
   var claimDeduction = new ClaimDeduction(deductionType, amount)
 
   return insertDeduction(req.params.claimId, claimDeduction)
@@ -274,7 +274,7 @@ function renderViewClaimPage (claimId, res) {
         displayHelper: displayHelper,
         duplicates: data.duplicates,
         claimEvents: data.claimEvents,
-        deductions: data.deductions,
+        deductions: displayHelper.processDeductionAmounts(data.deductions),
         overpaidClaims: data.overpaidClaims
       })
     })
@@ -291,7 +291,7 @@ function renderErrors (data, req, res, error) {
     prisonerRelationshipsEnum: prisonerRelationshipsEnum,
     displayHelper: displayHelper,
     claimDecision: req.body,
-    deductions: data.deductions,
+    deductions: displayHelper.processDeductionAmounts(data.deductions),
     errors: error.validationErrors
   })
 }

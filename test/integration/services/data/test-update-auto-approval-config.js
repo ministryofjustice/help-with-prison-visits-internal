@@ -4,26 +4,23 @@ var config = require('../../../../knexfile').migrations
 var knex = require('knex')(config)
 var dateFormatter = require('../../../../app/services/date-formatter')
 
+var insertedIds = []
+
 describe('services/data/update-auto-approval-config', function () {
-  var insertedIds = []
+  var existingAutoApprovalId
 
   before(function () {
-    return knex('AutoApprovalConfig')
-      .insert({
-        Caseworker: 'first-caseworker',
-        DateCreated: dateFormatter.now().toDate(),
-        AutoApprovalEnabled: 'true',
-        CostVariancePercentage: '5.00',
-        MaxClaimTotal: '100.00',
-        MaxDaysAfterAPVUVisit: '28',
-        MaxNumberOfClaimsPerYear: '10',
-        MaxNumberOfClaimsPerMonth: '2',
-        RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
-        IsEnabled: 'true'
+    return getCurrentAutoApprovalConfigId()
+      .then(function (currentAutoApprovalConfigId) {
+        if (currentAutoApprovalConfigId) {
+          existingAutoApprovalId = currentAutoApprovalConfigId.AutoApprovalConfigId
+          return setIsEnabled(existingAutoApprovalId, false)
+        } else {
+          return Promise.resolve()
+        }
       })
-      .returning('AutoApprovalConfigId')
-      .then(function (result) {
-        insertedIds.push(result[0])
+      .then(function () {
+        return insertTestData()
       })
   })
 
@@ -40,7 +37,7 @@ describe('services/data/update-auto-approval-config', function () {
     }
     return updateAutoApprovalConfig(AutoApprovalConfig)
       .then(function (result) {
-        insertedIds.push(result[0])
+        insertedIds.push(result)
         return knex('AutoApprovalConfig')
           .where('IsEnabled', true)
           .orderBy('DateCreated', 'desc')
@@ -67,7 +64,7 @@ describe('services/data/update-auto-approval-config', function () {
     }
     return updateAutoApprovalConfig(AutoApprovalConfig)
       .then(function (result) {
-        insertedIds.push(result[0])
+        insertedIds.push(result)
         return knex('AutoApprovalConfig')
           .where('IsEnabled', true)
           .orderBy('DateCreated', 'desc')
@@ -85,5 +82,45 @@ describe('services/data/update-auto-approval-config', function () {
     return knex('AutoApprovalConfig')
       .whereIn('AutoApprovalConfigId', insertedIds)
       .del()
+      .then(function () {
+        if (existingAutoApprovalId) {
+          return setIsEnabled(existingAutoApprovalId, true)
+        }
+      })
   })
 })
+
+function insertTestData () {
+  return knex('AutoApprovalConfig')
+    .insert({
+      Caseworker: 'first-caseworker',
+      DateCreated: dateFormatter.now().toDate(),
+      AutoApprovalEnabled: 'true',
+      CostVariancePercentage: '5.00',
+      MaxClaimTotal: '100.00',
+      MaxDaysAfterAPVUVisit: '28',
+      MaxNumberOfClaimsPerYear: '10',
+      MaxNumberOfClaimsPerMonth: '2',
+      RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
+      IsEnabled: 'true'
+    })
+    .returning('AutoApprovalConfigId')
+    .then(function (result) {
+      insertedIds.push(result[0])
+    })
+}
+
+function setIsEnabled (autoApprovalConfigId, isEnabled) {
+  return knex('IntSchema.AutoApprovalConfig')
+    .where('AutoApprovalConfigId', autoApprovalConfigId)
+    .update({
+      IsEnabled: isEnabled
+    })
+}
+
+function getCurrentAutoApprovalConfigId () {
+  return knex('IntSchema.AutoApprovalConfig')
+    .first()
+    .where('IsEnabled', true)
+    .select('AutoApprovalConfigId')
+}

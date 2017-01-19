@@ -8,6 +8,9 @@
 <main id="content" role="main">
   {% include "includes/phase_banner_beta.html" %}
 
+  {% import 'partials/navigation.html' as nav %}
+      {{nav.active('/')}}
+
   <div class="grid-row">
     <div class="column-two-thirds">
 

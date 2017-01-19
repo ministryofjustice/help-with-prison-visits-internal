@@ -6,6 +6,10 @@
   <span class="error-message" id="error-message-cost-request">{{ errors['approve-cost'][0] }}</span>
 {% endif %}
 
+{% if errors['claim-expenses'][0] %}
+  <span class="error-message" id="claim-expenses">{{ errors['claim-expenses'][0] }}</span>
+{% endif %}
+
 <table class="no-pad-right">
   <tbody>
     {% for expense in Expenses %}

@@ -7,38 +7,43 @@ module.exports = function (autoApprovalConfig) {
     .where('IsEnabled', 'true')
     .orderBy('DateCreated', 'desc')
     .first('AutoApprovalConfigId')
-    .then(function (result) {
-      var currentConfigId = result.AutoApprovalConfigId
-
-      var rulesDisabledJoined = null
-      if (autoApprovalConfig.rulesDisabled) {
-        rulesDisabledJoined = autoApprovalConfig.rulesDisabled.join()
-      }
-
-      var insertResult
-      return knex('AutoApprovalConfig')
-        .insert({
-          Caseworker: autoApprovalConfig.caseworker,
-          DateCreated: dateFormatter.now().toDate(),
-          AutoApprovalEnabled: autoApprovalConfig.autoApprovalEnabled,
-          CostVariancePercentage: autoApprovalConfig.costVariancePercentage,
-          MaxClaimTotal: autoApprovalConfig.maxClaimTotal,
-          MaxDaysAfterAPVUVisit: autoApprovalConfig.maxDaysAfterAPVUVisit,
-          MaxNumberOfClaimsPerYear: autoApprovalConfig.maxNumberOfClaimsPerYear,
-          MaxNumberOfClaimsPerMonth: autoApprovalConfig.maxNumberOfClaimsPerMonth,
-          RulesDisabled: rulesDisabledJoined,
-          IsEnabled: 'true'
-        })
-        .returning('AutoApprovalConfigId')
+    .then(function (currentAutoApprovalConfig) {
+      if (currentAutoApprovalConfig) {
+        return insertConfigData(autoApprovalConfig)
         .then(function (result) {
           // only disable current config if new config was set successfully
-          insertResult = result
+          var insertResult = result[0]
           return knex('AutoApprovalConfig')
-            .where('AutoApprovalConfigId', currentConfigId)
+            .where('AutoApprovalConfigId', currentAutoApprovalConfig.AutoApprovalConfigId)
             .update('IsEnabled', 'false')
             .then(function () {
               return insertResult
             })
         })
+      } else {
+        return insertConfigData(autoApprovalConfig)
+      }
     })
+}
+
+function insertConfigData (autoApprovalConfig) {
+  var rulesDisabledJoined = null
+  if (autoApprovalConfig.rulesDisabled) {
+    rulesDisabledJoined = autoApprovalConfig.rulesDisabled.join()
+  }
+
+  return knex('AutoApprovalConfig')
+    .insert({
+      Caseworker: autoApprovalConfig.caseworker,
+      DateCreated: dateFormatter.now().toDate(),
+      AutoApprovalEnabled: autoApprovalConfig.autoApprovalEnabled,
+      CostVariancePercentage: autoApprovalConfig.costVariancePercentage,
+      MaxClaimTotal: autoApprovalConfig.maxClaimTotal,
+      MaxDaysAfterAPVUVisit: autoApprovalConfig.maxDaysAfterAPVUVisit,
+      MaxNumberOfClaimsPerYear: autoApprovalConfig.maxNumberOfClaimsPerYear,
+      MaxNumberOfClaimsPerMonth: autoApprovalConfig.maxNumberOfClaimsPerMonth,
+      RulesDisabled: rulesDisabledJoined,
+      IsEnabled: 'true'
+    })
+    .returning('AutoApprovalConfigId')
 }
