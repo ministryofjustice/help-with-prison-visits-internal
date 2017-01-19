@@ -34,22 +34,27 @@ class AutoApprovalConfig {
     FieldValidator(this.costVariancePercentage, 'cost-variance-percentage', errors)
       .isRequired()
       .isNumeric()
+      .isGreaterThanZero()
 
     FieldValidator(this.maxClaimTotal, 'max-claim-total', errors)
       .isRequired()
       .isNumeric()
+      .isGreaterThanZero()
 
     FieldValidator(this.maxDaysAfterAPVUVisit, 'max-days-after-apvu-visit', errors)
       .isRequired()
       .isNumeric()
+      .isGreaterThanZero()
 
     FieldValidator(this.maxNumberOfClaimsPerYear, 'max-number-of-claims-per-year', errors)
       .isRequired()
       .isNumeric()
+      .isGreaterThanZero()
 
     FieldValidator(this.maxNumberOfClaimsPerMonth, 'max-number-of-claims-per-month', errors)
       .isRequired()
       .isNumeric()
+      .isGreaterThanZero()
 
     var validationErrors = errors.get()
 

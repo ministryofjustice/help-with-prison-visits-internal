@@ -50,3 +50,13 @@ module.exports.getPaymentMethodDisplayName = function (paymentMethodValue) {
   var element = enumHelper.getKeyByValue(paymentMethodEnum, paymentMethodValue)
   return element.displayName
 }
+
+module.exports.processDeductionAmounts = function (deductions) {
+  if (deductions) {
+    deductions.forEach(function (deduction) {
+      deduction.Amount = Number(deduction.Amount).toFixed(2)
+    })
+
+    return deductions
+  }
+}

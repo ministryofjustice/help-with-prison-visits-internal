@@ -16,6 +16,9 @@ describe('views/helpers/display-helper', function () {
   const CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.APPROVED.value
   const NOT_CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.NEW.value
 
+  const INPUT_DEDUCTION_AMOUNTS = [{ Amount: '5.4' }, { Amount: '5' }, { Amount: '6.00' }]
+  const EXPECTED_PROCESSED_DEDUCTION_AMOUNTS = [{ Amount: '5.40' }, { Amount: '5.00' }, { Amount: '6.00' }]
+
   it('should return the correct benefit display name given a valid value', function () {
     var result = displayHelper.getBenefitDisplayName(VALID_BENEFIT_VALUE)
     expect(result).to.equal(benefitsEnum.INCOME_SUPPORT.displayName)
@@ -54,5 +57,10 @@ describe('views/helpers/display-helper', function () {
   it('should return the correct closed value given a valid claim status', function () {
     expect(displayHelper.getClaimStatusClosed(CLOSED_CLAIM_STATUS_VALUE)).to.be.true
     expect(displayHelper.getClaimStatusClosed(NOT_CLOSED_CLAIM_STATUS_VALUE)).to.be.false
+  })
+
+  it('should set deduction amounts to 2 decimal places', function () {
+    var processedDeductionAmounts = displayHelper.processDeductionAmounts(INPUT_DEDUCTION_AMOUNTS)
+    expect(processedDeductionAmounts).to.deep.equal(EXPECTED_PROCESSED_DEDUCTION_AMOUNTS)
   })
 })
