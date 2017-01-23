@@ -21,7 +21,7 @@
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
         </td>
 
-        <td class="cost">£{{ expense['Cost'] }}</td>
+        <td class="cost {% if expense['Status'] == 'APPROVED' %}approved-amount{% endif %}">£{{ expense['Cost'] }}</td>
 
         <td>
           {% if receiptRequiredEnum[expense.ExpenseType] %}

@@ -24,6 +24,7 @@ $(function () {
   $('input.approved-amount').on('input', function () {
     totalApproved()
   })
+  totalApproved()
 })
 
 function totalApproved () {
