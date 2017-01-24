@@ -57,136 +57,59 @@ module.exports = function (router) {
 
   // POST
   router.post('/claim/:claimId', function (req, res) {
-    authorisation.isCaseworker(req)
-    var updateConflict = true
-
-    return Promise.try(function () {
-      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
-        updateConflict = hasConflict
-
-        claimExpenses = getClaimExpenseResponses(req.body)
-        return submitClaimDecision(req, res, claimExpenses)
-      })
-    })
-    .catch(function (error) {
-      return handleError(error, req, res, updateConflict)
+    return validatePostRequest(req, res, `/`, function () {
+      claimExpenses = getClaimExpenseResponses(req.body)
+      return submitClaimDecision(req, res, claimExpenses)
     })
   })
 
   router.post('/claim/:claimId/add-deduction', function (req, res) {
-    authorisation.isCaseworker(req)
-    var updateConflict = true
+    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+      var deductionType = req.body.deductionType
+      var amount = Number(req.body.deductionAmount).toFixed(2)
+      var claimDeduction = new ClaimDeduction(deductionType, amount)
 
-    return Promise.try(function () {
-      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
-        updateConflict = hasConflict
-
-        var deductionType = req.body.deductionType
-        var amount = Number(req.body.deductionAmount).toFixed(2)
-        var claimDeduction = new ClaimDeduction(deductionType, amount)
-
-        return insertDeduction(req.params.claimId, claimDeduction)
-          .then(function () {
-            return res.redirect(`/claim/${req.params.claimId}`)
-          })
-      })
-    })
-    .catch(function (error) {
-      return handleError(error, req, res, updateConflict)
+      return insertDeduction(req.params.claimId, claimDeduction)
     })
   })
 
   router.post('/claim/:claimId/remove-deduction', function (req, res) {
-    authorisation.isCaseworker(req)
-    var updateConflict = true
+    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+      var removeDeductionId = getClaimDeductionId(req.body)
 
-    return Promise.try(function () {
-      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
-        updateConflict = hasConflict
-        var removeDeductionId = getClaimDeductionId(req.body)
-
-        return disableDeduction(removeDeductionId)
-          .then(function () {
-            return res.redirect(`/claim/${req.params.claimId}`)
-          })
-      })
-    })
-    .catch(function (error) {
-      return handleError(error, req, res, updateConflict)
+      return disableDeduction(removeDeductionId)
     })
   })
 
   router.post('/claim/:claimId/update-overpayment-status', function (req, res) {
-    authorisation.isCaseworker(req)
+    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+      return getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          var claim = data.claim
 
-    var updateConflict = true
+          var overpaymentAmount = req.body['overpayment-amount']
+          var overpaymentRemaining = req.body['overpayment-remaining']
+          var overpaymentReason = req.body['overpayment-reason']
 
-    return Promise.try(function () {
-      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
-        updateConflict = hasConflict
+          var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
 
-        return getIndividualClaimDetails(req.params.claimId)
-      })
-      .then(function (data) {
-        var claim = data.claim
-
-        var overpaymentAmount = req.body['overpayment-amount']
-        var overpaymentRemaining = req.body['overpayment-remaining']
-        var overpaymentReason = req.body['overpayment-reason']
-
-        var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
-
-        return updateClaimOverpaymentStatus(claim, overpaymentResponse)
-      })
-      .then(function () {
-        return res.redirect(`/claim/${req.params.claimId}`)
-      })
-    })
-    .catch(function (error) {
-      return handleError(error, req, res, updateConflict)
+          return updateClaimOverpaymentStatus(claim, overpaymentResponse)
+        })
     })
   })
 
   router.post('/claim/:claimId/close-advance-claim', function (req, res) {
-    authorisation.isCaseworker(req)
-
-    var updateConflict = true
-
-    return Promise.try(function () {
-      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
-        updateConflict = hasConflict
-
-        return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
-      })
-      .then(function () {
-        return res.redirect(`/claim/${req.params.claimId}`)
-      })
-    })
-    .catch(function (error) {
-      return handleError(error, req, res, updateConflict)
+    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+      return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
     })
   })
 
   router.post('/claim/:claimId/request-new-payment-details', function (req, res) {
-    authorisation.isCaseworker(req)
-
-    var updateConflict = true
-
-    return Promise.try(function () {
-      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
-        updateConflict = hasConflict
-
-        return getIndividualClaimDetails(req.params.claimId)
-      })
-      .then(function (data) {
-        return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
-      })
-      .then(function () {
-        return res.redirect(`/claim/${req.params.claimId}`)
-      })
-    })
-    .catch(function (error) {
-      return handleError(error, req, res, updateConflict)
+    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+      return getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
+        })
     })
   })
 }
@@ -203,6 +126,25 @@ function getClaimDeductionId (requestBody) {
   return deductionId
 }
 
+function validatePostRequest (req, res, redirectUrl, postFunction) {
+  authorisation.isCaseworker(req)
+  var updateConflict = true
+
+  return Promise.try(function () {
+    return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+      updateConflict = hasConflict
+
+      return postFunction()
+        .then(function () {
+          return res.redirect(redirectUrl)
+        })
+    })
+  })
+  .catch(function (error) {
+    return handleError(error, req, res, updateConflict)
+  })
+}
+
 function submitClaimDecision (req, res, claimExpenses) {
   var claimDecision = new ClaimDecision(
     req.user.email,
@@ -216,7 +158,6 @@ function submitClaimDecision (req, res, claimExpenses) {
     req.body.visitConfirmationCheck,
     claimExpenses
   )
-
   return SubmitClaimResponse(req.params.claimId, claimDecision)
     .then(function () {
       if (claimDecision.decision === claimDecisionEnum.APPROVED) {
@@ -225,9 +166,6 @@ function submitClaimDecision (req, res, claimExpenses) {
 
         return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
       }
-    })
-    .then(function () {
-      return res.redirect('/')
     })
 }
 
@@ -238,10 +176,6 @@ function checkForUpdateConflict (claimId, currentLastUpdated) {
       throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
     }
   })
-}
-
-function removeDeduction (req, res, deductionId) {
-  
 }
 
 function renderViewClaimPage (claimId, res) {

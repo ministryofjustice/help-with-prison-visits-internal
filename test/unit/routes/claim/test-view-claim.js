@@ -185,57 +185,6 @@ describe('routes/claim/view-claim', function () {
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
-
-    it('should respond with 400 including extra data if claim expenses exist and there is no update conflict when a validation error occurs', function () {
-      var claimData = {
-        claim: {},
-        claimExpenses: {}
-      }
-      stubCheckLastUpdated.returns(false)
-      stubGetIndividualClaimDetails.resolves(claimData)
-      stubClaimDecision.returns({})
-      stubInsertDeduction.throws(new ValidationError())
-      stubMergeClaimExpensesWithSubmittedResponses.returns({})
-
-      return supertest(app)
-        .post('/claim/123')
-        .send(VALID_DATA_ADD_DEDUCTION)
-        .expect(400)
-        .expect(function () {
-          expect(authorisation.isCaseworker.calledOnce).to.be.true
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
-          expect(stubCheckLastUpdated.calledOnce).to.be.true
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
-        })
-    })
-
-    it('should respond with 302 when valid data entered (add deduction)', function () {
-      var testClaimDecisionObject = {deductionType: 'a', amount: '5'}
-      stubCheckLastUpdated.returns(false)
-      stubInsertDeduction.resolves({})
-      stubClaimDeduction.returns(testClaimDecisionObject)
-
-      return supertest(app)
-        .post('/claim/123')
-        .send(VALID_DATA_ADD_DEDUCTION)
-        .expect(302)
-        .expect(function () {
-          expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).to.be.true
-        })
-    })
-
-    it('should respond with 302 when valid data entered (disable deduction)', function () {
-      stubCheckLastUpdated.returns(false)
-      stubDisableDeduction.resolves({})
-
-      return supertest(app)
-        .post('/claim/123')
-        .send(VALID_DATA_DISABLE_DEDUCTION)
-        .expect(302)
-        .expect(function () {
-          expect(stubDisableDeduction.calledWith('1')).to.be.true
-        })
-    })
   })
 
   describe('GET /claim/:claimId/download', function () {
@@ -255,6 +204,93 @@ describe('routes/claim/view-claim', function () {
       return supertest(app)
         .get('/claim/123/download')
         .expect(500)
+    })
+  })
+
+  describe('POST /claim/:claimId/add-deduction', function () {
+    it('should respond with 400 when last updated check returns true', function () {
+      stubCheckLastUpdated.returns(true)
+      stubGetIndividualClaimDetails.resolves({})
+
+      return supertest(app)
+        .post('/claim/123/add-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 400 including extra data if claim expenses exist and there is no update conflict when a validation error occurs', function () {
+      var claimData = {
+        claim: {},
+        claimExpenses: {}
+      }
+      stubCheckLastUpdated.returns(false)
+      stubGetIndividualClaimDetails.resolves(claimData)
+      stubClaimDecision.returns({})
+      stubInsertDeduction.throws(new ValidationError())
+      stubMergeClaimExpensesWithSubmittedResponses.returns({})
+
+      return supertest(app)
+        .post('/claim/123/add-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 302 when valid data entered (add deduction)', function () {
+      var testClaimDecisionObject = {deductionType: 'a', amount: '5'}
+      stubCheckLastUpdated.returns(false)
+      stubInsertDeduction.resolves({})
+      stubClaimDeduction.returns(testClaimDecisionObject)
+
+      return supertest(app)
+        .post('/claim/123/add-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(302)
+        .expect(function () {
+          expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).to.be.true
+        })
+    })
+  })
+
+  describe('POST /claim/:claimId/remove-deduction', function () {
+    it('should respond with 400 when last updated check returns true', function () {
+      stubCheckLastUpdated.returns(true)
+      stubGetIndividualClaimDetails.resolves({})
+
+      return supertest(app)
+        .post('/claim/123/remove-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 302 when valid data entered (disable deduction)', function () {
+      stubCheckLastUpdated.returns(false)
+      stubDisableDeduction.resolves({})
+
+      return supertest(app)
+        .post('/claim/123/remove-deduction')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(302)
+        .expect(function () {
+          expect(stubDisableDeduction.calledWith('1')).to.be.true
+        })
     })
   })
 
