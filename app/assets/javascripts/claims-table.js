@@ -33,7 +33,7 @@ $(document).ready(function () {
       error: function (response) {
         var error = JSON.parse(response.responseText)
         $('#claims_processing').hide()
-        alert('An error occurred when searching for claims. ' + error.name + ': ' + error.message) // eslint-disable-line no-undef
+        alert('An error occurred when retrieving claims. ' + error.name + ': ' + error.message) // eslint-disable-line no-undef
       }
     },
 
