@@ -64,21 +64,51 @@ module.exports = function (router) {
       return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
         updateConflict = hasConflict
 
+        claimExpenses = getClaimExpenseResponses(req.body)
+        return submitClaimDecision(req, res, claimExpenses)
+      })
+    })
+    .catch(function (error) {
+      return handleError(error, req, res, updateConflict)
+    })
+  })
+
+  router.post('/claim/:claimId/add-deduction', function (req, res) {
+    authorisation.isCaseworker(req)
+    var updateConflict = true
+
+    return Promise.try(function () {
+      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+        updateConflict = hasConflict
+
+        var deductionType = req.body.deductionType
+        var amount = Number(req.body.deductionAmount).toFixed(2)
+        var claimDeduction = new ClaimDeduction(deductionType, amount)
+
+        return insertDeduction(req.params.claimId, claimDeduction)
+          .then(function () {
+            return res.redirect(`/claim/${req.params.claimId}`)
+          })
+      })
+    })
+    .catch(function (error) {
+      return handleError(error, req, res, updateConflict)
+    })
+  })
+
+  router.post('/claim/:claimId/remove-deduction', function (req, res) {
+    authorisation.isCaseworker(req)
+    var updateConflict = true
+
+    return Promise.try(function () {
+      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+        updateConflict = hasConflict
         var removeDeductionId = getClaimDeductionId(req.body)
-        var removeDeductionClicked = false
 
-        if (removeDeductionId) {
-          removeDeductionClicked = true
-        }
-
-        if (req.body['add-deduction']) {
-          return addDeduction(req, res)
-        } else if (removeDeductionClicked) {
-          return removeDeduction(req, res, removeDeductionId)
-        } else {
-          claimExpenses = getClaimExpenseResponses(req.body)
-          return submitClaimDecision(req, res, claimExpenses)
-        }
+        return disableDeduction(removeDeductionId)
+          .then(function () {
+            return res.redirect(`/claim/${req.params.claimId}`)
+          })
       })
     })
     .catch(function (error) {
@@ -211,21 +241,7 @@ function checkForUpdateConflict (claimId, currentLastUpdated) {
 }
 
 function removeDeduction (req, res, deductionId) {
-  return disableDeduction(deductionId)
-    .then(function () {
-      return res.redirect(`/claim/${req.params.claimId}`)
-    })
-}
-
-function addDeduction (req, res) {
-  var deductionType = req.body.deductionType
-  var amount = Number(req.body.deductionAmount).toFixed(2)
-  var claimDeduction = new ClaimDeduction(deductionType, amount)
-
-  return insertDeduction(req.params.claimId, claimDeduction)
-    .then(function () {
-      return res.redirect(`/claim/${req.params.claimId}`)
-    })
+  
 }
 
 function renderViewClaimPage (claimId, res) {
