@@ -71,8 +71,6 @@ module.exports = function (router) {
           removeDeductionClicked = true
         }
 
-        claimExpenses = getClaimExpenseResponses(req.body)
-
         if (req.body['add-deduction']) {
           return addDeduction(req, res)
         } else if (removeDeductionClicked) {
