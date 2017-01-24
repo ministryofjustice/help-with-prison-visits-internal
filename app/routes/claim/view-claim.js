@@ -30,57 +30,11 @@ const Promise = require('bluebird')
 var claimExpenses
 
 module.exports = function (router) {
+  // GET
   router.get('/claim/:claimId', function (req, res) {
     authorisation.isCaseworker(req)
 
-    renderViewClaimPage(req.params.claimId, res)
-  })
-
-  router.post('/claim/:claimId', function (req, res) {
-    authorisation.isCaseworker(req)
-
-    var updateConflict
-
-    return Promise.try(function () {
-      return getLastUpdated(req.params.claimId).then(function (lastUpdatedData) {
-        updateConflict = checkLastUpdated(lastUpdatedData.LastUpdated, req.body.lastUpdated)
-        if (updateConflict) {
-          throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
-        }
-
-        var removeDeductionId = getClaimDeductionId(req.body)
-        var removeDeductionClicked = false
-
-        if (removeDeductionId) {
-          removeDeductionClicked = true
-        }
-
-        if (req.body['add-deduction']) {
-          return addDeduction(req, res)
-        } else if (removeDeductionClicked) {
-          return removeDeduction(req, res, removeDeductionId)
-        } else {
-          claimExpenses = getClaimExpenseResponses(req.body)
-          return submitClaimDecision(req, res, claimExpenses)
-        }
-      })
-    })
-    .catch(function (error) {
-      if (error instanceof ValidationError) {
-        return getIndividualClaimDetails(req.params.claimId)
-          .then(function (data) {
-            if (data.claim && data.claimExpenses && !updateConflict && claimExpenses) {
-              data.claim.NomisCheck = req.body.nomisCheck
-              data.claim.DWPCheck = req.body.dwpCheck
-              data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
-              data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
-            }
-            return renderErrors(data, req, res, error)
-          })
-      } else {
-        throw error
-      }
-    })
+    return renderViewClaimPage(req.params.claimId, res)
   })
 
   router.get('/claim/:claimId/download', function (req, res) {
@@ -101,47 +55,144 @@ module.exports = function (router) {
       })
   })
 
-  router.post('/claim/:claimId/closed-claim-action', function (req, res) {
+  // POST
+  router.post('/claim/:claimId', function (req, res) {
     authorisation.isCaseworker(req)
-
-    var updateConflict
+    var updateConflict = true
 
     return Promise.try(function () {
-      return getLastUpdated(req.params.claimId).then(function (lastUpdatedData) {
-        updateConflict = checkLastUpdated(lastUpdatedData.LastUpdated, req.body.lastUpdated)
-        if (updateConflict) {
-          throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
-        }
+      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+        updateConflict = hasConflict
 
-        if (req.body['closed-claim-action'] === 'OVERPAYMENT') {
-          updateOverpaymentStatus(req, res)
-        } else if (req.body['closed-claim-action'] === 'CLOSE-ADVANCE-CLAIM') {
-          setAdvanceClaimStatusToClosed(req, res)
-        } else if (req.body['closed-claim-action'] === 'REQUEST-NEW-PAYMENT-DETAILS') {
-          requestNewPaymentDetails(req, res)
-        }
+        claimExpenses = getClaimExpenseResponses(req.body)
+        return submitClaimDecision(req, res, claimExpenses)
       })
     })
     .catch(function (error) {
-      if (error instanceof ValidationError) {
+      return handleError(error, req, res, updateConflict)
+    })
+  })
+
+  router.post('/claim/:claimId/add-deduction', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    var updateConflict = true
+
+    return Promise.try(function () {
+      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+        updateConflict = hasConflict
+
+        var deductionType = req.body.deductionType
+        var amount = Number(req.body.deductionAmount).toFixed(2)
+        var claimDeduction = new ClaimDeduction(deductionType, amount)
+
+        return insertDeduction(req.params.claimId, claimDeduction)
+      })
+      .then(function () {
+        return res.send({redirectUrl: `/claim/${req.params.claimId}`})
+      })
+    })
+    .catch(function (error) {
+      return handleError(error, req, res, updateConflict)
+    })
+  })
+
+  router.post('/claim/:claimId/remove-deduction', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    var updateConflict = true
+
+    return Promise.try(function () {
+      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+        updateConflict = hasConflict
+
+        return disableDeduction(getClaimDeductionId(req.body))
+      })
+      .then(function () {
+        return res.send({redirectUrl: `/claim/${req.params.claimId}`})
+      })
+    })
+    .catch(function (error) {
+      return handleError(error, req, res, updateConflict)
+    })
+  })
+
+  router.post('/claim/:claimId/update-overpayment-status', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    var updateConflict = true
+
+    return Promise.try(function () {
+      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+        updateConflict = hasConflict
+
         return getIndividualClaimDetails(req.params.claimId)
-          .then(function (data) {
-            return renderErrors(data, req, res, error)
-          })
-      } else {
-        throw error
-      }
+      })
+      .then(function (data) {
+        var claim = data.claim
+
+        var overpaymentAmount = req.body['overpayment-amount']
+        var overpaymentRemaining = req.body['overpayment-remaining']
+        var overpaymentReason = req.body['overpayment-reason']
+
+        var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
+
+        return updateClaimOverpaymentStatus(claim, overpaymentResponse)
+      })
+      .then(function () {
+        return res.send({redirectUrl: `/claim/${req.params.claimId}`})
+      })
+    })
+    .catch(function (error) {
+      return handleError(error, req, res, updateConflict)
+    })
+  })
+
+  router.post('/claim/:claimId/close-advance-claim', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    var updateConflict = true
+
+    return Promise.try(function () {
+      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+        updateConflict = hasConflict
+
+        return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
+      })
+      .then(function () {
+        return res.send({redirectUrl: `/`})
+      })
+    })
+    .catch(function (error) {
+      return handleError(error, req, res, updateConflict)
+    })
+  })
+
+  router.post('/claim/:claimId/request-new-payment-details', function (req, res) {
+    authorisation.isCaseworker(req)
+
+    var updateConflict = true
+
+    return Promise.try(function () {
+      return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+        updateConflict = hasConflict
+
+        return getIndividualClaimDetails(req.params.claimId)
+      })
+      .then(function (data) {
+        return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
+      })
+      .then(function () {
+        return res.send({redirectUrl: `/`})
+      })
+    })
+    .catch(function (error) {
+      return handleError(error, req, res, updateConflict)
     })
   })
 }
 
-function removeDeduction (req, res, deductionId) {
-  return disableDeduction(deductionId)
-    .then(function () {
-      return res.redirect(`/claim/${req.params.claimId}`)
-    })
-}
-
+ // Functions
 function getClaimDeductionId (requestBody) {
   var deductionId = null
   Object.keys(requestBody).forEach(function (key) {
@@ -151,17 +202,6 @@ function getClaimDeductionId (requestBody) {
   })
 
   return deductionId
-}
-
-function addDeduction (req, res) {
-  var deductionType = req.body.deductionType
-  var amount = Number(req.body.deductionAmount).toFixed(2)
-  var claimDeduction = new ClaimDeduction(deductionType, amount)
-
-  return insertDeduction(req.params.claimId, claimDeduction)
-    .then(function () {
-      return res.redirect(`/claim/${req.params.claimId}`)
-    })
 }
 
 function submitClaimDecision (req, res, claimExpenses) {
@@ -192,72 +232,17 @@ function submitClaimDecision (req, res, claimExpenses) {
     })
 }
 
-function updateOverpaymentStatus (req, res) {
-  return Promise.try(function () {
-    return getIndividualClaimDetails(req.params.claimId)
-      .then(function (data) {
-        var claim = data.claim
-
-        var overpaymentAmount = req.body['overpayment-amount']
-        var overpaymentRemaining = req.body['overpayment-remaining']
-        var overpaymentReason = req.body['overpayment-reason']
-
-        var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
-
-        return updateClaimOverpaymentStatus(claim, overpaymentResponse)
-          .then(function () {
-            return res.redirect(`/claim/${req.params.claimId}`)
-          })
-      })
-  })
-  .catch(function (error) {
-    if (error instanceof ValidationError) {
-      getIndividualClaimDetails(req.params.claimId)
-        .then(function (data) {
-          return renderErrors(data, req, res, error)
-        })
-    } else {
-      throw error
+function checkForUpdateConflict (claimId, currentLastUpdated) {
+  return getLastUpdated(claimId).then(function (lastUpdatedData) {
+    var updateConflict = checkLastUpdated(lastUpdatedData.LastUpdated, currentLastUpdated)
+    if (updateConflict) {
+      throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
     }
-  })
-}
-
-function setAdvanceClaimStatusToClosed (req, res) {
-  return Promise.try(function () {
-    return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
-    .then(function () {
-      return res.redirect(`/`)
-    })
-  })
-  .catch(function (error) {
-    if (error instanceof ValidationError) {
-      return getIndividualClaimDetails(req.params.claimId)
-        .then(function (data) {
-          return renderErrors(data, req, res, error)
-        })
-    } else {
-      throw error
-    }
-  })
-}
-
-function requestNewPaymentDetails (req, res) {
-  return Promise.try(function () {
-    return getIndividualClaimDetails(req.params.claimId)
-      .then(function (data) {
-        requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
-          .then(function () {
-            return res.redirect(`/`)
-          })
-      })
-  })
-  .catch(function (error) {
-    throw error
   })
 }
 
 function renderViewClaimPage (claimId, res) {
-  getIndividualClaimDetails(claimId)
+  return getIndividualClaimDetails(claimId)
     .then(function (data) {
       return res.render('./claim/view-claim', {
         title: 'APVS Claim',
@@ -280,18 +265,31 @@ function renderViewClaimPage (claimId, res) {
     })
 }
 
-function renderErrors (data, req, res, error) {
-  res.status(400).render('./claim/view-claim', {
-    title: 'APVS Claim',
-    Claim: data.claim,
-    Expenses: data.claimExpenses,
-    getDateFormatted: getDateFormatted,
-    getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
-    getDisplayFieldName: getDisplayFieldName,
-    prisonerRelationshipsEnum: prisonerRelationshipsEnum,
-    displayHelper: displayHelper,
-    claimDecision: req.body,
-    deductions: displayHelper.processDeductionAmounts(data.deductions),
-    errors: error.validationErrors
-  })
+function handleError (error, req, res, updateConflict) {
+  if (error instanceof ValidationError) {
+    return getIndividualClaimDetails(req.params.claimId)
+      .then(function (data) {
+        if (data.claim && data.claimExpenses && !updateConflict && claimExpenses) {
+          data.claim.NomisCheck = req.body.nomisCheck
+          data.claim.DWPCheck = req.body.dwpCheck
+          data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
+          data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
+        }
+        return res.status(400).render('./claim/view-claim', {
+          title: 'APVS Claim',
+          Claim: data.claim,
+          Expenses: data.claimExpenses,
+          getDateFormatted: getDateFormatted,
+          getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
+          getDisplayFieldName: getDisplayFieldName,
+          prisonerRelationshipsEnum: prisonerRelationshipsEnum,
+          displayHelper: displayHelper,
+          claimDecision: req.body,
+          deductions: displayHelper.processDeductionAmounts(data.deductions),
+          errors: error.validationErrors
+        })
+      })
+  } else {
+    throw error
+  }
 }

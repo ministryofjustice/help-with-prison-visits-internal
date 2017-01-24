@@ -90,10 +90,7 @@
 
   </form>
 
-  <form action="/claim/{{ Claim['ClaimId'] }}/closed-claim-action" method="post" class="form">
-  {% include "partials/csrf-hidden-input.html" %}
   {% include "partials/view-claim/closed-claim-actions.html" %}
-  </form>
 
 </main>
 

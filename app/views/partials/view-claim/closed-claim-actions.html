@@ -1,10 +1,9 @@
 {% if displayHelper.getClaimStatusClosed(Claim['Status']) %}
   <br >
-  <div id="closedClaimAction" class="form-group">
-    <fieldset id='closedClaimActions' >
-      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-
-      <!-- Radio Buttons -->
+  
+  <form>
+    <fieldset id='closedClaimActions'> 
+      <!-- Radio Buttons -->    
       <label for="overpayment-toggle" class="block-label inline" data-target="overpayment-input">
         <input type="radio" name="closed-claim-action" value="OVERPAYMENT" id="overpayment-toggle">
         <span>Manage Overpayment</span>
@@ -24,6 +23,8 @@
       <!-- End of Radio Buttons -->
 
       <!-- Manage Overpayments -->
+      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">      
+        
       <div class="panel js-hidden" id="overpayment-input">
         {% if Claim['IsOverpaid'] != true %}
         <div class="form-group" id='overpayment-amount-group' >
@@ -41,7 +42,7 @@
           <label class="form-label-bold" for="overpayment-reason">Reason</label>
           <textarea name='overpayment-reason' id='overpayment-reason'></textarea>
         </div>
-        <input type="submit" class="button grey" name="update-overpayment-status" id="update-overpayment-status" value="Submit">
+        <input type="button" class="button grey" name="update-overpayment-status" id="update-overpayment-status" value="Submit">
       </div>
       <!-- End of Manage Overpayments -->
 
@@ -52,7 +53,7 @@
           <textarea id="close-advance-claim-reason" class="form-control" name="close-advance-claim-reason"></textarea>
         </div>
 
-        <input type="submit" class="button" name="close-advance-claim" id="close-advance-claim-submit" value="Submit">
+        <input type="button" class="button" name="close-advance-claim" id="close-advance-claim-submit" value="Submit">
       </div>
       <!-- End of Close Advanced Claim -->
 
@@ -66,11 +67,11 @@
           <label class="form-label-bold" for="payment-details-additional-information">Additional Information (optional)</label>
           <textarea type='text' name='payment-details-additional-information' id='payment-details-additional-information' class='form-control'></textarea>
         </div>
-        <input type="submit" class="button grey" name="request-new-payment-details" id="request-new-payment-details" value="Submit">
+        <input type="button" class="button grey" name="request-new-payment-details" id="request-new-payment-details" value="Submit">
 
-        {% endif %}
+        {% endif %}  
+        <!--End of Request New Payment Details-->
       </div>
-      <!--End of Request New Payment Details-->
     </fieldset>
-  </div>
+  </form>
 {% endif %}
