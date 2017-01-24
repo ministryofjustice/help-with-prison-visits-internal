@@ -1,44 +1,18 @@
 
 
 $(function () {
-  var claimId = $('input[name="claimId"]').val()
-
   $('.claim-expense-status').next('input').addClass('approved-amount')
   $('input.approved-amount').on('input', function () {
     totalApproved()
   })
-  $('#update-overpayment-status').on('click', function () {
-    var data = getPostDataObject()
-    data['overpayment-amount'] = $('#overpayment-amount').val()
-    data['overpayment-remaining'] = $('#overpayment-remaining').val()
-    data['overpayment-reason'] = $('#overpayment-reason').val()
-
-    post(`/claim/${claimId}/update-overpayment-status`, data)
+  $('#overpayment-toggle').change(function () {
+    showClosedClaimActionSection('#overpayment-input')
   })
-  $('#close-advance-claim-submit').on('click', function () {
-    var data = getPostDataObject()
-    data['close-advance-claim-reason'] = $('#close-advance-claim-reason').val()
-
-    post(`/claim/${claimId}/close-advance-claim`, data)
+  $('#close-toggle').change(function () {
+    showClosedClaimActionSection('#close-advanced-claim-input')
   })
-  $('#request-new-payment-details').on('click', function () {
-    var data = getPostDataObject()
-    data['payment-details-additional-information'] = $('#payment-details-additional-information').val()
-
-    post(`/claim/${claimId}/request-new-payment-details`, data)
-  })
-  $('input.remove-deduction-button').on('click', function () {
-    var data = getPostDataObject()
-    data[this.name] = 'Remove'
-
-    post(`/claim/${claimId}/remove-deduction`, data)
-  })
-  $('#add-deduction').on('click', function () {
-    var data = getPostDataObject()
-    data['deductionType'] = $('#deductionType').val()
-    data['deductionAmount'] = $('#deductionAmount').val()
-
-    post(`/claim/${claimId}/add-deduction`, data)
+  $('#request-new-payment-details-toggle').change(function () {
+    showClosedClaimActionSection('#request-new-payment-details-input')
   })
 
   $('.claim-expense-status').change(function () {
@@ -79,27 +53,9 @@ function totalApproved () {
   $('.claim-expense-approvedCostText').text('£' + (approvedCost + manuallyProcessed).toFixed(2))
 }
 
-function post (endPoint, data) {
-  $.post(endPoint,
-    data,
-    function (data, textStatus, jqXHR) {
-      if (data.redirectUrl) {
-        window.location.replace(data.redirectUrl)
-      } else {
-        window.location.reload()
-      }
-    }
-  )
-  .fail(function (err) {
-    alert(err)
-  })
-}
-
-function getPostDataObject () {
-  var data = {
-    _csrf: $('input[name="_csrf"]').val(),
-    'lastUpdated': $('input[name="lastUpdated"]').val()
-  }
-
-  return data
+function showClosedClaimActionSection (id) {
+  $('#overpayment-input').addClass('js-hidden')
+  $('#close-advanced-claim-input').addClass('js-hidden')
+  $('#request-new-payment-details-input').addClass('js-hidden')
+  $(id).removeClass('js-hidden')
 }
