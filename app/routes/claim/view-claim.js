@@ -202,7 +202,8 @@ function renderViewClaimPage (claimId, res) {
         duplicates: data.duplicates,
         claimEvents: data.claimEvents,
         deductions: displayHelper.processDeductionAmounts(data.deductions),
-        overpaidClaims: data.overpaidClaims
+        overpaidClaims: data.overpaidClaims,
+        claimDecisionEnum: claimDecisionEnum
       })
     })
 }
@@ -235,6 +236,7 @@ function handleError (error, req, res, updateConflict, next) {
           duplicates: data.duplicates,
           claimEvents: data.claimEvents,
           overpaidClaims: data.overpaidClaims,
+          claimDecisionEnum: claimDecisionEnum,
           errors: error.validationErrors
         })
       })
