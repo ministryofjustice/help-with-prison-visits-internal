@@ -30,7 +30,6 @@ exports.seed = function (knex, Promise) {
                 ClaimExpense.TicketType,
                 ClaimExpense.TicketOwner,
                 ClaimExpense.Status
-                ClaimExpense.DepartureTime
               FROM IntSchema.ClaimExpense AS ClaimExpense
               WHERE
               (
