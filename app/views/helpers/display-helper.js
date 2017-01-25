@@ -51,12 +51,10 @@ module.exports.getPaymentMethodDisplayName = function (paymentMethodValue) {
   return element.displayName
 }
 
-module.exports.processDeductionAmounts = function (deductions) {
-  if (deductions) {
-    deductions.forEach(function (deduction) {
-      deduction.Amount = Number(deduction.Amount).toFixed(2)
-    })
-
-    return deductions
+module.exports.toCurrency = function (value) {
+  if (value && value < 0) {
+    return `-£${Number(value * -1).toFixed(2)}`
+  } else {
+    return `£${Number(value).toFixed(2)}`
   }
 }

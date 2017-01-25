@@ -89,12 +89,25 @@
     {% include "partials/view-claim/decision.html" %}
 
   </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/closed-claim-action" method="post" class="form">
-  {% include "partials/csrf-hidden-input.html" %}
+   
   {% include "partials/view-claim/closed-claim-actions.html" %}
+  <form action="/claim/{{ Claim['ClaimId'] }}/update-overpayment-status" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}"> 
+    {% include "partials/view-claim/manage-overpayments.html" %}
   </form>
 
+  <form action="/claim/{{ Claim['ClaimId'] }}/close-advance-claim" method="post" class="form">
+      {% include "partials/csrf-hidden-input.html" %}
+      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">      
+      {% include "partials/view-claim/close-advance-claim.html" %}
+  </form>
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/request-new-payment-details" method="post" class="form">    
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">      
+    {% include "partials/view-claim/request-new-payment-details.html" %}
+  </form>
 </main>
 
 {% endblock %}

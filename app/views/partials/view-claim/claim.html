@@ -24,7 +24,7 @@
         {% if expense.ExpenseType == 'train' and Claim.IsAdvanceClaim %}
           <td>{{ expense['TravelTime'] }}</td>
         {% else %}
-          <td>£{{ expense['Cost'] }}</td>
+          <td class="cost">{{ displayHelper.toCurrency(expense['Cost']) }}</td>
         {% endif %}
 
         <td>
@@ -54,18 +54,18 @@
           <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status"
             class="form-control action-select claim-expense-status">
             <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
-            <option {% if expense['Status'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-            <option {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' %} selected {% endif %} value="APPROVED-DIFF-AMOUNT" >Approve different amount</option>
-            <option {% if expense['Status'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+            <option {% if expense['Status'] == claimDecisionEnum.APPROVED %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED }}">Approve</option>
+            <option {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED_DIFF_AMOUNT }}" >Approve different amount</option>
+            <option {% if expense['Status'] == claimDecisionEnum.REQUEST_INFORMATION %} selected {% endif %} value="{{ claimDecisionEnum.REQUEST_INFORMATION }}">Request information</option>
             {% if Claim['IsAdvanceClaim'] %}
-            <option {% if expense['Status'] == 'MANUALLY-PROCESSED' %} selected {% endif %} value="MANUALLY-PROCESSED">Process manually</option>
+            <option {% if expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Process manually</option>
             {% endif %}
-            <option {% if expense['Status'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject claim</option>
+            <option {% if expense['Status'] == claimDecisionEnum.REJECTED %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject claim</option>
           </select>
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text"
             name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ expense['ApprovedCost'] }}"
             class="form-control cost
-              {% if expense['Status'] == 'APPROVED-DIFF-AMOUNT' or expense['Status'] == 'MANUALLY-PROCESSED' %}
+              {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT or expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %}
                 visibility-visible
               {% else %}
                 visibility-hidden
@@ -82,21 +82,21 @@
         <br>
         Deduction
       </td>
-      <td>-£{{ deduction['Amount'] }}</td>
+      <td>-{{ displayHelper.toCurrency(deduction['Amount']) }}</td>
       <td></td>
-      <td><input type="submit" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey' value='Remove'></td>
+      <td><input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/remove-deduction" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey remove-deduction-button' value='Remove'></td>
     </tr>
     {% endfor %}
 
     <tr class="no-border">
       <td class="text-left"><h3 class="heading-small space-right">Total Expense Cost:</h3></td>
-      <td><h3 class="heading-small">£{{ Claim.Total }}</h3></td>
+      <td><h3 class="heading-small">{{ displayHelper.toCurrency(Claim.Total) }}</h3></td>
       <td></td>
       <td></td>
     </tr>
     <tr class="no-border">
       <td class="text-left"><h3 class="heading-small space-right">Total Approved Cost:</h3></td>
-      <td><h3 class="heading-small claim-expense-approvedCostText">£0.0</h3></td>
+      <td><h3 class="heading-small claim-expense-approvedCostText">£0.00</h3></td>
       <td></td>
       <td></td>
     </tr>

@@ -22,6 +22,7 @@ var stubOverpaymentResponse
 var stubCloseAdvanceClaim
 var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
+var stubUpdateEligibilityTrustedStatus
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 var bodyParser = require('body-parser')
@@ -77,6 +78,7 @@ describe('routes/claim/view-claim', function () {
     stubCloseAdvanceClaim = sinon.stub()
     stubMergeClaimExpensesWithSubmittedResponses = sinon.stub()
     stubRequestNewBankDetails = sinon.stub()
+    stubUpdateEligibilityTrustedStatus = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -94,7 +96,8 @@ describe('routes/claim/view-claim', function () {
       '../../services/domain/overpayment-response': stubOverpaymentResponse,
       '../../services/data/close-advance-claim': stubCloseAdvanceClaim,
       '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
-      '../../services/data/request-new-bank-details': stubRequestNewBankDetails
+      '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
+      '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus
     })
     app = express()
     app.use(bodyParser.json())
@@ -109,6 +112,9 @@ describe('routes/claim/view-claim', function () {
       next()
     })
     route(app)
+    app.use(function (req, res, next) {
+      next(new Error())
+    })
     app.use(function (err, req, res, next) {
       if (err) {
         res.status(500).render('includes/error')
@@ -153,6 +159,42 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
+    it('should respond with a 500 for an unhandled exception', function () {
+      stubCheckLastUpdated.returns(false)
+      stubClaimDecision.returns()
+      stubGetClaimExpenseResponses.returns()
+      stubSubmitClaimResponse.rejects()
+
+      return supertest(app)
+        .post('/claim/123')
+        .send(VALID_DATA_APPROVE)
+        .expect(500)
+    })
+
+    it('should call updateEligibilityTrustedStatus if claim decision is APPROVED', function () {
+      var newClaimDecision = {decision: 'APPROVED'}
+      var newClaimExpenseResponse = []
+      stubCheckLastUpdated.returns(false)
+      stubSubmitClaimResponse.resolves()
+      stubClaimDecision.returns(newClaimDecision)
+      stubGetClaimExpenseResponses.returns(newClaimExpenseResponse)
+      stubUpdateEligibilityTrustedStatus.resolves()
+
+      return supertest(app)
+        .post('/claim/123')
+        .send(VALID_DATA_APPROVE)
+        .expect(302)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetClaimExpenseResponses.calledOnce).to.be.true
+          expect(stubClaimDecision.calledOnce).to.be.true
+          expect(stubSubmitClaimResponse.calledOnce).to.be.true
+          expect(stubUpdateEligibilityTrustedStatus.calledOnce).to.be.true
+        })
+    })
+
     it('should respond with 400 when last updated check returns true', function () {
       stubCheckLastUpdated.returns(true)
       stubGetIndividualClaimDetails.resolves({})
@@ -186,54 +228,34 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
-    it('should respond with 400 including extra data if claim expenses exist and there is no update conflict when a validation error occurs', function () {
-      var claimData = {
-        claim: {},
-        claimExpenses: {}
-      }
+    it('should respond with a 500 when promise is rejected', function () {
       stubCheckLastUpdated.returns(false)
-      stubGetIndividualClaimDetails.resolves(claimData)
       stubClaimDecision.returns({})
-      stubInsertDeduction.throws(new ValidationError())
-      stubMergeClaimExpensesWithSubmittedResponses.returns({})
+      stubClaimDecision.rejects()
 
       return supertest(app)
         .post('/claim/123')
-        .send(VALID_DATA_ADD_DEDUCTION)
-        .expect(400)
-        .expect(function () {
-          expect(authorisation.isCaseworker.calledOnce).to.be.true
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
-          expect(stubCheckLastUpdated.calledOnce).to.be.true
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
-        })
+        .send(VALID_DATA_APPROVE)
+        .expect(500)
     })
 
-    it('should respond with 302 when valid data entered (add deduction)', function () {
-      var testClaimDecisionObject = {deductionType: 'a', amount: '5'}
+    it('should populate NomisCheck, DWPCheck and VisitConfirmationCheck when handling error and data is available', function () {
+      var claimDetails = {
+        claim: {},
+        claimExpenses: [{}]
+      }
+
       stubCheckLastUpdated.returns(false)
-      stubInsertDeduction.resolves({})
-      stubClaimDeduction.returns(testClaimDecisionObject)
+      stubGetClaimExpenseResponses.returns([{}])
+      stubSubmitClaimResponse.throws(new ValidationError())
+      stubGetIndividualClaimDetails.resolves(claimDetails)
+      stubMergeClaimExpensesWithSubmittedResponses.returns()
 
       return supertest(app)
         .post('/claim/123')
-        .send(VALID_DATA_ADD_DEDUCTION)
-        .expect(302)
+        .send(VALID_DATA_APPROVE)
         .expect(function () {
-          expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).to.be.true
-        })
-    })
-
-    it('should respond with 302 when valid data entered (disable deduction)', function () {
-      stubCheckLastUpdated.returns(false)
-      stubDisableDeduction.resolves({})
-
-      return supertest(app)
-        .post('/claim/123')
-        .send(VALID_DATA_DISABLE_DEDUCTION)
-        .expect(302)
-        .expect(function () {
-          expect(stubDisableDeduction.calledWith('1')).to.be.true
+          expect(stubMergeClaimExpensesWithSubmittedResponses.calledOnce).to.be.true
         })
     })
   })
@@ -256,15 +278,129 @@ describe('routes/claim/view-claim', function () {
         .get('/claim/123/download')
         .expect(500)
     })
+
+    it('should respond with 500 if no file path is provided', function () {
+      stubGetClaimDocumentFilePath.resolves()
+      return supertest(app)
+        .get('/claim/123/download?claim-document-id=55')
+        .expect(500)
+    })
   })
 
-  describe('POST /claim/:claimId/close-claim-action', function () {
+  describe('POST /claim/:claimId/add-deduction', function () {
+    it('should respond with 400 when last updated check returns true', function () {
+      stubCheckLastUpdated.returns(true)
+      stubGetIndividualClaimDetails.resolves({})
+
+      return supertest(app)
+        .post('/claim/123/add-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 400 including extra data if claim expenses exist and there is no update conflict when a validation error occurs', function () {
+      var claimData = {
+        claim: {},
+        claimExpenses: {}
+      }
+      stubCheckLastUpdated.returns(false)
+      stubGetIndividualClaimDetails.resolves(claimData)
+      stubClaimDecision.returns({})
+      stubInsertDeduction.throws(new ValidationError())
+      stubMergeClaimExpensesWithSubmittedResponses.returns({})
+
+      return supertest(app)
+        .post('/claim/123/add-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 302 when valid data entered (add deduction)', function () {
+      var testClaimDecisionObject = {deductionType: 'a', amount: '5'}
+      stubCheckLastUpdated.returns(false)
+      stubInsertDeduction.resolves({})
+      stubClaimDeduction.returns(testClaimDecisionObject)
+
+      return supertest(app)
+        .post('/claim/123/add-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(302)
+        .expect(function () {
+          expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).to.be.true
+        })
+    })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCheckLastUpdated.returns(false)
+      stubInsertDeduction.rejects()
+
+      return supertest(app)
+        .post('/claim/123/add-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(500)
+    })
+  })
+
+  describe('POST /claim/:claimId/remove-deduction', function () {
+    it('should respond with 400 when last updated check returns true', function () {
+      stubCheckLastUpdated.returns(true)
+      stubGetIndividualClaimDetails.resolves({})
+
+      return supertest(app)
+        .post('/claim/123/remove-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 302 when valid data entered (disable deduction)', function () {
+      stubCheckLastUpdated.returns(false)
+      stubDisableDeduction.resolves({})
+
+      return supertest(app)
+        .post('/claim/123/remove-deduction')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(302)
+        .expect(function () {
+          expect(stubDisableDeduction.calledWith('1')).to.be.true
+        })
+    })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCheckLastUpdated.returns(false)
+      stubDisableDeduction.rejects()
+
+      return supertest(app)
+        .post('/claim/123/remove-deduction')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(500)
+    })
+  })
+
+  describe('POST /claim/:claimId/update-overpayment-status', function () {
     it('should respond with 400 when last updated check returns true', function () {
       stubGetIndividualClaimDetails.resolves({})
       stubCheckLastUpdated.returns(true)
 
       return supertest(app)
-        .post('/claim/123/closed-claim-action')
+        .post('/claim/123/update-overpayment-status')
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(400)
         .expect(function () {
@@ -275,7 +411,7 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
-    it('should respond with 302 when valid data entered (add overpayment)', function () {
+    it('should respond with 302 when valid data entered', function () {
       var claimData = { claim: { IsOverpaid: false } }
       var overpaymentResponse = {}
       stubGetIndividualClaimDetails.resolves(claimData)
@@ -284,7 +420,7 @@ describe('routes/claim/view-claim', function () {
       stubCheckLastUpdated.returns(false)
 
       return supertest(app)
-        .post('/claim/123/closed-claim-action')
+        .post('/claim/123/update-overpayment-status')
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(302)
         .expect(function () {
@@ -303,7 +439,7 @@ describe('routes/claim/view-claim', function () {
       stubUpdateClaimOverpaymentStatus.throws(new ValidationError())
 
       return supertest(app)
-        .post('/claim/123/closed-claim-action')
+        .post('/claim/123/update-overpayment-status')
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(400)
         .expect(function () {
@@ -315,12 +451,42 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
-    it('should respond with 302 when valid data entered (close advance claim)', function () {
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCheckLastUpdated.returns(false)
+      stubGetIndividualClaimDetails.resolves({})
+      stubOverpaymentResponse.resolves({})
+      stubUpdateClaimOverpaymentStatus.rejects()
+
+      return supertest(app)
+        .post('/claim/123/update-overpayment-status')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(500)
+    })
+  })
+
+  describe('POST /claim/:claimId/close-advance-claim', function () {
+    it('should respond with 400 when last updated check returns true', function () {
+      stubGetIndividualClaimDetails.resolves({})
+      stubCheckLastUpdated.returns(true)
+
+      return supertest(app)
+        .post('/claim/123/close-advance-claim')
+        .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 302 when valid data entered', function () {
       stubCloseAdvanceClaim.resolves()
       stubCheckLastUpdated.returns(false)
 
       return supertest(app)
-        .post('/claim/123/closed-claim-action')
+        .post('/claim/123/close-advance-claim')
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(302)
         .expect(function () {
@@ -336,12 +502,41 @@ describe('routes/claim/view-claim', function () {
       stubCheckLastUpdated.returns(false)
 
       return supertest(app)
-        .post('/claim/123/closed-claim-action')
+        .post('/claim/123/close-advance-claim')
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(function () {
           expect(stubGetClaimLastUpdated.calledOnce).to.be.true
           expect(stubCheckLastUpdated.calledOnce).to.be.true
           expect(stubGetIndividualClaimDetails.calledOnce).to.be.true
+        })
+    })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCloseAdvanceClaim.rejects()
+      stubGetIndividualClaimDetails.resolves({})
+      stubCheckLastUpdated.returns(false)
+
+      return supertest(app)
+        .post('/claim/123/close-advance-claim')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(500)
+    })
+  })
+
+  describe('POST /claim/:claimId/request-new-payment-details', function () {
+    it('should respond with 400 when last updated check returns true', function () {
+      stubGetIndividualClaimDetails.resolves({})
+      stubCheckLastUpdated.returns(true)
+
+      return supertest(app)
+        .post('/claim/123/request-new-payment-details')
+        .send(VALID_DATA_REQUEST_BANK_DETAILS)
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
 
@@ -356,7 +551,7 @@ describe('routes/claim/view-claim', function () {
       })
 
       return supertest(app)
-        .post('/claim/123/closed-claim-action')
+        .post('/claim/123/request-new-payment-details')
         .send(VALID_DATA_REQUEST_BANK_DETAILS)
         .expect(302)
         .expect(function () {
@@ -364,6 +559,17 @@ describe('routes/claim/view-claim', function () {
           expect(stubCheckLastUpdated.calledOnce).to.be.true
           expect(stubRequestNewBankDetails.calledWith('NEWBANK', '1', '123', '', 'test@test.com')).to.be.true
         })
+    })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCloseAdvanceClaim.rejects()
+      stubGetIndividualClaimDetails.resolves({})
+      stubCheckLastUpdated.returns(false)
+
+      return supertest(app)
+        .post('/claim/123/request-new-payment-details')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(500)
     })
   })
 })

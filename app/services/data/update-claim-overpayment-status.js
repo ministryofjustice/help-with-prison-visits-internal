@@ -1,6 +1,7 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const dateFormatter = require('../date-formatter')
+const displayHelper = require('../../views/helpers/display-helper')
 
 const insertClaimEvent = require('./insert-claim-event')
 const overpaymentActionEnum = require('../../constants/overpayment-action-enum')
@@ -42,8 +43,8 @@ module.exports = function (claim, overpaymentResponse) {
 function buildUpdateNote (previousRemainingAmount, newRemainingAmount, note) {
   var result = []
   result.push(note)
-  result.push(`Previous remaining amount: £${previousRemainingAmount}`)
-  result.push(`New remaining amount: £${newRemainingAmount}`)
+  result.push(`Previous remaining amount: ${displayHelper.toCurrency(previousRemainingAmount)}`)
+  result.push(`New remaining amount: ${displayHelper.toCurrency(newRemainingAmount)}`)
 
   return result.join(newLine)
 }
