@@ -227,7 +227,7 @@ function handleError (error, req, res, updateConflict, next) {
           prisonerRelationshipsEnum: prisonerRelationshipsEnum,
           displayHelper: displayHelper,
           claimDecision: req.body,
-          deductions: displayHelper.processDeductionAmounts(data.deductions),
+          deductions: data.deductions,
           errors: error.validationErrors
         })
       })
