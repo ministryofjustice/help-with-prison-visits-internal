@@ -2,21 +2,21 @@
 <div id="decision" class="form-group {% if errors['decision'][0] %} error {% endif %}">
   <fieldset id='reason' >
     <label for="approve" class="block-label inline" data-target="accept-input">
-      <input type="radio" name="decision" value="APPROVED" id="approve" {% if claimDecision['decision'] == 'APPROVED' %} checked {% endif %}>
+      <input type="radio" name="decision" value="{{ claimDecisionEnum.APPROVED }}" id="approve" {% if claimDecision['decision'] == claimDecisionEnum.APPROVED %} checked {% endif %}>
       <span>Approve</span>
     </label>
 
     <label for="request" class="block-label inline" data-target="request-input">
-      <input type="radio" name="decision" value="REQUEST-INFORMATION" id="request" {% if claimDecision['decision'] == 'REQUEST-INFORMATION' %} checked {% endif %}>
+      <input type="radio" name="decision" value="{{ claimDecisionEnum.REQUEST_INFORMATION }}" id="request" {% if claimDecision['decision'] == claimDecisionEnum.REQUEST_INFORMATION %} checked {% endif %}>
       <span>Request information</span>
     </label>
 
     <label for="reject" class="block-label inline" data-target="reject-input">
-      <input type="radio" name="decision" value="REJECTED" id="reject" {% if claimDecision['decision'] == 'REJECTED' %} checked {% endif %}>
+      <input type="radio" name="decision" value="{{ claimDecisionEnum.REJECTED }}" id="reject" {% if claimDecision['decision'] == claimDecisionEnum.REJECTED %} checked {% endif %}>
       <span>Reject</span>
     </label>
 
-    <div class="panel {% if claimDecision['decision'] != 'APPROVED' %}js-hidden{% endif %}" id="accept-input">
+    <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.APPROVED %}js-hidden{% endif %}" id="accept-input">
 
       <div class="form-group">
         <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
@@ -38,7 +38,7 @@
       <input type="submit" class="button" name="approve" id="approve-submit" value="Send confirmation email to claimant">
     </div>
 
-    <div class="panel {% if claimDecision['decision'] != 'REQUEST-INFORMATION' %}js-hidden{% endif %}" id="request-input">
+    <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.REQUEST_INFORMATION %}js-hidden{% endif %}" id="request-input">
 
       <div class="form-group">
         <label class="form-label-bold {% if errors['note'][0] %} error {% endif %}" for="additional-info-request">Additional information</label>
@@ -51,7 +51,7 @@
       <input type="submit" class="button" name="request" value="Send request email to claimant">
     </div>
 
-    <div class="panel {% if claimDecision['decision'] != 'REJECTED' %}js-hidden{% endif %}" id="reject-input">
+    <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.REJECTED %}js-hidden{% endif %}" id="reject-input">
 
       <div class="form-group">
         <label class="form-label-bold {% if errors['note'][0] %} error {% endif %}" for="additional-info-reject">Additional information</label>

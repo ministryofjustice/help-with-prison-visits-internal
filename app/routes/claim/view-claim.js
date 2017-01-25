@@ -202,7 +202,8 @@ function renderViewClaimPage (claimId, res) {
         duplicates: data.duplicates,
         claimEvents: data.claimEvents,
         deductions: displayHelper.processDeductionAmounts(data.deductions),
-        overpaidClaims: data.overpaidClaims
+        overpaidClaims: data.overpaidClaims,
+        claimDecisionEnum: claimDecisionEnum
       })
     })
 }
@@ -221,13 +222,21 @@ function handleError (error, req, res, updateConflict, next) {
           title: 'APVS Claim',
           Claim: data.claim,
           Expenses: data.claimExpenses,
+          Children: data.claimChild,
+          Escort: data.claimEscort,
           getDateFormatted: getDateFormatted,
+          getChildFormatted: getChildFormatted,
           getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
           getDisplayFieldName: getDisplayFieldName,
           prisonerRelationshipsEnum: prisonerRelationshipsEnum,
           displayHelper: displayHelper,
           claimDecision: req.body,
+          receiptRequiredEnum: receiptRequiredEnum,
           deductions: displayHelper.processDeductionAmounts(data.deductions),
+          duplicates: data.duplicates,
+          claimEvents: data.claimEvents,
+          overpaidClaims: data.overpaidClaims,
+          claimDecisionEnum: claimDecisionEnum,
           errors: error.validationErrors
         })
       })
