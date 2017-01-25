@@ -21,7 +21,7 @@
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
         </td>
 
-        <td class="cost">£{{ expense['Cost'] }}</td>
+        <td class="cost">{{ displayHelper.toCurrency(expense['Cost']) }}</td>
 
         <td>
           {% if receiptRequiredEnum[expense.ExpenseType] %}
@@ -75,7 +75,7 @@
         <br>
         Deduction
       </td>
-      <td>-£{{ deduction['Amount'] }}</td>
+      <td>-{{ displayHelper.toCurrency(deduction['Amount']) }}</td>
       <td></td>
       <td><input type="submit" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey' value='Remove'></td>
     </tr>
@@ -83,13 +83,13 @@
 
     <tr class="no-border">
       <td class="text-left"><h3 class="heading-small space-right">Total Expense Cost:</h3></td>
-      <td><h3 class="heading-small">£{{ Claim.Total }}</h3></td>
+      <td><h3 class="heading-small">{{ displayHelper.toCurrency(Claim.Total) }}</h3></td>
       <td></td>
       <td></td>
     </tr>
     <tr class="no-border">
       <td class="text-left"><h3 class="heading-small space-right">Total Approved Cost:</h3></td>
-      <td><h3 class="heading-small claim-expense-approvedCostText">£0.0</h3></td>
+      <td><h3 class="heading-small claim-expense-approvedCostText">£0.00</h3></td>
       <td></td>
       <td></td>
     </tr>

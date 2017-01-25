@@ -16,9 +16,6 @@ describe('views/helpers/display-helper', function () {
   const CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.APPROVED.value
   const NOT_CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.NEW.value
 
-  const INPUT_DEDUCTION_AMOUNTS = [{ Amount: '5.4' }, { Amount: '5' }, { Amount: '6.00' }]
-  const EXPECTED_PROCESSED_DEDUCTION_AMOUNTS = [{ Amount: '5.40' }, { Amount: '5.00' }, { Amount: '6.00' }]
-
   it('should return the correct benefit display name given a valid value', function () {
     var result = displayHelper.getBenefitDisplayName(VALID_BENEFIT_VALUE)
     expect(result).to.equal(benefitsEnum.INCOME_SUPPORT.displayName)
@@ -59,8 +56,10 @@ describe('views/helpers/display-helper', function () {
     expect(displayHelper.getClaimStatusClosed(NOT_CLOSED_CLAIM_STATUS_VALUE)).to.be.false
   })
 
-  it('should set deduction amounts to 2 decimal places', function () {
-    var processedDeductionAmounts = displayHelper.processDeductionAmounts(INPUT_DEDUCTION_AMOUNTS)
-    expect(processedDeductionAmounts).to.deep.equal(EXPECTED_PROCESSED_DEDUCTION_AMOUNTS)
+  it('should return the correct currency value given a valid integer or decimal number', function () {
+    expect(displayHelper.toCurrency(50)).to.equal('£50.00')
+    expect(displayHelper.toCurrency('21.5')).to.equal('£21.50')
+    expect(displayHelper.toCurrency(-40)).to.equal('-£40.00')
+    expect(displayHelper.toCurrency('-32.4')).to.equal('-£32.40')
   })
 })

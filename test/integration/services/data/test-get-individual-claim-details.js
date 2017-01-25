@@ -42,7 +42,7 @@ describe('services/data/get-individual-claim-details', function () {
           expect(result.claim.NameOfPrison).to.equal(testData.Prisoner.NameOfPrison)
           expect(result.claimExpenses[0].ExpenseType).to.equal(testData.ClaimExpenses[0].ExpenseType)
           expect(result.claimExpenses[0].DocumentStatus).to.equal(testData.ClaimDocument['expense'].DocumentStatus)
-          expect(result.claimExpenses[1].Cost).to.equal(Number(testData.ClaimExpenses[1].Cost).toFixed(2))
+          expect(result.claimExpenses[1].Cost).to.equal(testData.ClaimExpenses[1].Cost)
           expect(result.claim.visitConfirmation.DocumentStatus).to.equal(testData.ClaimDocument['visit-confirmation'].DocumentStatus)
           expect(result.claim.benefitDocument[0].DocumentStatus).to.equal(testData.ClaimDocument['benefit'].DocumentStatus)
           expect(result.claimChild[0].FirstName).to.equal(testData.ClaimChild[0].FirstName)
