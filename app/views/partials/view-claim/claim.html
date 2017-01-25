@@ -21,7 +21,11 @@
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
         </td>
 
-        <td class="cost">£{{ expense['Cost'] }}</td>
+        {% if expense.ExpenseType == 'train' and Claim.IsAdvanceClaim %}
+          <td>{{ expense['TravelTime'] }}</td>
+        {% else %}
+          <td>£{{ expense['Cost'] }}</td>
+        {% endif %}
 
         <td>
           {% if receiptRequiredEnum[expense.ExpenseType] %}
@@ -35,6 +39,9 @@
             {% elif expense.DocumentStatus == 'post-later' %}
               <span class="text-pending">To be posted later</span>
               <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
+
+            {% elif expense.ExpenseType == 'train' and Claim.IsAdvanceClaim %}
+              <span class="text-pending">Receipt to be uploaded after visit</span>
 
             {% else %}
               <span class="text-warning">Receipt required</span>
