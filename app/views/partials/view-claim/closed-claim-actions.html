@@ -1,22 +1,24 @@
 {% if displayHelper.getClaimStatusClosed(Claim['Status']) %}
   <!-- Radio Buttons -->    
   <form>
-    <label for="overpayment-toggle" class="block-label inline" data-target="overpayment-input">
-      <input type="radio" name="closed-claim-action" value="OVERPAYMENT" id="overpayment-toggle">
-      <span>Manage Overpayment</span>
-    </label>
+    <fieldset id="closedClaimActions">
+      <label for="overpayment-toggle" class="block-label inline" data-target="overpayment-input">
+        <input type="radio" name="closed-claim-action" value="OVERPAYMENT" id="overpayment-toggle">
+        <span>Manage Overpayment</span>
+      </label>
 
-    {% if Claim['IsAdvanceClaim'] == true %}
-    <label for="close-toggle" class="block-label inline" data-target="close-advanced-claim-input">
-      <input type="radio" name="closed-claim-action" value="CLOSE-ADVANCE-CLAIM" id="close-toggle">
-      <span>Close Advance Claim</span>
-    </label>
-    {% endif %}
+      {% if Claim['IsAdvanceClaim'] == true %}
+      <label for="close-toggle" class="block-label inline" data-target="close-advanced-claim-input">
+        <input type="radio" name="closed-claim-action" value="CLOSE-ADVANCE-CLAIM" id="close-toggle">
+        <span>Close Advance Claim</span>
+      </label>
+      {% endif %}
 
-    <label for="request-new-payment-details-toggle" class="block-label inline" data-target="request-new-payment-details-input">
-      <input type="radio" name="closed-claim-action" value="REQUEST-NEW-PAYMENT-DETAILS" id="request-new-payment-details-toggle">
-      <span>Request new payment details</span>
-    </label>
+      <label for="request-new-payment-details-toggle" class="block-label inline" data-target="request-new-payment-details-input">
+        <input type="radio" name="closed-claim-action" value="REQUEST-NEW-PAYMENT-DETAILS" id="request-new-payment-details-toggle">
+        <span>Request new payment details</span>
+      </label>
+    </fieldset>
   </form>
   <!-- End of Radio Buttons -->
 {% endif %}
