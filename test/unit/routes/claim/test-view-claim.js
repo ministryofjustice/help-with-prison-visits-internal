@@ -134,8 +134,6 @@ describe('routes/claim/view-claim', function () {
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
-
-    
   })
 
   describe('POST /claim/:claimId', function () {
