@@ -5,6 +5,7 @@ const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference
 const insertClaimEvent = require('./insert-claim-event')
 const deductionTypeEnum = require('../../constants/deduction-type-enum')
 const overpaymentActionEnum = require('../../constants/overpayment-action-enum')
+const displayHelper = require('../../views/helpers/display-helper')
 
 module.exports = function (currentClaimId, reference) {
   return getIndividualClaimDetails(currentClaimId)
@@ -66,7 +67,7 @@ function updateRemainingOverpaymentAmount (claim, newRemainingOverpaymentAmount,
   }
 
   var eventLabel = isOverpaid ? overpaymentActionEnum.UPDATE : overpaymentActionEnum.RESOLVE
-  var note = `Deduction of £${deductionAmount} applied on related claim`
+  var note = `Deduction of ${displayHelper.toCurrency(deductionAmount)} applied on related claim`
 
   return knex('Claim').where('ClaimId', claim.ClaimId).update(updatedClaim)
     .then(function () {

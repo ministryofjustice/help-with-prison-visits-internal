@@ -201,7 +201,7 @@ function renderViewClaimPage (claimId, res) {
         displayHelper: displayHelper,
         duplicates: data.duplicates,
         claimEvents: data.claimEvents,
-        deductions: displayHelper.processDeductionAmounts(data.deductions),
+        deductions: data.deductions,
         overpaidClaims: data.overpaidClaims,
         claimDecisionEnum: claimDecisionEnum
       })
@@ -232,7 +232,7 @@ function handleError (error, req, res, updateConflict, next) {
           displayHelper: displayHelper,
           claimDecision: req.body,
           receiptRequiredEnum: receiptRequiredEnum,
-          deductions: displayHelper.processDeductionAmounts(data.deductions),
+          deductions: data.deductions,
           duplicates: data.duplicates,
           claimEvents: data.claimEvents,
           overpaidClaims: data.overpaidClaims,
