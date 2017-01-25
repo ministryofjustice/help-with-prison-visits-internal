@@ -37,34 +37,39 @@ module.exports = function (router) {
     return renderViewClaimPage(req.params.claimId, res)
   })
 
-  router.get('/claim/:claimId/download', function (req, res) {
+  router.get('/claim/:claimId/download', function (req, res, next) {
     authorisation.isCaseworker(req)
 
-    var claimDocumentId = req.query['claim-document-id']
-    if (!claimDocumentId) {
-      throw new Error('Invalid Document ID')
-    }
+    return Promise.try(function () {
+      var claimDocumentId = req.query['claim-document-id']
+      if (!claimDocumentId) {
+        throw new Error('Invalid Document ID')
+      }
 
-    getClaimDocumentFilePath(claimDocumentId)
-      .then(function (document) {
-        if (document && document.Filepath) {
-          res.download(document.Filepath)
-        } else {
-          throw new Error('No path to file provided')
-        }
-      })
+      return getClaimDocumentFilePath(claimDocumentId)
+        .then(function (document) {
+          if (document && document.Filepath) {
+            res.download(document.Filepath)
+          } else {
+            throw new Error('No path to file provided')
+          }
+        })
+    })
+    .catch(function (err) {
+      return handleError(err, req, res, false, next)
+    })
   })
 
   // POST
-  router.post('/claim/:claimId', function (req, res) {
-    return validatePostRequest(req, res, `/`, function () {
+  router.post('/claim/:claimId', function (req, res, next) {
+    return validatePostRequest(req, res, next, `/`, function () {
       claimExpenses = getClaimExpenseResponses(req.body)
       return submitClaimDecision(req, res, claimExpenses)
     })
   })
 
-  router.post('/claim/:claimId/add-deduction', function (req, res) {
-    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+  router.post('/claim/:claimId/add-deduction', function (req, res, next) {
+    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
       var deductionType = req.body.deductionType
       var amount = Number(req.body.deductionAmount).toFixed(2)
       var claimDeduction = new ClaimDeduction(deductionType, amount)
@@ -73,16 +78,16 @@ module.exports = function (router) {
     })
   })
 
-  router.post('/claim/:claimId/remove-deduction', function (req, res) {
-    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+  router.post('/claim/:claimId/remove-deduction', function (req, res, next) {
+    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
       var removeDeductionId = getClaimDeductionId(req.body)
 
       return disableDeduction(removeDeductionId)
     })
   })
 
-  router.post('/claim/:claimId/update-overpayment-status', function (req, res) {
-    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+  router.post('/claim/:claimId/update-overpayment-status', function (req, res, next) {
+    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           var claim = data.claim
@@ -98,14 +103,14 @@ module.exports = function (router) {
     })
   })
 
-  router.post('/claim/:claimId/close-advance-claim', function (req, res) {
-    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+  router.post('/claim/:claimId/close-advance-claim', function (req, res, next) {
+    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
       return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
     })
   })
 
-  router.post('/claim/:claimId/request-new-payment-details', function (req, res) {
-    return validatePostRequest(req, res, `/claim/${req.params.claimId}`, function () {
+  router.post('/claim/:claimId/request-new-payment-details', function (req, res, next) {
+    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
@@ -126,7 +131,7 @@ function getClaimDeductionId (requestBody) {
   return deductionId
 }
 
-function validatePostRequest (req, res, redirectUrl, postFunction) {
+function validatePostRequest (req, res, next, redirectUrl, postFunction) {
   authorisation.isCaseworker(req)
   var updateConflict = true
 
@@ -141,7 +146,7 @@ function validatePostRequest (req, res, redirectUrl, postFunction) {
     })
   })
   .catch(function (error) {
-    return handleError(error, req, res, updateConflict)
+    return handleError(error, req, res, updateConflict, next)
   })
 }
 
@@ -202,7 +207,7 @@ function renderViewClaimPage (claimId, res) {
     })
 }
 
-function handleError (error, req, res, updateConflict) {
+function handleError (error, req, res, updateConflict, next) {
   if (error instanceof ValidationError) {
     return getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
@@ -227,6 +232,6 @@ function handleError (error, req, res, updateConflict) {
         })
       })
   } else {
-    throw error
+    next(error)
   }
 }

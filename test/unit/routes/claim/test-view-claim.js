@@ -112,6 +112,9 @@ describe('routes/claim/view-claim', function () {
       next()
     })
     route(app)
+    app.use(function (req, res, next) {
+      next(new Error())
+    })
     app.use(function (err, req, res, next) {
       if (err) {
         res.status(500).render('includes/error')
@@ -131,6 +134,8 @@ describe('routes/claim/view-claim', function () {
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
+
+    
   })
 
   describe('POST /claim/:claimId', function () {
@@ -154,6 +159,18 @@ describe('routes/claim/view-claim', function () {
           expect(stubClaimDecision.calledOnce).to.be.true
           expect(stubSubmitClaimResponse.calledOnce).to.be.true
         })
+    })
+
+    it('should respond with a 500 for an unhandled exception', function () {
+      stubCheckLastUpdated.returns(false)
+      stubClaimDecision.returns()
+      stubGetClaimExpenseResponses.returns()
+      stubSubmitClaimResponse.rejects()
+
+      return supertest(app)
+        .post('/claim/123')
+        .send(VALID_DATA_APPROVE)
+        .expect(500)
     })
 
     it('should call updateEligibilityTrustedStatus if claim decision is APPROVED', function () {
@@ -212,6 +229,37 @@ describe('routes/claim/view-claim', function () {
           expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCheckLastUpdated.returns(false)
+      stubClaimDecision.returns({})
+      stubClaimDecision.rejects()
+
+      return supertest(app)
+        .post('/claim/123')
+        .send(VALID_DATA_APPROVE)
+        .expect(500)
+    })
+
+    it('should populate NomisCheck, DWPCheck and VisitConfirmationCheck when handling error and data is available', function () {
+      var claimDetails = {
+        claim: {},
+        claimExpenses: [{}]
+      }
+
+      stubCheckLastUpdated.returns(false)
+      stubGetClaimExpenseResponses.returns([{}])
+      stubSubmitClaimResponse.throws(new ValidationError())
+      stubGetIndividualClaimDetails.resolves(claimDetails)
+      stubMergeClaimExpensesWithSubmittedResponses.returns()
+
+      return supertest(app)
+        .post('/claim/123')
+        .send(VALID_DATA_APPROVE)
+        .expect(function () {
+          expect(stubMergeClaimExpensesWithSubmittedResponses.calledOnce).to.be.true
+        })
+    })
   })
 
   describe('GET /claim/:claimId/download', function () {
@@ -230,6 +278,13 @@ describe('routes/claim/view-claim', function () {
     it('should respond with 500 if no claim-document-id provided', function () {
       return supertest(app)
         .get('/claim/123/download')
+        .expect(500)
+    })
+
+    it('should respond with 500 if no file path is provided', function () {
+      stubGetClaimDocumentFilePath.resolves()
+      return supertest(app)
+        .get('/claim/123/download?claim-document-id=55')
         .expect(500)
     })
   })
@@ -288,6 +343,16 @@ describe('routes/claim/view-claim', function () {
           expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).to.be.true
         })
     })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCheckLastUpdated.returns(false)
+      stubInsertDeduction.rejects()
+
+      return supertest(app)
+        .post('/claim/123/add-deduction')
+        .send(VALID_DATA_ADD_DEDUCTION)
+        .expect(500)
+    })
   })
 
   describe('POST /claim/:claimId/remove-deduction', function () {
@@ -318,6 +383,16 @@ describe('routes/claim/view-claim', function () {
         .expect(function () {
           expect(stubDisableDeduction.calledWith('1')).to.be.true
         })
+    })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCheckLastUpdated.returns(false)
+      stubDisableDeduction.rejects()
+
+      return supertest(app)
+        .post('/claim/123/remove-deduction')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(500)
     })
   })
 
@@ -377,6 +452,18 @@ describe('routes/claim/view-claim', function () {
           expect(stubUpdateClaimOverpaymentStatus.calledOnce).to.be.true
         })
     })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCheckLastUpdated.returns(false)
+      stubGetIndividualClaimDetails.resolves({})
+      stubOverpaymentResponse.resolves({})
+      stubUpdateClaimOverpaymentStatus.rejects()
+
+      return supertest(app)
+        .post('/claim/123/update-overpayment-status')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(500)
+    })
   })
 
   describe('POST /claim/:claimId/close-advance-claim', function () {
@@ -425,6 +512,17 @@ describe('routes/claim/view-claim', function () {
           expect(stubGetIndividualClaimDetails.calledOnce).to.be.true
         })
     })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCloseAdvanceClaim.rejects()
+      stubGetIndividualClaimDetails.resolves({})
+      stubCheckLastUpdated.returns(false)
+
+      return supertest(app)
+        .post('/claim/123/close-advance-claim')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(500)
+    })
   })
 
   describe('POST /claim/:claimId/request-new-payment-details', function () {
@@ -463,6 +561,17 @@ describe('routes/claim/view-claim', function () {
           expect(stubCheckLastUpdated.calledOnce).to.be.true
           expect(stubRequestNewBankDetails.calledWith('NEWBANK', '1', '123', '', 'test@test.com')).to.be.true
         })
+    })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCloseAdvanceClaim.rejects()
+      stubGetIndividualClaimDetails.resolves({})
+      stubCheckLastUpdated.returns(false)
+
+      return supertest(app)
+        .post('/claim/123/request-new-payment-details')
+        .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(500)
     })
   })
 })
