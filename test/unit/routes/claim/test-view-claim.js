@@ -22,6 +22,7 @@ var stubOverpaymentResponse
 var stubCloseAdvanceClaim
 var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
+var stubUpdateEligibilityTrustedStatus
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 var bodyParser = require('body-parser')
@@ -77,6 +78,7 @@ describe('routes/claim/view-claim', function () {
     stubCloseAdvanceClaim = sinon.stub()
     stubMergeClaimExpensesWithSubmittedResponses = sinon.stub()
     stubRequestNewBankDetails = sinon.stub()
+    stubUpdateEligibilityTrustedStatus = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -94,7 +96,8 @@ describe('routes/claim/view-claim', function () {
       '../../services/domain/overpayment-response': stubOverpaymentResponse,
       '../../services/data/close-advance-claim': stubCloseAdvanceClaim,
       '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
-      '../../services/data/request-new-bank-details': stubRequestNewBankDetails
+      '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
+      '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus
     })
     app = express()
     app.use(bodyParser.json())
@@ -150,6 +153,30 @@ describe('routes/claim/view-claim', function () {
           expect(stubGetClaimExpenseResponses.calledOnce).to.be.true
           expect(stubClaimDecision.calledOnce).to.be.true
           expect(stubSubmitClaimResponse.calledOnce).to.be.true
+        })
+    })
+
+    it('should call updateEligibilityTrustedStatus if claim decision is APPROVED', function () {
+      var newClaimDecision = {decision: 'APPROVED'}
+      var newClaimExpenseResponse = []
+      stubCheckLastUpdated.returns(false)
+      stubSubmitClaimResponse.resolves()
+      stubClaimDecision.returns(newClaimDecision)
+      stubGetClaimExpenseResponses.returns(newClaimExpenseResponse)
+      stubUpdateEligibilityTrustedStatus.resolves()
+
+      return supertest(app)
+        .post('/claim/123')
+        .send(VALID_DATA_APPROVE)
+        .expect(302)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetClaimExpenseResponses.calledOnce).to.be.true
+          expect(stubClaimDecision.calledOnce).to.be.true
+          expect(stubSubmitClaimResponse.calledOnce).to.be.true
+          expect(stubUpdateEligibilityTrustedStatus.calledOnce).to.be.true
         })
     })
 
