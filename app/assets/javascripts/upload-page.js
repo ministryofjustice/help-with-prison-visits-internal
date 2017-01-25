@@ -1,7 +1,9 @@
 $('#document').change(function () {
   var document = $('#document').val().replace(/\\/g, '/').replace(/.*\//, '')
   if (document) {
-    $('#document-name').html(document)
-    $('#choose-file').html('Choose a different file')
+    $('#document-name').html(document).addClass('text-success')
+    $('#choose-file').hide()
+    $('#label').hide()
+    $('#remove-file-upload').show()
   }
 })
