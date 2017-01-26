@@ -62,6 +62,7 @@ module.exports = function (router) {
 
   // POST
   router.post('/claim/:claimId', function (req, res, next) {
+    req.session.formData = parseFormData(req.body)
     return validatePostRequest(req, res, next, function () {
       claimExpenses = getClaimExpenseResponses(req.body)
       return submitClaimDecision(req, res, claimExpenses)
