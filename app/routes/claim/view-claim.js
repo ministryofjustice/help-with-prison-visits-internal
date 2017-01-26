@@ -82,7 +82,10 @@ module.exports = function (router) {
   })
 
   router.post('/claim/:claimId/add-deduction', function (req, res, next) {
+    delete req.session.formData.deductionType
+    delete req.session.formData.deductionAmount
     req.session.formData = parseFormData(req.body)
+
     return validatePostRequest(req, res, next, function () {
       var deductionType = req.body.deductionType
       var amount = Number(req.body.deductionAmount).toFixed(2)
@@ -90,8 +93,6 @@ module.exports = function (router) {
 
       return insertDeduction(req.params.claimId, claimDeduction)
         .then(function () {
-          delete req.session.formData.deductionType
-          delete req.session.formData.deductionAmount
           return res.redirect(`/claim/${req.params.claimId}`)
         })
     })
