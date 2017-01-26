@@ -37,15 +37,15 @@ $(function () {
   $('.approved-amount').each(function () {
     totalApproved()
   })
-  
+
   $('#overpayment-toggle').change(function () {
     showClosedClaimActionSection('#overpayment-input')
   })
-  
+
   $('#close-toggle').change(function () {
     showClosedClaimActionSection('#close-advanced-claim-input')
   })
-  
+
   $('#request-new-payment-details-toggle').change(function () {
     showClosedClaimActionSection('#request-new-payment-details-input')
   })
