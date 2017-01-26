@@ -1,7 +1,7 @@
 module.exports = {
   'car': 'Car Journey',
   'toll': 'Toll',
-  'parking charge': 'Parking Charge',
+  'parking': 'Parking Charge',
   'hire': 'Car Hire',
   'bus': 'Bus Journey',
   'train': 'Train Journey',
