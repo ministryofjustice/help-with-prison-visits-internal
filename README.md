@@ -50,6 +50,7 @@ npm run-script test-coverage    # unit tests and generates code coverage using I
 npm run-script test-unit        # unit tests
 npm run-script test-integration # integration tests
 npm run-script test-e2e         # e2e tests using selenium standalone against local
+npm run-script test-e2e-smoke   # short smoke test using selenium standalone against local
 ```
 
 Run e2e tests with [saucelabs](https://saucelabs.com)
@@ -89,3 +90,13 @@ Use the following partial to add the hidden input:
 ```
 {% include "partials/csrf-hidden-input.html" %}
 ```
+
+## Notes
+
+### Updating dependencies
+
+This node application uses [npm shrinkwrap](https://docs.npmjs.com/cli/shrinkwrap) to fix dependencies and peer dependencies to specific versions. This prevents node modules from automatically updating on new releases without developers knowledge.
+
+To manually update a dependency (e.g. GOV.UK styles) use `npm update my-dependency` and commit the updated `package.json` and `npm-shrinkwrap.json` files.
+
+Please note, there is an outstanding [bug in npm](https://github.com/npm/npm/issues/14042) which attempts to install incompatible optional dependencies when referenced in shrinkwrap (`fsevents` is one). To prevent this, either update the dependency from inside a docker image or manually remove the dependency from `npm-shrinkwrap.json`.

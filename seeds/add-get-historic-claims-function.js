@@ -23,6 +23,7 @@ exports.seed = function (knex, Promise) {
                 Claim.ClaimId,
                 Claim.DateOfJourney,
                 Claim.Status,
+                Claim.EligibilityId,
                 Visitor.DateOfBirth,
                 Prisoner.FirstName,
                 Prisoner.LastName,

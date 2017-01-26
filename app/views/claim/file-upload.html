@@ -8,6 +8,9 @@
 <main id="content" role="main">
   {% include "includes/phase_banner_beta.html" %}
 
+  {% import 'partials/navigation.html' as nav %}
+      {{nav.active('/')}}
+
   <div class="grid-row">
     <div class="column-two-thirds">
 
@@ -25,13 +28,17 @@
       {% include "partials/csrf-hidden-input.html" %}
 
         <div>
-          <div id='document-name'></div>
           <div>
-            <label class="custom-file-upload">
+            <p id='document-name' class="column-two-quarter"></p>
+            <a id="remove-file-upload" class="link pull-right remove-upload" href="{{ URL }}">remove</a>
+          </div>
+          <div>
+            <label id="label" class="custom-file-upload">
               <input id="document" type="file" name="document" />
               <div id='choose-file'>Choose file</div>
             </label>
           </div>
+
         </div>
 
         <div class="form-group">
@@ -39,11 +46,9 @@
             <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Help with upload</span></summary>
             <div class="panel panel-border-narrow" id="details-content-0" aria-hidden="false">
               <ul class="list list-number">
-                <li>Photograph or capture your document using a camera, mobile phone, scanner or other device</li>
-                <li>Transfer the image to your computer, or attach your camera to your computer</li>
-                <li>Click “Choose File”</li>
-                <li>Locate and select the file</li>
-                <li>Click “Continue"</li>
+                <li>Take a photo using your smartphone, tablet or camera, or scan the document</li>
+                <li>Transfer the image to your computer or the device you’re using to make the claim</li>
+                <li>Go to ‘choose file’ above and find the image</li>
               </ul>
             </div>
           </details>

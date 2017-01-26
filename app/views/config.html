@@ -12,6 +12,9 @@
 
   {% include "includes/validation-error-messages.html" %}
 
+  {% import 'partials/navigation.html' as nav %}
+    {{nav.active('')}}
+
   <form action="/config" method="post">
   <h1 class="table-heading">Auto Approval Configuration</h1>
     <div class="form-group">
@@ -70,7 +73,7 @@
               Controls the maximum claim total that can be auto-approved (e.g. 250)
             </td>
             <td class="pound-wrapper">
-              <span>£</span>
+              <span class="pound-symbol">£</span>
               <input id="max-claim-total" type="text" name="MaxClaimTotal" class="form-control" value="{{ autoApprovalConfig.MaxClaimTotal }}">
             </td>
           </tr>

@@ -33,7 +33,7 @@ class ClaimDecision {
     this.claimExpenseResponses = claimExpenseResponses
     claimExpenseResponses.forEach(function (expense) {
       if (expense.status === claimDecisionEnum.APPROVED) {
-        expense.approvedCost = expense.cost
+        expense.approvedCost = Number(expense.cost).toFixed(2)
       } else if (expense.status !== claimDecisionEnum.APPROVED_DIFF_AMOUNT &&
                  expense.status !== claimDecisionEnum.MANUALLY_PROCESSED) {
         expense.approvedCost = null
@@ -69,6 +69,16 @@ class ClaimDecision {
           .isLessThanMaximumDifferentApprovedAmount()
       }
     })
+    var check = false
+    this.claimExpenseResponses.forEach(function (expense) {
+      if (expense.status !== claimDecisionEnum.REJECTED) {
+        check = true
+      }
+    })
+
+    if (check === false) {
+      errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
+    }
 
     FieldValidator(this.nomisCheck, 'nomis-check', errors)
       .isRequired()

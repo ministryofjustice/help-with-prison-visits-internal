@@ -11,7 +11,8 @@
   {% include "includes/phase_banner_beta.html" %}
 
 
-  {% include "partials/navigation.html" %}
+  {% import 'partials/navigation.html' as nav %}
+    {{nav.active('/')}}
 
   <div class="column-one-half search">
     <form action="/search">
@@ -19,7 +20,7 @@
         <input type="text" name="q" class="form-control" id="input-search-query">
       </label>
       <input type="submit" class="button" value="Search" id="search">
-      <a href="/advanced-search-input" class="link margin-left">Advanced Search</a>
+      <a id="advanced-search" href="/advanced-search-input" class="link margin-left">Advanced Search</a>
     </form>
     <br>
   </div>
