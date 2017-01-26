@@ -10,7 +10,7 @@
         </select>
       </td>
       <td>
-        Amount: <input id="deductionAmount" name="deductionAmount" type="text" class="form-control">
+        Amount: <input id="deductionAmount" name="deductionAmount" type="text" class="form-control" value="{{ formData.deductionAmount }}">
       </td>
       <td>
         <input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/add-deduction" class="button pull-right grey" name="add-deduction" id="add-deduction" value="Submit">

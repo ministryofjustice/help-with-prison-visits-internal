@@ -62,32 +62,41 @@ module.exports = function (router) {
 
   // POST
   router.post('/claim/:claimId', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/`, function () {
+    return validatePostRequest(req, res, next, function () {
       claimExpenses = getClaimExpenseResponses(req.body)
       return submitClaimDecision(req, res, claimExpenses)
+    })
+    .then(function () {
+      return res.redirect('/')
     })
   })
 
   router.post('/claim/:claimId/add-deduction', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    return validatePostRequest(req, res, next, function () {
       var deductionType = req.body.deductionType
       var amount = Number(req.body.deductionAmount).toFixed(2)
       var claimDeduction = new ClaimDeduction(deductionType, amount)
 
       return insertDeduction(req.params.claimId, claimDeduction)
     })
+    .then(function () {
+      return renderViewClaimPage(req.params.claimId, res, req.body)
+    })
   })
 
   router.post('/claim/:claimId/remove-deduction', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    return validatePostRequest(req, res, next, function () {
       var removeDeductionId = getClaimDeductionId(req.body)
 
       return disableDeduction(removeDeductionId)
     })
+    .then(function () {
+      return renderViewClaimPage(req.params.claimId, res, req.body)
+    })
   })
 
   router.post('/claim/:claimId/update-overpayment-status', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    return validatePostRequest(req, res, next, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           var claim = data.claim
@@ -101,20 +110,29 @@ module.exports = function (router) {
           return updateClaimOverpaymentStatus(claim, overpaymentResponse)
         })
     })
+    .then(function () {
+      return renderViewClaimPage(req.params.claimId, res, req.body)
+    })
   })
 
   router.post('/claim/:claimId/close-advance-claim', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    return validatePostRequest(req, res, next, function () {
       return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
+    })
+    .then(function () {
+      return renderViewClaimPage(req.params.claimId, res, req.body)
     })
   })
 
   router.post('/claim/:claimId/request-new-payment-details', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    return validatePostRequest(req, res, next, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
         })
+    })
+    .then(function () {
+      return renderViewClaimPage(req.params.claimId, res, req.body)
     })
   })
 }
@@ -131,7 +149,8 @@ function getClaimDeductionId (requestBody) {
   return deductionId
 }
 
-function validatePostRequest (req, res, next, redirectUrl, postFunction) {
+function validatePostRequest (req, res, next, postFunction) {
+  console.dir(req.body)
   authorisation.isCaseworker(req)
   var updateConflict = true
 
@@ -140,9 +159,6 @@ function validatePostRequest (req, res, next, redirectUrl, postFunction) {
       updateConflict = hasConflict
 
       return postFunction()
-        .then(function () {
-          return res.redirect(redirectUrl)
-        })
     })
   })
   .catch(function (error) {
@@ -183,7 +199,40 @@ function checkForUpdateConflict (claimId, currentLastUpdated) {
   })
 }
 
-function renderViewClaimPage (claimId, res) {
+function parseClaimExpenseFormData (formData) {
+  if (formData) {
+    var claimExpenseData = {}
+
+    Object.keys(formData).forEach(function (key) {
+      if (key.indexOf('claim-expense') > -1) {
+        var claimExpenseId = key.substr('claim-expense-'.length)
+        claimExpenseId = claimExpenseId.substr(0, claimExpenseId.indexOf('-'))
+
+        claimExpenseData[claimExpenseId] = {}
+      }
+    })
+
+    Object.keys(claimExpenseData).forEach(function (claimExpenseId) {
+      var cost = formData[`claim-expense-${claimExpenseId}-cost`]
+      var status = formData[`claim-expense-${claimExpenseId}-status`]
+      var approvedCost = formData[`claim-expense-${claimExpenseId}-approvedcost`]
+
+      claimExpenseData[claimExpenseId] = {
+        cost: cost,
+        status: status,
+        approvedCost: approvedCost
+      }
+    })
+
+    formData.claimExpenseData = claimExpenseData
+    console.dir(formData)
+    return formData
+  } else {
+    return {}
+  }
+}
+
+function renderViewClaimPage (claimId, res, formData) {
   return getIndividualClaimDetails(claimId)
     .then(function (data) {
       return res.render('./claim/view-claim', {
@@ -203,7 +252,8 @@ function renderViewClaimPage (claimId, res) {
         claimEvents: data.claimEvents,
         deductions: data.deductions,
         overpaidClaims: data.overpaidClaims,
-        claimDecisionEnum: claimDecisionEnum
+        claimDecisionEnum: claimDecisionEnum,
+        formData: parseClaimExpenseFormData(formData)
       })
     })
 }

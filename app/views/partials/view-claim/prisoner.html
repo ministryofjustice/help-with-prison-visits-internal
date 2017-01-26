@@ -23,7 +23,7 @@
   <tr {% if errors['nomis-check'][0] %} class="warning"{% endif %}>
     <td>Eligible for visitation?</td>
     <td>
-      {% if Claim['NomisCheck'] != 'APPROVED' %}
+      {% if Claim['NomisCheck'] != 'APPROVED' or formData.nomisCheck == 'APPROVED' %}
       <span class="text-warning">
         {% if displayHelper.getPrisonRegion(Claim['NameOfPrison']) != 'NI' %}
           NOMIS check required
@@ -43,9 +43,9 @@
 
       <select class="form-control action-select" id="nomis-check" name="nomisCheck">
         <option value="">Select</option>
-        <option {% if Claim['NomisCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-        <option {% if Claim['NomisCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-        <option {% if Claim['NomisCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
+        <option {% if Claim['NomisCheck'] == 'APPROVED' or formData.nomisCheck == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+        <option {% if Claim['NomisCheck'] == 'REQUEST-INFORMATION' or formData.nomisCheck == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+        <option {% if Claim['NomisCheck'] == 'REJECTED' or formData.nomisCheck == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
       </select>
     </td>
   </tr>
