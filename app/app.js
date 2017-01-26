@@ -12,10 +12,26 @@ const onFinished = require('on-finished')
 const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
+const session = require('express-session')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
 const config = require('../config')
 
 var app = express()
+
+// Using local session storage
+var sessionOptions = {
+  secret: config.SESSION_SECRET,
+  cookie: {},
+  resave: true,
+  saveUninitialized: true
+}
+
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1)
+  sessionOptions.cookie.secure = true
+}
+
+app.use(session(sessionOptions))
 
 authentication(app)
 
