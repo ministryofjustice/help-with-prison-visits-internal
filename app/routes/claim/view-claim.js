@@ -245,6 +245,9 @@ function parseFormData (formData) {
 }
 
 function renderViewClaimPage (claimId, res, req) {
+  var formData = req.session.formData
+  delete req.session.formData
+
   return getIndividualClaimDetails(claimId)
     .then(function (data) {
       return res.render('./claim/view-claim', {
@@ -265,12 +268,15 @@ function renderViewClaimPage (claimId, res, req) {
         deductions: data.deductions,
         overpaidClaims: data.overpaidClaims,
         claimDecisionEnum: claimDecisionEnum,
-        formData: req.session.formData
+        formData: formData
       })
     })
 }
 
 function handleError (error, req, res, updateConflict, next) {
+  var formData = req.session.formData
+  delete req.session.formData
+
   if (error instanceof ValidationError) {
     return getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
@@ -300,7 +306,7 @@ function handleError (error, req, res, updateConflict, next) {
           overpaidClaims: data.overpaidClaims,
           claimDecisionEnum: claimDecisionEnum,
           errors: error.validationErrors,
-          formData: req.session.formData
+          formData: formData
         })
       })
   } else {
