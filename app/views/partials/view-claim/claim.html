@@ -18,7 +18,7 @@
         <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
           <br>
           {{ getClaimExpenseDetailFormatted(expense) }}
-          <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] or formData.claimExpenseData[expense['ClaimExpenseId']].cost }}">
+          <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ formData.claimExpenseData[expense['ClaimExpenseId']].cost or expense['Cost'] }}">
         </td>
 
         {% if expense.ExpenseType == 'train' and Claim.IsAdvanceClaim %}
@@ -34,11 +34,11 @@
 
             {% elif expense.DocumentStatus == 'upload-later' %}
               <span class="text-pending">To be uploaded later</span>
-              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
+              <input type="submit" formaction="/claim/file-upload-redirect/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" value="Add" class="button grey pull-right">
 
             {% elif expense.DocumentStatus == 'post-later' %}
               <span class="text-pending">To be posted later</span>
-              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
+              <input type="submit" formaction="/claim/file-upload-redirect/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" value="Add" class="button grey pull-right">
 
             {% elif expense.ExpenseType == 'train' and Claim.IsAdvanceClaim %}
               <span class="text-pending">Receipt to be uploaded after visit</span>
@@ -54,18 +54,22 @@
           <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status"
             class="form-control action-select claim-expense-status">
             <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
-            <option {% if expense['Status'] == claimDecisionEnum.APPROVED or formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.APPROVED %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED }}">Approve</option>
-            <option {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT or formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED_DIFF_AMOUNT }}" >Approve different amount</option>
-            <option {% if expense['Status'] == claimDecisionEnum.REQUEST_INFORMATION or formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.REQUEST_INFORMATION %} selected {% endif %} value="{{ claimDecisionEnum.REQUEST_INFORMATION }}">Request information</option>
+            <option 
+            {% if formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.APPROVED or expense['Status'] == claimDecisionEnum.APPROVED %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED }}">Approve</option>
+            <option {% if formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.APPROVED_DIFF_AMOUNT or expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED_DIFF_AMOUNT }}" >Approve different amount</option>
+            <option {% if formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.REQUEST_INFORMATION or expense['Status'] == claimDecisionEnum.REQUEST_INFORMATION %} selected {% endif %} value="{{ claimDecisionEnum.REQUEST_INFORMATION }}">Request information</option>
             {% if Claim['IsAdvanceClaim'] %}
-            <option {% if expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED or formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Process manually</option>
+            <option {% if formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.MANUALLY_PROCESSED or expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Process manually</option>
             {% endif %}
-            <option {% if expense['Status'] == claimDecisionEnum.REJECTED or formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.REJECTED %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject claim</option>
+            <option {% if formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.REJECTED or expense['Status'] == claimDecisionEnum.REJECTED  %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject claim</option>
           </select>
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text"
-            name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ expense['ApprovedCost'] or formData.claimExpenseData[expense['ClaimExpenseId'].approvedCost] }}"
+            name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ formData.claimExpenseData[expense['ClaimExpenseId']].approvedCost or expense['ApprovedCost'] }}"
             class="form-control cost
-              {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT or expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %}
+              {% if (formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.APPROVED_DIFF_AMOUNT 
+                  or formData.claimExpenseData[expense['ClaimExpenseId']].status == claimDecisionEnum.MANUALLY_PROCESSED)
+                or (expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT 
+                  or expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED) %}
                 visibility-visible
               {% else %}
                 visibility-hidden

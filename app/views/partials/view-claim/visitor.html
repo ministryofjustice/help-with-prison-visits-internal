@@ -45,9 +45,9 @@
 
       <select class="form-control action-select" id="dwp-status" name="dwpCheck">
         <option value="">Select</option>
-        <option {% if Claim['DWPCheck'] == 'APPROVED' or formData.dwpCheck == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-        <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' or formData.dwpCheck == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-        <option {% if Claim['DWPCheck'] == 'REJECTED' or formData.dwpCheck == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
+        <option {% if formData.dwpCheck == 'APPROVED' or Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+        <option {% if formData.dwpCheck == 'REQUEST-INFORMATION' or Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+        <option {% if formData.dwpCheck == 'REJECTED' or Claim['DWPCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
       </select>
 
       <br/>

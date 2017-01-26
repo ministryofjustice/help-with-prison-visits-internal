@@ -23,9 +23,9 @@
       <td>
         <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
           <option value="">Select</option>
-          <option {% if Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-          <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-          <option {% if Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
+          <option {% if formData.visitConfirmationCheck == 'APPROVED' or Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+          <option {% if formData.visitConfirmationCheck == 'REQUEST-INFORMATION' or Claim['VisitConfirmationCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+          <option {% if formData.visitConfirmationCheck == 'REJECTED' or Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
         </select>
       </td>
     </tr>

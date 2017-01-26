@@ -4,9 +4,9 @@
     <tr>
       <td>
         Type: <select id="deductionType" name="deductionType" class="form-control">
-          <option selected>Select</option>
-          <option value="hc3">{{ displayHelper.getDeductionTypeDisplayName('hc3') }}</option>
-          <option value="overpayment">{{ displayHelper.getDeductionTypeDisplayName('overpayment') }}</option>
+          <option {% if not formData.deductionType %}selected{% endif %}>Select</option>
+          <option {% if formData.deductionType == 'hc3' %}selected{% endif %} value="hc3">{{ displayHelper.getDeductionTypeDisplayName('hc3') }}</option>
+          <option {% if formData.deductionType == 'overpayment' %}selected{% endif %} value="overpayment">{{ displayHelper.getDeductionTypeDisplayName('overpayment') }}</option>
         </select>
       </td>
       <td>

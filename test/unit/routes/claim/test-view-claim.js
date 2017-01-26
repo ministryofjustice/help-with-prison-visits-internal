@@ -109,6 +109,9 @@ describe('routes/claim/view-claim', function () {
         'last_name': 'Adams',
         'roles': ['caseworker', 'admin', 'sscl']
       }
+      req.session = {
+        formData: {}
+      }
       next()
     })
     route(app)
