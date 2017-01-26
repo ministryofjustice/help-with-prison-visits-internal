@@ -7,8 +7,10 @@ describe('services/domain/claim-decision', function () {
   const VALID_CASEWORKER = 'adam@adams.gov'
   const VALID_ASSISTED_DIGITAL_CASEWORKER = 'betty@barnes.gov'
   const VALID_DECISION = 'REJECTED'
+  const VALID_DECISION_APPROVED = 'APPROVED'
   const VALID_NOTE_REJECTION = 'rejection note'
   const VALID_CLAIMEXPENSES = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
+  const VALID_CLAIMEXPENSES_REJECTED = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'REJECTED'}]
   const INVALID_CLAIMEXPENSES = [{claimExpenseId: '1', approvedCost: '20.00', cost: '-1', status: 'APPROVED'}]
   const VALID_NOMIS_CHECK = 'APPROVED'
   const VALID_DWP_CHECK = 'APPROVED'
@@ -25,6 +27,7 @@ describe('services/domain/claim-decision', function () {
   it('should return isRequired error for decision given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, '', '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['decision'][0]).to.equal('Decision is required')
@@ -34,6 +37,7 @@ describe('services/domain/claim-decision', function () {
   it('should return isRequired error for note given on reject', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['note'][0]).to.equal('Additional information is required')
@@ -43,6 +47,7 @@ describe('services/domain/claim-decision', function () {
   it('should return isRequired error for nomis-check given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['nomis-check'][0]).to.equal('NOMIS check is required')
@@ -52,6 +57,7 @@ describe('services/domain/claim-decision', function () {
   it('should return isRequired error for dwp-check given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['dwp-check'][0]).to.equal('Benefit check is required')
@@ -61,6 +67,7 @@ describe('services/domain/claim-decision', function () {
   it('should return isRequired error for visit-confirmation-check given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', '', VALID_CLAIMEXPENSES)
+      expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['visit-confirmation-check'][0]).to.equal('Visit confirmation check is required')
@@ -70,15 +77,27 @@ describe('services/domain/claim-decision', function () {
   it('should return error for invalid claim expenses', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, INVALID_CLAIMEXPENSES)
+      expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['approve-cost'][0]).to.equal('New approved cost must be greater than zero')
     }
   })
 
+  it('should return error if approving with all expenses rejected', function () {
+    try {
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_APPROVED, '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED)
+      expect(false, 'should have thrown validation error').to.be.true
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['claim-expenses'][0]).to.equal('At least one expense must not be rejected for the claim to be approved')
+    }
+  })
+
   it('should return error if same caseworker as assisted digital caseworker', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_CASEWORKER, '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, INVALID_CLAIMEXPENSES)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_CASEWORKER, '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED)
+      expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['assisted-digital-caseworker'][0]).to.equal('You cannot process this claim since you filled it in on behalf of a visitor')

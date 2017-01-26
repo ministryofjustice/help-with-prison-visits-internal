@@ -69,14 +69,15 @@ class ClaimDecision {
           .isLessThanMaximumDifferentApprovedAmount()
       }
     })
-    var check = false
+
+    var allExpensesRejected = true
     this.claimExpenseResponses.forEach(function (expense) {
       if (expense.status !== claimDecisionEnum.REJECTED) {
-        check = true
+        allExpensesRejected = false
       }
     })
 
-    if (check === false) {
+    if (this.decision === claimDecisionEnum.APPROVED && allExpensesRejected) {
       errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
     }
 
