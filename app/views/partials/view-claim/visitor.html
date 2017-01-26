@@ -59,10 +59,10 @@
           <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ document['ClaimDocumentId'] }}">View evidence</a>
         {% elif document['DocumentStatus'] == 'upload-later' %}
           <span class="text-pending">To be uploaded later</span>
-          <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-upload-later" class="button grey pull-right">Add</a>
+          <input type="submit" formaction="/claim/file-upload-redirect/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" value="Add" class="button grey pull-right">
         {% elif document['DocumentStatus'] == 'post-later' %}
           <span class="text-pending">To be posted later</span>
-          <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-post-later" class="button grey pull-right">Add</a>
+          <input type="submit" formaction="/claim/file-upload-redirect/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" value="Add" class="button grey pull-right">
         {% else %}
           <span class="text-warning">Benefit required</span>
         {% endif %}
