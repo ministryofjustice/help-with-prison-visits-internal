@@ -34,7 +34,7 @@ module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
     authorisation.isCaseworker(req)
 
-    return renderViewClaimPage(req.params.claimId, res)
+    return renderViewClaimPage(req.params.claimId, res, req)
   })
 
   router.get('/claim/:claimId/download', function (req, res, next) {
@@ -65,33 +65,46 @@ module.exports = function (router) {
     return validatePostRequest(req, res, next, function () {
       claimExpenses = getClaimExpenseResponses(req.body)
       return submitClaimDecision(req, res, claimExpenses)
-    })
-    .then(function () {
-      return res.redirect('/')
+        .then(function () {
+          return res.redirect('/')
+        })
     })
   })
 
+  router.post('/claim/file-upload-redirect/:referenceId/:claimId/:documentType', function (req, res, next) {
+    req.session.formData = parseFormData(req.body)
+
+    var queryIndex = req.url.indexOf('?')
+    var rawQueryString = queryIndex > -1 ? req.url.substr(queryIndex + 1) : ''
+
+    return res.redirect(`/claim/file-upload/${req.params.referenceId}/${req.params.claimId}/${req.params.documentType}?${rawQueryString}`)
+  })
+
   router.post('/claim/:claimId/add-deduction', function (req, res, next) {
+    req.session.formData = parseFormData(req.body)
     return validatePostRequest(req, res, next, function () {
       var deductionType = req.body.deductionType
       var amount = Number(req.body.deductionAmount).toFixed(2)
       var claimDeduction = new ClaimDeduction(deductionType, amount)
 
       return insertDeduction(req.params.claimId, claimDeduction)
-    })
-    .then(function () {
-      return renderViewClaimPage(req.params.claimId, res, req.body)
+        .then(function () {
+          delete req.session.formData.deductionType
+          delete req.session.formData.deductionAmount
+          return res.redirect(`/claim/${req.params.claimId}`)
+        })
     })
   })
 
   router.post('/claim/:claimId/remove-deduction', function (req, res, next) {
+    req.session.formData = parseFormData(req.body)
     return validatePostRequest(req, res, next, function () {
       var removeDeductionId = getClaimDeductionId(req.body)
 
       return disableDeduction(removeDeductionId)
-    })
-    .then(function () {
-      return renderViewClaimPage(req.params.claimId, res, req.body)
+      .then(function () {
+        return res.redirect(`/claim/${req.params.claimId}`)
+      })
     })
   })
 
@@ -108,19 +121,19 @@ module.exports = function (router) {
           var overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
 
           return updateClaimOverpaymentStatus(claim, overpaymentResponse)
+            .then(function () {
+              return res.redirect(`/claim/${req.params.claimId}`)
+            })
         })
-    })
-    .then(function () {
-      return renderViewClaimPage(req.params.claimId, res, req.body)
     })
   })
 
   router.post('/claim/:claimId/close-advance-claim', function (req, res, next) {
     return validatePostRequest(req, res, next, function () {
       return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
-    })
-    .then(function () {
-      return renderViewClaimPage(req.params.claimId, res, req.body)
+      .then(function () {
+        return res.redirect(`/claim/${req.params.claimId}`)
+      })
     })
   })
 
@@ -130,9 +143,9 @@ module.exports = function (router) {
         .then(function (data) {
           return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
         })
-    })
-    .then(function () {
-      return renderViewClaimPage(req.params.claimId, res, req.body)
+        .then(function () {
+          return res.redirect(`/claim/${req.params.claimId}`)
+        })
     })
   })
 }
@@ -150,7 +163,6 @@ function getClaimDeductionId (requestBody) {
 }
 
 function validatePostRequest (req, res, next, postFunction) {
-  console.dir(req.body)
   authorisation.isCaseworker(req)
   var updateConflict = true
 
@@ -199,8 +211,9 @@ function checkForUpdateConflict (claimId, currentLastUpdated) {
   })
 }
 
-function parseClaimExpenseFormData (formData) {
+function parseFormData (formData) {
   if (formData) {
+    delete formData['_csrf']
     var claimExpenseData = {}
 
     Object.keys(formData).forEach(function (key) {
@@ -225,14 +238,13 @@ function parseClaimExpenseFormData (formData) {
     })
 
     formData.claimExpenseData = claimExpenseData
-    console.dir(formData)
     return formData
   } else {
     return {}
   }
 }
 
-function renderViewClaimPage (claimId, res, formData) {
+function renderViewClaimPage (claimId, res, req) {
   return getIndividualClaimDetails(claimId)
     .then(function (data) {
       return res.render('./claim/view-claim', {
@@ -253,7 +265,7 @@ function renderViewClaimPage (claimId, res, formData) {
         deductions: data.deductions,
         overpaidClaims: data.overpaidClaims,
         claimDecisionEnum: claimDecisionEnum,
-        formData: parseClaimExpenseFormData(formData)
+        formData: req.session.formData
       })
     })
 }
@@ -287,7 +299,8 @@ function handleError (error, req, res, updateConflict, next) {
           claimEvents: data.claimEvents,
           overpaidClaims: data.overpaidClaims,
           claimDecisionEnum: claimDecisionEnum,
-          errors: error.validationErrors
+          errors: error.validationErrors,
+          formData: req.session.formData
         })
       })
   } else {
