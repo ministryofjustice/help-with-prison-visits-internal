@@ -1,5 +1,7 @@
 module.exports = {
-  'note': 'Additional information',
+  'additional-info-approve': 'Additional information',
+  'additional-info-reject': 'Additional information',
+  'additional-info-request': 'Additional information',
   'decision': 'Decision',
   'claim-expense': 'Claim expense status',
   'approve-cost': 'New approved cost',

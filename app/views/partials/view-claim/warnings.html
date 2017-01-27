@@ -14,7 +14,7 @@
     <p class="heading-small">This claim is for a claimant that has been overpaid</p> 
     <ul class="list"> 
     {% for overpaidClaim in overpaidClaims %} 
-      <li><a href='/claim/{{ overpaidClaim.ClaimId }}'>{{ getDateFormatted.shortDate(overpaidClaim.DateOfJourney) }} - Remaining: £{{ overpaidClaim.RemainingOverpaymentAmount }}</a></li> 
+      <li><a href='/claim/{{ overpaidClaim.ClaimId }}'>{{ getDateFormatted.shortDate(overpaidClaim.DateOfJourney) }} - Remaining: {{ displayHelper.toCurrency(overpaidClaim.RemainingOverpaymentAmount) }}</a></li> 
     {% endfor %} 
     </ul> 
   </div> 
@@ -23,8 +23,8 @@
 {% if Claim['IsOverpaid'] %}
   <div class="banner"> 
     <p class="heading-small">This claim has been marked as overpaid</p>
-    <p>Total overpaid: £{{ Claim['OverpaymentAmount'] }}</p>
-    <p>Remaining: £{{ Claim['RemainingOverpaymentAmount'] }}</p>
+    <p>Total overpaid: {{ displayHelper.toCurrency(Claim['OverpaymentAmount']) }}</p>
+    <p>Remaining: {{ displayHelper.toCurrency(Claim['RemainingOverpaymentAmount']) }}</p>
     <p>Reason: {{ Claim['OverpaymentReason'] }}</p>    
   </div>
 {% endif %}

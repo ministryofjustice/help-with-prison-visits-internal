@@ -4,6 +4,8 @@ const ErrorHandler = require('../validators/error-handler')
 const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 
+var noteId
+
 class ClaimDecision {
   constructor (caseworker,
                assistedDigitalCaseworker,
@@ -21,10 +23,13 @@ class ClaimDecision {
     this.decision = decision
     if (this.decision === claimDecisionEnum.APPROVED) {
       this.note = additionalInfoApprove
+      noteId = 'additional-info-approve'
     } else if (decision === claimDecisionEnum.REJECTED) {
       this.note = additionalInfoReject
+      noteId = 'additional-info-reject'
     } else {
       this.note = additionalInfoRequest
+      noteId = 'additional-info-request'
     }
     this.nomisCheck = nomisCheck
     this.dwpCheck = dwpCheck
@@ -33,7 +38,7 @@ class ClaimDecision {
     this.claimExpenseResponses = claimExpenseResponses
     claimExpenseResponses.forEach(function (expense) {
       if (expense.status === claimDecisionEnum.APPROVED) {
-        expense.approvedCost = expense.cost
+        expense.approvedCost = Number(expense.cost).toFixed(2)
       } else if (expense.status !== claimDecisionEnum.APPROVED_DIFF_AMOUNT &&
                  expense.status !== claimDecisionEnum.MANUALLY_PROCESSED) {
         expense.approvedCost = null
@@ -53,7 +58,7 @@ class ClaimDecision {
       .isRequired()
 
     if (this.decision !== claimDecisionEnum.APPROVED) {
-      FieldValidator(this.note, 'note', errors)
+      FieldValidator(this.note, noteId, errors)
         .isRequired()
     }
 
@@ -69,14 +74,15 @@ class ClaimDecision {
           .isLessThanMaximumDifferentApprovedAmount()
       }
     })
-    var check = false
+
+    var allExpensesRejected = true
     this.claimExpenseResponses.forEach(function (expense) {
       if (expense.status !== claimDecisionEnum.REJECTED) {
-        check = true
+        allExpensesRejected = false
       }
     })
 
-    if (check === false) {
+    if (this.decision === claimDecisionEnum.APPROVED && allExpensesRejected) {
       errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
     }
 
