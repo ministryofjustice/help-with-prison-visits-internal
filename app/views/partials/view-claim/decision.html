@@ -20,7 +20,7 @@
 
       <div class="form-group">
         <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
-        <textarea type="text" class="form-control" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
+        <textarea type="text" class="form-control" id="additional-info-approve" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
       </div>
 
       <div class="form-group">
@@ -41,11 +41,11 @@
     <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.REQUEST_INFORMATION %}js-hidden{% endif %}" id="request-input">
 
       <div class="form-group">
-        <label class="form-label-bold {% if errors['note'][0] %} error {% endif %}" for="additional-info-request">Additional information</label>
-        {% if errors['note'][0] %}
-          <span class="error-message" id="error-message-note-request">{{ errors['note'][0] }}</span>
+        <label class="form-label-bold {% if errors['additional-info-request'][0] %} error {% endif %}" for="additional-info-request">Additional information</label>
+        {% if errors['additional-info-request'][0] %}
+          <span class="error-message" id="error-message-note-request">{{ errors['additional-info-request'][0] }}</span>
         {% endif %}
-        <textarea type="text" class="form-control" name="additionalInfoRequest">{{ claimDecision['additionalInfoRequest'] }}</textarea>
+        <textarea type="text" class="form-control" id="additional-info-request" name="additionalInfoRequest">{{ claimDecision['additionalInfoRequest'] }}</textarea>
       </div>
 
       <input type="submit" class="button" name="request" value="Send request email to claimant">
@@ -54,11 +54,11 @@
     <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.REJECTED %}js-hidden{% endif %}" id="reject-input">
 
       <div class="form-group">
-        <label class="form-label-bold {% if errors['note'][0] %} error {% endif %}" for="additional-info-reject">Additional information</label>
-        {% if errors['note'][0] %}
-          <span class="error-message" id="error-message-note-reject">{{ errors['note'][0] }}</span>
+        <label class="form-label-bold {% if errors['additional-info-reject'][0] %} error {% endif %}" for="additional-info-reject">Additional information</label>
+        {% if errors['additional-info-reject'][0] %}
+          <span class="error-message" id="error-message-note-reject">{{ errors['additional-info-reject'][0] }}</span>
         {% endif %}
-        <textarea type="text" class="form-control" name="additionalInfoReject">{{ claimDecision['additionalInfoReject'] }}</textarea>
+        <textarea type="text" class="form-control" id="additional-info-reject" name="additionalInfoReject">{{ claimDecision['additionalInfoReject'] }}</textarea>
       </div>
 
       <input type="submit" class="button" name="reject" value="Send rejection email to claimant">
