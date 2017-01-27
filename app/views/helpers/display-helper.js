@@ -51,6 +51,6 @@ module.exports.getPaymentMethodDisplayName = function (paymentMethodValue) {
   return element.displayName
 }
 
-module.exports.toCurrency = function (value) {
+module.exports.toDecimal = function (value) {
   return `${Number(value).toFixed(2)}`
 }

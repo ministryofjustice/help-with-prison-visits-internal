@@ -67,7 +67,7 @@ function updateRemainingOverpaymentAmount (claim, newRemainingOverpaymentAmount,
   }
 
   var eventLabel = isOverpaid ? overpaymentActionEnum.UPDATE : overpaymentActionEnum.RESOLVE
-  var note = `Deduction of ${displayHelper.toCurrency(deductionAmount)} applied on related claim`
+  var note = `Deduction of ${displayHelper.toDecimal(deductionAmount)} applied on related claim`
 
   return knex('Claim').where('ClaimId', claim.ClaimId).update(updatedClaim)
     .then(function () {
