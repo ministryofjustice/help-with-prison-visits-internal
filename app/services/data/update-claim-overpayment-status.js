@@ -43,8 +43,8 @@ module.exports = function (claim, overpaymentResponse) {
 function buildUpdateNote (previousRemainingAmount, newRemainingAmount, note) {
   var result = []
   result.push(note)
-  result.push(`Previous remaining amount: ${displayHelper.toCurrency(previousRemainingAmount)}`)
-  result.push(`New remaining amount: ${displayHelper.toCurrency(newRemainingAmount)}`)
+  result.push(`Previous remaining amount: £${displayHelper.toDecimal(previousRemainingAmount)}`)
+  result.push(`New remaining amount: £${displayHelper.toDecimal(newRemainingAmount)}`)
 
   return result.join(newLine)
 }
