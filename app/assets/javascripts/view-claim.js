@@ -20,15 +20,32 @@ $(function () {
     } totalApproved()
   })
   $('.claim-expense-status').next('input').addClass('approved-amount')
+  $('input[value="Remove"]').parent().parent().find('td.deduction').addClass('approved-amount')
   $('input.approved-amount').on('input', function () {
     totalApproved()
   })
+
+  $('.claim-expense-status').each(function () {
+    var value = this[this.selectedIndex].value
+    if (value === 'APPROVED') {
+      $('.claim-expense-status').parent().parent().find('td.cost').addClass('approved-amount')
+    } else if (value === 'APPROVED-DIFF-AMOUNT' || value === 'MANUALLY-PROCESSED') {
+      $('.claim-expense-status').next('input').addClass('approved-amount')
+    }
+  })
+
+  $('.approved-amount').each(function () {
+    totalApproved()
+  })
+
   $('#overpayment-toggle').change(function () {
     showClosedClaimActionSection('#overpayment-input')
   })
+
   $('#close-toggle').change(function () {
     showClosedClaimActionSection('#close-advanced-claim-input')
   })
+
   $('#request-new-payment-details-toggle').change(function () {
     showClosedClaimActionSection('#request-new-payment-details-input')
   })
