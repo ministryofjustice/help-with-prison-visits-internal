@@ -82,7 +82,7 @@
         <br>
         Deduction
       </td>
-      <td>-£{{ displayHelper.toCurrency(deduction['Amount']) }}</td>
+      <td class="deduction">-£{{ displayHelper.toCurrency(deduction['Amount']) }}</td>
       <td></td>
       <td><input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/remove-deduction" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey remove-deduction-button' value='Remove'></td>
     </tr>
@@ -90,7 +90,7 @@
 
     <tr class="no-border">
       <td class="text-left"><h3 class="heading-small space-right">Total Expense Cost:</h3></td>
-      <td><h3 class="heading-small">{{ displayHelper.toCurrency(Claim.Total) }}</h3></td>
+      <td><h3 class="heading-small">£{{ displayHelper.toCurrency(Claim.Total) }}</h3></td>
       <td></td>
       <td></td>
     </tr>
