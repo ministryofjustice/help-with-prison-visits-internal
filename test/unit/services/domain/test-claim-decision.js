@@ -6,7 +6,8 @@ var claimDecision
 describe('services/domain/claim-decision', function () {
   const VALID_CASEWORKER = 'adam@adams.gov'
   const VALID_ASSISTED_DIGITAL_CASEWORKER = 'betty@barnes.gov'
-  const VALID_DECISION = 'REJECTED'
+  const VALID_DECISION_REJECTED = 'REJECTED'
+  const VALID_DECISION_REQUESTED = 'REQUEST_INFORMATION'
   const VALID_NOTE_REJECTION = 'rejection note'
   const VALID_CLAIMEXPENSES = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
   const INVALID_CLAIMEXPENSES = [{claimExpenseId: '1', approvedCost: '20.00', cost: '-1', status: 'APPROVED'}]
@@ -15,8 +16,8 @@ describe('services/domain/claim-decision', function () {
   const VALID_VISIT_CONFIRMATION_CHECK = 'APPROVED'
 
   it('should construct a domain object given valid input', function () {
-    claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, VALID_DECISION, '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
-    expect(claimDecision.decision).to.equal(VALID_DECISION)
+    claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, VALID_DECISION_REJECTED, '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+    expect(claimDecision.decision).to.equal(VALID_DECISION_REJECTED)
     expect(claimDecision.nomisCheck).to.equal(VALID_NOMIS_CHECK)
     expect(claimDecision.dwpCheck).to.equal(VALID_DWP_CHECK)
     expect(claimDecision.visitConfirmationCheck).to.equal(VALID_VISIT_CONFIRMATION_CHECK)
@@ -33,10 +34,19 @@ describe('services/domain/claim-decision', function () {
 
   it('should return isRequired error for note given on reject', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['note'][0]).to.equal('Additional information is required')
+      expect(e.validationErrors['additional-info-reject'][0]).to.equal('Additional information is required')
+    }
+  })
+
+  it('should return isRequired error for note given on request information', function () {
+    try {
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REQUESTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['additional-info-request'][0]).to.equal('Additional information is required')
     }
   })
 

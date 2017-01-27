@@ -4,6 +4,8 @@ const ErrorHandler = require('../validators/error-handler')
 const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 
+var noteId
+
 class ClaimDecision {
   constructor (caseworker,
                assistedDigitalCaseworker,
@@ -21,10 +23,13 @@ class ClaimDecision {
     this.decision = decision
     if (this.decision === claimDecisionEnum.APPROVED) {
       this.note = additionalInfoApprove
+      noteId = 'additional-info-approve'
     } else if (decision === claimDecisionEnum.REJECTED) {
       this.note = additionalInfoReject
+      noteId = 'additional-info-reject'
     } else {
       this.note = additionalInfoRequest
+      noteId = 'additional-info-request'
     }
     this.nomisCheck = nomisCheck
     this.dwpCheck = dwpCheck
@@ -53,7 +58,7 @@ class ClaimDecision {
       .isRequired()
 
     if (this.decision !== claimDecisionEnum.APPROVED) {
-      FieldValidator(this.note, 'note', errors)
+      FieldValidator(this.note, noteId, errors)
         .isRequired()
     }
 
