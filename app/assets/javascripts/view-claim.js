@@ -19,6 +19,7 @@ $(function () {
       $(this).next('input').on('input').removeClass('approved-amount')
     } totalApproved()
   })
+
   $('.claim-expense-status').next('input').addClass('approved-amount')
   $('input[value="Remove"]').parent().parent().find('td.deduction').addClass('approved-amount')
   $('input.approved-amount').on('input', function () {
@@ -31,6 +32,9 @@ $(function () {
       $('.claim-expense-status').parent().parent().find('td.cost').addClass('approved-amount')
     } else if (value === 'APPROVED-DIFF-AMOUNT' || value === 'MANUALLY-PROCESSED') {
       $('.claim-expense-status').next('input').addClass('approved-amount')
+      $('.claim-expense-status').parent().parent().find('td.cost').removeClass('approved-amount')
+    } else {
+      $('.claim-expense-status').parent().parent().find('td.cost').removeClass('approved-amount')
     }
   })
 
