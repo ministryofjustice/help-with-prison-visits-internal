@@ -24,7 +24,7 @@
         {% if expense.ExpenseType == 'train' and Claim.IsAdvanceClaim %}
           <td>{{ expense['TravelTime'] }}</td>
         {% else %}
-          <td class="cost">{{ displayHelper.toCurrency(expense['Cost']) }}</td>
+          <td class="cost">£{{ displayHelper.toCurrency(expense['Cost']) }}</td>
         {% endif %}
 
         <td>
@@ -63,7 +63,7 @@
             <option {% if expense['Status'] == claimDecisionEnum.REJECTED %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject claim</option>
           </select>
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text"
-            name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ expense['ApprovedCost'] }}"
+            name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ displayHelper.toCurrency(expense['ApprovedCost']) }}"
             class="form-control cost
               {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT or expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %}
                 visibility-visible
@@ -82,7 +82,7 @@
         <br>
         Deduction
       </td>
-      <td>-{{ displayHelper.toCurrency(deduction['Amount']) }}</td>
+      <td>-£{{ displayHelper.toCurrency(deduction['Amount']) }}</td>
       <td></td>
       <td><input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/remove-deduction" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey remove-deduction-button' value='Remove'></td>
     </tr>

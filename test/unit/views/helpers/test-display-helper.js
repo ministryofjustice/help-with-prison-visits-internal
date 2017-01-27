@@ -57,9 +57,7 @@ describe('views/helpers/display-helper', function () {
   })
 
   it('should return the correct currency value given a valid integer or decimal number', function () {
-    expect(displayHelper.toCurrency(50)).to.equal('£50.00')
-    expect(displayHelper.toCurrency('21.5')).to.equal('£21.50')
-    expect(displayHelper.toCurrency(-40)).to.equal('-£40.00')
-    expect(displayHelper.toCurrency('-32.4')).to.equal('-£32.40')
+    expect(displayHelper.toCurrency(50)).to.equal('50.00')
+    expect(displayHelper.toCurrency('21.5')).to.equal('21.50')
   })
 })
