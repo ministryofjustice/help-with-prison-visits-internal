@@ -69,12 +69,10 @@
 
     {% include "partials/view-claim/visit.html" %}
 
-    <div id='claim-expense'></div>
     <div id='approve-cost'></div>
     <h1 class="table-heading">Claim</h1>
 
     {% include "partials/view-claim/claim.html" %}
-
     <br>
 
     {% include "partials/view-claim/add-deduction.html" %}
@@ -89,23 +87,23 @@
     {% include "partials/view-claim/decision.html" %}
 
   </form>
-   
+
   {% include "partials/view-claim/closed-claim-actions.html" %}
   <form action="/claim/{{ Claim['ClaimId'] }}/update-overpayment-status" method="post" class="form">
     {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}"> 
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
     {% include "partials/view-claim/manage-overpayments.html" %}
   </form>
 
   <form action="/claim/{{ Claim['ClaimId'] }}/close-advance-claim" method="post" class="form">
       {% include "partials/csrf-hidden-input.html" %}
-      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">      
+      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
       {% include "partials/view-claim/close-advance-claim.html" %}
   </form>
 
-  <form action="/claim/{{ Claim['ClaimId'] }}/request-new-payment-details" method="post" class="form">    
+  <form action="/claim/{{ Claim['ClaimId'] }}/request-new-payment-details" method="post" class="form">
     {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">      
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
     {% include "partials/view-claim/request-new-payment-details.html" %}
   </form>
 </main>

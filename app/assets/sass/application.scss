@@ -214,7 +214,7 @@ span.bold {
 
 .form-control.cost{
     width:90px;
-    margin-left: 10px;
+    margin-left: 20px;
 }
 
 .button.grey {
@@ -419,6 +419,24 @@ label.custom-file-upload {
 
 #proposition-links li {
     color: white!important;
+}
+
+.claim-expense {
+  td {
+    word-wrap: break-word;
+  }
+  td:nth-child(1) {
+    width: 35%;
+  }
+  td:nth-child(2) {
+    width: 5%;
+  }
+  td:nth-child(3) {
+    width: 25%;
+  }
+  td:nth-child(4) {
+    width: 35%;
+  }
 }
 
 ul.claim-dialog li {
