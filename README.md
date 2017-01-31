@@ -91,6 +91,14 @@ Use the following partial to add the hidden input:
 {% include "partials/csrf-hidden-input.html" %}
 ```
 
+## Maintenance page
+
+You can start the application in maintenance mode, so it only displays a maintenance page for all requests.
+
+```
+npm run-script start-maintenance
+```
+
 ## Notes
 
 ### Updating dependencies
