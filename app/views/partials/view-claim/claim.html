@@ -88,13 +88,7 @@
       <td><input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/remove-deduction" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey remove-deduction-button' value='Remove'></td>
     </tr>
     {% endfor %}
-
-    <tr class="no-border">
-      <td class="text-left"><h3 class="heading-small space-right">Total Expense Cost:</h3></td>
-      <td><h3 class="heading-small">{{ displayHelper.toCurrency(Claim.Total) }}</h3></td>
-      <td></td>
-      <td></td>
-    </tr>
+    
     <tr class="no-border">
       <td class="text-left"><h3 class="heading-small space-right">Total Approved Cost:</h3></td>
       <td><h3 class="heading-small claim-expense-approvedCostText">£0.00</h3></td>
