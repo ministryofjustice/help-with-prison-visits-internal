@@ -792,11 +792,6 @@
       "from": "deep-is@>=0.1.3 <0.2.0",
       "resolved": "https://registry.npmjs.org/deep-is/-/deep-is-0.1.3.tgz"
     },
-    "deepmerge": {
-      "version": "0.2.10",
-      "from": "deepmerge@>=0.2.10 <0.3.0",
-      "resolved": "https://registry.npmjs.org/deepmerge/-/deepmerge-0.2.10.tgz"
-    },
     "defaults": {
       "version": "1.0.3",
       "from": "defaults@>=1.0.0 <2.0.0",
