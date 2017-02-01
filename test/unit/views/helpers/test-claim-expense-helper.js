@@ -6,6 +6,8 @@ describe('views/helpers/claim-expense-helper', function () {
   describe('FormattedDetail', function () {
     const FROM = 'PointA'
     const TO = 'PointB'
+    const TO_PRISON = 'hewell'
+    const TO_PRISON_DISPLAY_NAME = 'Hewell'
     const DURATION_OF_TRAVEL = '2'
     const TICKET_TYPE = 'foot-passenger'
 
@@ -94,6 +96,17 @@ describe('views/helpers/claim-expense-helper', function () {
 
       expect(claimExpenseHelper({ ExpenseType: 'ferry', From: FROM, To: TO, IsReturn: true, TicketType: TICKET_TYPE }))
         .to.equal(`${FROM} to ${TO} as a foot passenger${RETURN_POSTFIX}`)
+    })
+
+    it('should use prison display name for car, toll and parking expenses', function () {
+      expect(claimExpenseHelper({ ExpenseType: 'car', From: FROM, To: TO_PRISON }))
+        .to.equal(`${FROM} to ${TO_PRISON_DISPLAY_NAME}`)
+
+      expect(claimExpenseHelper({ ExpenseType: 'toll', From: FROM, To: TO_PRISON }))
+        .to.equal(`${FROM} to ${TO_PRISON_DISPLAY_NAME}`)
+
+      expect(claimExpenseHelper({ ExpenseType: 'parking', From: FROM, To: TO_PRISON }))
+        .to.equal(`${FROM} to ${TO_PRISON_DISPLAY_NAME}`)
     })
   })
 })
