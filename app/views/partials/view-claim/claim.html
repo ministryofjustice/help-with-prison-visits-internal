@@ -54,7 +54,7 @@
           <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status"
             class="form-control action-select claim-expense-status">
             <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
-            {% if expense['ExpenseType'] != 'car' and expense['ExpenseType'] != 'train' %}
+            {% if expense['Cost'] > 0 %}
             <option {% if expense['Status'] == claimDecisionEnum.APPROVED %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED }}">Approve</option>
             {% endif %}
             <option {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED_DIFF_AMOUNT }}" >Approve different amount</option>
