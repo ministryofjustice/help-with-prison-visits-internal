@@ -1,5 +1,6 @@
 const displayFieldNames = require('./display-field-names')
 const ticketOwnerEnum = require('../../constants/ticket-owner-enum')
+const displayHelper = require('./display-helper')
 
 module.exports = function (expense) {
   var formattedDetail
@@ -25,6 +26,11 @@ module.exports = function (expense) {
       break
     case 'ferry':
       formattedDetail = `${addTicketOwnerPrefix(expense)}${expense.From} to ${expense.To} as ${displayFieldNames[expense.TicketType]}${addReturnPostfix(expense)}`
+      break
+    case 'car':
+    case 'toll':
+    case 'parking':
+      formattedDetail = `${expense.From} to ${displayHelper.getPrisonDisplayName(expense.To)}`
       break
     default:
       formattedDetail = `${expense.From} to ${expense.To}`

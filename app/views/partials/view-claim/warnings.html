@@ -1,38 +1,38 @@
-{% if duplicates.length > 0 %} 
-  <div class="banner"> 
-    <p class="heading-small">This claim may be a duplicate</p> 
-    <ul class="list"> 
-    {% for duplicateClaim in duplicates %} 
-      <li><a href='/claim/{{ duplicateClaim.ClaimId }}'>{{ duplicateClaim.Reference }}</a></li> 
-    {% endfor %} 
-    </ul> 
-  </div> 
+{% if duplicates.length > 0 %}
+  <div class="banner">
+    <p class="heading-small">This claim may be a duplicate</p>
+    <ul class="list">
+    {% for duplicateClaim in duplicates %}
+      <li><a href='/claim/{{ duplicateClaim.ClaimId }}'>{{ duplicateClaim.Reference }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
 {% endif %}
 
 {% if overpaidClaims.length > 0 %}
-  <div class="banner"> 
-    <p class="heading-small">This claim is for a claimant that has been overpaid</p> 
-    <ul class="list"> 
-    {% for overpaidClaim in overpaidClaims %} 
-      <li><a href='/claim/{{ overpaidClaim.ClaimId }}'>{{ getDateFormatted.shortDate(overpaidClaim.DateOfJourney) }} - Remaining: {{ displayHelper.toCurrency(overpaidClaim.RemainingOverpaymentAmount) }}</a></li> 
-    {% endfor %} 
-    </ul> 
-  </div> 
-{% endif %} 
+  <div class="banner">
+    <p class="heading-small">This claim is for a claimant that has been overpaid</p>
+    <ul class="list">
+    {% for overpaidClaim in overpaidClaims %}
+      <li><a href='/claim/{{ overpaidClaim.ClaimId }}'>{{ getDateFormatted.shortDate(overpaidClaim.DateOfJourney) }} - Remaining: £{{ displayHelper.toDecimal(overpaidClaim.RemainingOverpaymentAmount) }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+{% endif %}
 
 {% if Claim['IsOverpaid'] %}
-  <div class="banner"> 
+  <div class="banner">
     <p class="heading-small">This claim has been marked as overpaid</p>
-    <p>Total overpaid: {{ displayHelper.toCurrency(Claim['OverpaymentAmount']) }}</p>
-    <p>Remaining: {{ displayHelper.toCurrency(Claim['RemainingOverpaymentAmount']) }}</p>
-    <p>Reason: {{ Claim['OverpaymentReason'] }}</p>    
+    <p>Total overpaid: £{{ displayHelper.toDecimal(Claim['OverpaymentAmount']) }}</p>
+    <p>Remaining: £{{ displayHelper.toDecimal(Claim['RemainingOverpaymentAmount']) }}</p>
+    <p>Reason: {{ Claim['OverpaymentReason'] }}</p>
   </div>
 {% endif %}
 
 {% if Claim['IsTrusted'] === false %}
   <div class="banner">
-    <p class="heading-small">Auto-approval has been switched off for this claimant</p> 
-    <p>Reason: {{ Claim['UntrustedReason'] }}</p> 
+    <p class="heading-small">Auto-approval has been switched off for this claimant</p>
+    <p>Reason: {{ Claim['UntrustedReason'] }}</p>
     <p>Date: {{ getDateFormatted.shortDate(Claim['UntrustedDate']) }}</p>
   </div>
 {% endif %}

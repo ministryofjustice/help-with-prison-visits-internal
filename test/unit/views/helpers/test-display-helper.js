@@ -56,10 +56,8 @@ describe('views/helpers/display-helper', function () {
     expect(displayHelper.getClaimStatusClosed(NOT_CLOSED_CLAIM_STATUS_VALUE)).to.be.false
   })
 
-  it('should return the correct currency value given a valid integer or decimal number', function () {
-    expect(displayHelper.toCurrency(50)).to.equal('£50.00')
-    expect(displayHelper.toCurrency('21.5')).to.equal('£21.50')
-    expect(displayHelper.toCurrency(-40)).to.equal('-£40.00')
-    expect(displayHelper.toCurrency('-32.4')).to.equal('-£32.40')
+  it('should return the correct value given a valid integer or decimal number', function () {
+    expect(displayHelper.toDecimal(50)).to.equal('50.00')
+    expect(displayHelper.toDecimal('21.5')).to.equal('21.50')
   })
 })

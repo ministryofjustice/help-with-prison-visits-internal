@@ -2,6 +2,7 @@ const config = require('../config')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
 const request = require('request')
+const log = require('./services/log')
 
 module.exports = function (app) {
   if (config.AUTHENTICATION_ENABLED === 'true') {
@@ -41,11 +42,13 @@ module.exports = function (app) {
             }
             cb(null, sessionUser)
           } else {
+            log.error('no roles found for user')
             var notAuthorisedError = new Error('You are not authorised for this service')
             notAuthorisedError.status = 403
             cb(notAuthorisedError, null)
           }
         } else {
+          log.error({ error: error }, 'error returned when requesting user details from SSO')
           cb(error, null)
         }
       })

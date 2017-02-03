@@ -145,6 +145,7 @@ app.use(function (req, res, next) {
 // catch CSRF token errors
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
+  log.error({error: err})
   res.status(403)
   res.render('includes/error', {
     error: 'Invalid CSRF token'

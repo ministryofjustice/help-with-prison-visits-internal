@@ -19,16 +19,37 @@ $(function () {
       $(this).next('input').on('input').removeClass('approved-amount')
     } totalApproved()
   })
-  $('.claim-expense-status').next('input').addClass('approved-amount')
+
+  $('input[value="Remove"]').parent().parent().find('td.deduction').addClass('approved-amount')
   $('input.approved-amount').on('input', function () {
     totalApproved()
   })
+
+  $('.claim-expense-status').each(function () {
+    var value = this[this.selectedIndex].value
+    if (value === 'APPROVED') {
+      $(this).parent().parent().find('td.cost').addClass('approved-amount')
+      $(this).next('input').removeClass('approved-amount')
+    } else if (value === 'APPROVED-DIFF-AMOUNT' || value === 'MANUALLY-PROCESSED') {
+      $(this).next('input').addClass('approved-amount')
+      $(this).parent().parent().find('td.cost').removeClass('approved-amount')
+    } else {
+      $(this).parent().parent().find('td.cost').removeClass('approved-amount')
+    }
+  })
+
+  $('.approved-amount').each(function () {
+    totalApproved()
+  })
+
   $('#overpayment-toggle').change(function () {
     showClosedClaimActionSection('#overpayment-input')
   })
+
   $('#close-toggle').change(function () {
     showClosedClaimActionSection('#close-advanced-claim-input')
   })
+
   $('#request-new-payment-details-toggle').change(function () {
     showClosedClaimActionSection('#request-new-payment-details-input')
   })
