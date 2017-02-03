@@ -1,5 +1,4 @@
 const config = require('../config')
-const session = require('express-session')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
 const request = require('request')
@@ -7,21 +6,6 @@ const log = require('./services/log')
 
 module.exports = function (app) {
   if (config.AUTHENTICATION_ENABLED === 'true') {
-    // Using local session storage
-    var sessionOptions = {
-      secret: config.SESSION_SECRET,
-      cookie: {},
-      resave: true,
-      saveUninitialized: true
-    }
-
-    if (app.get('env') === 'production') {
-      app.set('trust proxy', 1)
-      sessionOptions.cookie.secure = true
-    }
-
-    app.use(session(sessionOptions))
-
     app.use(passport.initialize())
     app.use(passport.session())
 

@@ -10,11 +10,12 @@
         {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
           <span class="text-pending">To be uploaded later</span>
           <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-upload-later" class="button grey pull-right">Add</a>
+          <input type="submit" formaction="/claim/file-upload-redirect/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" value="Add" class="button grey pull-right">
 
         {% elif Claim.visitConfirmation['DocumentStatus'] == 'post-later' %}
           <span class="text-pending">To be posted later</span>
-          <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-post-later" class="button grey pull-right">Add</a>
-
+          <input type="submit" formaction="/claim/file-upload-redirect/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" value="Add" class="button grey pull-right">
+          
         {% else %}
           <span class="text-warning">Visit confirmation required</span>
 
@@ -23,9 +24,9 @@
       <td>
         <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
           <option value="">Select</option>
-          <option {% if Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
-          <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
-          <option {% if Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
+          <option {% if formData.visitConfirmationCheck == 'APPROVED' or Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
+          <option {% if formData.visitConfirmationCheck == 'REQUEST-INFORMATION' or Claim['VisitConfirmationCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
+          <option {% if formData.visitConfirmationCheck == 'REJECTED' or Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
         </select>
       </td>
     </tr>
