@@ -4,5 +4,6 @@ module.exports = {
   'parent-grandparent': {'displayName': 'Parent or grand-parent'},
   'sibling': {'displayName': 'Brother or sister'},
   'child': {'displayName': 'Son or daughter'},
-  'sole-visitor': {'displayName': 'Sole visitor'}
+  'sole-visitor': {'displayName': 'Sole visitor'},
+  'next-of-kin': {'displayName': 'Next of kin'}
 }
