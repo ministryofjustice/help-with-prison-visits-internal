@@ -4,7 +4,7 @@ const claimStatusEnum = require('../../constants/claim-status-enum')
 const claimTypeEnum = require('../../constants/claim-type-enum')
 const deductionTypeEnum = require('../../constants/deduction-type-enum')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
-const rulesEnum = require('../../constants/rules-enum')
+const rulesEnum = require('../../constants/region-rules-enum')
 const enumHelper = require('../../constants/helpers/enum-helper')
 
 module.exports.getBenefitDisplayName = function (value) {
@@ -32,7 +32,7 @@ module.exports.getPrisonRegion = function (value) {
   return element.region
 }
 
-module.exports.getRulesByValue = function (value) {
+module.exports.getRegionRulesByValue = function (value) {
   var element = enumHelper.getKeyByValue(rulesEnum, value)
   return element.rules
 }
