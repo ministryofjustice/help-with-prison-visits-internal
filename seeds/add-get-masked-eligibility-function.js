@@ -25,6 +25,7 @@ exports.seed = function (knex, Promise) {
                 Visitor.HouseNumberAndStreet,
                 Visitor.Town,
                 Visitor.PostCode,
+                Visitor.Country,
                 Visitor.Benefit,
                 Visitor.Relationship,
                 Visitor.EmailAddress,
