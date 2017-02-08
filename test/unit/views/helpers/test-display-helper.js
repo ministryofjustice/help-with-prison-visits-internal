@@ -6,12 +6,14 @@ const benefitsEnum = require('../../../../app/constants/benefits-enum')
 const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
 const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
+const rulesEnum = require('../../../../app/constants/region-rules-enum')
 
 describe('views/helpers/display-helper', function () {
   const VALID_BENEFIT_VALUE = benefitsEnum.INCOME_SUPPORT.value
   const VALID_PRISON_VALUE = prisonsEnum.ALTCOURSE.value
   const VALID_CLAIM_TYPE_VALUE = claimTypeEnum.FIRST_TIME.value
   const VALID_DEDUCTION_TYPE_VALUE = deductionTypeEnum.HC3_DEDUCTION.value
+  const VALID_REGION_RULES_VALUE = rulesEnum.NI.value
 
   const CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.APPROVED.value
   const NOT_CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.NEW.value
@@ -34,6 +36,11 @@ describe('views/helpers/display-helper', function () {
   it('should return the correct prison display name given a valid value', function () {
     var result = displayHelper.getPrisonDisplayName(VALID_PRISON_VALUE)
     expect(result).to.equal(prisonsEnum.ALTCOURSE.displayName)
+  })
+
+  it('should return the correct rules given the country value', function () {
+    var result = displayHelper.getRegionRulesByValue(VALID_REGION_RULES_VALUE)
+    expect(result).to.equal(rulesEnum.NI.rules)
   })
 
   it('should return the correct prison region given a valid value', function () {
