@@ -94,6 +94,7 @@ function getClaimantDetails (claimId) {
       'Visitor.Town',
       'Visitor.County',
       'Visitor.PostCode',
+      'Visitor.Country',
       'Visitor.EmailAddress',
       'Visitor.PhoneNumber',
       'Visitor.Relationship',
