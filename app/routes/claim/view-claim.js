@@ -34,7 +34,7 @@ module.exports = function (router) {
   router.get('/claim/:claimId', function (req, res) {
     authorisation.isCaseworker(req)
 
-    return renderViewClaimPage(req.params.claimId, res)
+    return renderViewClaimPage(req.params.claimId, req, res)
   })
 
   router.get('/claim/:claimId/download', function (req, res, next) {
@@ -73,8 +73,12 @@ module.exports = function (router) {
       var deductionType = req.body.deductionType
       var amount = Number(req.body.deductionAmount).toFixed(2)
       var claimDeduction = new ClaimDeduction(deductionType, amount)
+      claimExpenses = getClaimExpenseResponses(req.body)
 
       return insertDeduction(req.params.claimId, claimDeduction)
+        .then(function () {
+          return true
+        })
     })
   })
 
@@ -140,8 +144,12 @@ function validatePostRequest (req, res, next, redirectUrl, postFunction) {
       updateConflict = hasConflict
 
       return postFunction()
-        .then(function () {
-          return res.redirect(redirectUrl)
+        .then(function (addDeduction) {
+          if (addDeduction) {
+            return renderViewClaimPage(req.params.claimId, req, res, addDeduction)
+          } else {
+            return res.redirect(redirectUrl)
+          }
         })
     })
   })
@@ -183,28 +191,14 @@ function checkForUpdateConflict (claimId, currentLastUpdated) {
   })
 }
 
-function renderViewClaimPage (claimId, res) {
+function renderViewClaimPage (claimId, req, res, addDeduction) {
   return getIndividualClaimDetails(claimId)
     .then(function (data) {
-      return res.render('./claim/view-claim', {
-        title: 'APVS Claim',
-        Claim: data.claim,
-        Expenses: data.claimExpenses,
-        Children: data.claimChild,
-        Escort: data.claimEscort,
-        getDateFormatted: getDateFormatted,
-        getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
-        getChildFormatted: getChildFormatted,
-        getDisplayFieldName: getDisplayFieldName,
-        prisonerRelationshipsEnum: prisonerRelationshipsEnum,
-        receiptRequiredEnum: receiptRequiredEnum,
-        displayHelper: displayHelper,
-        duplicates: data.duplicates,
-        claimEvents: data.claimEvents,
-        deductions: data.deductions,
-        overpaidClaims: data.overpaidClaims,
-        claimDecisionEnum: claimDecisionEnum
-      })
+      if (addDeduction) {
+        populateNewData(data, req)
+      }
+      var error = {ValidationError: null}
+      return res.render('./claim/view-claim', renderValues(data, req, error))
     })
 }
 
@@ -213,34 +207,42 @@ function handleError (error, req, res, updateConflict, next) {
     return getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
         if (data.claim && data.claimExpenses && !updateConflict && claimExpenses) {
-          data.claim.NomisCheck = req.body.nomisCheck
-          data.claim.DWPCheck = req.body.dwpCheck
-          data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
-          data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
+          populateNewData(data, req)
         }
-        return res.status(400).render('./claim/view-claim', {
-          title: 'APVS Claim',
-          Claim: data.claim,
-          Expenses: data.claimExpenses,
-          Children: data.claimChild,
-          Escort: data.claimEscort,
-          getDateFormatted: getDateFormatted,
-          getChildFormatted: getChildFormatted,
-          getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
-          getDisplayFieldName: getDisplayFieldName,
-          prisonerRelationshipsEnum: prisonerRelationshipsEnum,
-          displayHelper: displayHelper,
-          claimDecision: req.body,
-          receiptRequiredEnum: receiptRequiredEnum,
-          deductions: data.deductions,
-          duplicates: data.duplicates,
-          claimEvents: data.claimEvents,
-          overpaidClaims: data.overpaidClaims,
-          claimDecisionEnum: claimDecisionEnum,
-          errors: error.validationErrors
-        })
+        return res.status(400).render('./claim/view-claim', renderValues(data, req, error))
       })
   } else {
     next(error)
+  }
+}
+
+function populateNewData (data, req) {
+  data.claim.NomisCheck = req.body.nomisCheck
+  data.claim.DWPCheck = req.body.dwpCheck
+  data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
+  data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
+}
+
+function renderValues (data, req, error) {
+  return {
+    title: 'APVS Claim',
+    Claim: data.claim,
+    Expenses: data.claimExpenses,
+    Children: data.claimChild,
+    Escort: data.claimEscort,
+    getDateFormatted: getDateFormatted,
+    getChildFormatted: getChildFormatted,
+    getClaimExpenseDetailFormatted: getClaimExpenseDetailFormatted,
+    getDisplayFieldName: getDisplayFieldName,
+    prisonerRelationshipsEnum: prisonerRelationshipsEnum,
+    displayHelper: displayHelper,
+    claimDecision: req.body,
+    receiptRequiredEnum: receiptRequiredEnum,
+    deductions: data.deductions,
+    duplicates: data.duplicates,
+    claimEvents: data.claimEvents,
+    overpaidClaims: data.overpaidClaims,
+    claimDecisionEnum: claimDecisionEnum,
+    errors: error.validationErrors
   }
 }

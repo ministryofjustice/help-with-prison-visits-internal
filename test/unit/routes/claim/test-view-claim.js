@@ -327,16 +327,22 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
-    it('should respond with 302 when valid data entered (add deduction)', function () {
+    it('should respond with 200 when valid data entered (add deduction)', function () {
+      var claimData = {
+        claim: {},
+        claimExpenses: {}
+      }
       var testClaimDecisionObject = {deductionType: 'a', amount: '5'}
       stubCheckLastUpdated.returns(false)
       stubInsertDeduction.resolves({})
       stubClaimDeduction.returns(testClaimDecisionObject)
+      stubGetClaimExpenseResponses.returns([{}])
+      stubGetIndividualClaimDetails.resolves(claimData)
 
       return supertest(app)
         .post('/claim/123/add-deduction')
         .send(VALID_DATA_ADD_DEDUCTION)
-        .expect(302)
+        .expect(200)
         .expect(function () {
           expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).to.be.true
         })
@@ -370,14 +376,19 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
-    it('should respond with 302 when valid data entered (disable deduction)', function () {
+    it('should respond with 200 when valid data entered (disable deduction)', function () {
+      var claimData = {
+        claim: {},
+        claimExpenses: {}
+      }
       stubCheckLastUpdated.returns(false)
       stubDisableDeduction.resolves({})
+      stubGetIndividualClaimDetails.resolves(claimData)
 
       return supertest(app)
         .post('/claim/123/remove-deduction')
         .send(VALID_DATA_DISABLE_DEDUCTION)
-        .expect(302)
+        .expect(200)
         .expect(function () {
           expect(stubDisableDeduction.calledWith('1')).to.be.true
         })
