@@ -15,6 +15,8 @@
           <span class="text-pending">To be posted later</span>
           <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-post-later" class="button grey pull-right">Add</a>
 
+        {% elif Claim.IsAdvanceClaim %}
+          <span class="text-pending">Visit confirmation to be uploaded after visit</span>
         {% else %}
           <span class="text-warning">Visit confirmation required</span>
 
