@@ -86,6 +86,7 @@ function getClaimantDetails (claimId) {
       'Claim.VisitConfirmationCheck',
       'Claim.LastUpdated',
       'Claim.Status',
+      'Claim.PaymentMethod',
       'Visitor.FirstName',
       'Visitor.LastName',
       'Visitor.DateOfBirth',
