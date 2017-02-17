@@ -17,9 +17,8 @@ $(document).ready(function () {
       url: dataReference,
       dataSrc: 'claims',
       error: function (response) {
-        var error = JSON.parse(response.responseText)
         $('#search-results_processing').hide()
-        alert('An error occurred when searching for claims. ' + error.name + ': ' + error.message) // eslint-disable-line no-undef
+        alert('An error occurred when searching for claims.') // eslint-disable-line no-undef
       }
     },
 
