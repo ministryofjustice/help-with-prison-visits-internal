@@ -6,7 +6,7 @@ var dateFormatter = require('../../../../app/services/date-formatter')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 var expect = require('chai').expect
 
-var date
+var date = dateFormatter.build('10', '09', '2016') // set date in past so that is always at top of list returned
 var reference1 = 'SQBUIL1'
 var reference2 = 'SQBUIL2'
 var claimId
@@ -18,17 +18,15 @@ var prison
 
 describe('services/data/get-claim-list-for-advanced-search', function () {
   before(function () {
-    date = dateFormatter.now()
     testData = databaseHelper.getTestData(reference1, 'APPROVED')
     name = testData.Visitor.FirstName + ' ' + testData.Visitor.LastName
     ninumber = testData.Visitor.NationalInsuranceNumber
     prisonerNumber = testData.Prisoner.PrisonNumber
     prison = testData.Prisoner.NameOfPrison
-
     return databaseHelper.insertTestData(reference1, date.toDate(), 'APPROVED')
       .then(function (ids) {
         claimId = ids.claimId
-        return databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED', dateFormatter.now().toDate(), 10)
+        return databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
           .then(function () {
             var reference1ClaimUpdate = knex('Claim')
               .update({
@@ -66,7 +64,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   it('should return 0 claims given empty search criteria', function () {
     var searchCriteria = {}
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         expect(result.claims.length, 'Claims length should equal 0').to.equal(0)
         expect(result.total, 'Total should equal 0').to.equal(0)
@@ -78,7 +76,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       reference: reference1
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         expect(result.claims[0].Reference, `Reference should equal ${reference1}`).to.equal(reference1)
         expect(result.claims[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
@@ -91,7 +89,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       reference: reference1
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
@@ -105,7 +103,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       name: name
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -120,7 +118,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       name: testData.Visitor.FirstName
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -134,7 +132,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       name: name
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
@@ -148,7 +146,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       ninumber: ninumber
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -162,7 +160,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       ninumber: ninumber
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
@@ -176,7 +174,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       prisonerNumber: prisonerNumber
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -190,7 +188,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       prisonerNumber: prisonerNumber
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
@@ -204,7 +202,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       prison: prison
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -218,7 +216,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       prison: prison
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
@@ -232,7 +230,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       assistedDigital: true
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -244,7 +242,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   it('should not return claims with the wrong assisted digital value', function () {
     var searchCriteria = {}
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
@@ -258,7 +256,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       claimStatus: 'APPROVED'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -272,7 +270,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       claimStatus: 'all'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -286,7 +284,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       claimStatus: 'PENDING'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
@@ -300,7 +298,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       modeOfApproval: 'APPROVED'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -314,7 +312,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       modeOfApproval: 'AUTOAPPROVED'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -328,7 +326,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       pastOrFuture: 'past'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -342,7 +340,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       pastOrFuture: 'future'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -356,7 +354,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       visitRules: 'englandScotlandWales'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -370,7 +368,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       visitRules: 'northernIreland'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -380,12 +378,12 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should return the correct claim given the date of visit lower bound', function () {
-    var visitDateFrom = dateFormatter.now().subtract(1, 'day').toDate()
+    var visitDateFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
     var searchCriteria = {
       visitDateFrom: visitDateFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -400,7 +398,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       visitDateFrom: visitDateFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -415,7 +413,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       visitDateTo: visitDateTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -425,12 +423,12 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should not return claims with the wrong value for date of visit upper bound', function () {
-    var visitDateTo = dateFormatter.now().subtract(1, 'day').toDate()
+    var visitDateTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
     var searchCriteria = {
       visitDateTo: visitDateTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -440,12 +438,12 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should return the correct claim given the date submitted lower bound', function () {
-    var dateSubmittedFrom = dateFormatter.now().subtract(1, 'day').toDate()
+    var dateSubmittedFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
     var searchCriteria = {
       dateSubmittedFrom: dateSubmittedFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -460,7 +458,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       dateSubmittedFrom: dateSubmittedFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -475,7 +473,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       dateSubmittedTo: dateSubmittedTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -485,12 +483,12 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should not return claims with the wrong value for date submitted upper bound', function () {
-    var dateSubmittedTo = dateFormatter.now().subtract(1, 'day').toDate()
+    var dateSubmittedTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
     var searchCriteria = {
       dateSubmittedTo: dateSubmittedTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -500,12 +498,12 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should return the correct claim given the date approved lower bound', function () {
-    var dateApprovedFrom = dateFormatter.now().subtract(1, 'day').toDate()
+    var dateApprovedFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
     var searchCriteria = {
       dateApprovedFrom: dateApprovedFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -520,7 +518,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       dateApprovedFrom: dateApprovedFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -535,7 +533,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       dateApprovedTo: dateApprovedTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -545,12 +543,12 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should not return claims with the wrong value for date approved upper bound', function () {
-    var dateApprovedTo = dateFormatter.now().subtract(1, 'day').toDate()
+    var dateApprovedTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
     var searchCriteria = {
       dateApprovedTo: dateApprovedTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -560,12 +558,12 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should return the correct claim given the date rejected lower bound', function () {
-    var dateRejectedFrom = dateFormatter.now().subtract(1, 'day').toDate()
+    var dateRejectedFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
     var searchCriteria = {
       dateRejectedFrom: dateRejectedFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
@@ -580,7 +578,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       dateRejectedFrom: dateRejectedFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -595,7 +593,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       dateRejectedTo: dateRejectedTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
@@ -605,12 +603,12 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should not return claims with the wrong value for date rejected upper bound', function () {
-    var dateRejectedTo = dateFormatter.now().subtract(1, 'day').toDate()
+    var dateRejectedTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
     var searchCriteria = {
       dateRejectedTo: dateRejectedTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -625,7 +623,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       approvedClaimAmountFrom: approvedClaimAmountFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference1 = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -640,7 +638,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       approvedClaimAmountFrom: approvedClaimAmountFrom
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference1 = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -655,7 +653,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       approvedClaimAmountTo: approvedClaimAmountTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference1 = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -670,7 +668,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       approvedClaimAmountTo: approvedClaimAmountTo
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         var claimsWithReference1 = result.claims.filter(function (claim) {
           return claim.Reference === reference1
@@ -691,17 +689,17 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       modeOfApproval: 'APPROVED',
       pastOrFuture: 'past',
       visitRules: 'englandScotlandWales',
-      visitDateFrom: date.subtract(1, 'day').toDate(),
-      visitDateTo: date.add(1, 'day').toDate(),
-      dateSubmittedFrom: date.subtract(1, 'day').toDate(),
-      dateSubmittedTo: date.add(1, 'day').toDate(),
-      dateApprovedFrom: date.subtract(1, 'day').toDate(),
-      dateApprovedTo: date.add(1, 'day').toDate(),
+      visitDateFrom: dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate(),
+      visitDateTo: dateFormatter.build('10', '09', '2016').add(1, 'day').toDate(),
+      dateSubmittedFrom: dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate(),
+      dateSubmittedTo: dateFormatter.build('10', '09', '2016').add(1, 'day').toDate(),
+      dateApprovedFrom: dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate(),
+      dateApprovedTo: dateFormatter.build('10', '09', '2016').add(1, 'day').toDate(),
       approvedClaimAmountFrom: '11.50',
       approvedClaimAmountTo: '13'
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
         expect(result.claims[0].Reference, `Reference should equal ${reference1}`).to.equal(reference1)
         expect(result.claims[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
@@ -714,7 +712,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       prison: prison
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000, true)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10, true)
       .then(function (result) {
         var claim = result.claims[0]
 
@@ -743,7 +741,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       prison: prison
     }
 
-    return getClaimListForAdvancedSearch(searchCriteria, 0, 1000, false)
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10, false)
       .then(function (result) {
         var claim = result.claims[0]
 
