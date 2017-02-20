@@ -104,7 +104,7 @@ function insertTestData () {
       MaxNumberOfClaimsPerYear: '10',
       MaxNumberOfClaimsPerMonth: '2',
       RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
-      CostPerMile: '13.0',
+      CostPerMile: '0.13',
       IsEnabled: 'true'
     })
     .returning('AutoApprovalConfigId')
