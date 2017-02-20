@@ -3,7 +3,7 @@ exports.up = function (knex, Promise) {
     table.decimal('CostPerMile')
   })
   .then(function () {
-    const DEFAULT_COST_PER_MILE = 13.0
+    const DEFAULT_COST_PER_MILE = 0.13
 
     return knex('AutoApprovalConfig')
       .update({'CostPerMile': DEFAULT_COST_PER_MILE})
