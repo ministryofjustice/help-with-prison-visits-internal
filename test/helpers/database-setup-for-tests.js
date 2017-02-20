@@ -83,7 +83,8 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           IsAdvanceClaim: data.Claim.IsAdvanceClaim,
           IsOverpaid: data.Claim.IsOverpaid,
           OverpaymentAmount: data.Claim.OverpaymentAmount,
-          Status: status
+          Status: status,
+          PaymentMethod: data.Claim.PaymentMethod
         })
     })
     .then(function (result) {
@@ -314,7 +315,8 @@ module.exports.getTestData = function (reference, status) {
       ClaimType: 'first-time',
       IsAdvanceClaim: false,
       IsOverpaid: false,
-      OverpaymentAmount: 20
+      OverpaymentAmount: 20,
+      PaymentMethod: 'bank'
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
