@@ -56,7 +56,7 @@ const EXPORT_CLAIMS_FIELDS = [
   'Claim.Caseworker',
   'Claim.IsAdvanceClaim',
   'Claim.Status',
-  'Claim.BankPaymentAmount',
+  'Claim.PaymentAmount',
   'Claim.ManuallyProcessedAmount',
   'Claim.PaymentMethod',
   'Claim.ClaimId',
@@ -331,12 +331,12 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   }
 
   function applyApprovedClaimAmountFromFilter (query, approvedClaimAmountFrom) {
-    query.where('Claim.BankPaymentAmount', '>=', approvedClaimAmountFrom)
+    query.where('Claim.PaymentAmount', '>=', approvedClaimAmountFrom)
       .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
   }
 
   function applyApprovedClaimAmountToFilter (query, approvedClaimAmountTo) {
-    query.where('Claim.BankPaymentAmount', '<=', approvedClaimAmountTo)
+    query.where('Claim.PaymentAmount', '<=', approvedClaimAmountTo)
       .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
   }
 

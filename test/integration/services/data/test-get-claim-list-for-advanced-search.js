@@ -33,7 +33,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
                 'AssistedDigitalCaseworker': 'test@test.com',
                 'DateOfJourney': date.toDate(),
                 'DateReviewed': date.toDate(),
-                'BankPaymentAmount': '12'
+                'PaymentAmount': '12'
               })
               .where('Reference', reference1)
             var reference2ClaimUpdate = knex('Claim')
@@ -728,7 +728,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         expect(claim.hasOwnProperty('Caseworker')).to.be.true
         expect(claim.hasOwnProperty('IsAdvanceClaim')).to.be.true
         expect(claim.hasOwnProperty('Status')).to.be.true
-        expect(claim.hasOwnProperty('BankPaymentAmount')).to.be.true
+        expect(claim.hasOwnProperty('PaymentAmount')).to.be.true
         expect(claim.hasOwnProperty('ClaimId')).to.be.true
         expect(claim.hasOwnProperty('IsTrusted')).to.be.true
         expect(claim.hasOwnProperty('NameOfPrison')).to.be.true

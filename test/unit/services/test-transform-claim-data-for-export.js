@@ -18,7 +18,7 @@ var getClaimExpensesStub
 const TEST_CLAIM_DATA_MIXED = [
   {
     ClaimId: 1,
-    BankPaymentAmount: 10.50,
+    PaymentAmount: 10.50,
     ManuallyProcessedAmount: 4.50,
     Name: 'Test Claimant',
     NameOfPrison: prisonsEnum.MAGHABERRY.value,
@@ -39,7 +39,7 @@ const TEST_CLAIM_DATA_MIXED = [
 const TEST_CLAIM_DATA_BANK = [
   {
     ClaimId: 1,
-    BankPaymentAmount: 26.50,
+    PaymentAmount: 26.50,
     ManuallyProcessedAmount: null,
     Name: 'Test Claimant',
     NameOfPrison: prisonsEnum.MAGHABERRY.value,
@@ -60,7 +60,7 @@ const TEST_CLAIM_DATA_BANK = [
 const TEST_CLAIM_DATA_MANUAL = [
   {
     ClaimId: 1,
-    BankPaymentAmount: null,
+    PaymentAmount: null,
     ManuallyProcessedAmount: 25.50,
     Name: 'Test Claimant',
     NameOfPrison: prisonsEnum.MAGHABERRY.value,
