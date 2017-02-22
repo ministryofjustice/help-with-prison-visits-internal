@@ -1,7 +1,6 @@
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('PayoutPaymentFile', function (table) {
     table.increments('PayoutPaymentFileId')
-    table.string('FileType', 20).notNullable()
     table.dateTime('DateCreated').notNullable()
     table.string('Filepath', 250).notNullable()
     table.boolean('IsEnabled').defaultTo(true)
