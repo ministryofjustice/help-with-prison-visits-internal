@@ -1,3 +1,4 @@
+const defaultsConfig = require('../../../config')
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const dateFormatter = require('../date-formatter')
@@ -31,7 +32,6 @@ function insertConfigData (autoApprovalConfig) {
   if (autoApprovalConfig.rulesDisabled) {
     rulesDisabledJoined = autoApprovalConfig.rulesDisabled.join()
   }
-
   return knex('AutoApprovalConfig')
     .insert({
       Caseworker: autoApprovalConfig.caseworker,
@@ -43,6 +43,7 @@ function insertConfigData (autoApprovalConfig) {
       MaxNumberOfClaimsPerYear: autoApprovalConfig.maxNumberOfClaimsPerYear,
       MaxNumberOfClaimsPerMonth: autoApprovalConfig.maxNumberOfClaimsPerMonth,
       RulesDisabled: rulesDisabledJoined,
+      CostPerMile: defaultsConfig.AUTO_APPROVAL_COST_PER_MILE,
       IsEnabled: 'true'
     })
     .returning('AutoApprovalConfigId')

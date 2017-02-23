@@ -24,6 +24,11 @@ module.exports = function (expense) {
       formattedDetail = `${addTicketOwnerPrefix(expense)}${expense.From} to ${expense.To} as ${displayFieldNames[expense.TicketType]}${addReturnPostfix(expense)}`
       break
     case 'car':
+      formattedDetail = `${expense.From} to ${displayHelper.getPrisonDisplayName(expense.To)}`
+      if (expense.Distance) {
+        formattedDetail = `${expense.From} ${expense.FromPostCode} to ${displayHelper.getPrisonDisplayName(expense.To)} ${expense.ToPostCode} (${expense.Distance} miles)`
+      }
+      break
     case 'toll':
     case 'parking':
       formattedDetail = `${expense.From} to ${displayHelper.getPrisonDisplayName(expense.To)}`

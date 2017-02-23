@@ -3,6 +3,7 @@ var updateAutoApprovalConfig = require('../../../../app/services/data/update-aut
 var config = require('../../../../knexfile').migrations
 var knex = require('knex')(config)
 var dateFormatter = require('../../../../app/services/date-formatter')
+var defaultsConfig = require('../../../../config')
 
 var insertedIds = []
 
@@ -47,6 +48,7 @@ describe('services/data/update-auto-approval-config', function () {
             expect(result.AutoApprovalEnabled).to.equal(true)
             expect(result.CostVariancePercentage).to.equal(null)
             expect(result.RulesDisabled).to.equal('auto-approval-rule-1,auto-approval-rule-2')
+            expect(result.CostPerMile, 'should have set CostPerMile to default').to.equal(parseFloat(defaultsConfig.AUTO_APPROVAL_COST_PER_MILE))
           })
       })
   })
@@ -102,6 +104,7 @@ function insertTestData () {
       MaxNumberOfClaimsPerYear: '10',
       MaxNumberOfClaimsPerMonth: '2',
       RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
+      CostPerMile: '0.13',
       IsEnabled: 'true'
     })
     .returning('AutoApprovalConfigId')
