@@ -29,7 +29,10 @@ exports.seed = function (knex, Promise) {
                 ClaimExpense.DurationOfTravel,
                 ClaimExpense.TicketType,
                 ClaimExpense.TicketOwner,
-                ClaimExpense.Status
+                ClaimExpense.Status,
+                ClaimExpense.FromPostCode,
+                ClaimExpense.ToPostCode,
+                ClaimExpense.Distance
               FROM IntSchema.ClaimExpense AS ClaimExpense
               WHERE
               (
@@ -38,7 +41,7 @@ exports.seed = function (knex, Promise) {
                 OR
                   (
                     @claimId IS NULL AND
-                    ClaimExpense.ClaimId IN 
+                    ClaimExpense.ClaimId IN
                     (
                       SELECT TOP(1) Claim.ClaimId
                       FROM IntSchema.Claim AS Claim
@@ -49,7 +52,7 @@ exports.seed = function (knex, Promise) {
                       ORDER BY Claim.DateSubmitted DESC
                     )
                   )
-              ) 
+              )
               AND ClaimExpense.IsEnabled = 1
               AND
                 (
