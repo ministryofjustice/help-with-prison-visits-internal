@@ -3,6 +3,7 @@ const knex = require('knex')(config)
 const duplicateClaimCheck = require('./duplicate-claim-check')
 const getClaimTotalAmount = require('../get-claim-total-amount')
 const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference')
+const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const moment = require('moment')
 
 module.exports = function (claimId) {
@@ -168,8 +169,8 @@ function getClaimEvents (claimId) {
 
 function setClaimExpenseStatusForCarJourneys (claimExpenses) {
   claimExpenses.forEach(function (claimExpense) {
-    if (claimExpense.ExpenseType === 'car' && claimExpense.Status === null) {
-      claimExpense.Status = 'APPROVED-DIFF-AMOUNT'
+    if (claimExpense.ExpenseType === 'car' && claimExpense.Status === null && claimExpense.Cost === 0) {
+      claimExpense.Status = claimDecisionEnum.APPROVED_DIFF_AMOUNT
     }
   })
 
