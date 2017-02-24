@@ -11,5 +11,10 @@ module.exports = {
   getUploadIncorrectType: 'File uploaded was not an image or pdf',
   getUpdateConflict: function (currentStatus) { return `This record has been updated since you started viewing it, its current status is ${currentStatus}` },
   getIsLessThanMaximumDifferentApprovedAmount: function (displayName) { return `${displayName} can only be £250 or less` },
-  getNonRejectedClaimExpenseResponse: function () { return 'At least one expense must not be rejected for the claim to be approved' }
+  getNonRejectedClaimExpenseResponse: function () { return 'At least one expense must not be rejected for the claim to be approved' },
+  getBenefitCheckRequired: function () { return 'Decide if benefit check needed' },
+  getPrisonerCheckRequired: function () { return 'Decide on prisoner check' },
+  getExpenseCheckRequired: function () { return 'Decide on this expense' },
+  getVisitConfirmationRequired: function () { return 'Decide on visit confirmation' },
+  getAdditionalInformationRequired: function () { return 'More information needed' }
 }

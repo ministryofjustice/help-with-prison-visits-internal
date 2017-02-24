@@ -40,7 +40,7 @@ describe('services/domain/claim-decision', function () {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['additional-info-reject'][0]).to.equal('Additional information is required')
+      expect(e.validationErrors['additional-info-reject'][0]).to.equal('More information needed')
     }
   })
 
@@ -49,7 +49,7 @@ describe('services/domain/claim-decision', function () {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REQUESTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['additional-info-request'][0]).to.equal('Additional information is required')
+      expect(e.validationErrors['additional-info-request'][0]).to.equal('More information needed')
     }
   })
 
@@ -59,7 +59,7 @@ describe('services/domain/claim-decision', function () {
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['nomis-check'][0]).to.equal('NOMIS check is required')
+      expect(e.validationErrors['nomis-check'][0]).to.equal('Decide on prisoner check')
     }
   })
 
@@ -69,7 +69,7 @@ describe('services/domain/claim-decision', function () {
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['dwp-check'][0]).to.equal('Benefit check is required')
+      expect(e.validationErrors['dwp-check'][0]).to.equal('Decide if benefit check needed')
     }
   })
 
@@ -79,7 +79,7 @@ describe('services/domain/claim-decision', function () {
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['visit-confirmation-check'][0]).to.equal('Visit confirmation check is required')
+      expect(e.validationErrors['visit-confirmation-check'][0]).to.equal('Decide on visit confirmation')
     }
   })
 

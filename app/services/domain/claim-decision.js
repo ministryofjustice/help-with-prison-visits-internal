@@ -59,12 +59,12 @@ class ClaimDecision {
 
     if (this.decision !== claimDecisionEnum.APPROVED) {
       FieldValidator(this.note, noteId, errors)
-        .isRequired()
+        .isRequired(ERROR_MESSAGES.getAdditionalInformationRequired)
     }
 
     this.claimExpenseResponses.forEach(function (expense) {
       FieldValidator(expense.status, 'claim-expense', errors)
-        .isRequired()
+        .isRequired(ERROR_MESSAGES.getExpenseCheckRequired)
 
       if (expense.approvedCost != null) {
         FieldValidator(expense.approvedCost, 'approve-cost', errors)
@@ -87,13 +87,13 @@ class ClaimDecision {
     }
 
     FieldValidator(this.nomisCheck, 'nomis-check', errors)
-      .isRequired()
+      .isRequired(ERROR_MESSAGES.getPrisonerCheckRequired)
 
     FieldValidator(this.dwpCheck, 'dwp-check', errors)
-      .isRequired()
+      .isRequired(ERROR_MESSAGES.getBenefitCheckRequired)
 
     FieldValidator(this.visitConfirmationCheck, 'visit-confirmation-check', errors)
-      .isRequired()
+      .isRequired(ERROR_MESSAGES.getVisitConfirmationRequired)
 
     var validationErrors = errors.get()
 
