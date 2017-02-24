@@ -41,12 +41,10 @@ module.exports = function (app) {
       }
       request(options, function (error, response, userDetails) {
         if (!error && response.statusCode === 200) {
-          var roles
+          var roles = []
 
           userDetails.permissions.forEach(function (permission) {
-            if (permission.organisation === config.ORGANISATION) {
-              roles = permission.roles
-            }
+            roles = roles.concat(permission.roles)
           })
 
           if (roles) {
