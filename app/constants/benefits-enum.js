@@ -22,7 +22,7 @@ module.exports = {
 
   UNIVERSAL_CREDIT: {
     value: 'universal-credit',
-    requireBenefitUpload: false,
+    requireBenefitUpload: true,
     displayName: 'Universal Credit',
     multipage: false
   },
