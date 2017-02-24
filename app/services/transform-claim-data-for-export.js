@@ -40,7 +40,7 @@ module.exports = function (claims) {
         var childCount = result[0][0].Count
         var hasEscort = result[1].length > 0
         var claimExpenses = result[2]
-        var totalAmountPaid = (claim.BankPaymentAmount || 0) + (claim.ManuallyProcessedAmount || 0)
+        var totalAmountPaid = (claim.PaymentAmount || 0) + (claim.ManuallyProcessedAmount || 0)
 
         returnValue[NAME_HEADER] = claim.Name
         returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)

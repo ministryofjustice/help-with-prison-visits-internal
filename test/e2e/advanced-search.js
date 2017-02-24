@@ -28,7 +28,7 @@ describe('Advanced search flow', () => {
             'AssistedDigitalCaseworker': 'test@test.com',
             'DateOfJourney': date.toDate(),
             'DateReviewed': date.toDate(),
-            'BankPaymentAmount': '12'
+            'PaymentAmount': '12'
           })
           .where('Reference', reference1)
 
