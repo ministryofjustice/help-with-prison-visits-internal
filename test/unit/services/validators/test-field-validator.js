@@ -1,6 +1,7 @@
 const expect = require('chai').expect
 const FieldValidator = require('../../../../app/services/validators/field-validator')
 const ErrorHandler = require('../../../../app/services/validators/error-handler')
+const ERROR_MESSAGES = require('../../../../app/services/validators/validation-error-messages')
 
 describe('services/validators/field-validator', function () {
   const VALID_ALPHA = 'data'
@@ -10,17 +11,6 @@ describe('services/validators/field-validator', function () {
   const ERROR_HANDLER = ErrorHandler()
 
   describe('isRequired', function () {
-    const QUESTION_TYPE = 'radio'
-
-    it('should reach radio branch if radio is passed.', function (done) {
-      var errorHandler = ErrorHandler()
-      FieldValidator(null, FIELD_NAME, errorHandler)
-        .isRequired(QUESTION_TYPE)
-      var errors = errorHandler.get()
-      expect(errors).to.have.property(FIELD_NAME)
-      done()
-    })
-
     it('should return an error object if passed null', function (done) {
       var errorHandler = ErrorHandler()
       FieldValidator(null, FIELD_NAME, errorHandler)
@@ -46,6 +36,15 @@ describe('services/validators/field-validator', function () {
       var errors = errorHandler.get()
       expect(errors).to.equal(false)
       done()
+    })
+
+    it('should return an error if passed invalid data with a specific message', function () {
+      var errorHandler = ErrorHandler()
+      FieldValidator(null, FIELD_NAME, errorHandler)
+        .isRequired(ERROR_MESSAGES.getRadioQuestionIsRequired)
+      var errors = errorHandler.get()
+      expect(errors).to.have.property(FIELD_NAME)
+      expect(errors[FIELD_NAME]).to.include(ERROR_MESSAGES.getRadioQuestionIsRequired())
     })
 
     it('should return false if passed valid data', function (done) {
