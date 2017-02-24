@@ -63,7 +63,7 @@ class ClaimDecision {
     }
 
     this.claimExpenseResponses.forEach(function (expense) {
-      FieldValidator(expense.status, 'claim-expense', errors)
+      FieldValidator(expense.status, 'claim-expenses', errors)
         .isRequired(ERROR_MESSAGES.getExpenseCheckRequired)
 
       if (expense.approvedCost != null) {
