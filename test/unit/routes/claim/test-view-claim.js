@@ -1,8 +1,7 @@
+const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
-const express = require('express')
-const mockViewEngine = require('../mock-view-engine')
 const sinon = require('sinon')
 require('sinon-bluebird')
 
@@ -25,7 +24,6 @@ var stubRequestNewBankDetails
 var stubUpdateEligibilityTrustedStatus
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
-var bodyParser = require('body-parser')
 const VALID_CLAIMEXPENSE_DATA = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
 const VALID_DATA_APPROVE = {
   'decision': 'APPROVED',
@@ -99,27 +97,8 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
       '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus
     })
-    app = express()
-    app.use(bodyParser.json())
-    mockViewEngine(app, '../../../app/views')
-    app.use(function (req, res, next) {
-      req.user = {
-        'email': 'test@test.com',
-        'first_name': 'Andrew',
-        'last_name': 'Adams',
-        'roles': ['caseworker', 'admin', 'sscl']
-      }
-      next()
-    })
+    app = routeHelper.buildApp(route)
     route(app)
-    app.use(function (req, res, next) {
-      next(new Error())
-    })
-    app.use(function (err, req, res, next) {
-      if (err) {
-        res.status(500).render('includes/error')
-      }
-    })
   })
 
   describe('GET /claim/:claimId', function () {

@@ -1,8 +1,7 @@
+const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
-const express = require('express')
-const mockViewEngine = require('./mock-view-engine')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const sinon = require('sinon')
 require('sinon-bluebird')
@@ -39,9 +38,7 @@ describe('routes/index', function () {
       '../views/helpers/display-helper': displayHelperStub
     })
 
-    app = express()
-    mockViewEngine(app, '../../../app/views')
-    route(app)
+    app = routeHelper.buildApp(route)
   })
 
   describe('GET /', function () {
@@ -101,6 +98,13 @@ describe('routes/index', function () {
         .expect(function (response) {
           expect(getClaimsListAndCount.calledWith(claimStatusEnum.UPDATED.value, true, 0, 10)).to.be.true
         })
+    })
+
+    it('should respond with a 500 promise rejects', function () {
+      getClaimsListAndCount.rejects()
+      return supertest(app)
+        .get('/claims/TEST?draw=1&start=0&length=10')
+        .expect(500)
     })
   })
 })

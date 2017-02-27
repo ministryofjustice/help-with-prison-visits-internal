@@ -1,17 +1,18 @@
+const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
-const express = require('express')
-const mockViewEngine = require('./mock-view-engine')
-const bodyParser = require('body-parser')
 const sinon = require('sinon')
 require('sinon-bluebird')
 
 var isSscl
 var getDirectPaymentFiles
 
-const DIRECT_PAYMENT_FILES = {
-  accessPayFiles: [{FilePath: 'accessPayFile1'}, {FilePath: 'accessPayFile2'}],
+const ACCESS_PAYMENT_FILES = {
+  accessPayFiles: [{FilePath: 'accessPayFile1'}, {FilePath: 'accessPayFile2'}]
+}
+
+const ADI_JOURNAL_FILES = {
   adiJournalFiles: [{FilePath: 'adiJournalFile1'}, {FilePath: 'adiJournalFile2'}]
 }
 
@@ -20,26 +21,19 @@ describe('routes/download-payment-files', function () {
 
   beforeEach(function () {
     isSscl = sinon.stub()
-    getDirectPaymentFiles = sinon.stub().resolves(DIRECT_PAYMENT_FILES)
+    getDirectPaymentFiles = sinon.stub()
 
     var route = proxyquire('../../../app/routes/download-payment-files', {
       '../services/authorisation': { 'isSscl': isSscl },
       '../services/data/get-direct-payment-files': getDirectPaymentFiles
     })
 
-    app = express()
-    app.use(bodyParser.json())
-    mockViewEngine(app, '../../../app/views')
-    route(app)
-    app.use(function (err, req, res, next) {
-      if (err) {
-        res.status(500).render('includes/error')
-      }
-    })
+    app = routeHelper.buildApp(route)
   })
 
   describe('GET /download-payment-files', function () {
     it('should respond with a 200', function () {
+      getDirectPaymentFiles.resolves()
       return supertest(app)
         .get('/download-payment-files')
         .expect(200)
@@ -49,16 +43,33 @@ describe('routes/download-payment-files', function () {
         })
     })
 
-    it('should set top and previous payment files', function () {
+    it('should set top and previous access payment files', function () {
+      getDirectPaymentFiles.resolves(ACCESS_PAYMENT_FILES)
       return supertest(app)
         .get('/download-payment-files')
         .expect(200)
         .expect(function (response) {
           expect(response.text).to.contain('"topAccessPayFile":{')
           expect(response.text).to.contain('"previousAccessPayFiles":[')
+        })
+    })
+
+    it('should set top and previous adi journal files', function () {
+      getDirectPaymentFiles.resolves(ADI_JOURNAL_FILES)
+      return supertest(app)
+        .get('/download-payment-files')
+        .expect(200)
+        .expect(function (response) {
           expect(response.text).to.contain('"topAdiJournalFile":{')
           expect(response.text).to.contain('"previousAdiJournalFiles":[')
         })
+    })
+
+    it('should respond with a 500 promise rejects', function () {
+      getDirectPaymentFiles.rejects()
+      return supertest(app)
+        .get('/download-payment-files')
+        .expect(500)
     })
   })
 

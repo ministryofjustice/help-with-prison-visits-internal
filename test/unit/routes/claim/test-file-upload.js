@@ -1,9 +1,7 @@
-const mockViewEngine = require('../mock-view-engine')
+const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
 const proxyquire = require('proxyquire')
-const express = require('express')
 const sinon = require('sinon')
-const bodyParser = require('body-parser')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 require('sinon-bluebird')
 
@@ -40,24 +38,8 @@ describe('routes/claim/file-upload', function () {
       '../../services/generate-csrf-token': generateCSRFTokenStub,
       'csurf': function () { return function () { } }
     })
-    app = express()
-    app.use(bodyParser.json())
-    mockViewEngine(app, '../../../app/views')
-    app.use(function (req, res, next) {
-      req.user = {
-        'email': 'test@test.com',
-        'first_name': 'Andrew',
-        'last_name': 'Adams',
-        'roles': ['caseworker', 'admin', 'sscl']
-      }
-      next()
-    })
+    app = routeHelper.buildApp(route)
     route(app)
-    app.use(function (err, req, res, next) {
-      if (err) {
-        res.status(500).render('includes/error')
-      }
-    })
   })
 
   describe(`GET ${BASEROUTE}`, function () {

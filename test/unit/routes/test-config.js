@@ -1,10 +1,7 @@
+const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
-const express = require('express')
-const mockViewEngine = require('./mock-view-engine')
-const bodyParser = require('body-parser')
-const expressSanitizer = require('express-sanitized')
 const sinon = require('sinon')
 require('sinon-bluebird')
 const ValidationError = require('../../../app/services/errors/validation-error')
@@ -20,7 +17,7 @@ describe('routes/config', function () {
 
   beforeEach(function () {
     isAdmin = sinon.stub()
-    getAutoApprovalConfigStub = sinon.stub().resolves({ RulesDisabled: '' })
+    getAutoApprovalConfigStub = sinon.stub().resolves({ RulesDisabled: 'Test' })
     updateAutoApprovalConfigStub = sinon.stub().resolves()
     AutoApprovalConfigStub = sinon.stub().returns({})
 
@@ -31,21 +28,12 @@ describe('routes/config', function () {
       '../services/domain/auto-approval-config': AutoApprovalConfigStub
     })
 
-    app = express()
-    app.use(bodyParser.json())
-    app.use(expressSanitizer())
-    mockViewEngine(app, '../../../app/views')
-    app.use(function (req, res, next) {
-      req.user = {
-        email: 'test@test.com'
-      }
-      next()
-    })
+    app = routeHelper.buildApp(route)
     route(app)
   })
 
   describe('GET /config', function () {
-    it('should respond with a 200', function () {
+    it('should respond with a 200 for rules disabled defined', function () {
       return supertest(app)
         .get('/config')
         .expect(200)
@@ -53,6 +41,24 @@ describe('routes/config', function () {
           expect(isAdmin.calledOnce).to.be.true
           expect(getAutoApprovalConfigStub.calledOnce).to.be.true
         })
+    })
+
+    it('should respond with a 200 for rules disabled not defined', function () {
+      getAutoApprovalConfigStub.resolves({})
+      return supertest(app)
+        .get('/config')
+        .expect(200)
+        .expect(function () {
+          expect(isAdmin.calledOnce).to.be.true
+          expect(getAutoApprovalConfigStub.calledOnce).to.be.true
+        })
+    })
+
+    it('should respond with a 500 promise rejects', function () {
+      getAutoApprovalConfigStub.rejects()
+      return supertest(app)
+        .get('/config')
+        .expect(500)
     })
   })
 
@@ -73,6 +79,13 @@ describe('routes/config', function () {
       return supertest(app)
         .post('/config')
         .expect(400)
+    })
+
+    it('should respond with a 500 if error other than validation thrown', function () {
+      updateAutoApprovalConfigStub.throws(new Error())
+      return supertest(app)
+        .post('/config')
+        .expect(500)
     })
 
     it('should construct empty rulesDisabled array when all rules are enabled', function () {
@@ -118,6 +131,13 @@ describe('routes/config', function () {
             undefined,
             EXPECTED_RULES_DISABLED)
         })
+    })
+
+    it('should respond with a 500 promise rejects and update fails', function () {
+      updateAutoApprovalConfigStub.rejects()
+      return supertest(app)
+        .post('/config')
+        .expect(500)
     })
   })
 })
