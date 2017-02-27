@@ -10,13 +10,12 @@ module.exports = function (app) {
     // Using local session storage
     var sessionOptions = {
       secret: config.SESSION_SECRET,
-      cookie: {},
-      resave: true,
-      saveUninitialized: true
+      cookie: {}
     }
 
     if (app.get('env') === 'production') {
-      app.set('trust proxy', 1)
+      app.set('trust proxy', true)
+      sessionOptions.proxy = true
       sessionOptions.cookie.secure = true
     }
 
