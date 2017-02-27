@@ -29,12 +29,6 @@ describe('routes/config', function () {
     })
 
     app = routeHelper.buildApp(route)
-    app.use(function (req, res, next) {
-      req.user = {
-        email: 'test@test.com'
-      }
-      next()
-    })
     route(app)
   })
 
