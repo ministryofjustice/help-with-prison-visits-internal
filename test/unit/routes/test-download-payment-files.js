@@ -8,8 +8,11 @@ require('sinon-bluebird')
 var isSscl
 var getDirectPaymentFiles
 
-const DIRECT_PAYMENT_FILES = {
-  accessPayFiles: [{FilePath: 'accessPayFile1'}, {FilePath: 'accessPayFile2'}],
+const ACCESS_PAYMENT_FILES = {
+  accessPayFiles: [{FilePath: 'accessPayFile1'}, {FilePath: 'accessPayFile2'}]
+}
+
+const ADI_JOURNAL_FILES = {
   adiJournalFiles: [{FilePath: 'adiJournalFile1'}, {FilePath: 'adiJournalFile2'}]
 }
 
@@ -30,7 +33,7 @@ describe('routes/download-payment-files', function () {
 
   describe('GET /download-payment-files', function () {
     it('should respond with a 200', function () {
-      getDirectPaymentFiles.resolves(DIRECT_PAYMENT_FILES)
+      getDirectPaymentFiles.resolves()
       return supertest(app)
         .get('/download-payment-files')
         .expect(200)
@@ -40,14 +43,23 @@ describe('routes/download-payment-files', function () {
         })
     })
 
-    it('should set top and previous payment files', function () {
-      getDirectPaymentFiles.resolves(DIRECT_PAYMENT_FILES)
+    it('should set top and previous access payment files', function () {
+      getDirectPaymentFiles.resolves(ACCESS_PAYMENT_FILES)
       return supertest(app)
         .get('/download-payment-files')
         .expect(200)
         .expect(function (response) {
           expect(response.text).to.contain('"topAccessPayFile":{')
           expect(response.text).to.contain('"previousAccessPayFiles":[')
+        })
+    })
+
+    it('should set top and previous adi journal files', function () {
+      getDirectPaymentFiles.resolves(ADI_JOURNAL_FILES)
+      return supertest(app)
+        .get('/download-payment-files')
+        .expect(200)
+        .expect(function (response) {
           expect(response.text).to.contain('"topAdiJournalFile":{')
           expect(response.text).to.contain('"previousAdiJournalFiles":[')
         })
