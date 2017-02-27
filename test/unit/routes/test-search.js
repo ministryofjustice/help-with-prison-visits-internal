@@ -79,5 +79,13 @@ describe('routes/index', function () {
           expect(getClaimListForSearch.notCalled).to.be.true
         })
     })
+
+    it('should respond with a 500 promise rejects', function () {
+      var searchQuery = 'Joe Bloggs'
+      getClaimListForSearch.rejects()
+      return supertest(app)
+        .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
+        .expect(500)
+    })
   })
 })
