@@ -1,8 +1,7 @@
+const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
-const express = require('express')
-const mockViewEngine = require('./mock-view-engine')
 const sinon = require('sinon')
 require('sinon-bluebird')
 
@@ -38,9 +37,7 @@ describe('routes/index', function () {
       '../views/helpers/display-helper': displayHelperStub
     })
 
-    app = express()
-    mockViewEngine(app, '../../../app/views')
-    route(app)
+    app = routeHelper.buildApp(route)
   })
 
   describe('GET /search', function () {

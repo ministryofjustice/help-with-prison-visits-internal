@@ -1,10 +1,7 @@
+const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
-const express = require('express')
-const mockViewEngine = require('./mock-view-engine')
-const bodyParser = require('body-parser')
-const expressSanitizer = require('express-sanitized')
 const sinon = require('sinon')
 require('sinon-bluebird')
 const ValidationError = require('../../../app/services/errors/validation-error')
@@ -31,10 +28,7 @@ describe('routes/config', function () {
       '../services/domain/auto-approval-config': AutoApprovalConfigStub
     })
 
-    app = express()
-    app.use(bodyParser.json())
-    app.use(expressSanitizer())
-    mockViewEngine(app, '../../../app/views')
+    app = routeHelper.buildApp(route)
     app.use(function (req, res, next) {
       req.user = {
         email: 'test@test.com'
