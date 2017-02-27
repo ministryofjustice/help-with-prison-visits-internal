@@ -99,5 +99,12 @@ describe('routes/index', function () {
           expect(getClaimsListAndCount.calledWith(claimStatusEnum.UPDATED.value, true, 0, 10)).to.be.true
         })
     })
+
+    it('should respond with a 500 promise rejects', function () {
+      getClaimsListAndCount.rejects()
+      return supertest(app)
+        .get('/claims/TEST?draw=1&start=0&length=10')
+        .expect(500)
+    })
   })
 })
