@@ -110,17 +110,10 @@ describe('services/date-formatter', function () {
 
   describe('buildDateFromString', function () {
     const DATE_AS_STRING = '2000-01-01'
-    const DATE_AS_STRING_DST = '2014-05-14'
-    const EXPECTED_DATE_FROM_STRING_DST = moment(['2014', '05', '14'], DATE_FORMAT).add(1, 'hour') // to account for DST
 
     it('should return date made from string', function () {
       var result = dateFormatter.buildFromDateString(DATE_AS_STRING)
       expect(result.toString()).to.equal(EXPECTED_DATE.toString())
-    })
-
-    it('should return date in expected format and apply DST', function () {
-      var result = dateFormatter.buildFromDateString(DATE_AS_STRING_DST)
-      expect(result.toString()).to.equal(EXPECTED_DATE_FROM_STRING_DST.toString())
     })
 
     it('should return false if passed null', function () {
