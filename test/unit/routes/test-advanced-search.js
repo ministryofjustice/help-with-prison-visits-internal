@@ -164,9 +164,18 @@ describe('routes/index', function () {
   })
 
   describe('GET /advanced-search', function () {
-    it('should respond with a 200', function () {
+    it('should respond with a 200 for no query string', function () {
       return supertest(app)
         .get('/advanced-search')
+        .expect(200)
+        .expect(function () {
+          expect(isCaseworkerStub.calledOnce).to.be.true
+        })
+    })
+
+    it('should respond with a 200 with query string', function () {
+      return supertest(app)
+        .get('/advanced-search?Reference=V123456')
         .expect(200)
         .expect(function () {
           expect(isCaseworkerStub.calledOnce).to.be.true
@@ -225,6 +234,13 @@ describe('routes/index', function () {
         .expect(function (response) {
           expect(getClaimListForAdvancedSearch.calledWith(sinon.match(processedSearchCriteria), start, length), 'expected data method to be called with processed search criteria').to.be.true
         })
+    })
+
+    it('should respond with a 500 promise rejects', function () {
+      getClaimListForAdvancedSearch.rejects()
+      return supertest(app)
+        .get('/advanced-search-results')
+        .expect(500)
     })
   })
 
