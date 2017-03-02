@@ -17,7 +17,8 @@
       <tr {% if expense['Status'] == 'Select' %} class="warning" {% endif %} {% if expense['Error'] %} class="warning"{% endif %}>
         <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
           <br>
-          {{ getClaimExpenseDetailFormatted(expense) }}
+          {# car expenses have styling for distance calculation and their data is not entered directly by users so is safe #}
+          {% if expense['ExpenseType'] == 'car' %}{{ getClaimExpenseDetailFormatted(expense) | safe }}{% else %}{{ getClaimExpenseDetailFormatted(expense) }}{% endif %}
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
         </td>
 
