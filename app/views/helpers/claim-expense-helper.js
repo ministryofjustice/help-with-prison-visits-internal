@@ -25,8 +25,11 @@ module.exports = function (expense) {
       break
     case 'car':
       formattedDetail = `${expense.From} to ${displayHelper.getPrisonDisplayName(expense.To)}`
-      if (expense.Distance) {
-        formattedDetail = `${expense.From} <span class="bold">${expense.FromPostCode}</span> to ${displayHelper.getPrisonDisplayName(expense.To)} <span class="bold">${expense.ToPostCode}</span><br>(${expense.Distance} miles)`
+      if (expense.FromPostCode && expense.ToPostCode) {
+        formattedDetail = `${expense.From} <span class="bold">${expense.FromPostCode}</span> to ${displayHelper.getPrisonDisplayName(expense.To)} <span class="bold">${expense.ToPostCode}</span>`
+        if (expense.Distance) {
+          formattedDetail += `<br>(${expense.Distance} miles)`
+        }
       }
       break
     case 'toll':
