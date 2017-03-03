@@ -60,12 +60,14 @@ function requestSerializer (request) {
     url: request.url,
     method: request.method,
     params: request.params,
+    headers: JSON.stringify(request.headers),
     user: request.user ? request.user.email : 'n/a'
   }
 }
 
 function responseSerializer (response) {
   return {
+    headers: JSON.stringify(response.req.headers),
     statusCode: response.statusCode
   }
 }

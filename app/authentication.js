@@ -14,6 +14,7 @@ module.exports = function (app) {
     }
 
     if (app.get('env') === 'production') {
+      log.info('using production settings')
       app.set('trust proxy', true)
       sessionOptions.proxy = true
       sessionOptions.cookie.secure = true
