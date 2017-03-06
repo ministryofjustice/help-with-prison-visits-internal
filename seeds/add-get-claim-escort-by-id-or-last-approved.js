@@ -20,8 +20,7 @@ exports.seed = function (knex, Promise) {
               SELECT
                 ClaimEscort.FirstName,
                 ClaimEscort.LastName,
-                ClaimEscort.DateOfBirth,
-                ClaimEscort.NationalInsuranceNumber
+                ClaimEscort.DateOfBirth
               FROM IntSchema.ClaimEscort AS ClaimEscort
               WHERE
                 (ClaimEscort.ClaimId = @claimId AND
