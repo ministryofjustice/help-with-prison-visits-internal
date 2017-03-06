@@ -389,8 +389,7 @@ module.exports.getTestData = function (reference, status) {
     ClaimEscort: {
       FirstName: 'Escort',
       LastName: 'Person',
-      DateOfBirth: '01-01-1990',
-      NationalInsuranceNumber: 'AB123456A'
+      DateOfBirth: '01-01-1990'
     }
   }
 }
@@ -438,7 +437,6 @@ function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
       FirstName: escortData.FirstName,
       LastName: escortData.LastName,
       DateOfBirth: escortData.DateOfBirth,
-      NationalInsuranceNumber: escortData.NationalInsuranceNumber,
       IsEnabled: true
     })
 }
