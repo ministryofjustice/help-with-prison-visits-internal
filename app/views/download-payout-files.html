@@ -1,0 +1,42 @@
+{% extends "includes/layout.html" %}
+
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<main id="content" role="main">
+
+  {% include "includes/phase_banner_beta.html" %}
+
+  {% import 'partials/navigation.html' as nav %}
+    {{nav.active('')}}
+
+<h1 class="heading-large">Download payment files</h1>
+
+  <h3 class="heading-medium">Post Office Payout file</h3>
+  {% if topPayoutFile %}
+  <a href="/download-payout-files/download?path={{ topPayoutFile.Filepath }}" class="link">Download file for {{ dateHelper.shortDateAndTime(topPayoutFile.DateCreated) }}</a>
+  {% endif %}
+  <br>
+  <br>
+
+  {% if previousPayoutFiles %}
+  <div class="form-group">
+    <details role="group">
+      <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Previous AccessPay files</span></summary>
+      <div class="panel panel-border-narrow" id="" aria-hidden="false">
+        <ul class="list list-bullet">
+          {% for previousPayoutFile in previousPayoutFiles %}
+          <li><a href="/download-payout-files/download?path={{ previousPayoutFile.Filepath }}" class="link">Download file for {{ dateHelper.shortDateAndTime(previousPayoutFile.DateCreated) }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </details>
+  </div>
+  {% endif %}
+
+</main>
+
+{% endblock %}

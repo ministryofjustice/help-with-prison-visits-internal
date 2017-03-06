@@ -14,8 +14,9 @@ var routes = [
   // Configuration
   require('./config'),
 
-  // SSCL Download payment files
+  // Payment files screens
   require('./download-payment-files'),
+  require('./download-payout-files'),
 
   // Authentication routes
   require('./authentication'),

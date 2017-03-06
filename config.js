@@ -29,6 +29,7 @@ module.exports = {
 
   // Payment
   PAYMENT_NUMBER_OF_PAYMENT_FILES: process.env.APVS_PAYMENT_NUMBER_OF_PAYMENT_FILES || '7',
+  PAYMENT_NUMBER_OF_PAYOUT_FILES: process.env.APVS_PAYMENT_NUMBER_OF_PAYOUT_FILES || '11',
 
   // File upload
   FILE_UPLOAD_LOCATION: process.env.FILE_UPLOAD_LOCATION || './uploads',
