@@ -41,7 +41,9 @@ const ADVANCED_SEARCH_FIELDS = [
   'Claim.DateSubmitted',
   'Claim.DateOfJourney',
   'Claim.ClaimType',
-  'Claim.ClaimId'
+  'Claim.ClaimId',
+  'Claim.AssignedTo',
+  'Claim.AssignmentTime'
 ]
 const EXPORT_CLAIMS_FIELDS = [
   'Visitor.FirstName',
@@ -205,6 +207,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
           claims.forEach(function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.Name = claim.FirstName + ' ' + claim.LastName
+            claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
           })
           return {
             claims: claims,
