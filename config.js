@@ -54,5 +54,5 @@ module.exports = {
   AUTO_APPROVAL_COST_PER_MILE: process.env.APVS_AUTO_APPROVAL_COST_PER_MILE || '0.13',
 
   // Assignment rules
-  TIME_OF_INACTIVITY_FOR_UNASSIGNMENT: process.env.APVS_TIME_OF_INACTIVITY_FOR_UNASSIGNMENT || '30' // Number of minutes of inactivity to unassign caseworkers
+  TIME_FOR_UNASSIGNMENT: process.env.APVS_TIME_FOR_UNASSIGNMENT || '30' // Number of minutes of inactivity to unassign caseworkers
 }
