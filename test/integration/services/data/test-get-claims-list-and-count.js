@@ -28,6 +28,7 @@ describe('services/data/get-claim-list-and-count', function () {
           expect(result.claims[0].Name).to.be.equal(`${testData.Visitor.FirstName} ${testData.Visitor.LastName}`)
           expect(result.claims[0].DateSubmittedFormatted.toString()).to.equal(date.format('DD/MM/YYYY - HH:mm').toString())
           expect(result.claims[0].ClaimType).to.equal(testData.Claim.ClaimType)
+          expect(result.claims[0].AssignedTo).to.equal(testData.Claim.AssignedTo)
           expect(result.claims[0].ClaimId).to.equal(claimId)
           expect(result.total.Count).to.equal(1)
         })
