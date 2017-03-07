@@ -7,6 +7,7 @@ const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
 const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 const rulesEnum = require('../../../../app/constants/region-rules-enum')
+const moment = require('moment')
 
 describe('views/helpers/display-helper', function () {
   const VALID_BENEFIT_VALUE = benefitsEnum.INCOME_SUPPORT.value
@@ -17,6 +18,11 @@ describe('views/helpers/display-helper', function () {
 
   const CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.APPROVED.value
   const NOT_CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.NEW.value
+
+  const ADVANCE_UPDATED_CLAIM_STATUS_VALUE = claimStatusEnum.UPDATED.value
+  const IS_ADVANCE_CLAIM = true
+  const DATE_OF_JOURNEY_PAST = moment().toDate()
+  const FUTURE_DATE_OF_JOURNEY = moment().add('2', 'days').toDate()
 
   it('should return the correct benefit display name given a valid value', function () {
     var result = displayHelper.getBenefitDisplayName(VALID_BENEFIT_VALUE)
@@ -61,6 +67,11 @@ describe('views/helpers/display-helper', function () {
   it('should return the correct closed value given a valid claim status', function () {
     expect(displayHelper.getClaimStatusClosed(CLOSED_CLAIM_STATUS_VALUE)).to.be.true
     expect(displayHelper.getClaimStatusClosed(NOT_CLOSED_CLAIM_STATUS_VALUE)).to.be.false
+  })
+
+  it('should return the correct closed value given a valid advance updated claim status and date of journey', function () {
+    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, DATE_OF_JOURNEY_PAST)).to.be.true
+    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, FUTURE_DATE_OF_JOURNEY)).to.be.false
   })
 
   it('should return the correct value given a valid integer or decimal number', function () {
