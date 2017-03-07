@@ -85,7 +85,8 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           OverpaymentAmount: data.Claim.OverpaymentAmount,
           Status: status,
           PaymentMethod: data.Claim.PaymentMethod,
-          AssignedTo: data.Claim.AssignedTo
+          AssignedTo: data.Claim.AssignedTo,
+          AssignmentTime: data.Claim.AssignmentTime
         })
     })
     .then(function (result) {
@@ -318,7 +319,8 @@ module.exports.getTestData = function (reference, status) {
       IsOverpaid: false,
       OverpaymentAmount: 20,
       PaymentMethod: 'bank',
-      AssignedTo: 'TestUser@test.com'
+      AssignedTo: 'TestUser@test.com',
+      AssignmentTime: new Date('2017-01-01')
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
