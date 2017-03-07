@@ -1,6 +1,7 @@
 const authorisation = require('../services/authorisation')
 const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-for-advanced-search')
 const exportSearchResults = require('../services/export-search-results')
+const unassignClaimsAfterTimePeriod = require('../services/data/unassign-claims-after-time-period')
 const displayHelper = require('../views/helpers/display-helper')
 const dateFormatter = require('../services/date-formatter')
 const validationFieldNames = require('../services/validators/validation-field-names')
@@ -63,31 +64,34 @@ module.exports = function (router) {
     authorisation.isCaseworker(req)
     var searchCriteria = extractSearchCriteria(req.query)
 
-    getClaimListForAdvancedSearch(searchCriteria, parseInt(req.query.start), parseInt(req.query.length))
-      .then(function (data) {
-        var claims = data.claims
-        claims.map(function (claim) {
-          claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
-        })
+    unassignClaimsAfterTimePeriod()
+      .then(function () {
+        getClaimListForAdvancedSearch(searchCriteria, parseInt(req.query.start), parseInt(req.query.length))
+          .then(function (data) {
+            var claims = data.claims
+            claims.map(function (claim) {
+              claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
+            })
 
-        if (claims.length === 0) {
-          return res.json({
-            draw: 0,
-            recordsTotal: 0,
-            recordsFiltered: 0,
-            claims: claims
+            if (claims.length === 0) {
+              return res.json({
+                draw: 0,
+                recordsTotal: 0,
+                recordsFiltered: 0,
+                claims: claims
+              })
+            }
+
+            return res.json({
+              draw: req.query.draw,
+              recordsTotal: data.total.Count,
+              recordsFiltered: data.total.Count,
+              claims: claims
+            })
           })
-        }
-
-        return res.json({
-          draw: req.query.draw,
-          recordsTotal: data.total.Count,
-          recordsFiltered: data.total.Count,
-          claims: claims
-        })
-      })
-      .catch(function (error) {
-        res.status(500).send(error)
+          .catch(function (error) {
+            res.status(500).send(error)
+          })
       })
   })
 }

@@ -13,6 +13,7 @@ var displayHelperStub
 var authorisation
 var isCaseworkerStub
 var exportSearchResultsStub
+var unassignClaimsAfterTimePeriodStub
 
 const INPUT_SEARCH_CRITERIA = {
   reference: 'APVS123',
@@ -131,12 +132,14 @@ describe('routes/index', function () {
     displayHelperStub = sinon.stub({ 'getClaimTypeDisplayName': function () {} })
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
     exportSearchResultsStub = sinon.stub().resolves('')
+    unassignClaimsAfterTimePeriodStub = sinon.stub().resolves()
 
     var route = proxyquire('../../../app/routes/advanced-search', {
       '../services/authorisation': authorisation,
       '../services/data/get-claim-list-for-advanced-search': getClaimListForAdvancedSearch,
       '../views/helpers/display-helper': displayHelperStub,
-      '../services/export-search-results': exportSearchResultsStub
+      '../services/export-search-results': exportSearchResultsStub,
+      '../services/data/unassign-claims-after-time-period': unassignClaimsAfterTimePeriodStub
     })
 
     app = express()
