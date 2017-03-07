@@ -25,6 +25,7 @@ const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 const updateEligibilityTrustedStatus = require('../../services/data/update-eligibility-trusted-status')
 const requestNewBankDetails = require('../../services/data/request-new-bank-details')
 const claimDecisionEnum = require('../../../app/constants/claim-decision-enum')
+const unassignClaimsAfterTimePeriod = require('../../services/data/unassign-claims-after-time-period')
 const Promise = require('bluebird')
 
 var claimExpenses
@@ -33,8 +34,10 @@ module.exports = function (router) {
   // GET
   router.get('/claim/:claimId', function (req, res) {
     authorisation.isCaseworker(req)
-
-    return renderViewClaimPage(req.params.claimId, req, res)
+    unassignClaimsAfterTimePeriod()
+      .then(function () {
+        return renderViewClaimPage(req.params.claimId, req, res)
+      })
   })
 
   router.get('/claim/:claimId/download', function (req, res, next) {

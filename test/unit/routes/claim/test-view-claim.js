@@ -22,6 +22,7 @@ var stubCloseAdvanceClaim
 var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
 var stubUpdateEligibilityTrustedStatus
+var stubUnassignClaimsAfterTimePeriod
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 const VALID_CLAIMEXPENSE_DATA = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
@@ -77,6 +78,7 @@ describe('routes/claim/view-claim', function () {
     stubMergeClaimExpensesWithSubmittedResponses = sinon.stub()
     stubRequestNewBankDetails = sinon.stub()
     stubUpdateEligibilityTrustedStatus = sinon.stub()
+    stubUnassignClaimsAfterTimePeriod = sinon.stub().resolves()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -95,7 +97,8 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/close-advance-claim': stubCloseAdvanceClaim,
       '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
       '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
-      '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus
+      '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus,
+      '../../services/data/unassign-claims-after-time-period': stubUnassignClaimsAfterTimePeriod
     })
     app = routeHelper.buildApp(route)
     route(app)
