@@ -29,6 +29,7 @@ describe('services/data/close-advance-claim', function () {
           return knex('Claim').first().where('ClaimId', claimId)
             .then(function (claim) {
               expect(claim.Status).to.equal(claimStatusEnum.APPROVED_ADVANCE_CLOSED.value)
+              expect(claim.VisitConfirmationCheck).to.equal(claimStatusEnum.APPROVED.value)
               expect(claim.lastUpdated).to.not.equal(previousLastUpdated)
               return knex('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
             })
