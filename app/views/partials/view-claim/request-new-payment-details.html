@@ -1,4 +1,4 @@
-{% if displayHelper.getClaimStatusClosed(Claim['Status']) %}
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
 <!-- Request New Payment Details -->
   <div class="panel js-hidden" id="request-new-payment-details-input">
     {% if Claim[Status] == 'REJECTED' %}
@@ -11,7 +11,7 @@
     </div>
     <input type="submit" class="button grey" name="request-new-payment-details" id="request-new-payment-details" value="Submit">
 
-    {% endif %}     
+    {% endif %}
   </div>
 <!-- Request New Payment Details -->
 {% endif %}

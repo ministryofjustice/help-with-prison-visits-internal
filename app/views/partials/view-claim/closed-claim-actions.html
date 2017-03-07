@@ -1,5 +1,5 @@
-{% if displayHelper.getClaimStatusClosed(Claim['Status']) %}
-  <!-- Radio Buttons -->    
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
+  <!-- Radio Buttons -->
   <form>
     <fieldset id="closedClaimActions">
       <label for="overpayment-toggle" class="block-label inline" data-target="overpayment-input">
