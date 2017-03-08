@@ -7,5 +7,5 @@ module.exports = function () {
   return knex('Claim')
     .whereNotNull('AssignedTo')
     .andWhere('AssignmentTime', '<=', dateFormatter.now().subtract(enviromentVariables.TIME_FOR_UNASSIGNMENT, 'minutes').toDate())
-    .update({ 'AssignedTo': null, 'AssignmentTime': null, 'LastUpdated': dateFormatter.now().toDate() })
+    .update({ 'AssignedTo': null, 'AssignmentTime': null })
 }

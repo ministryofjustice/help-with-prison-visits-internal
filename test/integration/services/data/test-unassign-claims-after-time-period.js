@@ -7,7 +7,6 @@ const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const unassignClaims = require('../../../../app/services/data/unassign-claims-after-time-period')
 var reference = 'UNASSIGN'
 var date
-var previousLastUpdated
 var claimId
 
 describe('services/data/unassign-claims-after-time-period', function () {
@@ -16,7 +15,6 @@ describe('services/data/unassign-claims-after-time-period', function () {
       date = dateFormatter.now()
       return databaseHelper.insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
-        previousLastUpdated = ids.lastUpdated
       })
     })
 
@@ -27,7 +25,6 @@ describe('services/data/unassign-claims-after-time-period', function () {
             .then(function (claim) {
               expect(claim.AssignedTo).to.equal(null)
               expect(claim.AssignmentTime).to.equal(null)
-              expect(claim.LastUpdated).to.not.equal(previousLastUpdated)
             })
         })
         .catch(function (error) {

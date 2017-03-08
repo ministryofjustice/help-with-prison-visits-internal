@@ -26,6 +26,7 @@ const updateEligibilityTrustedStatus = require('../../services/data/update-eligi
 const requestNewBankDetails = require('../../services/data/request-new-bank-details')
 const claimDecisionEnum = require('../../../app/constants/claim-decision-enum')
 const unassignClaimsAfterTimePeriod = require('../../services/data/unassign-claims-after-time-period')
+const updateAssignmentOfClaims = require('../../services/data/update-assignment-of-claims')
 const Promise = require('bluebird')
 
 var claimExpenses
@@ -90,6 +91,9 @@ module.exports = function (router) {
       var removeDeductionId = getClaimDeductionId(req.body)
 
       return disableDeduction(removeDeductionId)
+        .then(function () {
+          return true
+        })
     })
   })
 
@@ -124,6 +128,15 @@ module.exports = function (router) {
         })
     })
   })
+
+  router.post('/claim/:claimId/assign-self', function (req, res, next) {
+    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+      return updateAssignmentOfClaims(req.params.claimId, req.user.email)
+        .then(function () {
+          return false
+        })
+    })
+  })
 }
 
  // Functions
@@ -147,9 +160,9 @@ function validatePostRequest (req, res, next, redirectUrl, postFunction) {
       updateConflict = hasConflict
 
       return postFunction()
-        .then(function (addDeduction) {
-          if (addDeduction) {
-            return renderViewClaimPage(req.params.claimId, req, res, addDeduction)
+        .then(function (keepUnsubmittedChanges) {
+          if (keepUnsubmittedChanges) {
+            return renderViewClaimPage(req.params.claimId, req, res, keepUnsubmittedChanges)
           } else {
             return res.redirect(redirectUrl)
           }
@@ -194,10 +207,10 @@ function checkForUpdateConflict (claimId, currentLastUpdated) {
   })
 }
 
-function renderViewClaimPage (claimId, req, res, addDeduction) {
+function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
   return getIndividualClaimDetails(claimId)
     .then(function (data) {
-      if (addDeduction) {
+      if (keepUnsubmittedChanges) {
         populateNewData(data, req)
       }
       var error = {ValidationError: null}
