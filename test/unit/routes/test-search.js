@@ -9,7 +9,6 @@ var getClaimListForSearch
 var displayHelperStub
 var authorisation
 var isCaseworkerStub
-var unassignClaimsAfterTimePeriodStub
 
 const RETURNED_CLAIM = {
   Reference: 'SEARCH1',
@@ -31,13 +30,11 @@ describe('routes/index', function () {
     getClaimListForSearch = sinon.stub()
     displayHelperStub = sinon.stub({ 'getClaimTypeDisplayName': function () {} })
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
-    unassignClaimsAfterTimePeriodStub = sinon.stub().resolves()
 
     var route = proxyquire('../../../app/routes/search', {
       '../services/authorisation': authorisation,
       '../services/data/get-claim-list-for-search': getClaimListForSearch,
-      '../views/helpers/display-helper': displayHelperStub,
-      '../services/data/unassign-claims-after-time-period': unassignClaimsAfterTimePeriodStub
+      '../views/helpers/display-helper': displayHelperStub
     })
 
     app = routeHelper.buildApp(route)

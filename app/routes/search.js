@@ -1,6 +1,5 @@
 const authorisation = require('../services/authorisation')
 const getClaimListForSearch = require('../services/data/get-claim-list-for-search')
-const unassignClaimsAfterTimePeriod = require('../services/data/unassign-claims-after-time-period')
 const displayHelper = require('../views/helpers/display-helper')
 
 module.exports = function (router) {
@@ -22,26 +21,23 @@ module.exports = function (router) {
         claims: []
       })
     } else {
-      unassignClaimsAfterTimePeriod()
-        .then(function () {
-          getClaimListForSearch(searchQuery, parseInt(req.query.start), parseInt(req.query.length))
-            .then(function (data) {
-              var claims = data.claims
-              claims.map(function (claim) {
-                claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
-              })
+      getClaimListForSearch(searchQuery, parseInt(req.query.start), parseInt(req.query.length))
+        .then(function (data) {
+          var claims = data.claims
+          claims.map(function (claim) {
+            claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
+          })
 
-              return res.json({
-                draw: req.query.draw,
-                recordsTotal: data.total.Count,
-                recordsFiltered: data.total.Count,
-                claims: claims
-              })
-            })
-          .catch(function (error) {
-            res.status(500).send(error)
+          return res.json({
+            draw: req.query.draw,
+            recordsTotal: data.total.Count,
+            recordsFiltered: data.total.Count,
+            claims: claims
           })
         })
+      .catch(function (error) {
+        res.status(500).send(error)
+      })
     }
   })
 }

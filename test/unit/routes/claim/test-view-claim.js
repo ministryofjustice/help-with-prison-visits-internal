@@ -22,7 +22,6 @@ var stubCloseAdvanceClaim
 var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
 var stubUpdateEligibilityTrustedStatus
-var stubUnassignClaimsAfterTimePeriod
 var stubUpdateAssignmentOfClaims
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
@@ -79,7 +78,6 @@ describe('routes/claim/view-claim', function () {
     stubMergeClaimExpensesWithSubmittedResponses = sinon.stub()
     stubRequestNewBankDetails = sinon.stub()
     stubUpdateEligibilityTrustedStatus = sinon.stub()
-    stubUnassignClaimsAfterTimePeriod = sinon.stub().resolves()
     stubUpdateAssignmentOfClaims = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
@@ -100,7 +98,6 @@ describe('routes/claim/view-claim', function () {
       '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
       '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
       '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus,
-      '../../services/data/unassign-claims-after-time-period': stubUnassignClaimsAfterTimePeriod,
       '../../services/data/update-assignment-of-claims': stubUpdateAssignmentOfClaims
     })
     app = routeHelper.buildApp(route)
