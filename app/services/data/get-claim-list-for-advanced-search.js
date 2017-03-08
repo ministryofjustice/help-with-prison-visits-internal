@@ -3,6 +3,7 @@ const knex = require('knex')(config)
 const moment = require('moment')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const prisonsEnum = require('../../../app/constants/prisons-enum')
+const dateFormatter = require('../date-formatter')
 
 const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.AUTOAPPROVED.value ]
 const IN_PROGRESS_STATUS_VALUES = [ claimStatusEnum.NEW.value, claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value ]
@@ -207,6 +208,9 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
           claims.forEach(function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.Name = claim.FirstName + ' ' + claim.LastName
+            if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
+              claim.AssignedTo = null
+            }
             claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
           })
           return {

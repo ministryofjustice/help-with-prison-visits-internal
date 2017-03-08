@@ -1,6 +1,7 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 
 module.exports = function (query, offset, limit) {
   query = `%${query}%` // wrap in % for where clause
@@ -28,6 +29,9 @@ module.exports = function (query, offset, limit) {
           claims.forEach(function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.Name = claim.FirstName + ' ' + claim.LastName
+            if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
+              claim.AssignedTo = null
+            }
             claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
           })
           return {claims: claims, total: count[0]}
