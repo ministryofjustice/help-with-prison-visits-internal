@@ -23,6 +23,7 @@ var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
 var stubUpdateEligibilityTrustedStatus
 var stubUnassignClaimsAfterTimePeriod
+var stubUpdateAssignmentOfClaims
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 const VALID_CLAIMEXPENSE_DATA = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
@@ -79,6 +80,7 @@ describe('routes/claim/view-claim', function () {
     stubRequestNewBankDetails = sinon.stub()
     stubUpdateEligibilityTrustedStatus = sinon.stub()
     stubUnassignClaimsAfterTimePeriod = sinon.stub().resolves()
+    stubUpdateAssignmentOfClaims = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -98,7 +100,8 @@ describe('routes/claim/view-claim', function () {
       '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
       '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
       '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus,
-      '../../services/data/unassign-claims-after-time-period': stubUnassignClaimsAfterTimePeriod
+      '../../services/data/unassign-claims-after-time-period': stubUnassignClaimsAfterTimePeriod,
+      '../../services/data/update-assignment-of-claims': stubUpdateAssignmentOfClaims
     })
     app = routeHelper.buildApp(route)
     route(app)
@@ -383,6 +386,52 @@ describe('routes/claim/view-claim', function () {
       return supertest(app)
         .post('/claim/123/remove-deduction')
         .send(VALID_DATA_DISABLE_DEDUCTION)
+        .expect(500)
+    })
+  })
+
+  describe('POST /claim/:claimId/assign-self', function () {
+    it('should respond with 400 when last updated check returns true', function () {
+      stubCheckLastUpdated.returns(true)
+      stubGetIndividualClaimDetails.resolves({})
+
+      return supertest(app)
+        .post('/claim/123/assign-self')
+        .send()
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 200 after calling assignment with users email if no conflicts', function () {
+      var claimData = {
+        claim: {},
+        claimExpenses: {}
+      }
+      stubCheckLastUpdated.returns(false)
+      stubUpdateAssignmentOfClaims.resolves()
+      stubGetIndividualClaimDetails.resolves(claimData)
+
+      return supertest(app)
+        .post('/claim/123/assign-self')
+        .send()
+        .expect(200)
+        .expect(function () {
+          expect(stubUpdateAssignmentOfClaims.calledWith('123', 'test@test.com')).to.be.true
+        })
+    })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCheckLastUpdated.returns(false)
+      stubUpdateAssignmentOfClaims.rejects()
+
+      return supertest(app)
+        .post('/claim/123/assign-self')
+        .send()
         .expect(500)
     })
   })
