@@ -43,7 +43,7 @@ const ADVANCED_SEARCH_FIELDS = [
   'Claim.ClaimType',
   'Claim.ClaimId',
   'Claim.AssignedTo',
-  'Claim.AssignmentTime'
+  'Claim.AssignmentExpiry'
 ]
 const EXPORT_CLAIMS_FIELDS = [
   'Visitor.FirstName',

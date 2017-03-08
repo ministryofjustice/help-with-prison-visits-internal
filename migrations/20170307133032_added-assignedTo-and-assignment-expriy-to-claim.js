@@ -1,7 +1,7 @@
 exports.up = function (knex, Promise) {
   return knex.schema.table('Claim', function (table) {
     table.string('AssignedTo', 100)
-    table.dateTime('AssignmentTime')
+    table.dateTime('AssignmentExpiry')
   })
   .catch(function (error) {
     console.log(error)
@@ -12,7 +12,7 @@ exports.up = function (knex, Promise) {
 exports.down = function (knex, Promise) {
   return knex.schema.table('Claim', function (table) {
     table.dropColumn('AssignedTo')
-    table.dropColumn('AssignmentTime')
+    table.dropColumn('AssignmentExpiry')
   })
   .catch(function (error) {
     console.log(error)
