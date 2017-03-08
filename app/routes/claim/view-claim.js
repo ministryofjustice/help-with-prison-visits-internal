@@ -133,7 +133,7 @@ module.exports = function (router) {
     return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
       return updateAssignmentOfClaims(req.params.claimId, req.user.email)
         .then(function () {
-          return false
+          return true
         })
     })
   })

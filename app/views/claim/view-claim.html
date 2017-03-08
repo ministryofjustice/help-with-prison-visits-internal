@@ -13,90 +13,85 @@
   {% import 'partials/navigation.html' as nav %}
       {{nav.active('/')}}
 
-  <div>
-    <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+  <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
+    <div>
       {% if Claim['AssignedTo'] %}
-        <span class="bold">This claim is assigned to {{ Claim['AssignedTo'] }}</span>
+        This claim is assigned to: <span class="bold">{{ Claim['AssignedTo'] }}</span>
       {% else %}
         <input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/assign-self" name="assign-self" class="button pull-left grey" value="Assign myself to this claim">
       {% endif %}
-    </form>
-  </div>
-
-  <div class="grid-row">
-    <div class="column-quarter">
-      <h1 class="heading-large">
-        <span id="reference" class="heading-secondary">Reference number</span>{{ Claim['Reference'] }}
-      </h1>
-      {% if Claim['AssistedDigitalCaseworker'] %}
-      <span class="bold-small">Assisted digital - </span>{{ Claim['AssistedDigitalCaseworker'] }}
-      {% endif %}
-      <span class="tag {{ Claim['ClaimType'] }}" \>{{ displayHelper.getClaimTypeDisplayName(Claim['ClaimType']) }} {% if Claim['IsAdvanceClaim'] %} - Advance{% endif %}</span>
     </div>
 
-    <div class="column-quarter">
-      <h1 class="heading-large">
-        <span class="heading-secondary">Visit rules</span>
-        <span>{{ displayHelper.getRegionRulesByValue(Claim['Country']) }}</span>
-      </h1>
+    <div class="grid-row">
+      <div class="column-quarter">
+        <h1 class="heading-large">
+          <span id="reference" class="heading-secondary">Reference number</span>{{ Claim['Reference'] }}
+        </h1>
+        {% if Claim['AssistedDigitalCaseworker'] %}
+        <span class="bold-small">Assisted digital - </span>{{ Claim['AssistedDigitalCaseworker'] }}
+        {% endif %}
+        <span class="tag {{ Claim['ClaimType'] }}" \>{{ displayHelper.getClaimTypeDisplayName(Claim['ClaimType']) }} {% if Claim['IsAdvanceClaim'] %} - Advance{% endif %}</span>
+      </div>
+
+      <div class="column-quarter">
+        <h1 class="heading-large">
+          <span class="heading-secondary">Visit rules</span>
+          <span>{{ displayHelper.getRegionRulesByValue(Claim['Country']) }}</span>
+        </h1>
+      </div>
+
+      <div class="column-quarter">
+        <h1 class="heading-large">
+          <span class="heading-secondary">Submitted </span>{{ getDateFormatted.shortDate(Claim['DateSubmitted']) }}
+        </h1>
+      </div>
+
+      <div class="column-quarter">
+
+        <h1 class="heading-large">
+          <span class="heading-secondary">Last Updated </span>{{ getDateFormatted.shortDate(Claim['LastUpdated']) }}
+        </h1>
+      </div>
+
     </div>
 
-    <div class="column-quarter">
-      <h1 class="heading-large">
-        <span class="heading-secondary">Submitted </span>{{ getDateFormatted.shortDate(Claim['DateSubmitted']) }}
-      </h1>
-    </div>
+    {% include "partials/view-claim/warnings.html" %}
 
-    <div class="column-quarter">
+    {% include "includes/validation-error-messages.html" %}
 
-      <h1 class="heading-large">
-        <span class="heading-secondary">Last Updated </span>{{ getDateFormatted.shortDate(Claim['LastUpdated']) }}
-      </h1>
-    </div>
+    <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
 
-  </div>
+      {% include "partials/csrf-hidden-input.html" %}
 
-  {% include "partials/view-claim/warnings.html" %}
+      <input type="hidden" name="assistedDigitalCaseworker" value="{{ Claim['AssistedDigitalCaseworker'] }}">
+      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
 
-  {% include "includes/validation-error-messages.html" %}
+      {% include "partials/view-claim/visitor.html" %}
 
-  <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
+      <h1 class="table-heading">Prisoner</h1>
 
-  <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
+      {% include "partials/view-claim/prisoner.html" %}
 
-    {% include "partials/csrf-hidden-input.html" %}
+      <h1 class="table-heading">Visit</h1>
 
-    <input type="hidden" name="assistedDigitalCaseworker" value="{{ Claim['AssistedDigitalCaseworker'] }}">
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+      {% include "partials/view-claim/visit.html" %}
 
-    {% include "partials/view-claim/visitor.html" %}
+      <div id='approve-cost'></div>
+      <h1 class="table-heading">Claim</h1>
 
-    <h1 class="table-heading">Prisoner</h1>
+      {% include "partials/view-claim/claim.html" %}
+      <br>
 
-    {% include "partials/view-claim/prisoner.html" %}
+      {% include "partials/view-claim/add-deduction.html" %}
 
-    <h1 class="table-heading">Visit</h1>
+      <br>
 
-    {% include "partials/view-claim/visit.html" %}
+      {% include "partials/view-claim/claim-events.html" %}
 
-    <div id='approve-cost'></div>
-    <h1 class="table-heading">Claim</h1>
+      <br>
+      <br>
 
-    {% include "partials/view-claim/claim.html" %}
-    <br>
-
-    {% include "partials/view-claim/add-deduction.html" %}
-
-    <br>
-
-    {% include "partials/view-claim/claim-events.html" %}
-
-    <br>
-    <br>
-
-    {% include "partials/view-claim/decision.html" %}
+      {% include "partials/view-claim/decision.html" %}
 
   </form>
 
