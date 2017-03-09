@@ -16,18 +16,28 @@ describe('services/domain/claim-decision', function () {
   const VALID_NOMIS_CHECK = 'APPROVED'
   const VALID_DWP_CHECK = 'APPROVED'
   const VALID_VISIT_CONFIRMATION_CHECK = 'APPROVED'
+  const NOT_ADVANCE_CLAIM = false
+  const ADVANCE_CLAIM = true
 
   it('should construct a domain object given valid input', function () {
-    claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, VALID_DECISION_REJECTED, '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+    claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, VALID_DECISION_REJECTED, '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, NOT_ADVANCE_CLAIM)
     expect(claimDecision.decision).to.equal(VALID_DECISION_REJECTED)
     expect(claimDecision.nomisCheck).to.equal(VALID_NOMIS_CHECK)
     expect(claimDecision.dwpCheck).to.equal(VALID_DWP_CHECK)
     expect(claimDecision.visitConfirmationCheck).to.equal(VALID_VISIT_CONFIRMATION_CHECK)
   })
 
+  it('should construct a domain object given valid input but no visit confirmation as advance claim', function () {
+    claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, VALID_DECISION_REJECTED, '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, '', VALID_CLAIMEXPENSES, ADVANCE_CLAIM)
+    expect(claimDecision.decision).to.equal(VALID_DECISION_REJECTED)
+    expect(claimDecision.nomisCheck).to.equal(VALID_NOMIS_CHECK)
+    expect(claimDecision.dwpCheck).to.equal(VALID_DWP_CHECK)
+    expect(claimDecision.visitConfirmationCheck).to.equal('')
+  })
+
   it('should return isRequired error for decision given empty strings', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, '', '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, '', '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, NOT_ADVANCE_CLAIM)
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
@@ -37,7 +47,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return isRequired error for note given on reject', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, NOT_ADVANCE_CLAIM)
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['additional-info-reject'][0]).to.equal('More information needed')
@@ -46,7 +56,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return isRequired error for note given on request information', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REQUESTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REQUESTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, NOT_ADVANCE_CLAIM)
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['additional-info-request'][0]).to.equal('More information needed')
@@ -55,7 +65,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return isRequired error for nomis-check given empty strings', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, NOT_ADVANCE_CLAIM)
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
@@ -65,7 +75,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return isRequired error for dwp-check given empty strings', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, NOT_ADVANCE_CLAIM)
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
@@ -75,7 +85,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return isRequired error for visit-confirmation-check given empty strings', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', '', VALID_CLAIMEXPENSES)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', '', VALID_CLAIMEXPENSES, NOT_ADVANCE_CLAIM)
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
@@ -85,7 +95,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return error for invalid claim expenses', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, INVALID_CLAIMEXPENSES)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, INVALID_CLAIMEXPENSES, NOT_ADVANCE_CLAIM)
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
@@ -95,7 +105,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return error if approving with all expenses rejected', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_APPROVED, '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_APPROVED, '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, NOT_ADVANCE_CLAIM)
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
@@ -105,7 +115,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return error if same caseworker as assisted digital caseworker', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_CASEWORKER, '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED)
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_CASEWORKER, '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, NOT_ADVANCE_CLAIM)
       expect(false, 'should have thrown validation error').to.be.true
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)

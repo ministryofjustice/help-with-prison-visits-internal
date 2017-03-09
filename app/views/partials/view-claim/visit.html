@@ -23,12 +23,16 @@
         {% endif %}
       </td>
       <td>
+      {% if not Claim.IsAdvanceClaim %}
         <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
           <option value="">Select</option>
           <option {% if Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
           <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
           <option {% if Claim['VisitConfirmationCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
         </select>
+      {% else %}
+        <input type="hidden" name="isAdvanceClaim" value="{{ Claim.IsAdvanceClaim }}">
+      {% endif %}
       </td>
     </tr>
   </tbody>

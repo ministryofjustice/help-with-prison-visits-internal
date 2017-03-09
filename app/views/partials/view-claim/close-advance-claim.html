@@ -1,5 +1,5 @@
-{% if displayHelper.getClaimStatusClosed(Claim['Status']) %}
-  <div class="panel js-hidden" id="close-advanced-claim-input">  
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
+  <div class="panel js-hidden" id="close-advanced-claim-input">
     <div class="form-group">
       <label class="form-label-bold" for="close-advance-claim-reason">Additional information (optional)</label>
       <textarea id="close-advance-claim-reason" class="form-control" name="close-advance-claim-reason"></textarea>
