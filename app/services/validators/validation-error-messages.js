@@ -17,5 +17,6 @@ module.exports = {
   getExpenseCheckRequired: function () { return 'Decide on this expense' },
   getVisitConfirmationRequired: function () { return 'Decide on visit confirmation' },
   getAdditionalInformationRequired: function () { return 'More information needed' },
-  getUserAssignmentConflict: function (user) { return `This claim has been assigned to ${user}` }
+  getUserAssignmentConflict: function (user) { return `This claim has been assigned to ${user}` },
+  getUserNotAssigned: function () { return 'You have not assigned yourself to this claim' }
 }
