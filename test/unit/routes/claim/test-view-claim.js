@@ -434,6 +434,52 @@ describe('routes/claim/view-claim', function () {
     })
   })
 
+  describe('POST /claim/:claimId/unassign', function () {
+    it('should respond with 400 when user and last updated check throws validation error', function () {
+      stubCheckUserAndLastUpdated.throws(new ValidationError({ 'reason': {} }))
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
+
+      return supertest(app)
+        .post('/claim/123/unassign')
+        .send()
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 200 after calling assignment with users email if no conflicts', function () {
+      var claimData = {
+        claim: {},
+        claimExpenses: {}
+      }
+      stubCheckUserAndLastUpdated.resolves()
+      stubUpdateAssignmentOfClaims.resolves()
+      stubGetIndividualClaimDetails.resolves(claimData)
+
+      return supertest(app)
+        .post('/claim/123/unassign')
+        .send()
+        .expect(302)
+        .expect(function () {
+          expect(stubUpdateAssignmentOfClaims.calledWith('123', null)).to.be.true
+        })
+    })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubCheckUserAndLastUpdated.resolves()
+      stubUpdateAssignmentOfClaims.rejects()
+
+      return supertest(app)
+        .post('/claim/123/unassign')
+        .send()
+        .expect(500)
+    })
+  })
+
   describe('POST /claim/:claimId/update-overpayment-status', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
       stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
