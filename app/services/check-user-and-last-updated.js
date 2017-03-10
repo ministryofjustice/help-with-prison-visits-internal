@@ -11,7 +11,7 @@ module.exports = function (lastUpdatedData, previousLastUpdated, needAssignmentC
       throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUserNotAssigned()]})
     }
   }
-  if (!moment(lastUpdatedData.LastUpdated).toString() === previousLastUpdated) {
+  if (!(moment(lastUpdatedData.LastUpdated).toString() === previousLastUpdated)) {
     throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
   }
 

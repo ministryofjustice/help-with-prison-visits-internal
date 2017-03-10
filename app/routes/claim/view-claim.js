@@ -208,6 +208,9 @@ function submitClaimDecision (req, res, claimExpenses) {
 function checkForUpdateConflict (claimId, currentLastUpdated, needAssignmentCheck, user) {
   return getLastUpdated(claimId).then(function (lastUpdatedData) {
     return checkUserAndLastUpdated(lastUpdatedData, currentLastUpdated, needAssignmentCheck, user)
+      .then(function () {
+        return false
+      })
   })
 }
 
