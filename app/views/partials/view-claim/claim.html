@@ -52,6 +52,7 @@
         </td>
 
         <td class="claim-expense-response">
+        {% if unlock %}
           <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status"
             class="form-control action-select claim-expense-status">
             <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
@@ -73,6 +74,7 @@
               {% else %}
                 visibility-hidden
               {% endif %}">
+        {% endif %}
         </td>
       </tr>
 
@@ -87,7 +89,7 @@
       </td>
       <td class="deduction">-£{{ displayHelper.toDecimal(deduction['Amount']) }}</td>
       <td></td>
-      <td><input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/remove-deduction" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey remove-deduction-button' value='Remove'></td>
+      <td>{% if unlock %}<input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/remove-deduction" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey remove-deduction-button' value='Remove'>{% endif %}</td>
     </tr>
     {% endfor %}
 

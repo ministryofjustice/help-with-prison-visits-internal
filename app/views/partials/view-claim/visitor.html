@@ -43,14 +43,14 @@
     <td>Benefit Information</td>
     <td>
       {{ displayHelper.getBenefitDisplayName(Claim['Benefit']) }}
-
+      {% if unlock %}
       <select class="form-control action-select" id="dwp-status" name="dwpCheck">
         <option value="">Select</option>
         <option {% if Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
         <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
         <option {% if Claim['DWPCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
       </select>
-
+      {% endif %}
       <br/>
 
       {% if displayHelper.getBenefitRequireUpload(Claim['Benefit']) %}

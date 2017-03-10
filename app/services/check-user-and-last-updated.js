@@ -1,9 +1,10 @@
 const moment = require('moment')
 const ValidationError = require('./errors/validation-error')
 const ValidationErrorMessages = require('./validators/validation-error-messages')
+const checkUserAssignment = require('./check-user-assignment')
 
 module.exports = function (lastUpdatedData, previousLastUpdated, needAssignmentCheck, user) {
-  if (needAssignmentCheck && lastUpdatedData.AssignedTo !== user && (lastUpdatedData.AssignmentExpiry > moment().toDate() || !lastUpdatedData.AssignmentExpiry)) {
+  if (needAssignmentCheck && !checkUserAssignment(user, lastUpdatedData.AssignedTo, lastUpdatedData.AssignmentExpiry)) {
     if (lastUpdatedData.AssignedTo && lastUpdatedData.AssignmentExpiry > moment().toDate()) {
       throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUserAssignmentConflict(lastUpdatedData.AssignedTo)]})
     } else {

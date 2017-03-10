@@ -56,6 +56,7 @@ const INCOMPLETE_DATA = {
   'reasonRejected': '',
   'claimExpense': []
 }
+const CLAIM_RETURN = {claim: {}}
 
 describe('routes/claim/view-claim', function () {
   var app
@@ -106,7 +107,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('GET /claim/:claimId', function () {
     it('should respond with a 200', function () {
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
 
       return supertest(app)
         .get('/claim/123')
@@ -179,7 +180,7 @@ describe('routes/claim/view-claim', function () {
 
     it('should respond with 400 when user and user and last updated check throws validation error', function () {
       stubCheckUserAndLastUpdated.throws(new ValidationError({ 'reason': {} }))
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
 
       return supertest(app)
         .post('/claim/123')
@@ -195,7 +196,7 @@ describe('routes/claim/view-claim', function () {
 
     it('should respond with 400 when invalid data entered', function () {
       stubClaimDecision.throws(new ValidationError({ 'reason': {} }))
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
       stubCheckUserAndLastUpdated.resolves()
 
       return supertest(app)
@@ -272,7 +273,7 @@ describe('routes/claim/view-claim', function () {
   describe('POST /claim/:claimId/add-deduction', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
       stubCheckUserAndLastUpdated.throws(new ValidationError({ 'reason': {} }))
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
 
       return supertest(app)
         .post('/claim/123/add-deduction')
@@ -344,7 +345,7 @@ describe('routes/claim/view-claim', function () {
   describe('POST /claim/:claimId/remove-deduction', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
       stubCheckUserAndLastUpdated.throws(new ValidationError({ 'reason': {} }))
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
 
       return supertest(app)
         .post('/claim/123/remove-deduction')
@@ -390,7 +391,7 @@ describe('routes/claim/view-claim', function () {
   describe('POST /claim/:claimId/assign-self', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
       stubCheckUserAndLastUpdated.throws(new ValidationError({ 'reason': {} }))
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
 
       return supertest(app)
         .post('/claim/123/assign-self')
@@ -435,7 +436,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('POST /claim/:claimId/update-overpayment-status', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
       stubCheckUserAndLastUpdated.throws(new ValidationError({ 'reason': {} }))
 
       return supertest(app)
@@ -492,7 +493,7 @@ describe('routes/claim/view-claim', function () {
 
     it('should respond with a 500 when promise is rejected', function () {
       stubCheckUserAndLastUpdated.resolves()
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
       stubOverpaymentResponse.resolves({})
       stubUpdateClaimOverpaymentStatus.rejects()
 
@@ -505,7 +506,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('POST /claim/:claimId/close-advance-claim', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
       stubCheckUserAndLastUpdated.throws(new ValidationError({ 'reason': {} }))
 
       return supertest(app)
@@ -537,7 +538,7 @@ describe('routes/claim/view-claim', function () {
 
     it('should respond with 400 when adding an overpayment and a validation error occurs', function () {
       stubCloseAdvanceClaim.throws(new ValidationError())
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
       stubCheckUserAndLastUpdated.resolves()
 
       return supertest(app)
@@ -552,7 +553,7 @@ describe('routes/claim/view-claim', function () {
 
     it('should respond with a 500 when promise is rejected', function () {
       stubCloseAdvanceClaim.rejects()
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
       stubCheckUserAndLastUpdated.resolves()
 
       return supertest(app)
@@ -564,7 +565,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('POST /claim/:claimId/request-new-payment-details', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
-      stubGetIndividualClaimDetails.resolves({})
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
       stubCheckUserAndLastUpdated.throws(new ValidationError({ 'reason': {} }))
 
       return supertest(app)
