@@ -41,6 +41,8 @@ describe('First time claim viewing flow', () => {
 
       // View-claim
       .waitForExist('#reference')
+      .click('#assign-self')
+      .waitForExist('#reference')
       .getText('#visitor-name').then(function (text) {
         expect(text).to.be.equal('John Smith')
       })

@@ -21,7 +21,7 @@
         <div>This claim is assigned to: <span class="bold">{{ Claim['AssignedTo'] }}</span>
         <input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/unassign" name="unassign" class="button pull-right grey assignment" value="Unassign"></div>
       {% else %}
-        <input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/assign-self" name="assign-self" class="button pull-left grey assignment" value="Assign myself to this claim">
+        <input id="assign-self" type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/assign-self" name="assign-self" class="button pull-left grey assignment" value="Assign myself to this claim">
       {% endif %}
     </div>
   </form>

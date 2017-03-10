@@ -34,6 +34,8 @@ describe('Requesting bank details flow', () => {
       .waitForExist('#claim' + claimId)
       .click('#claim' + claimId)
       .waitForExist('#reference')
+      .click('#assign-self')
+      .waitForExist('#reference')
       .click('[for="request-new-payment-details-toggle"]')
       .setValue('#payment-details-additional-information', 'TESTING')
       .click('#request-new-payment-details')
