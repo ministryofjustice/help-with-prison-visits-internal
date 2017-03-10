@@ -16,7 +16,8 @@ class ClaimDecision {
                nomisCheck,
                dwpCheck,
                visitConfirmationCheck,
-               claimExpenseResponses) {
+               claimExpenseResponses,
+               isAdvanceClaim) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
 
@@ -44,6 +45,7 @@ class ClaimDecision {
         expense.approvedCost = null
       }
     })
+    this.isAdvanceClaim = isAdvanceClaim
     this.IsValid()
   }
 
@@ -92,8 +94,10 @@ class ClaimDecision {
     FieldValidator(this.dwpCheck, 'dwp-check', errors)
       .isRequired(ERROR_MESSAGES.getBenefitCheckRequired)
 
-    FieldValidator(this.visitConfirmationCheck, 'visit-confirmation-check', errors)
-      .isRequired(ERROR_MESSAGES.getVisitConfirmationRequired)
+    if (!this.isAdvanceClaim) {
+      FieldValidator(this.visitConfirmationCheck, 'visit-confirmation-check', errors)
+        .isRequired(ERROR_MESSAGES.getVisitConfirmationRequired)
+    }
 
     var validationErrors = errors.get()
 

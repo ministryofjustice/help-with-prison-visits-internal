@@ -1,6 +1,6 @@
-{% if displayHelper.getClaimStatusClosed(Claim['Status']) %}
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
 <!-- Manage Overpayments -->
-  <div class="panel js-hidden" id="overpayment-input">    
+  <div class="panel js-hidden" id="overpayment-input">
     {% if Claim['IsOverpaid'] != true %}
     <div class="form-group" id='overpayment-amount-group' >
       <label class="form-label-bold" for="overpayment-amount">Amount</label>

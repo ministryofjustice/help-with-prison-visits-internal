@@ -192,7 +192,8 @@ function submitClaimDecision (req, res, claimExpenses) {
     req.body.nomisCheck,
     req.body.dwpCheck,
     req.body.visitConfirmationCheck,
-    claimExpenses
+    claimExpenses,
+    req.body.isAdvanceClaim
   )
   return SubmitClaimResponse(req.params.claimId, claimDecision)
     .then(function () {
