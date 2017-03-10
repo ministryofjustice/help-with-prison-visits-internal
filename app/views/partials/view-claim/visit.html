@@ -9,11 +9,15 @@
 
         {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
           <span class="text-pending">To be uploaded later</span>
+          {% if unlock %}
           <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-upload-later" class="button grey pull-right">Add</a>
+          {% endif %}
 
         {% elif Claim.visitConfirmation['DocumentStatus'] == 'post-later' %}
           <span class="text-pending">To be posted later</span>
+          {% if unlock %}
           <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/VISIT_CONFIRMATION?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ Claim.visitConfirmation['ClaimDocumentId'] }}" id="add-visit-confirmation-post-later" class="button grey pull-right">Add</a>
+          {% endif %}
 
         {% elif Claim.IsAdvanceClaim %}
           <span class="text-pending">Visit confirmation to be uploaded after visit</span>
