@@ -29,7 +29,7 @@
         {% endif %}
 
         <td>
-          {% if receiptRequiredEnum[expense.ExpenseType] %}
+          {% if receiptAndProcessedManuallyEnum[expense.ExpenseType].receiptRequired %}
             {% if expense.DocumentStatus == 'uploaded' %}
               <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ expense['ClaimDocumentId'] }}">View receipt</a>
 
@@ -60,7 +60,7 @@
             {% endif %}
             <option {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED_DIFF_AMOUNT }}" >Approve different amount</option>
             <option {% if expense['Status'] == claimDecisionEnum.REQUEST_INFORMATION %} selected {% endif %} value="{{ claimDecisionEnum.REQUEST_INFORMATION }}">Request information</option>
-            {% if Claim['IsAdvanceClaim'] %}
+            {% if Claim['IsAdvanceClaim'] and receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
             <option {% if expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Process manually</option>
             {% endif %}
             <option {% if expense['Status'] == claimDecisionEnum.REJECTED %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject claim</option>

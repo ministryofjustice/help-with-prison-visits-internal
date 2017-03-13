@@ -11,7 +11,7 @@ const ClaimDecision = require('../../services/domain/claim-decision')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 const getClaimExpenseResponses = require('../helpers/get-claim-expense-responses')
 const prisonerRelationshipsEnum = require('../../constants/prisoner-relationships-enum')
-const receiptRequiredEnum = require('../../constants/receipt-required-enum')
+const receiptAndProcessedManuallyEnum = require('../../constants/receipt-and-processed-manually-enum')
 const displayHelper = require('../../views/helpers/display-helper')
 const mergeClaimExpensesWithSubmittedResponses = require('../helpers/merge-claim-expenses-with-submitted-responses')
 const getLastUpdated = require('../../services/data/get-claim-last-updated')
@@ -238,7 +238,7 @@ function renderValues (data, req, error) {
     prisonerRelationshipsEnum: prisonerRelationshipsEnum,
     displayHelper: displayHelper,
     claimDecision: req.body,
-    receiptRequiredEnum: receiptRequiredEnum,
+    receiptAndProcessedManuallyEnum: receiptAndProcessedManuallyEnum,
     deductions: data.deductions,
     duplicates: data.duplicates,
     claimEvents: data.claimEvents,
