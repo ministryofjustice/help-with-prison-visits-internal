@@ -31,6 +31,7 @@ $(document).ready(function () {
           $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
         }
       },
+      {'data': 'AssignedTo'},
       {'data': 'ClaimId',
         'createdCell': function (td, cellData, rowData, row, col) {
           $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")

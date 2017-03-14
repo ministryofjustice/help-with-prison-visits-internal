@@ -43,14 +43,14 @@
     <td>Benefit Information</td>
     <td>
       {{ displayHelper.getBenefitDisplayName(Claim['Benefit']) }}
-
+      {% if unlock %}
       <select class="form-control action-select" id="dwp-status" name="dwpCheck">
         <option value="">Select</option>
         <option {% if Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
         <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
         <option {% if Claim['DWPCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
       </select>
-
+      {% endif %}
       <br/>
 
       {% if displayHelper.getBenefitRequireUpload(Claim['Benefit']) %}
@@ -60,10 +60,14 @@
           <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ document['ClaimDocumentId'] }}">View evidence</a>
         {% elif document['DocumentStatus'] == 'upload-later' %}
           <span class="text-pending">To be uploaded later</span>
+          {% if unlock %}
           <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-upload-later" class="button grey pull-right">Add</a>
+          {% endif %}
         {% elif document['DocumentStatus'] == 'post-later' %}
           <span class="text-pending">To be posted later</span>
+          {% if unlock %}
           <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/{{ Claim['Benefit'] }}?eligibilityId={{ Claim['EligibilityId'] }}&claimDocumentId={{ document['ClaimDocumentId'] }}" id="add-benefit-documentation-post-later" class="button grey pull-right">Add</a>
+          {% endif %}
         {% else %}
           <span class="text-warning">Benefit required</span>
         {% endif %}

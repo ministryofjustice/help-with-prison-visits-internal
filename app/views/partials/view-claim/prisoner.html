@@ -41,12 +41,14 @@
       </span>
       {% endif %}
 
+      {% if unlock %}
       <select class="form-control action-select" id="nomis-check" name="nomisCheck">
         <option value="">Select</option>
         <option {% if Claim['NomisCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
         <option {% if Claim['NomisCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
         <option {% if Claim['NomisCheck'] == 'REJECTED' %} selected {% endif %} value="REJECTED">Reject</option>
       </select>
+      {% endif %}
     </td>
   </tr>
 

@@ -88,6 +88,8 @@ function getClaimantDetails (claimId) {
       'Claim.LastUpdated',
       'Claim.Status',
       'Claim.PaymentMethod',
+      'Claim.AssignedTo',
+      'Claim.AssignmentExpiry',
       'Visitor.FirstName',
       'Visitor.LastName',
       'Visitor.DateOfBirth',
@@ -109,6 +111,12 @@ function getClaimantDetails (claimId) {
       'Prisoner.PrisonNumber',
       'Prisoner.NameOfPrison',
       'Prisoner.NomisCheck')
+    .then(function (data) {
+      if (data.AssignedTo && data.AssignmentExpiry < moment().toDate()) {
+        data.AssignedTo = null
+      }
+      return data
+    })
 }
 
 function getClaimDocuments (claimId, reference, eligibilityId) {

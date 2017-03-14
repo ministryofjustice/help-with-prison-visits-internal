@@ -29,7 +29,7 @@ module.exports = function (router) {
       status = claimStatusEnum.UPDATED.value
     }
 
-    getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length))
+    getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email)
       .then(function (data) {
         var claims = data.claims
         claims.map(function (claim) {
@@ -43,8 +43,8 @@ module.exports = function (router) {
           claims: claims
         })
       })
-      .catch(function (error) {
-        res.status(500).send(error)
-      })
+    .catch(function (error) {
+      res.status(500).send(error)
+    })
   })
 }

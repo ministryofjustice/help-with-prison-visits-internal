@@ -13,6 +13,19 @@
   {% import 'partials/navigation.html' as nav %}
       {{nav.active('/')}}
 
+  <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    <div>
+      {% if Claim['AssignedTo'] %}
+        <div>This claim is assigned to: <span class="bold">{{ Claim['AssignedTo'] }}</span>
+        <input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/unassign" name="unassign" class="button pull-right grey assignment" value="Unassign"></div>
+      {% else %}
+        <input id="assign-self" type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/assign-self" name="assign-self" class="button pull-left grey assignment" value="Assign myself to this claim">
+      {% endif %}
+    </div>
+  </form>
+
   <div class="grid-row">
     <div class="column-quarter">
       <h1 class="heading-large">

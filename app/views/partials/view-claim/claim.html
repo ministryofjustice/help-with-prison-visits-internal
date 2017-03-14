@@ -35,11 +35,15 @@
 
             {% elif expense.DocumentStatus == 'upload-later' %}
               <span class="text-pending">To be uploaded later</span>
+              {% if unlock %}
               <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
+              {% endif %}
 
             {% elif expense.DocumentStatus == 'post-later' %}
               <span class="text-pending">To be posted later</span>
+              {% if unlock %}
               <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
+              {% endif %}
 
             {% elif Claim.IsAdvanceClaim %}
               <span class="text-pending">Receipt to be uploaded after visit</span>
@@ -52,6 +56,7 @@
         </td>
 
         <td class="claim-expense-response">
+        {% if unlock %}
           <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status"
             class="form-control action-select claim-expense-status">
             <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
@@ -73,6 +78,7 @@
               {% else %}
                 visibility-hidden
               {% endif %}">
+        {% endif %}
         </td>
       </tr>
 
@@ -87,7 +93,7 @@
       </td>
       <td class="deduction">-£{{ displayHelper.toDecimal(deduction['Amount']) }}</td>
       <td></td>
-      <td><input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/remove-deduction" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey remove-deduction-button' value='Remove'></td>
+      <td>{% if unlock %}<input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/remove-deduction" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey remove-deduction-button' value='Remove'>{% endif %}</td>
     </tr>
     {% endfor %}
 

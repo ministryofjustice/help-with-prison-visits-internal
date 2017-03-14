@@ -1,4 +1,4 @@
-{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) and unlock %}
   <!-- Radio Buttons -->
   <form>
     <fieldset id="closedClaimActions">

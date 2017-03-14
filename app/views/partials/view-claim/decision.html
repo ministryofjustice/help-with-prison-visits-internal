@@ -1,4 +1,4 @@
-{% if not displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
+{% if not displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) and unlock %}
 <div id="decision" class="form-group {% if errors['decision'][0] %} error {% endif %}">
   <fieldset id='reason' >
     <label for="approve" class="block-label inline" data-target="accept-input">

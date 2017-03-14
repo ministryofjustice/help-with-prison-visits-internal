@@ -6,7 +6,6 @@ const getClaimExpenseDetailFormatted = require('../../views/helpers/claim-expens
 const getChildFormatted = require('../../views/helpers/child-helper')
 const getDisplayFieldName = require('../../views/helpers/display-field-names')
 const ValidationError = require('../../services/errors/validation-error')
-const ValidationErrorMessages = require('../../services/validators/validation-error-messages')
 const ClaimDecision = require('../../services/domain/claim-decision')
 const SubmitClaimResponse = require('../../services/data/submit-claim-response')
 const getClaimExpenseResponses = require('../helpers/get-claim-expense-responses')
@@ -15,7 +14,7 @@ const receiptAndProcessedManuallyEnum = require('../../constants/receipt-and-pro
 const displayHelper = require('../../views/helpers/display-helper')
 const mergeClaimExpensesWithSubmittedResponses = require('../helpers/merge-claim-expenses-with-submitted-responses')
 const getLastUpdated = require('../../services/data/get-claim-last-updated')
-const checkLastUpdated = require('../../services/check-last-updated')
+const checkUserAndLastUpdated = require('../../services/check-user-and-last-updated')
 const insertDeduction = require('../../services/data/insert-deduction')
 const disableDeduction = require('../../services/data/disable-deduction')
 const ClaimDeduction = require('../../services/domain/claim-deduction')
@@ -25,6 +24,8 @@ const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 const updateEligibilityTrustedStatus = require('../../services/data/update-eligibility-trusted-status')
 const requestNewBankDetails = require('../../services/data/request-new-bank-details')
 const claimDecisionEnum = require('../../../app/constants/claim-decision-enum')
+const updateAssignmentOfClaims = require('../../services/data/update-assignment-of-claims')
+const checkUserAssignment = require('../../services/check-user-assignment')
 const Promise = require('bluebird')
 
 var claimExpenses
@@ -33,7 +34,6 @@ module.exports = function (router) {
   // GET
   router.get('/claim/:claimId', function (req, res) {
     authorisation.isCaseworker(req)
-
     return renderViewClaimPage(req.params.claimId, req, res)
   })
 
@@ -62,14 +62,16 @@ module.exports = function (router) {
 
   // POST
   router.post('/claim/:claimId', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/`, function () {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/`, function () {
       claimExpenses = getClaimExpenseResponses(req.body)
       return submitClaimDecision(req, res, claimExpenses)
     })
   })
 
   router.post('/claim/:claimId/add-deduction', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       var deductionType = req.body.deductionType
       var amount = Number(req.body.deductionAmount).toFixed(2)
       var claimDeduction = new ClaimDeduction(deductionType, amount)
@@ -83,15 +85,20 @@ module.exports = function (router) {
   })
 
   router.post('/claim/:claimId/remove-deduction', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       var removeDeductionId = getClaimDeductionId(req.body)
 
       return disableDeduction(removeDeductionId)
+        .then(function () {
+          return true
+        })
     })
   })
 
   router.post('/claim/:claimId/update-overpayment-status', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           var claim = data.claim
@@ -108,17 +115,33 @@ module.exports = function (router) {
   })
 
   router.post('/claim/:claimId/close-advance-claim', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
     })
   })
 
   router.post('/claim/:claimId/request-new-payment-details', function (req, res, next) {
-    return validatePostRequest(req, res, next, `/claim/${req.params.claimId}`, function () {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
         })
+    })
+  })
+
+  router.post('/claim/:claimId/assign-self', function (req, res, next) {
+    var needAssignmentCheck = false
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return updateAssignmentOfClaims(req.params.claimId, req.user.email)
+    })
+  })
+
+  router.post('/claim/:claimId/unassign', function (req, res, next) {
+    var needAssignmentCheck = false
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return updateAssignmentOfClaims(req.params.claimId, null)
     })
   })
 }
@@ -135,18 +158,18 @@ function getClaimDeductionId (requestBody) {
   return deductionId
 }
 
-function validatePostRequest (req, res, next, redirectUrl, postFunction) {
+function validatePostRequest (req, res, next, needAssignmentCheck, redirectUrl, postFunction) {
   authorisation.isCaseworker(req)
   var updateConflict = true
 
   return Promise.try(function () {
-    return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated).then(function (hasConflict) {
+    return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated, needAssignmentCheck, req.user.email).then(function (hasConflict) {
       updateConflict = hasConflict
 
       return postFunction()
-        .then(function (addDeduction) {
-          if (addDeduction) {
-            return renderViewClaimPage(req.params.claimId, req, res, addDeduction)
+        .then(function (keepUnsubmittedChanges) {
+          if (keepUnsubmittedChanges) {
+            return renderViewClaimPage(req.params.claimId, req, res, keepUnsubmittedChanges)
           } else {
             return res.redirect(redirectUrl)
           }
@@ -183,19 +206,19 @@ function submitClaimDecision (req, res, claimExpenses) {
     })
 }
 
-function checkForUpdateConflict (claimId, currentLastUpdated) {
+function checkForUpdateConflict (claimId, currentLastUpdated, needAssignmentCheck, user) {
   return getLastUpdated(claimId).then(function (lastUpdatedData) {
-    var updateConflict = checkLastUpdated(lastUpdatedData.LastUpdated, currentLastUpdated)
-    if (updateConflict) {
-      throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
-    }
+    return checkUserAndLastUpdated(lastUpdatedData, currentLastUpdated, needAssignmentCheck, user)
+      .then(function () {
+        return false
+      })
   })
 }
 
-function renderViewClaimPage (claimId, req, res, addDeduction) {
+function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
   return getIndividualClaimDetails(claimId)
     .then(function (data) {
-      if (addDeduction) {
+      if (keepUnsubmittedChanges) {
         populateNewData(data, req)
       }
       var error = {ValidationError: null}
@@ -244,6 +267,7 @@ function renderValues (data, req, error) {
     claimEvents: data.claimEvents,
     overpaidClaims: data.overpaidClaims,
     claimDecisionEnum: claimDecisionEnum,
-    errors: error.validationErrors
+    errors: error.validationErrors,
+    unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry)
   }
 }
