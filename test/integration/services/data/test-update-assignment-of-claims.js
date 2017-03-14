@@ -31,6 +31,7 @@ describe('services/data/update-assignment-of-claim', function () {
             .then(function (claim) {
               expect(claim.AssignedTo).to.equal(assignedTo)
               expect(claim.AssignmentExpiry).to.be.within(twoMinutesAgo, twoMinutesAhead)
+              expect(claim.LastUpdated).to.be.within(twoMinutesAgo, twoMinutesAhead)
             })
         })
         .catch(function (error) {
