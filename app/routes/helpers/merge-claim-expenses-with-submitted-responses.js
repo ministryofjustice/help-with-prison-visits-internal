@@ -12,7 +12,7 @@ module.exports = function (oldData, nonPersistedData) {
 
     oldData.forEach(function (expense) {
       var postedClaimExpenseResponse = claimExpensesById[expense.ClaimExpenseId.toString()]
-      expense.Status = postedClaimExpenseResponse.status
+      expense.Status = postedClaimExpenseResponse ? postedClaimExpenseResponse.status : null
       if (expense.Status === claimDecisionEnum.APPROVED_DIFF_AMOUNT || expense.Status === claimDecisionEnum.MANUALLY_PROCESSED) {
         expense.ApprovedCost = postedClaimExpenseResponse.approvedCost
         if (!Validator.isCurrency(postedClaimExpenseResponse.approvedCost) || !Validator.isGreaterThanZero(postedClaimExpenseResponse.approvedCost) ||
