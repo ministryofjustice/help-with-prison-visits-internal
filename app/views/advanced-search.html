@@ -25,7 +25,7 @@
         <div class="form-group">
           <label class="form-label-bold">
             Reference number
-            <input id="reference" type="text" name="reference" value="{{ query.reference }}" class="form-control full">
+            <input id="reference" type="text" name="reference" value="{{ query.reference }}" class="form-control full" maxlength="7">
           </label>
         </div>
       </div>
@@ -34,7 +34,7 @@
         <div class="form-group">
           <label class="form-label-bold">
             Name
-            <input id="name" type="text" name="name" value="{{ query.name }}" class="form-control full">
+            <input id="name" type="text" name="name" value="{{ query.name }}" class="form-control full" maxlength="400">
           </label>
         </div>
       </div>
@@ -43,7 +43,7 @@
         <div class="form-group">
           <label class="form-label-bold">
             National Insurance Number
-            <input id="ninumber" type="text" name="ninumber" value="{{ query.ninumber }}" class="form-control full">
+            <input id="ninumber" type="text" name="ninumber" value="{{ query.ninumber }}" class="form-control full" maxlength="20">
           </label>
         </div>
       </div>
@@ -52,7 +52,7 @@
         <div class="form-group">
           <label class="form-label-bold">
             Prisoner number
-            <input id="prisonerNumber" type="text" name="prisonerNumber" value="{{ query.prisonerNumber }}" class="form-control full">
+            <input id="prisonerNumber" type="text" name="prisonerNumber" value="{{ query.prisonerNumber }}" class="form-control full" maxlength="20">
           </label>
         </div>
       </div>
@@ -61,7 +61,7 @@
         <div class="form-group">
           <label class="form-label-bold">
             Prison
-            <input id="prison" type="text" name="prison" value="{{ query.prison }}" class="form-control full">
+            <input id="prison" type="text" name="prison" value="{{ query.prison }}" class="form-control full" maxlength="30">
           </label>
         </div>
       </div>
@@ -451,7 +451,7 @@
             <span class="error-message">{{ errors['approvedClaimAmountFrom'][0] }}</span>
           {% endif %}
           <span class="pound-symbol">£</span>
-          <input id="approvedClaimAmountFromInput" type="text" class="form-control full" name="approvedClaimAmountFrom" value="{{ query.approvedClaimAmountFrom }}">
+          <input id="approvedClaimAmountFromInput" type="text" class="form-control full" name="approvedClaimAmountFrom" value="{{ query.approvedClaimAmountFrom }}" maxlength="6">
         </div>
       </div>
 
@@ -462,7 +462,7 @@
             <span class="error-message">{{ errors['approvedClaimAmountTo'][0] }}</span>
           {% endif %}
           <span class="pound-symbol">£</span>
-          <input id="approvedClaimAmountToInput" type="text" class="form-control full" name="approvedClaimAmountTo" value="{{ query.approvedClaimAmountTo }}">
+          <input id="approvedClaimAmountToInput" type="text" class="form-control full" name="approvedClaimAmountTo" value="{{ query.approvedClaimAmountTo }}" maxlength="6">
         </div>
       </div>
 

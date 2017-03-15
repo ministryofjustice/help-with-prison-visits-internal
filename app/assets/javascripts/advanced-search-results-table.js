@@ -4,12 +4,14 @@ function cleanColumnOutput (data, type, row) {
 }
 
 $(document).ready(function () {
-  var searchQuery = decodeURIComponent(window.location.search)
+  var searchQuery = decodeURIComponent(window.location.search.substring(1))
+
+  var search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
 
   if (searchQuery) {
     $('#search-results-header').show()
     $('#advanced-search-results').show()
-    var dataReference = '/advanced-search-results' + searchQuery
+    var dataReference = '/advanced-search-results'
 
     $('#advanced-search-results').DataTable({
       processing: true,
@@ -19,6 +21,8 @@ $(document).ready(function () {
       order: [],
       ajax: {
         url: dataReference,
+        type: 'POST',
+        data: search,
         dataSrc: 'claims',
         error: function (response) {
           $('#advanced-search-results_processing').hide()

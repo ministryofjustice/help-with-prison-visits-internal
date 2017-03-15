@@ -3,6 +3,7 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const express = require('express')
 const queryString = require('querystring')
+const bodyParser = require('body-parser')
 const dateFormatter = require('../../../app/services/date-formatter')
 const path = require('path')
 const sinon = require('sinon')
@@ -14,7 +15,16 @@ var authorisation
 var isCaseworkerStub
 var exportSearchResultsStub
 
+var draw = 1
+var start = 0
+var length = 10
+
+const EXPECTED_DATE_FROM = dateFormatter.build('12', '12', '2016').startOf('day').toDate()
+const EXPECTED_DATE_TO = dateFormatter.build('12', '12', '2016').endOf('day').toDate()
+
 const INPUT_SEARCH_CRITERIA = {
+  start: start,
+  length: length,
   reference: 'APVS123',
   name: 'testName',
   ninumber: 'apvs1234',
@@ -26,10 +36,7 @@ const INPUT_SEARCH_CRITERIA = {
   pastOrFuture: 'past',
   visitRules: 'englandScotlandWales',
   approvedClaimAmountFrom: '12',
-  approvedClaimAmountTo: '12'
-}
-
-const INPUT_DATE_FIELDS = {
+  approvedClaimAmountTo: '12',
   visitDateFromDay: '12',
   visitDateFromMonth: '12',
   visitDateFromYear: '2016',
@@ -54,6 +61,29 @@ const INPUT_DATE_FIELDS = {
   dateRejectedToDay: '12',
   dateRejectedToMonth: '12',
   dateRejectedToYear: '2016'
+}
+
+const PROCESSED_SEARCH_CRITERIA = {
+  reference: 'APVS123',
+  name: 'testName',
+  ninumber: 'apvs1234',
+  prisonerNumber: 'apvs12345',
+  prison: 'hewell',
+  pastOrFuture: 'past',
+  visitRules: 'englandScotlandWales',
+  approvedClaimAmountFrom: '12',
+  approvedClaimAmountTo: '12',
+  assistedDigital: true,
+  claimStatus: 'PENDING',
+  modeOfApproval: 'AUTOAPPROVED',
+  visitDateFrom: EXPECTED_DATE_FROM,
+  visitDateTo: EXPECTED_DATE_TO,
+  dateSubmittedFrom: EXPECTED_DATE_FROM,
+  dateSubmittedTo: EXPECTED_DATE_TO,
+  dateApprovedFrom: EXPECTED_DATE_FROM,
+  dateApprovedTo: EXPECTED_DATE_TO,
+  dateRejectedFrom: EXPECTED_DATE_FROM,
+  dateRejectedTo: EXPECTED_DATE_TO
 }
 
 const INVALID_DATE_FIELDS = {
@@ -112,13 +142,6 @@ const RETURNED_CLAIM = {
   Name: 'John Smith'
 }
 
-const EXPECTED_DATE_FROM = dateFormatter.build('12', '12', '2016').startOf('day').toDate()
-const EXPECTED_DATE_TO = dateFormatter.build('12', '12', '2016').endOf('day').toDate()
-
-var draw = 1
-var start = 0
-var length = 10
-
 var errorsReturnedToView = {}
 
 describe('routes/index', function () {
@@ -148,6 +171,7 @@ describe('routes/index', function () {
     })
     app.set('view engine', 'html')
     app.set('views', [ path.join(__dirname, '../../../app/views'), path.join(__dirname, '../../../lib/') ])
+    app.use(bodyParser.json())
 
     route(app)
   })
@@ -193,11 +217,12 @@ describe('routes/index', function () {
     })
   })
 
-  describe('GET /advanced-search-results', function () {
+  describe('POST /advanced-search-results', function () {
     it('should respond with a 200 and call data method', function () {
       getClaimListForAdvancedSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
       return supertest(app)
-        .get(`/advanced-search-results?&draw=${draw}&start=${start}&length=${length}`)
+        .post(`/advanced-search-results`)
+        .send({start: start, length: length})
         .expect(200)
         .expect(function (response) {
           expect(isCaseworkerStub.calledOnce).to.be.true
@@ -210,36 +235,18 @@ describe('routes/index', function () {
     it('should extract search criteria correctly', function () {
       getClaimListForAdvancedSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
 
-      var processedSearchCriteria = {}
-      for (var prop in INPUT_SEARCH_CRITERIA) {
-        processedSearchCriteria[prop] = INPUT_SEARCH_CRITERIA[prop]
-      }
-
-      processedSearchCriteria.assistedDigital = true
-      processedSearchCriteria.claimStatus = 'PENDING'
-      processedSearchCriteria.modeOfApproval = 'AUTOAPPROVED'
-      processedSearchCriteria.visitDateFrom = EXPECTED_DATE_FROM
-      processedSearchCriteria.visitDateTo = EXPECTED_DATE_TO
-      processedSearchCriteria.dateSubmittedFrom = EXPECTED_DATE_FROM
-      processedSearchCriteria.dateSubmittedTo = EXPECTED_DATE_TO
-      processedSearchCriteria.dateApprovedFrom = EXPECTED_DATE_FROM
-      processedSearchCriteria.dateApprovedTo = EXPECTED_DATE_TO
-      processedSearchCriteria.dateRejectedFrom = EXPECTED_DATE_FROM
-      processedSearchCriteria.dateRejectedTo = EXPECTED_DATE_TO
-
-      var searchQueryString = `${queryString.stringify(INPUT_SEARCH_CRITERIA)}&${queryString.stringify(INPUT_DATE_FIELDS)}`
-
       return supertest(app)
-        .get(`/advanced-search-results?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)
+        .post(`/advanced-search-results`)
+        .send(INPUT_SEARCH_CRITERIA)
         .expect(function (response) {
-          expect(getClaimListForAdvancedSearch.calledWith(sinon.match(processedSearchCriteria), start, length), 'expected data method to be called with processed search criteria').to.be.true
+          expect(getClaimListForAdvancedSearch.calledWith(sinon.match(PROCESSED_SEARCH_CRITERIA), start, length), 'expected data method to be called with processed search criteria').to.be.true
         })
     })
 
     it('should respond with a 500 promise rejects', function () {
       getClaimListForAdvancedSearch.rejects()
       return supertest(app)
-        .get('/advanced-search-results')
+        .post('/advanced-search-results')
         .expect(500)
     })
   })

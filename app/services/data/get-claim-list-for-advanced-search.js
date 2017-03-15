@@ -218,6 +218,8 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
             total: count[0]
           }
         })
+    }).catch(function (error) {
+      console.log(error)
     })
 
   function applyReferenceFilter (query, reference) {
