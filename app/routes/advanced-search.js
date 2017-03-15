@@ -59,7 +59,7 @@ module.exports = function (router) {
       })
   })
 
-  router.post('/advanced-search-results', function (req, res) {
+  router.post('/advanced-search-results', function (req, res, next) {
     authorisation.isCaseworker(req)
     var searchCriteria = extractSearchCriteria(req.body)
     getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body.start), parseInt(req.body.length))
@@ -86,7 +86,7 @@ module.exports = function (router) {
         })
       })
       .catch(function (error) {
-        res.status(500).send(error)
+        next(error)
       })
   })
 }

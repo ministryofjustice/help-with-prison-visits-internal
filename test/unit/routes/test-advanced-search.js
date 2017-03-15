@@ -244,6 +244,14 @@ describe('routes/index', function () {
     })
 
     it('should respond with a 500 promise rejects', function () {
+      app.use(function (req, res, next) {
+        next(new Error())
+      })
+      app.use(function (err, req, res, next) {
+        if (err) {
+          res.status(500).render('includes/error')
+        }
+      })
       getClaimListForAdvancedSearch.rejects()
       return supertest(app)
         .post('/advanced-search-results')
