@@ -31,9 +31,9 @@ $(document).ready(function () {
       url: dataReference,
       dataSrc: 'claims',
       error: function (response) {
-        var error = JSON.parse(response.responseText)
+        var error = JSON.Stringify(response)
         $('#claims_processing').hide()
-        alert(error.name + ': ' + error.message) // eslint-disable-line no-undef
+        alert(error) // eslint-disable-line no-undef
       }
     },
 
