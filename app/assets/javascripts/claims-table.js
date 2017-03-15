@@ -31,8 +31,9 @@ $(document).ready(function () {
       url: dataReference,
       dataSrc: 'claims',
       error: function (response) {
+        var error = JSON.parse(response.responseText)
         $('#claims_processing').hide()
-        alert('An error occurred when retrieving claims.') // eslint-disable-line no-undef
+        alert(error.name + ': ' + error.message) // eslint-disable-line no-undef
       }
     },
 
