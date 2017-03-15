@@ -17,9 +17,8 @@ $(document).ready(function () {
       url: dataReference,
       dataSrc: 'claims',
       error: function (response) {
-        var error = JSON.Stringify(response)
         $('#search-results_processing').hide()
-        alert(error) // eslint-disable-line no-undef
+        alert('An error occurred when searching for claims.') // eslint-disable-line no-undef
       }
     },
 
@@ -42,7 +41,7 @@ $(document).ready(function () {
 
     columnDefs: [
       {
-        'targets': [0, 1, 2, 3, 4],
+        'targets': [0, 1, 2, 3, 4, 5],
         'visible': true,
         'searchable': false,
         'orderable': false
@@ -50,7 +49,7 @@ $(document).ready(function () {
     ],
 
     drawCallback: function () {
-      var total = $('#search-results_info').text().split(' ')[5]
+      var total = $('#search-results_info').text().split(' ')[6]
       $('.badge').text(total)
     },
 
