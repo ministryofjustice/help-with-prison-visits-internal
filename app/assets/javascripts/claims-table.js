@@ -54,7 +54,7 @@ $(document).ready(function () {
 
     columnDefs: [
       {
-        'targets': [0, 1, 2, 3, 4, 5],
+        'targets': [0, 1, 2, 3, 4],
         'visible': true,
         'searchable': false,
         'orderable': false
@@ -62,7 +62,7 @@ $(document).ready(function () {
     ],
 
     drawCallback: function () {
-      var total = $('#claims_info').text().split(' ')[6]
+      var total = $('#claims_info').text().split(' ')[5]
       $('.badge').text(total)
     },
 
