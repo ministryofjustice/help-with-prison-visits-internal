@@ -6,7 +6,7 @@ function cleanColumnOutput (data, type, row) {
 $(document).ready(function () {
   var searchQuery = decodeURIComponent(window.location.search.substring(1))
 
-  var search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}')
+  var search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}')
 
   if (searchQuery) {
     $('#search-results-header').show()

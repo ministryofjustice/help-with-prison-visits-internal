@@ -62,6 +62,7 @@ module.exports = function (router) {
   router.post('/advanced-search-results', function (req, res) {
     authorisation.isCaseworker(req)
     var searchCriteria = extractSearchCriteria(req.body)
+    console.log(searchCriteria)
     getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body.start), parseInt(req.body.length))
       .then(function (data) {
         var claims = data.claims
