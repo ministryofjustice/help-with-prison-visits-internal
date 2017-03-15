@@ -31,9 +31,8 @@ $(document).ready(function () {
       url: dataReference,
       dataSrc: 'claims',
       error: function (response) {
-        var error = JSON.Stringify(response)
         $('#claims_processing').hide()
-        alert(error) // eslint-disable-line no-undef
+        alert('An error occurred when searching for claims.') // eslint-disable-line no-undef
       }
     },
 
