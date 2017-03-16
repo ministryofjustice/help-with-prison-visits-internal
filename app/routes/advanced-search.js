@@ -59,11 +59,10 @@ module.exports = function (router) {
       })
   })
 
-  router.get('/advanced-search-results', function (req, res) {
+  router.post('/advanced-search-results', function (req, res, next) {
     authorisation.isCaseworker(req)
-    var searchCriteria = extractSearchCriteria(req.query)
-
-    getClaimListForAdvancedSearch(searchCriteria, parseInt(req.query.start), parseInt(req.query.length))
+    var searchCriteria = extractSearchCriteria(req.body)
+    getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body.start), parseInt(req.body.length))
       .then(function (data) {
         var claims = data.claims
         claims.map(function (claim) {
@@ -80,14 +79,14 @@ module.exports = function (router) {
         }
 
         return res.json({
-          draw: req.query.draw,
+          draw: req.body.draw,
           recordsTotal: data.total.Count,
           recordsFiltered: data.total.Count,
           claims: claims
         })
       })
       .catch(function (error) {
-        res.status(500).send(error)
+        next(error)
       })
   })
 }

@@ -1,3 +1,4 @@
 module.exports = [
-  'file-upload'
+  'file-upload',
+  'advanced-search-results'
 ]

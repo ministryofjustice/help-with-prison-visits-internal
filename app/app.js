@@ -96,13 +96,17 @@ app.use(cookieParser(config.INT_APPLICATION_SECRET, { httpOnly: true, secure: co
 var csrfProtection = csurf({ cookie: { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' } })
 
 app.use(function (req, res, next) {
+  var exclude = false
   csrfExcludeRoutes.forEach(function (route) {
     if (req.originalUrl.includes(route) && req.method === 'POST') {
-      next()
-    } else {
-      csrfProtection(req, res, next)
+      exclude = true
     }
   })
+  if (exclude) {
+    next()
+  } else {
+    csrfProtection(req, res, next)
+  }
 })
 
 // Generate CSRF tokens to be sent in POST requests
