@@ -119,6 +119,12 @@
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
     {% include "partials/view-claim/request-new-payment-details.html" %}
   </form>
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/payout-barcode-expired" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    {% include "partials/view-claim/payout-barcode-expired.html" %}
+  </form>
 </main>
 
 {% endblock %}

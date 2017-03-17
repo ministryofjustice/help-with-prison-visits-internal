@@ -2,21 +2,26 @@
   <!-- Radio Buttons -->
   <form>
     <fieldset id="closedClaimActions">
-      <label for="overpayment-toggle" class="block-label inline" data-target="overpayment-input">
+      <label class="block-label inline" data-target="overpayment-input">
         <input type="radio" name="closed-claim-action" value="OVERPAYMENT" id="overpayment-toggle">
         <span>Manage Overpayment</span>
       </label>
 
       {% if Claim['IsAdvanceClaim'] == true and Claim['Status'] != 'APPROVED-ADVANCE-CLOSED' %}
-      <label for="close-toggle" class="block-label inline" data-target="close-advanced-claim-input">
+      <label class="block-label inline" data-target="close-advanced-claim-input">
         <input type="radio" name="closed-claim-action" value="CLOSE-ADVANCE-CLAIM" id="close-toggle">
         <span>Close Advance Claim</span>
       </label>
       {% endif %}
 
-      <label for="request-new-payment-details-toggle" class="block-label inline" data-target="request-new-payment-details-input">
+      <label id="request-new-payment-details-label" class="block-label inline" data-target="request-new-payment-details-input">
         <input type="radio" name="closed-claim-action" value="REQUEST-NEW-PAYMENT-DETAILS" id="request-new-payment-details-toggle">
         <span>Request new payment details</span>
+      </label>
+
+      <label class="block-label inline" data-target="payout-barcode-expired-input">
+        <input type="radio" name="closed-claim-action" value="PAYOUT-BARCODE-EXPIRED" id="payout-barcode-expired-toggle">
+        <span>Payout barcode expired</span>
       </label>
     </fieldset>
   </form>

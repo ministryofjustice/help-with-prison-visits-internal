@@ -11,6 +11,10 @@ module.exports = {
     value: 'APPROVED-ADVANCE-CLOSED',
     closed: true
   },
+  APPROVED_PAYOUT_BARCODE_EXPIRED: {
+    value: 'APPROVED-PAYOUT-BARCODE-EX',
+    closed: true
+  },
   REJECTED: {
     value: 'REJECTED',
     closed: true

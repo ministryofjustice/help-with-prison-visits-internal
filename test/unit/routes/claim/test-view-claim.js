@@ -19,6 +19,7 @@ var stubGetClaimDocumentFilePath
 var stubUpdateClaimOverpaymentStatus
 var stubOverpaymentResponse
 var stubCloseAdvanceClaim
+var stubPayoutBarcodeExpiredClaim
 var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
 var stubUpdateEligibilityTrustedStatus
@@ -46,6 +47,10 @@ const VALID_DATA_UPDATE_OVERPAYMENT_STATUS = {
 const VALID_DATA_CLOSE_ADVANCE_CLAIM = {
   'closed-claim-action': 'CLOSE-ADVANCE-CLAIM',
   'close-advance-claim-reason': 'close advance claim reason'
+}
+const VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM = {
+  'payout-barcode-expired': 'PAYOUT-BARCODE-EXPIRED',
+  'payout-barcode-expired-additional-information': 'Expiry reason'
 }
 const VALID_DATA_REQUEST_BANK_DETAILS = {
   'closed-claim-action': 'REQUEST-NEW-PAYMENT-DETAILS',
@@ -76,6 +81,7 @@ describe('routes/claim/view-claim', function () {
     stubUpdateClaimOverpaymentStatus = sinon.stub()
     stubOverpaymentResponse = sinon.stub()
     stubCloseAdvanceClaim = sinon.stub()
+    stubPayoutBarcodeExpiredClaim = sinon.stub()
     stubMergeClaimExpensesWithSubmittedResponses = sinon.stub()
     stubRequestNewBankDetails = sinon.stub()
     stubUpdateEligibilityTrustedStatus = sinon.stub()
@@ -96,6 +102,7 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/update-claim-overpayment-status': stubUpdateClaimOverpaymentStatus,
       '../../services/domain/overpayment-response': stubOverpaymentResponse,
       '../../services/data/close-advance-claim': stubCloseAdvanceClaim,
+      '../../services/data/payout-barcode-expired-claim': stubPayoutBarcodeExpiredClaim,
       '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
       '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
       '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus,
@@ -550,6 +557,65 @@ describe('routes/claim/view-claim', function () {
     })
   })
 
+  describe('POST /claim/:claimId/payout-barcode-expired', function () {
+    it('should respond with 400 when user and last updated check throws validation error', function () {
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
+      stubCheckUserAndLastUpdated.throws(new ValidationError({ 'reason': {} }))
+
+      return supertest(app)
+        .post('/claim/123/payout-barcode-expired')
+        .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
+        .expect(400)
+        .expect(function () {
+          expect(authorisation.isCaseworker.calledOnce).to.be.true
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
+        })
+    })
+
+    it('should respond with 302 when valid data entered', function () {
+      stubPayoutBarcodeExpiredClaim.resolves()
+      stubCheckUserAndLastUpdated.resolves()
+
+      return supertest(app)
+        .post('/claim/123/payout-barcode-expired')
+        .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
+        .expect(302)
+        .expect(function () {
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true
+          expect(stubPayoutBarcodeExpiredClaim.calledWith('123', 'Expiry reason')).to.be.true
+        })
+    })
+
+    it('should respond with 400 when marking claim as payout expired and a validation error occurs', function () {
+      stubPayoutBarcodeExpiredClaim.throws(new ValidationError())
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
+      stubCheckUserAndLastUpdated.resolves()
+
+      return supertest(app)
+        .post('/claim/123/payout-barcode-expired')
+        .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
+        .expect(function () {
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledOnce).to.be.true
+        })
+    })
+
+    it('should respond with a 500 when promise is rejected', function () {
+      stubPayoutBarcodeExpiredClaim.rejects()
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
+      stubCheckUserAndLastUpdated.resolves()
+
+      return supertest(app)
+        .post('/claim/123/payout-barcode-expired')
+        .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
+        .expect(500)
+    })
+  })
+
   describe('POST /claim/:claimId/close-advance-claim', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
       stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
@@ -582,7 +648,7 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
-    it('should respond with 400 when adding an overpayment and a validation error occurs', function () {
+    it('should respond with 400 when closing claim and a validation error occurs', function () {
       stubCloseAdvanceClaim.throws(new ValidationError())
       stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
       stubCheckUserAndLastUpdated.resolves()

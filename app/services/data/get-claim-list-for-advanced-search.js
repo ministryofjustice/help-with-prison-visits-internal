@@ -5,7 +5,7 @@ const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const prisonsEnum = require('../../../app/constants/prisons-enum')
 const dateFormatter = require('../date-formatter')
 
-const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.AUTOAPPROVED.value ]
+const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value ]
 const IN_PROGRESS_STATUS_VALUES = [ claimStatusEnum.NEW.value, claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value ]
 
 var countQuery
