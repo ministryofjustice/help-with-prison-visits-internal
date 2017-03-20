@@ -19,10 +19,12 @@
         <span>Request new payment details</span>
       </label>
 
+      {% if Claim['PaymentMethod'] == 'payout' %}
       <label class="block-label inline" data-target="payout-barcode-expired-input">
         <input type="radio" name="closed-claim-action" value="PAYOUT-BARCODE-EXPIRED" id="payout-barcode-expired-toggle">
         <span>Payout barcode expired</span>
       </label>
+      {% endif %}
     </fieldset>
   </form>
   <!-- End of Radio Buttons -->

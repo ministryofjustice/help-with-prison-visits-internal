@@ -1,7 +1,7 @@
 {% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
 <!-- Request New Payment Details -->
   <div class="panel js-hidden" id="request-new-payment-details-input">
-    {% if Claim[Status] == 'REJECTED' %}
+    {% if Claim['Status'] == 'REJECTED' %}
     <p>New bank details can not be requested on a rejected claim</p>
 
     {% else %}
