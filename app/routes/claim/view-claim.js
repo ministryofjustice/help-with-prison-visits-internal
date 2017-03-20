@@ -135,6 +135,9 @@ module.exports = function (router) {
     var needAssignmentCheck = false
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return updateAssignmentOfClaims(req.params.claimId, req.user.email)
+      .then(function () {
+        return false
+      })
     })
   })
 
