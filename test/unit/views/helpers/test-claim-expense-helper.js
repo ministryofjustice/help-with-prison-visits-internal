@@ -10,6 +10,8 @@ describe('views/helpers/claim-expense-helper', function () {
     const TO_PRISON_DISPLAY_NAME = 'Hewell'
     const DURATION_OF_TRAVEL = '2'
     const TICKET_TYPE = 'foot-passenger'
+    const TRAVEL_TIME = '10am'
+    const RETURN_TIME = '4pm'
 
     const CHILD_PREFIX = ticketOwnerEnum.CHILD.displayValue + ' - '
     const YOU_PREFIX = ticketOwnerEnum.YOU.displayValue + ' - '
@@ -104,6 +106,11 @@ describe('views/helpers/claim-expense-helper', function () {
 
       expect(claimExpenseHelper({ ExpenseType: 'parking', From: FROM, To: TO_PRISON }))
         .to.equal(`${FROM} to ${TO_PRISON_DISPLAY_NAME}`)
+    })
+
+    it('should append times onto advance train journeys which have them', function () {
+      expect(claimExpenseHelper({ ExpenseType: 'train', From: FROM, To: TO, IsReturn: true, TravelTime: TRAVEL_TIME, ReturnTime: RETURN_TIME }))
+        .to.equal(`${FROM} to ${TO} (${TRAVEL_TIME})${RETURN_POSTFIX} (${RETURN_TIME})`)
     })
   })
 })
