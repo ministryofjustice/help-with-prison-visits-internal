@@ -1,7 +1,7 @@
 module.exports = {
   YOU: {
     value: 'you',
-    displayValue: 'You'
+    displayValue: 'Claimant'
   },
   CHILD: {
     value: 'child',

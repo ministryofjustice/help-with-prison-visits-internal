@@ -23,7 +23,7 @@
         </td>
 
         {% if expense.ExpenseType == 'train' and Claim.IsAdvanceClaim %}
-          <td>{{ expense['TravelTime'] }}</td>
+          <td></td>
         {% else %}
           <td class="cost">£{{ displayHelper.toDecimal(expense['Cost']) }}</td>
         {% endif %}
@@ -66,7 +66,7 @@
             <option {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED_DIFF_AMOUNT }}" >Approve different amount</option>
             <option {% if expense['Status'] == claimDecisionEnum.REQUEST_INFORMATION %} selected {% endif %} value="{{ claimDecisionEnum.REQUEST_INFORMATION }}">Request information</option>
             {% if Claim['IsAdvanceClaim'] and receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
-            <option {% if expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Process manually</option>
+            <option {% if expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Book tickets using Redfern</option>
             {% endif %}
             <option {% if expense['Status'] == claimDecisionEnum.REJECTED %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject claim</option>
           </select>
