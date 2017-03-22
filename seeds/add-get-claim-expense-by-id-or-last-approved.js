@@ -32,7 +32,8 @@ exports.seed = function (knex, Promise) {
                 ClaimExpense.Status,
                 ClaimExpense.FromPostCode,
                 ClaimExpense.ToPostCode,
-                ClaimExpense.Distance
+                ClaimExpense.Distance,
+                ClaimExpense.ReturnTime
               FROM IntSchema.ClaimExpense AS ClaimExpense
               WHERE
               (
