@@ -73,5 +73,10 @@ module.exports = {
     value: 'is-claimant-trusted',
     displayName: 'Is the claimant trusted?',
     description: 'Auto-approval has been disabled for this Claimant by a case worker'
+  },
+  FORCE_MANUAL_CHECK_AFTER_NUMBER_OF_AUTO_APPROVALS: {
+    value: 'force-manual-check-after-number-of-auto-approvals',
+    displayName: 'Force manual check after number of auto approvals',
+    description: 'Claimants claims are forced to be manually checked after a set number of consecutive auto approvals'
   }
 }

@@ -32,6 +32,7 @@ describe('services/data/get-auto-approval-config', function () {
         expect(result.MaxNumberOfClaimsPerYear).to.equal(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR))
         expect(result.MaxNumberOfClaimsPerMonth).to.equal(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH))
         expect(result.RulesDisabled).to.be.null
+        expect(result.NumberOfConsecutiveAutoApprovals).to.equal(parseInt(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS))
       })
   })
 

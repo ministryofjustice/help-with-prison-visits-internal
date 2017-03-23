@@ -36,6 +36,7 @@ module.exports = function (router) {
         req.body.MaxDaysAfterAPVUVisit,
         req.body.MaxNumberOfClaimsPerYear,
         req.body.MaxNumberOfClaimsPerMonth,
+        req.body.NumberOfConsecutiveAutoApprovals,
         rulesDisabled
       )
 

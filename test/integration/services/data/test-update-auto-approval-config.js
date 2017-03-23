@@ -34,6 +34,7 @@ describe('services/data/update-auto-approval-config', function () {
       maxDaysAfterAPVUVisit: null,
       maxNumberOfClaimsPerYear: null,
       MaxNumberOfClaimsPerMonth: null,
+      NumberOfConsecutiveAutoApprovals: null,
       rulesDisabled: ['auto-approval-rule-1', 'auto-approval-rule-2']
     }
     return updateAutoApprovalConfig(AutoApprovalConfig)
@@ -62,6 +63,7 @@ describe('services/data/update-auto-approval-config', function () {
       maxDaysAfterAPVUVisit: null,
       maxNumberOfClaimsPerYear: null,
       MaxNumberOfClaimsPerMonth: null,
+      NumberOfConsecutiveAutoApprovals: null,
       rulesDisabled: null
     }
     return updateAutoApprovalConfig(AutoApprovalConfig)
@@ -103,6 +105,7 @@ function insertTestData () {
       MaxDaysAfterAPVUVisit: '28',
       MaxNumberOfClaimsPerYear: '10',
       MaxNumberOfClaimsPerMonth: '2',
+      NumberOfConsecutiveAutoApprovals: '4',
       RulesDisabled: 'auto-approval-rule-1,auto-approval-rule-2,auto-approval-rule-3',
       CostPerMile: '0.13',
       IsEnabled: 'true'
