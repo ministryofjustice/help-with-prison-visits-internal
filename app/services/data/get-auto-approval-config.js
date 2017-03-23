@@ -28,6 +28,7 @@ function getDefaults () {
     MaxDaysAfterAPVUVisit: parseInt(config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT),
     MaxNumberOfClaimsPerYear: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR),
     MaxNumberOfClaimsPerMonth: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH),
-    RulesDisabled: null
+    RulesDisabled: null,
+    NumberOfConsecutiveAutoApprovals: parseFloat(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS)
   }
 }
