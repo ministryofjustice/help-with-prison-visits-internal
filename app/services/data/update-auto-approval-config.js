@@ -42,6 +42,7 @@ function insertConfigData (autoApprovalConfig) {
       MaxDaysAfterAPVUVisit: autoApprovalConfig.maxDaysAfterAPVUVisit,
       MaxNumberOfClaimsPerYear: autoApprovalConfig.maxNumberOfClaimsPerYear,
       MaxNumberOfClaimsPerMonth: autoApprovalConfig.maxNumberOfClaimsPerMonth,
+      NumberOfConsecutiveAutoApprovals: autoApprovalConfig.numberOfConsecutiveAutoApprovals,
       RulesDisabled: rulesDisabledJoined,
       CostPerMile: defaultsConfig.AUTO_APPROVAL_COST_PER_MILE,
       IsEnabled: 'true'

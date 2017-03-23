@@ -11,6 +11,7 @@ class AutoApprovalConfig {
     maxDaysAfterAPVUVisit,
     maxNumberOfClaimsPerYear,
     maxNumberOfClaimsPerMonth,
+    numberOfConsecutiveAutoApprovals,
     rulesDisabled
   ) {
     this.caseworker = caseworker
@@ -20,6 +21,7 @@ class AutoApprovalConfig {
     this.maxDaysAfterAPVUVisit = maxDaysAfterAPVUVisit || ''
     this.maxNumberOfClaimsPerYear = maxNumberOfClaimsPerYear || ''
     this.maxNumberOfClaimsPerMonth = maxNumberOfClaimsPerMonth || ''
+    this.numberOfConsecutiveAutoApprovals = numberOfConsecutiveAutoApprovals || ''
     this.rulesDisabled = rulesDisabled.length > 0 ? rulesDisabled : null
 
     this.IsValid()
@@ -52,6 +54,11 @@ class AutoApprovalConfig {
       .isGreaterThanZero()
 
     FieldValidator(this.maxNumberOfClaimsPerMonth, 'max-number-of-claims-per-month', errors)
+      .isRequired()
+      .isNumeric()
+      .isGreaterThanZero()
+
+    FieldValidator(this.numberOfConsecutiveAutoApprovals, 'number-of-consecutive-auto-approvals', errors)
       .isRequired()
       .isNumeric()
       .isGreaterThanZero()

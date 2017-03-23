@@ -19,6 +19,7 @@ module.exports = {
   'max-days-after-apvu-visit': 'Max days after APVU visit',
   'max-number-of-claims-per-year': 'Max number of claims per year',
   'max-number-of-claims-per-month': 'Max number of claims per month',
+  'number-of-consecutive-auto-approvals': 'Number of consecutive auto approvals',
   'visitDateFrom': 'Visit date (from)',
   'visitDateTo': 'Visit date (to)',
   'dateSubmittedFrom': 'Date submitted (from)',

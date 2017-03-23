@@ -116,6 +116,19 @@
               <label>claims</label>
             </td>
           </tr>
+
+          <tr {% if errors['number-of-consecutive-auto-approvals'][0] %} class="warning" {% endif %}>
+            <td>
+              Number of consecutive auto approvals
+            </td>
+            <td>
+              Controls the maximum number of consecutive auto approvals before a claim is forced to be manual (e.g. 4)
+            </td>
+            <td>
+              <input id="number-of-consecutive-auto-approvals" type="text" name="NumberOfConsecutiveAutoApprovals" class="form-control" value="{{ autoApprovalConfig.NumberOfConsecutiveAutoApprovals }}">
+              <label>approvals</label>
+            </td>
+          </tr>
         </thead>
         </tbody>
       </table>
