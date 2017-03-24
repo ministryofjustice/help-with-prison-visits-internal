@@ -63,17 +63,19 @@
             {% if expense['Cost'] > 0 %}
             <option {% if expense['Status'] == claimDecisionEnum.APPROVED %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED }}">Approve</option>
             {% endif %}
+            {% if not Claim['IsAdvanceClaim'] and not receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
             <option {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED_DIFF_AMOUNT }}" >Approve different amount</option>
+            {% endif %}
             <option {% if expense['Status'] == claimDecisionEnum.REQUEST_INFORMATION %} selected {% endif %} value="{{ claimDecisionEnum.REQUEST_INFORMATION }}">Request information</option>
             {% if Claim['IsAdvanceClaim'] and receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
-            <option {% if expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Book tickets using Redfern</option>
+            <option {% if expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Booked tickets using Redfern</option>
             {% endif %}
             <option {% if expense['Status'] == claimDecisionEnum.REJECTED %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject claim</option>
           </select>
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text"
             name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ displayHelper.toDecimal(expense['ApprovedCost']) }}"
             class="form-control cost
-              {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT or expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %}
+              {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %}
                 visibility-visible
               {% else %}
                 visibility-hidden
