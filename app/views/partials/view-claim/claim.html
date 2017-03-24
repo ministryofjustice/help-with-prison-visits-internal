@@ -63,7 +63,7 @@
             {% if expense['Cost'] > 0 %}
             <option {% if expense['Status'] == claimDecisionEnum.APPROVED %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED }}">Approve</option>
             {% endif %}
-            {% if not Claim['IsAdvanceClaim'] and not receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
+            {% if not Claim['IsAdvanceClaim'] or not receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
             <option {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED_DIFF_AMOUNT }}" >Approve different amount</option>
             {% endif %}
             <option {% if expense['Status'] == claimDecisionEnum.REQUEST_INFORMATION %} selected {% endif %} value="{{ claimDecisionEnum.REQUEST_INFORMATION }}">Request information</option>
