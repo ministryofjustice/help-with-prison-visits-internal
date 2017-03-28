@@ -13,4 +13,10 @@ describe('views/helpers/date-helper', function () {
       expect(getDateFormatted.longDate(new Date(2016, 10, 10))).to.equal('10th November 2016')
     })
   })
+
+  describe('shortDateAndTime', function () {
+    it('should change date to DD/MM/YY HH:mm', function () {
+      expect(getDateFormatted.shortDateAndTime(new Date(2016, 10, 10, 10, 10))).to.equal('10/11/16 10:10')
+    })
+  })
 })
