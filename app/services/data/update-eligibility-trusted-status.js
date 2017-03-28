@@ -1,6 +1,6 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 const insertClaimEvent = require('./insert-claim-event')
 
 module.exports = function (claimId, isTrusted, untrustedReason) {
@@ -9,7 +9,7 @@ module.exports = function (claimId, isTrusted, untrustedReason) {
       if (isTrusted !== eligibilityData.IsTrusted) {
         var updateObject = {
           isTrusted: isTrusted,
-          UntrustedDate: !isTrusted ? moment().toDate() : null,
+          UntrustedDate: !isTrusted ? dateFormatter.now().toDate() : null,
           UntrustedReason: !isTrusted ? untrustedReason : null
         }
 

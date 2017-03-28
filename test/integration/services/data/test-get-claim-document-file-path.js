@@ -1,5 +1,5 @@
 var expect = require('chai').expect
-var moment = require('moment')
+var dateFormatter = require('../../../../app/services/date-formatter')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 var getClaimDocumentFilePath = require('../../../../app/services/data/get-claim-document-file-path')
@@ -9,7 +9,7 @@ var claimDocumentId
 
 describe('services/data/get-claim-document-file-path', function () {
   before(function () {
-    date = moment()
+    date = dateFormatter.now()
     return databaseHelper.insertTestData(reference, date.toDate(), 'TESTING')
       .then(function (ids) {
         claimDocumentId = ids.claimDocumentId1

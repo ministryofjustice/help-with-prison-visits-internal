@@ -2,7 +2,7 @@
 const expect = require('chai').expect
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
-const moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 const updateClaimOverpaymentStatus = require('../../../../app/services/data/update-claim-overpayment-status')
@@ -15,7 +15,7 @@ var previousLastUpdated
 
 describe('services/data/test-update-claim-overpayment-status', function () {
   beforeEach(function () {
-    date = moment().toDate()
+    date = dateFormatter.now().toDate()
     return databaseHelper.insertTestData(reference, date, 'Test').then(function (ids) {
       claimId = ids.claimId
       previousLastUpdated = ids.previousLastUpdated

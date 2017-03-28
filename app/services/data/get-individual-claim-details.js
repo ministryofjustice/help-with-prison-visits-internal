@@ -4,6 +4,7 @@ const duplicateClaimCheck = require('./duplicate-claim-check')
 const getClaimTotalAmount = require('../get-claim-total-amount')
 const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
+const dateFormatter = require('../date-formatter')
 const moment = require('moment')
 
 module.exports = function (claimId) {
@@ -112,7 +113,7 @@ function getClaimantDetails (claimId) {
       'Prisoner.NameOfPrison',
       'Prisoner.NomisCheck')
     .then(function (data) {
-      if (data.AssignedTo && data.AssignmentExpiry < moment().toDate()) {
+      if (data.AssignedTo && data.AssignmentExpiry < dateFormatter.now().toDate()) {
         data.AssignedTo = null
       }
       return data
