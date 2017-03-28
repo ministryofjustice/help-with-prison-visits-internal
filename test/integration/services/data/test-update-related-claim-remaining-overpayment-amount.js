@@ -1,6 +1,7 @@
 /* eslint-env mocha */
 const expect = require('chai').expect
 const moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
@@ -8,7 +9,7 @@ const updateRelatedClaimRemainingOverpaymentAmount = require('../../../../app/se
 
 describe('services/data/update-related-claim-remaining-overpayment-amount', function () {
   var REFERENCE = 'OVERPAY'
-  var date = moment().toDate()
+  var date = dateFormatter.now().toDate()
   var currentClaimId
   var eligibilityId
   var claimId1

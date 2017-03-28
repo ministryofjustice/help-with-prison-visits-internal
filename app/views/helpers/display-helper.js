@@ -6,6 +6,7 @@ const deductionTypeEnum = require('../../constants/deduction-type-enum')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
 const rulesEnum = require('../../constants/region-rules-enum')
 const enumHelper = require('../../constants/helpers/enum-helper')
+const dateFormatter = require('../../services/date-formatter')
 const moment = require('moment')
 
 module.exports.getBenefitDisplayName = function (value) {
@@ -50,7 +51,7 @@ module.exports.getDeductionTypeDisplayName = function (value) {
 
 module.exports.getClaimStatusClosed = function (claimStatusValue, isAdvanceClaim, dateOfJourney) {
   if (isAdvanceClaim && claimStatusValue === claimStatusEnum.UPDATED.value) {
-    var currentDate = moment()
+    var currentDate = dateFormatter.now()
     if (moment(dateOfJourney).isSameOrBefore(currentDate, 'day')) {
       return true
     } else {

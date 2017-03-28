@@ -22,16 +22,18 @@ describe('services/data/update-assignment-of-claim', function () {
     it(`should assign a claim, setting the time and updating when it was last updated`, function () {
       var assignedTo = 'test@test.com'
       var expiryTime = parseInt(environmentVariables.ASSIGNMENT_EXPIRY_TIME)
-      var currentDate = new Date()
-      var twoMinutesAgo = new Date().setMinutes(currentDate.getMinutes() - (expiryTime - 2))
-      var twoMinutesAhead = new Date().setMinutes(currentDate.getMinutes() + (expiryTime + 2))
+      var currentDate = dateFormatter.now()
+      var twoMinutesAgoExpiry = dateFormatter.now().minutes(currentDate.get('minutes') + (expiryTime - 2))
+      var twoMinutesAheadExpiry = dateFormatter.now().minutes(currentDate.get('minutes') + (expiryTime + 2))
+      var twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
+      var twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
       return updateAssignmentOfClaims(claimId, assignedTo)
         .then(function () {
           return knex('Claim').first().where('ClaimId', claimId)
             .then(function (claim) {
               expect(claim.AssignedTo).to.equal(assignedTo)
-              expect(claim.AssignmentExpiry).to.be.within(twoMinutesAgo, twoMinutesAhead)
-              expect(claim.LastUpdated).to.be.within(twoMinutesAgo, twoMinutesAhead)
+              expect(claim.AssignmentExpiry).to.be.within(twoMinutesAgoExpiry.toDate(), twoMinutesAheadExpiry.toDate())
+              expect(claim.LastUpdated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
             })
         })
         .catch(function (error) {

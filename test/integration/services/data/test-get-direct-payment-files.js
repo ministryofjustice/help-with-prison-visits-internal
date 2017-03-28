@@ -1,6 +1,7 @@
 var expect = require('chai').expect
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
+const dateFormatter = require('../../../../app/services/date-formatter')
 
 const TEST_PATH = 'TEST_PATH'
 
@@ -20,7 +21,7 @@ describe('services/data/get-direct-payment-files', function () {
       }
 
       for (var i = 0; i < 8; i++) {
-        var descendingDate = new Date(new Date().setDate(new Date().getDate() - i))
+        var descendingDate = new Date(dateFormatter.now().toDate().setDate(new Date().getDate() - i))
         directPaymentFiles.push(getTestDirectPaymentFile('ACCESSPAY_FILE', descendingDate))
         directPaymentFiles.push(getTestDirectPaymentFile('ADI_JOURNAL_FILE', descendingDate))
       }

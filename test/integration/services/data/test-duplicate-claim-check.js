@@ -1,4 +1,5 @@
 const expect = require('chai').expect
+const dateFormatter = require('../../../../app/services/date-formatter')
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 const REFERENCE1 = 'DUPCHK1'
@@ -24,8 +25,8 @@ describe('services/data/duplicate-claim-check', function () {
       // Insert two duplicate claims, and a third unique claim
       testData = databaseHelper.getTestData(REFERENCE1, 'Test')
 
-      date1 = new Date()
-      date2 = new Date()
+      date1 = dateFormatter.now().toDate()
+      date2 = dateFormatter.now().toDate()
       date2.setDate(date1.getDate() + 1000)
       date3 = new Date()
       date3.setDate(date2.getDate() + 1000)

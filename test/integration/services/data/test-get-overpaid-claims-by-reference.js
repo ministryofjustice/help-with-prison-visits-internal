@@ -1,5 +1,5 @@
 var expect = require('chai').expect
-var moment = require('moment')
+const dateFormatter = require('../../../../app/services/date-formatter')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 var getOverpaidClaimsByReference = require('../../../../app/services/data/get-overpaid-claims-by-reference')
@@ -11,8 +11,8 @@ var claimId3
 describe('services/data/get-overpaid-claims-by-reference', function () {
   describe('module', function () {
     before(function () {
-      var date = moment().toDate()
-      var twoWeeksAgo = moment().subtract(14, 'days').toDate()
+      var date = dateFormatter.now().toDate()
+      var twoWeeksAgo = dateFormatter.now().subtract(14, 'days').toDate()
       return databaseHelper.insertTestData(reference, date, 'Test')
         .then(function (ids) {
           var eligibilityId = ids.eligibilityId

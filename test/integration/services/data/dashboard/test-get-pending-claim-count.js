@@ -1,5 +1,6 @@
 const expect = require('chai').expect
 const moment = require('moment')
+const dateFormatter = require('../../../../../app/services/date-formatter')
 const databaseHelper = require('../../../../helpers/database-setup-for-tests')
 
 const getPendingClaimCount = require('../../../../../app/services/data/dashboard/get-pending-claim-count')
@@ -17,13 +18,13 @@ var claimId8
 var claimId9
 var claimId10
 
-var date = moment().toDate()
-var yesterday = moment().subtract(1, 'days').toDate()
-var lastWeek = moment().subtract(7, 'days').toDate()
-var oneMonthAgo = moment().subtract(1, 'months').toDate()
-var twoMonthsAgo = moment().subtract(2, 'months').toDate()
-var threeMonthsAgo = moment().subtract(3, 'months').toDate()
-var fourMonthsAgo = moment().subtract(4, 'months').toDate()
+var date = dateFormatter.now().toDate()
+var yesterday = dateFormatter.now().subtract(1, 'days').toDate()
+var lastWeek = dateFormatter.now().subtract(7, 'days').toDate()
+var oneMonthAgo = dateFormatter.now().subtract(1, 'months').toDate()
+var twoMonthsAgo = dateFormatter.now().subtract(2, 'months').toDate()
+var threeMonthsAgo = dateFormatter.now().subtract(3, 'months').toDate()
+var fourMonthsAgo = dateFormatter.now().subtract(4, 'months').toDate()
 
 var todayCount
 var yesterdayCount
