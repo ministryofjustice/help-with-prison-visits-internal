@@ -9,6 +9,5 @@ module.exports.longDate = function (date) {
 }
 
 module.exports.shortDateAndTime = function (date) {
-  console.log(moment(date).toDate())
   return moment.utc(date).format('DD/MM/YY HH:mm')
 }
