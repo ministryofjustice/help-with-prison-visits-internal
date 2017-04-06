@@ -15,6 +15,7 @@ describe('views/helpers/display-helper', function () {
   const VALID_CLAIM_TYPE_VALUE = claimTypeEnum.FIRST_TIME.value
   const VALID_DEDUCTION_TYPE_VALUE = deductionTypeEnum.HC3_DEDUCTION.value
   const VALID_REGION_RULES_VALUE = rulesEnum.NI.value
+  const INVALID_PRISON_VALUE = 'testing'
 
   const CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.APPROVED.value
   const NOT_CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.NEW.value
@@ -42,6 +43,11 @@ describe('views/helpers/display-helper', function () {
   it('should return the correct prison display name given a valid value', function () {
     var result = displayHelper.getPrisonDisplayName(VALID_PRISON_VALUE)
     expect(result).to.equal(prisonsEnum.ALTCOURSE.displayName)
+  })
+
+  it('should return the value given if prison not found', function () {
+    var result = displayHelper.getPrisonDisplayName(INVALID_PRISON_VALUE)
+    expect(result).to.equal(INVALID_PRISON_VALUE)
   })
 
   it('should return the correct rules given the country value', function () {
