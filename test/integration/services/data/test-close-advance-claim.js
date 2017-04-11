@@ -4,6 +4,7 @@ const config = require('../../../../knexfile').intweb
 const knex = require('knex')(config)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
+const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
 const closeAdvanceClaim = require('../../../../app/services/data/close-advance-claim')
 var reference = 'CCACTION'
@@ -33,7 +34,7 @@ describe('services/data/close-advance-claim', function () {
               return knex('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
             })
             .then(function (claimEvent) {
-              expect(claimEvent.Event).to.equal('CLOSE-ADVANCE-CLAIM')
+              expect(claimEvent.Event).to.equal(claimEventEnum.CLOSE_ADVANCE_CLAIM.value)
               expect(claimEvent.Note).to.equal(reason)
             })
         })

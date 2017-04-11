@@ -3,6 +3,7 @@ const sinon = require('sinon')
 require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
+const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
 var insertTaskSendClaimNotificationStub = sinon.stub().resolves()
 var insertClaimEventStub = sinon.stub().resolves()
@@ -24,7 +25,7 @@ describe('services/data/request-new-bank-details', function () {
     return requestNewBankDetails(reference, eligibilityId, claimId, additionalInformaiton, user)
       .then(function (result) {
         expect(updateClaimStatusRequestingBankDetailsStub.calledWith(reference, claimId)).to.be.true
-        expect(insertClaimEventStub.calledWith(reference, eligibilityId, claimId, 'REQUEST-NEW-BANK-DETAILS', additionalInformaiton, '', user, false)).to.be.true
+        expect(insertClaimEventStub.calledWith(reference, eligibilityId, claimId, claimEventEnum.REQUEST_NEW_BANK_DETAILS.value, additionalInformaiton, '', user, false)).to.be.true
         expect(insertTaskSendClaimNotificationStub.calledWith(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION, reference, eligibilityId, claimId)).to.be.true
       })
   })
