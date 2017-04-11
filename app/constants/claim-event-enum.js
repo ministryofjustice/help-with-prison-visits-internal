@@ -1,0 +1,22 @@
+module.exports = {
+  'FORCED-MANUAL-CHECK': 'Forced manual check',
+  'CLAIM-AUTO-APPROVED': 'Claim auto approved',
+  'AUTO-APPROVAL-FAILURE': 'Auto approval failed',
+  'CLAIM-SUBMITTED': 'Claim submitted',
+  'CONTACT-DETAILS-UPDATED': 'Contact details updated',
+  'REPLACED-PREVIOUS-DOCUMENT': 'Previous document replaced',
+  'MESSAGE': 'Message from claimant',
+  'CLAIM-UPDATED': 'Claim updated',
+  'BANK-DETAILS-UPDATED': 'Bank details updated',
+  'CLOSE-ADVANCE-CLAIM': 'Advance claim closed',
+  'PAYOUT-BARCODE-EXPIRED': 'Payout barcode expired',
+  'REQUEST-NEW-BANK-DETAILS': 'New bank details requested',
+  'ALLOW-AUTO-APPROVAL': 'Auto approval allowed',
+  'DISABLE-AUTO-APPROVAL': 'Auto approval disabled',
+  'CLAIM-APPROVED': 'Claim approved',
+  'CLAIM-REJECTED': 'Claim rejected',
+  'CLAIM-REQUEST-INFORMATION': 'Claim information requested',
+  'OVERPAID-CLAIM': 'Overpaid claim',
+  'OVERPAID-CLAIM-UPDATE': 'Overpaid claim updated',
+  'OVERPAID-CLAIM-RESOLVE': 'Overpaid claim resolved'
+}
