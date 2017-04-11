@@ -1,13 +1,13 @@
 {% if claimEvents.length > 0 %}
-<h1 class="heading-medium">Additional information</h1>
+<h1 class="heading-medium">Claim history</h1>
 <ul class="claim-dialog">
   {% for claimEvent in claimEvents %}
     {% if claimEvent.IsInternal %}<li class="internal">
-      <h2>{{ claimEvent.Event }}</h2>
+      <h2>{{ displayHelper.getClaimEventDisplayName(claimEvent.Event) }}</h2>
 
     {% elif claimEvent.Caseworker %}<li class="caseworker">
       <h2>{{ claimEvent.Caseworker }}</h2>
-      <h2>{{ claimEvent.Event }}</h2>
+      <h2>{{ displayHelper.getClaimEventDisplayName(claimEvent.Event) }}</h2>
 
     {% else %}<li class="claimant">
       <h2>{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</h2>

@@ -2,6 +2,7 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const dateFormatter = require('../date-formatter')
 const insertClaimEvent = require('./insert-claim-event')
+const claimEventEnum = require('../../constants/claim-event-enum')
 
 module.exports = function (claimId, isTrusted, untrustedReason) {
   return getEligibilityData(claimId)
@@ -17,7 +18,7 @@ module.exports = function (claimId, isTrusted, untrustedReason) {
           .where('EligibilityId', eligibilityData.EligibilityId)
           .update(updateObject)
           .then(function () {
-            var event = isTrusted ? 'ALLOW-AUTO-APPROVAL' : 'DISABLE-AUTO-APPROVAL'
+            var event = isTrusted ? claimEventEnum.ALLOW_AUTO_APPROVAL.value : claimEventEnum.DISABLE_AUTO_APPROVAL.value
             return insertClaimEvent(eligibilityData.Reference, eligibilityData.EligibilityId, claimId, event, null, untrustedReason, null, true)
           })
       }

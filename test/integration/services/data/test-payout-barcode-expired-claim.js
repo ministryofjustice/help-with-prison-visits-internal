@@ -4,6 +4,7 @@ const config = require('../../../../knexfile').intweb
 const knex = require('knex')(config)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
+const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
 const payoutBarcodeExpiredClaim = require('../../../../app/services/data/payout-barcode-expired-claim')
 var reference = 'POBAREX'
@@ -33,7 +34,7 @@ describe('services/data/payout-barcode-expired-claim', function () {
               return knex('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
             })
             .then(function (claimEvent) {
-              expect(claimEvent.Event).to.equal('PAYOUT-BARCODE-EXPIRED')
+              expect(claimEvent.Event).to.equal(claimEventEnum.PAYOUT_BARCODE_EXPIRED.value)
               expect(claimEvent.Note).to.equal(reason)
             })
         })
