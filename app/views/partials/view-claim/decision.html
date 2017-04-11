@@ -19,7 +19,7 @@
     <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.APPROVED %}js-hidden{% endif %}" id="accept-input">
 
       <div class="form-group">
-        <label class="form-label-bold" for="additional-info-accept">Additional information (optional)</label>
+        <label class="form-label-bold" for="additional-info-accept">Note to claimant (optional)</label>
         <textarea type="text" class="form-control" id="additional-info-approve" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
       </div>
 
@@ -30,38 +30,39 @@
         </label>
         <div id='untrusted-reason-section' class='form-group {% if Claim['IsTrusted'] === true %} js-hidden {% endif %}'>
           <br >
-          <label class='form-label-bold'>Reason for disabling auto-approval for this claimant</label>
+          <label class='form-label-bold'>Why aren’t you allowing auto-approval?</label>
+          <span class="text-secondary">The claimant won’t see this</span>
           <textarea type="text" class='form-control ' name="untrusted-reason" id='untrusted-reason'></textarea>
         </div>
       </div>
 
-      <input type="submit" class="button" name="approve" id="approve-submit" value="Send confirmation email to claimant">
+      <input type="submit" class="button" name="approve" id="approve-submit" value="Send approval email">
     </div>
 
     <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.REQUEST_INFORMATION %}js-hidden{% endif %}" id="request-input">
 
       <div class="form-group">
-        <label class="form-label-bold {% if errors['additional-info-request'][0] %} error {% endif %}" for="additional-info-request">Additional information</label>
+        <label class="form-label-bold {% if errors['additional-info-request'][0] %} error {% endif %}" for="additional-info-request">Note to claimant</label>
         {% if errors['additional-info-request'][0] %}
           <span class="error-message" id="error-message-note-request">{{ errors['additional-info-request'][0] }}</span>
         {% endif %}
         <textarea type="text" class="form-control" id="additional-info-request" name="additionalInfoRequest">{{ claimDecision['additionalInfoRequest'] }}</textarea>
       </div>
 
-      <input type="submit" class="button" name="request" value="Send request email to claimant">
+      <input type="submit" class="button" name="request" value="Send request email">
     </div>
 
     <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.REJECTED %}js-hidden{% endif %}" id="reject-input">
 
       <div class="form-group">
-        <label class="form-label-bold {% if errors['additional-info-reject'][0] %} error {% endif %}" for="additional-info-reject">Additional information</label>
+        <label class="form-label-bold {% if errors['additional-info-reject'][0] %} error {% endif %}" for="additional-info-reject">Note to claimant</label>
         {% if errors['additional-info-reject'][0] %}
           <span class="error-message" id="error-message-note-reject">{{ errors['additional-info-reject'][0] }}</span>
         {% endif %}
         <textarea type="text" class="form-control" id="additional-info-reject" name="additionalInfoReject">{{ claimDecision['additionalInfoReject'] }}</textarea>
       </div>
 
-      <input type="submit" class="button" name="reject" value="Send rejection email to claimant">
+      <input type="submit" class="button" name="reject" value="Send rejection email">
     </div>
 
   </fieldset>
