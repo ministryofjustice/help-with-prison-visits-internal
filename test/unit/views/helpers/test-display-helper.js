@@ -6,6 +6,7 @@ const benefitsEnum = require('../../../../app/constants/benefits-enum')
 const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
 const claimTypeEnum = require('../../../../app/constants/claim-type-enum')
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
+const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 const rulesEnum = require('../../../../app/constants/region-rules-enum')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -15,6 +16,7 @@ describe('views/helpers/display-helper', function () {
   const VALID_CLAIM_TYPE_VALUE = claimTypeEnum.FIRST_TIME.value
   const VALID_DEDUCTION_TYPE_VALUE = deductionTypeEnum.HC3_DEDUCTION.value
   const VALID_REGION_RULES_VALUE = rulesEnum.NI.value
+  const VALID_CLAIM_EVENT_VALUE = claimEventEnum.FORCED_MANUAL_CHECK.value
   const INVALID_PRISON_VALUE = 'testing'
 
   const CLOSED_CLAIM_STATUS_VALUE = claimStatusEnum.APPROVED.value
@@ -68,6 +70,11 @@ describe('views/helpers/display-helper', function () {
   it('should return the correct deduction type display name given a valid value', function () {
     var result = displayHelper.getDeductionTypeDisplayName(VALID_DEDUCTION_TYPE_VALUE)
     expect(result).to.equal(deductionTypeEnum.HC3_DEDUCTION.displayName)
+  })
+
+  it('should return the correct claim event display name given a valid value', function () {
+    var result = displayHelper.getClaimEventDisplayName(VALID_CLAIM_EVENT_VALUE)
+    expect(result).to.equal(claimEventEnum.FORCED_MANUAL_CHECK.displayName)
   })
 
   it('should return the correct closed value given a valid claim status', function () {
