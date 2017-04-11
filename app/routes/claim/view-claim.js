@@ -27,7 +27,6 @@ const requestNewBankDetails = require('../../services/data/request-new-bank-deta
 const claimDecisionEnum = require('../../../app/constants/claim-decision-enum')
 const updateAssignmentOfClaims = require('../../services/data/update-assignment-of-claims')
 const checkUserAssignment = require('../../services/check-user-assignment')
-const claimEventEnum = require('../../constants/claim-event-enum')
 const Promise = require('bluebird')
 
 var claimExpenses
@@ -280,7 +279,6 @@ function renderValues (data, req, error) {
     overpaidClaims: data.overpaidClaims,
     claimDecisionEnum: claimDecisionEnum,
     errors: error.validationErrors,
-    unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry),
-    claimEventEnum: claimEventEnum
+    unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry)
   }
 }

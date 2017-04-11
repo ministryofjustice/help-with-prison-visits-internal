@@ -5,6 +5,7 @@ const claimTypeEnum = require('../../constants/claim-type-enum')
 const deductionTypeEnum = require('../../constants/deduction-type-enum')
 const paymentMethodEnum = require('../../constants/payment-method-enum')
 const rulesEnum = require('../../constants/region-rules-enum')
+const claimEventEnum = require('../../constants/claim-event-enum')
 const enumHelper = require('../../constants/helpers/enum-helper')
 const dateFormatter = require('../../services/date-formatter')
 const moment = require('moment')
@@ -46,6 +47,11 @@ module.exports.getClaimTypeDisplayName = function (value) {
 
 module.exports.getDeductionTypeDisplayName = function (value) {
   var element = enumHelper.getKeyByValue(deductionTypeEnum, value)
+  return element.displayName
+}
+
+module.exports.getClaimEventDisplayName = function (value) {
+  var element = enumHelper.getKeyByValue(claimEventEnum, value)
   return element.displayName
 }
 
