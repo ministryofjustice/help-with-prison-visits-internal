@@ -88,6 +88,8 @@ describe('services/data/submit-claim-response', function () {
           .first()
           .then(function (result) {
             expect(result.Caseworker).to.be.equal(caseworker)
+            expect(result.AssignedTo, 'should clear assignment').to.be.null
+            expect(result.AssignmentExpiry, 'should clear assignment').to.be.null
             expect(result.Status[0]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Status[1]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Note).to.be.equal(claimResponse.note)
