@@ -45,6 +45,8 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
     'Note': note,
     'VisitConfirmationCheck': visitConfirmationCheck,
     'DateReviewed': dateFormatter.now().toDate(),
+    'AssignedTo': null, // clear assignment
+    'AssignmentExpiry': null,
     'LastUpdated': dateFormatter.now().toDate()
   }
 
