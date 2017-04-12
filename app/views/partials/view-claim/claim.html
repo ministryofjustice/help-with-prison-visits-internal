@@ -70,7 +70,7 @@
             {% if Claim['IsAdvanceClaim'] and receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
             <option {% if expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Booked tickets using Redfern</option>
             {% endif %}
-            <option {% if expense['Status'] == claimDecisionEnum.REJECTED %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject claim</option>
+            <option {% if expense['Status'] == claimDecisionEnum.REJECTED %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject item</option>
           </select>
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text"
             name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ displayHelper.toDecimal(expense['ApprovedCost']) }}"
