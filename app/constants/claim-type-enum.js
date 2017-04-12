@@ -9,7 +9,7 @@ module.exports = {
   },
   REPEAT_DUPLICATE: {
     value: 'repeat-duplicate',
-    displayName: 'Repeat duplicate'
+    displayName: 'Repeat'
   },
   REPEAT_NEW_ELIGIBILITY: {
     value: 'repeat-new-eligibility',
