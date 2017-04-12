@@ -30,17 +30,17 @@ const multipleClaimExpenses = [
   }
 ]
 
-describe('services/get-claim-total-amount', function () {
+describe('services/get-formatted-claim-expense-string', function () {
   it('should return a correctly formatted string for a single expense', function () {
     var claimExpenseString = getFormattedClaimExpenseString(singleClaimExpense)
 
-    expect(claimExpenseString).to.equal('Light Refreshment: 5')
+    expect(claimExpenseString).to.equal('Light refreshment: 5')
   })
 
   it('should return a correctly formatted string for multiple expenses', function () {
     var claimExpenseString = getFormattedClaimExpenseString(multipleClaimExpenses)
 
-    expect(claimExpenseString).to.equal('Bus Journey: 5|Train Journey: 10|Ferry Journey: 15')
+    expect(claimExpenseString).to.equal('Bus journey: 5|Train journey: 10|Ferry journey: 15')
   })
 
   it('should return 0 for claims that dont have an ApprovedCost', function () {

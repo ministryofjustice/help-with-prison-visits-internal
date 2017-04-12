@@ -1,12 +1,12 @@
 <table class="col-2 no-pad-right">
 
   <tr>
-    <td>{{ 'Lead Visitor' if Children else 'Visitor' }}</td>
+    <td>{{ 'Lead visitor' if Children else 'Visitor' }}</td>
     <td id="visitor-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
   </tr>
 
   <tr>
-    <td>Date of Birth</td>
+    <td>Date of birth</td>
     <td>{{ getDateFormatted.shortDate(Claim['DateOfBirth']) }}</td>
   </tr>
 
@@ -16,7 +16,7 @@
   </tr>
 
   <tr>
-    <td>Home Address</td>
+    <td>Home address</td>
     <td>{{ Claim['HouseNumberAndStreet'] }}<br>
       {{ Claim['Town'] }}<br>
       {{ Claim['County'] }}<br>
@@ -25,22 +25,22 @@
   </tr>
 
   <tr>
-    <td>Email Address</td>
+    <td>Email address</td>
     <td><a href="mailto:{{ Claim['EmailAddress'] }}">{{ Claim['EmailAddress'] }}</a></td>
   </tr>
 
   <tr>
-  <td>Phone Number</td>
+  <td>Phone number</td>
   <td>{{ Claim['PhoneNumber'] }}</td>
   </tr>
 
   <tr>
-    <td>Prisoner Relationship</td>
+    <td>Prisoner relationship</td>
     <td>{{ prisonerRelationshipsEnum[Claim['Relationship']].displayName }}</td>
   </tr>
 
   <tr id="dwp-check" {% if errors['dwp-check'][0] %} class="warning"{% endif %}>
-    <td>Benefit Information</td>
+    <td>Benefit information</td>
     <td>
       {{ displayHelper.getBenefitDisplayName(Claim['Benefit']) }}
       {% if unlock %}
@@ -111,7 +111,7 @@
   </tr>
   {% endif %}
   <tr>
-    <td>Payment Method</td>
+    <td>Payment method</td>
     <td>{{ displayHelper.getPaymentMethodDisplayName(Claim['PaymentMethod']) }}</td>
 
 </table>
