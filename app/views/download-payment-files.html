@@ -45,7 +45,7 @@
 
       <h3 class="heading-medium">ADI Journal</h3>
         {% if topAdiJournalFile %}
-      <a href="/download-payment-files/download?path={{ topAdiJournalFile.Filepath }}" class="link">Download transactions for {{ dateHelper.shortDate(topAdiJournalFile.DateCreated) }}</a>
+      <a href="/download-payment-files/download?path={{ topAdiJournalFile.Filepath }}" class="link">Download transactions for {{ dateHelper.shortDateAndTime(topAdiJournalFile.DateCreated) }}</a>
       {% endif %}
 
       <br>
@@ -58,7 +58,7 @@
           <div class="panel panel-border-narrow" id="" aria-hidden="false">
             <ul class="list list-bullet">
               {% for previousAdiJournalFile in previousAdiJournalFiles %}
-              <li><a href="/download-payment-files/download?path={{ previousAdiJournalFile.Filepath }}" class="link">Download transactions for {{ dateHelper.shortDate(previousAdiJournalFile.DateCreated) }}</a></li>
+              <li><a href="/download-payment-files/download?path={{ previousAdiJournalFile.Filepath }}" class="link">Download transactions for {{ dateHelper.shortDateAndTime(previousAdiJournalFile.DateCreated) }}</a></li>
               {% endfor %}
             </ul>
           </div>
