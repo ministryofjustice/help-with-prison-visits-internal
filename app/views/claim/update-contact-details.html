@@ -1,0 +1,80 @@
+{% extends "includes/layout.html" %}
+
+{% block page_title %}
+  Update contact details - {{ serviceName }}
+{% endblock %}
+
+{% block content %}
+
+<main id="content" role="main">
+
+  {% include "includes/phase_banner_beta.html" %}
+
+  {% import 'partials/navigation.html' as nav %}
+      {{nav.active('/')}}
+
+  {% include "includes/validation-error-messages.html" %}
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/update-contact-details" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="Reference" value="{{ Claim['Reference'] }}">
+    <input type="hidden" name="EligibilityId" value="{{ Claim['EligibilityId'] }}">
+    <input type="hidden" name="PreviousEmailAddress" value="{{ Claim['PreviousEmailAddress'] }}">
+    <input type="hidden" name="PreviousPhoneNumber" value="{{ Claim['PreviousPhoneNumber'] }}">
+
+    <h1 class="form-title heading-large">
+      Update contact details
+    </h1>
+
+    <p>
+      This will affect the current and future claims for this claimant.
+      The claimant will be notified of any changes to their contact details.
+    </p>
+
+    <div class="form-group">
+      <table class="col-2 no-pad-right">
+        <tr>
+          <td>Reference number</td>
+          <td>{{ Claim['Reference'] }}</td>
+        </tr>
+        <tr>
+          <td>Visitor</td>
+          <td id="visitor-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="form-group {% if errors['EmailAddress'][0] %} error {% endif %}">
+      <label id="EmailAddress" class="form-label-bold" for="email-address-input">Email address</label>
+      {% if errors['EmailAddress'][0] %}
+      <span class="error-message" id="error-message-email">{{ errors['EmailAddress'][0] }}</span>
+      {% endif %}
+      <p class="form-hint">You’ll receive confirmation by email</p>
+      <input id="email-address-input"
+             name="EmailAddress"
+             type="text"
+             class="form-control"
+             value="{{ Claim['EmailAddress'] }}">
+    </div>
+
+    <div class="form-group {% if errors['PhoneNumber'][0] %} error {% endif %}">
+      <label id="PhoneNumber" class="form-label-bold" for="phone-number-input">Phone number (optional)</label>
+      {% if errors['PhoneNumber'][0] %}
+      <span class="error-message" id="error-message-phone">{{ errors['PhoneNumber'][0] }}</span>
+      {% endif %}
+      <input id="phone-number-input"
+             name="PhoneNumber"
+             type="text"
+             class="form-control"
+             value="{{ Claim['PhoneNumber'] }}">
+    </div>
+
+    <div class="form-group">
+      <input type="submit" class="button" value="Submit">
+    </div>
+
+  </form>
+
+</main>
+
+{% endblock %}

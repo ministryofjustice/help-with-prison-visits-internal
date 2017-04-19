@@ -25,13 +25,13 @@
   </tr>
 
   <tr>
-    <td>Email address</td>
-    <td><a href="mailto:{{ Claim['EmailAddress'] }}">{{ Claim['EmailAddress'] }}</a></td>
-  </tr>
-
-  <tr>
-  <td>Phone number</td>
-  <td>{{ Claim['PhoneNumber'] }}</td>
+    <td>Contact details</td>
+    <td>
+      <a href="mailto:{{ Claim['EmailAddress'] }}">{{ Claim['EmailAddress'] }}</a>
+      {% if unlock %}<a href="/claim/{{ Claim['ClaimId'] }}/update-contact-details" class="change">Change</a>{% endif %}
+      <br>
+      {{ Claim['PhoneNumber'] }}
+    </td>
   </tr>
 
   <tr>

@@ -234,4 +234,71 @@ describe('services/validators/common-validator', function () {
       done()
     })
   })
+
+  describe('isEmail', function () {
+    const VALID_STRING = 'test@test.com'
+    const INVALID_STRING = 'test.test.com'
+
+    it('should throw an error if passed null', function () {
+      expect(function () {
+        validator.isEmail(null)
+      }).to.throw(TypeError)
+    })
+
+    it('should throw an error if passed undefined', function () {
+      expect(function () {
+        validator.isEmail(undefined)
+      }).to.throw(TypeError)
+    })
+
+    it('should throw an error if passed an object', function () {
+      expect(function () {
+        validator.isEmail({})
+      }).to.throw(TypeError)
+    })
+
+    it('should return true if passed a string that has a valid format', function () {
+      var result = validator.isEmail(VALID_STRING)
+      expect(result).to.equal(true)
+    })
+
+    it('should return false if passed a string that has an invalid format', function () {
+      var result = validator.isEmail(INVALID_STRING)
+      expect(result).to.equal(false)
+    })
+  })
+
+  describe('isLessThanLength', function () {
+    const LENGTH = 10
+    const VALID_STRING = '11111'
+    const INVALID_STRING = '11111111111111111111'
+
+    it('should throw an error if passed null', function () {
+      expect(function () {
+        validator.isLessThanLength(null, null)
+      }).to.throw(TypeError)
+    })
+
+    it('should throw an error if passed undefined', function () {
+      expect(function () {
+        validator.isLessThanLength(undefined, undefined)
+      }).to.throw(TypeError)
+    })
+
+    it('should throw an error if passed an object', function () {
+      expect(function () {
+        validator.isLessThanLength({}, {})
+      }).to.throw(TypeError)
+    })
+
+    it('should return true if passed a string that has a valid length', function () {
+      var result = validator.isLessThanLength(VALID_STRING, LENGTH)
+      expect(result).to.equal(true)
+    })
+
+    it('should return false if passed a string that has an invalid length', function () {
+      var result = validator.isLessThanLength(INVALID_STRING, LENGTH)
+      expect(result).to.equal(false)
+    })
+  })
 })

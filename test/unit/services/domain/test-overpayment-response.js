@@ -4,7 +4,7 @@ const overpaymentActionEnum = require('../../../../app/constants/overpayment-act
 const expect = require('chai').expect
 var overpaymentResponse
 
-describe('services/domain/claim-deduction', function () {
+describe('services/domain/overpayment-response', function () {
   const IS_OVERPAID = true
   const IS_NOT_OVERPAID = false
   const OVERPAYMENT_AMOUNT = '10'
