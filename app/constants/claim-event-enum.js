@@ -78,5 +78,9 @@ module.exports = {
   OVERPAID_CLAIM_RESOLVE: {
     value: 'OVERPAID-CLAIM-RESOLVE',
     displayName: 'Overpaid claim resolved'
+  },
+  UPDATED_CONTACT_DETAILS: {
+    value: 'UPDATED-CONTACT-DETAILS',
+    displayName: 'Updated contact details'
   }
 }

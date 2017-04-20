@@ -29,5 +29,7 @@ module.exports = {
   'dateRejectedFrom': 'Date rejected (from)',
   'dateRejectedTo': 'Date rejected (to)',
   'approvedClaimAmountFrom': 'Approved claim amount (from)',
-  'approvedClaimAmountTo': 'Approved claim amount (to)'
+  'approvedClaimAmountTo': 'Approved claim amount (to)',
+  'EmailAddress': 'Email address',
+  'PhoneNumber': 'Phone number'
 }

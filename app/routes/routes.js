@@ -10,6 +10,7 @@ var routes = [
   require('./advanced-search'),
   require('./claim/view-claim'),
   require('./claim/file-upload'),
+  require('./claim/update-contact-details'),
 
   // Configuration
   require('./config'),

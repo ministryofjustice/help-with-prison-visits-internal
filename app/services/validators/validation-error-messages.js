@@ -18,5 +18,7 @@ module.exports = {
   getVisitConfirmationRequired: function () { return 'Decide on visit confirmation' },
   getAdditionalInformationRequired: function () { return 'More information needed' },
   getUserAssignmentConflict: function (user) { return `This claim has been assigned to ${user}` },
-  getUserNotAssigned: function () { return 'You have not assigned yourself to this claim' }
+  getUserNotAssigned: function () { return 'You have not assigned yourself to this claim' },
+  getIsValidFormat: function (displayName) { return `${displayName} must have valid format` },
+  getIsLessThanLengthMessage: function (displayName, options) { return `${displayName} must be shorter than ${options.length} characters` }
 }

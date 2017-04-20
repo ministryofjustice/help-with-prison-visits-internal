@@ -28,3 +28,11 @@ exports.isGreaterThanOrEqualToZero = function (value) {
 exports.isLessThanMaximumDifferentApprovedAmount = function (value) {
   return value <= parseInt(config.MAX_APPROVED_DIFFERENT_AMOUNT) && value !== null
 }
+
+exports.isEmail = function (value) {
+  return validator.isEmail(value)
+}
+
+exports.isLessThanLength = function (value, length) {
+  return validator.isLength(value, { max: length })
+}

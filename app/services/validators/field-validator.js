@@ -59,6 +59,21 @@ class FieldValidator {
     }
     return this
   }
+
+  isEmail () {
+    if (!validator.isEmail(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getIsValidFormat)
+    }
+    return this
+  }
+
+  isLessThanLength (length, specificMessage) {
+    var message = (!specificMessage) ? ERROR_MESSAGES.getIsLessThanLengthMessage : specificMessage
+    if (!validator.isLessThanLength(this.data, length)) {
+      this.errors.add(this.fieldName, message, { length: length })
+    }
+    return this
+  }
 }
 
 module.exports = function (data, fieldName, errors) {
