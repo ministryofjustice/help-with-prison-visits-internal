@@ -5,7 +5,7 @@ const sinon = require('sinon')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 require('sinon-bluebird')
 
-describe('routes/claim/file-upload', function () {
+describe('routes/claim/update-contact-details', function () {
   const CLAIMID = '1'
   const ROUTE = `/claim/${CLAIMID}/update-contact-details`
   const REDIRECT_URL = `/claim/${CLAIMID}`
