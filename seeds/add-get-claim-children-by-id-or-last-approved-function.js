@@ -11,14 +11,17 @@ exports.seed = function (knex, Promise) {
       return knex.schema
         .raw(
           `
-            CREATE FUNCTION IntSchema.getClaimChildrenByIdOrLastApproved(@reference varchar(7), @eligibiltyId int, @claimId int)
+            CREATE FUNCTION IntSchema.getClaimChildrenByIdOrLastApproved(@reference varchar(7), @eligibiltyId int, @claimId int, @masked bit)
             RETURNS TABLE
             AS
             RETURN
             (
               SELECT
                 ClaimChild.FirstName,
-                ClaimChild.LastName,
+                CASE
+                  WHEN @masked = 1 THEN STUFF(ClaimChild.LastName, 2, 100, REPLICATE('*', LEN(ClaimChild.LastName) - 1))
+                  ELSE ClaimChild.LastName
+                END AS LastName,
                 ClaimChild.DateOfBirth,
                 ClaimChild.Relationship
               FROM IntSchema.ClaimChild AS ClaimChild
