@@ -182,9 +182,15 @@
       <div class="column-one-third">
         <h3 class="heading-small">Visit rules</h3>
         <div class="form-group">
-          <label for="visitRulesEnglandScotlandWales" class="block-label inline">
-            England/Scotland/Wales
-            <input id="visitRulesEnglandScotlandWales" type="radio" name="visitRules" value="englandScotlandWales" {% if query.visitRules == 'englandScotlandWales' %} checked {% endif %}>
+          <label for="visitRulesEnglandWales" class="block-label inline">
+            England/Wales
+            <input id="visitRulesEnglandWales" type="radio" name="visitRules" value="englandWales" {% if query.visitRules == 'englandWales' %} checked {% endif %}>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="visitRulesScotland" class="block-label inline">
+            Scotland
+            <input id="visitRulesScotland" type="radio" name="visitRules" value="scotland" {% if query.visitRules == 'scotland' %} checked {% endif %}>
           </label>
         </div>
         <div class="form-group">

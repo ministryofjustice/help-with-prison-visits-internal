@@ -283,20 +283,28 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   }
 
   function applyVisitRulesFilter (query, visitRules) {
-    var nonEnglandScotlandWalesPrisons = []
+    var nonEnglandWalesPrisons = []
+    var scotlandPrisons = []
     var northernIrelandPrisons = []
     for (var prison in prisonsEnum) {
-      if (prisonsEnum[prison].region !== 'ENG/WAL' && prisonsEnum[prison].region !== 'SCO') {
-        nonEnglandScotlandWalesPrisons.push(prisonsEnum[prison].value)
+      if (prisonsEnum[prison].region !== 'ENG/WAL') {
+        nonEnglandWalesPrisons.push(prisonsEnum[prison].value)
+
+        if (prisonsEnum[prison].region === 'SCO') {
+          scotlandPrisons.push(prisonsEnum[prison].value)
+        }
+
         if (prisonsEnum[prison].region === 'NI') {
           northernIrelandPrisons.push(prisonsEnum[prison].value)
         }
       }
     }
 
-    if (visitRules === 'englandScotlandWales') {
-      query.whereNotIn('Prisoner.NameOfPrison', nonEnglandScotlandWalesPrisons)
-    } else {
+    if (visitRules === 'englandWales') {
+      query.whereNotIn('Prisoner.NameOfPrison', nonEnglandWalesPrisons)
+    } else if (visitRules === 'scotland') {
+      query.whereIn('Prisoner.NameOfPrison', scotlandPrisons)
+    } else if (visitRules === 'northernIreland') {
       query.whereIn('Prisoner.NameOfPrison', northernIrelandPrisons)
     }
   }

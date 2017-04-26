@@ -351,7 +351,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
   it('should return the correct claim given the visit rules', function () {
     var searchCriteria = {
-      visitRules: 'englandScotlandWales'
+      visitRules: 'englandWales'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
@@ -688,7 +688,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       claimStatus: 'APPROVED',
       modeOfApproval: 'APPROVED',
       pastOrFuture: 'past',
-      visitRules: 'englandScotlandWales',
+      visitRules: 'englandWales',
       visitDateFrom: dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate(),
       visitDateTo: dateFormatter.build('10', '09', '2016').add(1, 'day').toDate(),
       dateSubmittedFrom: dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate(),
