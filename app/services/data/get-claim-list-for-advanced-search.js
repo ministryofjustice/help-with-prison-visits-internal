@@ -262,8 +262,8 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
       this.where('Claim.PaymentStatus', 'PROCESSED')
         .orWhere(function () {
           this.where({
-            'IsAdvanceClaim': true,
-            'Status': claimStatusEnum.APPROVED_ADVANCE_CLOSED.value
+            'Claim.IsAdvanceClaim': true,
+            'Claim.Status': claimStatusEnum.APPROVED_ADVANCE_CLOSED.value
           })
         })
     })
