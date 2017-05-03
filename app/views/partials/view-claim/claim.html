@@ -80,6 +80,11 @@
               {% else %}
                 visibility-hidden
               {% endif %}">
+        {% else %}
+          {% if expense['ApprovedCost'] %} £{{ displayHelper.toDecimal(expense['ApprovedCost']) }} {% endif %}
+          <input id="claim-expense-hidden-{{ expense.ClaimExpenseId }}-approvedcost" type="hidden"
+            name="claim-expense-hidden-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ displayHelper.toDecimal(expense['ApprovedCost']) }}"
+            class="form-control approved-cost">
         {% endif %}
         </td>
       </tr>

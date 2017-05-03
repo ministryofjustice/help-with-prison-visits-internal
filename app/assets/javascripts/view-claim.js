@@ -1,4 +1,6 @@
 $(function () {
+  totalApproved()
+
   $('.claim-expense-status').change(function () {
     var id = $(this).attr('data-id')
     var value = $(this).val()
@@ -58,15 +60,24 @@ $(function () {
 function totalApproved () {
   var approvedCost = 0
   var manuallyProcessed = 0
-  $('input.approved-amount').each(function () {
-    if (!isNaN(this.value) && this.value.length !== 0) {
-      manuallyProcessed += parseFloat(this.value)
-    }
-  })
 
-  $('td.approved-amount').each(function () {
-    approvedCost += +$(this).text().replace('£', '')
-  })
+  if ($('#unassign').length) {
+    $('input.approved-amount').each(function () {
+      if (!isNaN(this.value) && this.value.length !== 0) {
+        manuallyProcessed += parseFloat(this.value)
+      }
+    })
+
+    $('td.approved-amount').each(function () {
+      approvedCost += +$(this).text().replace('£', '')
+    })
+  } else { // use hidden approved cost for unassigned claims
+    $('input.approved-cost').each(function () {
+      if (!isNaN(this.value) && this.value.length !== 0) {
+        approvedCost += parseFloat(this.value)
+      }
+    })
+  }
 
   $('.claim-expense-approvedCostText').text('£' + (approvedCost + manuallyProcessed).toFixed(2))
 }
