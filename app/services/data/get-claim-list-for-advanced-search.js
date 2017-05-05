@@ -2,7 +2,7 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const moment = require('moment')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
-const prisonsEnum = require('../../../app/constants/prisons-enum')
+const rulesEnum = require('../../../app/constants/region-rules-enum')
 const dateFormatter = require('../date-formatter')
 
 const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value ]
@@ -283,29 +283,12 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   }
 
   function applyVisitRulesFilter (query, visitRules) {
-    var nonEnglandWalesPrisons = []
-    var scotlandPrisons = []
-    var northernIrelandPrisons = []
-    for (var prison in prisonsEnum) {
-      if (prisonsEnum[prison].region !== 'ENG/WAL') {
-        nonEnglandWalesPrisons.push(prisonsEnum[prison].value)
-
-        if (prisonsEnum[prison].region === 'SCO') {
-          scotlandPrisons.push(prisonsEnum[prison].value)
-        }
-
-        if (prisonsEnum[prison].region === 'NI') {
-          northernIrelandPrisons.push(prisonsEnum[prison].value)
-        }
-      }
-    }
-
     if (visitRules === 'englandWales') {
-      query.whereNotIn('Prisoner.NameOfPrison', nonEnglandWalesPrisons)
+      query.whereIn('Visitor.Country', [rulesEnum.ENGLAND.value, rulesEnum.WALES.value])
     } else if (visitRules === 'scotland') {
-      query.whereIn('Prisoner.NameOfPrison', scotlandPrisons)
+      query.where('Visitor.Country', rulesEnum.SCOTLAND.value)
     } else if (visitRules === 'northernIreland') {
-      query.whereIn('Prisoner.NameOfPrison', northernIrelandPrisons)
+      query.where('Visitor.Country', rulesEnum.NI.value)
     }
   }
 
