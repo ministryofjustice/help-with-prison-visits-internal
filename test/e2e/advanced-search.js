@@ -73,7 +73,7 @@ describe('Advanced search flow', () => {
       .click('[for="claimStatusApproved"]')
       .click('[for="modeOfApprovalManual"]')
       .click('[for="typeOfClaimPast"]')
-      .click('[for="visitRulesEnglandScotlandWales"]')
+      .click('[for="visitRulesEnglandWales"]')
 
       .setValue('#visitDateFromDay', yesterday.date())
       .setValue('#visitDateFromMonth', yesterday.month() + 1)
