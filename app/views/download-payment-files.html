@@ -20,7 +20,7 @@
 
       <h3 class="heading-medium">Access Pay file</h3>
       {% if topAccessPayFile %}
-      <a href="/download-payment-files/download?path={{ topAccessPayFile.Filepath }}" class="link">Download file for {{ dateHelper.shortDateAndTime(topAccessPayFile.DateCreated) }}</a>
+      <a href="/download-payment-files/download?id={{ topAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(topAccessPayFile.DateCreated) }}</a>
       {% endif %}
       <br>
       <br>
@@ -32,7 +32,7 @@
           <div class="panel panel-border-narrow" id="" aria-hidden="false">
             <ul class="list list-bullet">
               {% for previousAccessPayFile in previousAccessPayFiles %}
-              <li><a href="/download-payment-files/download?path={{ previousAccessPayFile.Filepath }}" class="link">Download file for {{ dateHelper.shortDateAndTime(previousAccessPayFile.DateCreated) }}</a></li>
+              <li><a href="/download-payment-files/download?id={{ previousAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(previousAccessPayFile.DateCreated) }}</a></li>
               {% endfor %}
             </ul>
           </div>
@@ -45,7 +45,7 @@
 
       <h3 class="heading-medium">ADI Journal</h3>
         {% if topAdiJournalFile %}
-      <a href="/download-payment-files/download?path={{ topAdiJournalFile.Filepath }}" class="link">Download transactions for {{ dateHelper.shortDateAndTime(topAdiJournalFile.DateCreated) }}</a>
+      <a href="/download-payment-files/download?id={{ topAdiJournalFile.PaymentFileId }}" class="link">Download transactions for {{ dateHelper.shortDateAndTime(topAdiJournalFile.DateCreated) }}</a>
       {% endif %}
 
       <br>
@@ -58,7 +58,7 @@
           <div class="panel panel-border-narrow" id="" aria-hidden="false">
             <ul class="list list-bullet">
               {% for previousAdiJournalFile in previousAdiJournalFiles %}
-              <li><a href="/download-payment-files/download?path={{ previousAdiJournalFile.Filepath }}" class="link">Download transactions for {{ dateHelper.shortDateAndTime(previousAdiJournalFile.DateCreated) }}</a></li>
+              <li><a href="/download-payment-files/download?id={{ previousAdiJournalFile.PaymentFileId }}" class="link">Download transactions for {{ dateHelper.shortDateAndTime(previousAdiJournalFile.DateCreated) }}</a></li>
               {% endfor %}
             </ul>
           </div>
