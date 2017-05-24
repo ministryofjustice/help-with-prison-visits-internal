@@ -8,12 +8,9 @@ require('sinon-bluebird')
 var isSscl
 var getDirectPaymentFiles
 
-const ACCESS_PAYMENT_FILES = {
-  accessPayFiles: [{FilePath: 'accessPayFile1'}, {FilePath: 'accessPayFile2'}]
-}
-
-const ADI_JOURNAL_FILES = {
-  adiJournalFiles: [{FilePath: 'adiJournalFile1'}, {FilePath: 'adiJournalFile2'}]
+const FILES = {
+  accessPayFiles: [{FilePath: 'accessPayFile1'}, {PaymentFileId: 1, Filepath: './test/resources/testfile.txt'}],
+  adiJournalFiles: [{FilePath: 'adiJournalFile1'}, {PaymentFileId: 2, Filepath: './test/resources/testfile.txt'}]
 }
 
 describe('routes/download-payment-files', function () {
@@ -44,7 +41,7 @@ describe('routes/download-payment-files', function () {
     })
 
     it('should set top and previous access payment files', function () {
-      getDirectPaymentFiles.resolves(ACCESS_PAYMENT_FILES)
+      getDirectPaymentFiles.resolves(FILES)
       return supertest(app)
         .get('/download-payment-files')
         .expect(200)
@@ -55,7 +52,7 @@ describe('routes/download-payment-files', function () {
     })
 
     it('should set top and previous adi journal files', function () {
-      getDirectPaymentFiles.resolves(ADI_JOURNAL_FILES)
+      getDirectPaymentFiles.resolves(FILES)
       return supertest(app)
         .get('/download-payment-files')
         .expect(200)
@@ -74,12 +71,14 @@ describe('routes/download-payment-files', function () {
   })
 
   describe('GET /download-payment-files/download', function () {
-    it('should respond respond with 200 if valid path entered', function () {
+    it('should respond respond with 200 if valid id entered', function () {
+      getDirectPaymentFiles.resolves(FILES)
       return supertest(app)
-        .get('/download-payment-files/download?path=test/resources/testfile.txt')
+        .get('/download-payment-files/download?id=2')
         .expect(200)
         .expect(function (response) {
           expect(isSscl.calledOnce).to.be.true
+          expect(getDirectPaymentFiles.calledOnce).to.be.true
           expect(response.header['content-length']).to.equal('4')
         })
     })

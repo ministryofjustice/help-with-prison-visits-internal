@@ -38,14 +38,28 @@ module.exports = function (router) {
       })
   })
 
-  router.get('/download-payment-files/download', function (req, res) {
+  router.get('/download-payment-files/download', function (req, res, next) {
     authorisation.isSscl(req)
 
-    var path = req.query.path
-    if (path) {
-      res.download(path)
+    var id = parseInt(req.query.id)
+    if (id) {
+      getDirectPaymentFiles()
+        .then(function (directPaymentFiles) {
+          var matchingFile = directPaymentFiles.accessPayFiles.find(function (file) { return file.PaymentFileId === id })
+          if (!matchingFile && directPaymentFiles.adiJournalFiles) {
+            matchingFile = directPaymentFiles.adiJournalFiles.find(function (file) { return file.PaymentFileId === id })
+          }
+          if (!matchingFile) {
+            throw new Error('Unable to find file')
+          }
+
+          return res.download(matchingFile.Filepath)
+        })
+        .catch(function (error) {
+          next(error)
+        })
     } else {
-      throw new Error('No path to file provided')
+      throw new Error('No Id for file provided')
     }
   })
 }
