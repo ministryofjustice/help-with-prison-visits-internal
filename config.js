@@ -15,7 +15,7 @@ module.exports = {
 
   // MoJ SSO
   AUTHENTICATION_ENABLED: process.env.APVS_MOJ_SSO_AUTHENTICATION_ENABLED || false,
-  SESSION_SECRET: process.env.APVS_MOJ_SSO_SESSION_SECRET || 'apvs-internal-web',
+  SESSION_SECRET: process.env.APVS_MOJ_SSO_SESSION_SECRET, // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
   CLIENT_ID: process.env.APVS_MOJ_SSO_CLIENT_ID,
   CLIENT_SECRET: process.env.APVS_MOJ_SSO_CLIENT_SECRET,
   TOKEN_HOST: process.env.APVS_MOJ_SSO_TOKEN_HOST,
@@ -40,8 +40,8 @@ module.exports = {
   // Value configurations
   MAX_APPROVED_DIFFERENT_AMOUNT: process.env.MAX_APPROVED_DIFFERENT_AMOUNT || '250',
 
-  // Session and Cookie security (defaults for development)
-  INT_APPLICATION_SECRET: process.env.APVS_INT_APPLICATION_SECRET || 'secret',
+  // Session and Cookie security (CSRF)
+  INT_APPLICATION_SECRET: process.env.APVS_INT_APPLICATION_SECRET, // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
   INT_SECURE_COOKIE: process.env.APVS_INT_SECURE_COOKIE || 'false',
 
   // Auto approval config defaults
