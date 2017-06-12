@@ -16,6 +16,7 @@ module.exports = function (oldData, nonPersistedData) {
       if (expense.Status === claimDecisionEnum.APPROVED_DIFF_AMOUNT || expense.Status === claimDecisionEnum.MANUALLY_PROCESSED) {
         expense.ApprovedCost = postedClaimExpenseResponse.approvedCost
         if (!Validator.isCurrency(postedClaimExpenseResponse.approvedCost) || !Validator.isGreaterThanZero(postedClaimExpenseResponse.approvedCost) ||
+          !Validator.isGreaterThanMinimumClaim(postedClaimExpenseResponse.approvedCost) ||
           !Validator.isLessThanMaximumDifferentApprovedAmount(postedClaimExpenseResponse.approvedCost)) {
           expense.Error = true
         }

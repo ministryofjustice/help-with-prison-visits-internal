@@ -67,11 +67,16 @@ class ClaimDecision {
       FieldValidator(expense.status, 'claim-expenses', errors)
         .isRequired(ERROR_MESSAGES.getExpenseCheckRequired)
 
+      console.log(expense.approvedCost)
+
       if (expense.approvedCost != null) {
+        console.log('Not Null and greater than 1')
+
         FieldValidator(expense.approvedCost, 'approve-cost', errors)
           .isRequired()
           .isCurrency()
           .isGreaterThanZero()
+          .isGreaterThanMinimumClaim()
           .isLessThanMaximumDifferentApprovedAmount()
       }
     })
