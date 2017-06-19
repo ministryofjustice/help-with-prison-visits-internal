@@ -72,7 +72,6 @@ class ClaimDecision {
           .isRequired()
           .isCurrency()
           .isGreaterThanZero()
-          .isGreaterThanMinimumClaim()
           .isLessThanMaximumDifferentApprovedAmount()
       }
     })
