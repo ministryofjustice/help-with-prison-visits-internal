@@ -186,55 +186,6 @@ describe('services/validators/common-validator', function () {
     })
   })
 
-  describe('isGreaterThanMinimumClaim', function () {
-    const VALID_NUMERIC = '2'
-    const VALID_FLOAT = '2.99'
-    const INVALID_NUMERIC = '-2'
-    const INVALID_STRING = 'some invalid string'
-
-    it('should return false if passed null', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(null)
-      expect(result).to.equal(false)
-      done()
-    })
-
-    it('should return false if passed undefined', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(undefined)
-      expect(result).to.equal(false)
-      done()
-    })
-
-    it('should return false if passed an object', function (done) {
-      var result = validator.isGreaterThanMinimumClaim({})
-      expect(result).to.equal(false)
-      done()
-    })
-
-    it('should return true if passed a numeric string that is greater than one', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(VALID_NUMERIC)
-      expect(result).to.equal(true)
-      done()
-    })
-
-    it('should return true if passed a float that is greater than one', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(VALID_FLOAT)
-      expect(result).to.equal(true)
-      done()
-    })
-
-    it('should return false if passed a negative numeric string', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(INVALID_NUMERIC)
-      expect(result).to.equal(false)
-      done()
-    })
-
-    it('should return false if passed a non-numeric string', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(INVALID_STRING)
-      expect(result).to.equal(false)
-      done()
-    })
-  })
-
   describe('isLessThanMaximumDifferentApprovedAmount', function () {
     const VALID_NUMERIC = '20'
     const VALID_FLOAT = '7.99'
