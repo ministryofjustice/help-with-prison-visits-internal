@@ -25,6 +25,10 @@ exports.isGreaterThanOrEqualToZero = function (value) {
   return value >= 0
 }
 
+exports.isGreaterThanMinimumClaim = function (value) {
+  return value > 1
+}
+
 exports.isLessThanMaximumDifferentApprovedAmount = function (value) {
   return value <= parseInt(config.MAX_APPROVED_DIFFERENT_AMOUNT) && value !== null
 }

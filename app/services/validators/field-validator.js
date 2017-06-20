@@ -53,6 +53,13 @@ class FieldValidator {
     return this
   }
 
+  isGreaterThanMinimumClaim () {
+    if (!validator.isGreaterThanMinimumClaim(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.isGreaterThanMinimumClaim)
+    }
+    return this
+  }
+
   isLessThanMaximumDifferentApprovedAmount () {
     if (!validator.isLessThanMaximumDifferentApprovedAmount(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsLessThanMaximumDifferentApprovedAmount)

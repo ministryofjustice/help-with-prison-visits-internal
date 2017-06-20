@@ -10,6 +10,10 @@
   <span class="error-message" id="claim-expenses">{{ errors['claim-expenses'][0] }}</span>
 {% endif %}
 
+{% if errors['total-approved-cost'][0] %}
+<span class="error-message" id="total-approved-cost">{{ errors['total-approved-cost'][0] }}</span>
+{% endif %}
+
 <table class="no-pad-right claim-expense">
   <tbody>
     {% for expense in Expenses %}
@@ -104,7 +108,7 @@
     </tr>
     {% endfor %}
 
-    <tr class="no-border">
+    <tr {% if errors['total-approved-cost'] %} class="warning" {% else %} class="no-border total-approved-cost"{% endif %}>
       <td class="text-left"><h3 class="heading-small space-right">Total approved cost:</h3></td>
       <td><h3 class="heading-small claim-expense-approvedCostText">£0.00</h3></td>
       <td></td>

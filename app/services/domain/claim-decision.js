@@ -17,6 +17,7 @@ class ClaimDecision {
                dwpCheck,
                visitConfirmationCheck,
                claimExpenseResponses,
+               claimDeductionResponses,
                isAdvanceClaim) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
@@ -44,12 +45,16 @@ class ClaimDecision {
         expense.approvedCost = null
       }
     })
+    this.claimDeductionResponses = claimDeductionResponses
     this.isAdvanceClaim = isAdvanceClaim
     this.IsValid()
   }
 
   IsValid () {
     var errors = ErrorHandler()
+    var totalExpenseCost = 0.00
+    var totalDeductionCost = 0.00
+    var total = 0.00
 
     if (this.caseworker === this.assistedDigitalCaseworker) {
       throw new ValidationError({'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim]})
@@ -81,11 +86,21 @@ class ClaimDecision {
       if (expense.status !== claimDecisionEnum.REJECTED) {
         allExpensesRejected = false
       }
+      totalExpenseCost += parseFloat(expense.approvedCost)
     })
 
     if (this.decision === claimDecisionEnum.APPROVED && allExpensesRejected) {
       errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
     }
+
+    this.claimDeductionResponses.forEach(function (deduction) {
+      totalDeductionCost += parseFloat(deduction.Amount)
+    })
+
+    total = totalExpenseCost - totalDeductionCost
+
+    FieldValidator(total, 'total-approved-cost', errors)
+      .isGreaterThanMinimumClaim()
 
     FieldValidator(this.nomisCheck, 'nomis-check', errors)
       .isRequired(ERROR_MESSAGES.getPrisonerCheckRequired)
