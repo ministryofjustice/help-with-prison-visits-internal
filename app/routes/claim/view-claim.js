@@ -30,6 +30,7 @@ const checkUserAssignment = require('../../services/check-user-assignment')
 const Promise = require('bluebird')
 
 var claimExpenses
+var claimDeductions
 
 module.exports = function (router) {
   // GET
@@ -193,27 +194,33 @@ function validatePostRequest (req, res, next, needAssignmentCheck, redirectUrl, 
 }
 
 function submitClaimDecision (req, res, claimExpenses) {
-  var claimDecision = new ClaimDecision(
-    req.user.email,
-    req.body.assistedDigitalCaseworker,
-    req.body.decision,
-    req.body.additionalInfoApprove,
-    req.body.additionalInfoRequest,
-    req.body.additionalInfoReject,
-    req.body.nomisCheck,
-    req.body.dwpCheck,
-    req.body.visitConfirmationCheck,
-    claimExpenses,
-    req.body.isAdvanceClaim
-  )
-  return SubmitClaimResponse(req.params.claimId, claimDecision)
-    .then(function () {
-      if (claimDecision.decision === claimDecisionEnum.APPROVED) {
-        var isTrusted = req.body['is-trusted'] === 'on'
-        var untrustedReason = req.body['untrusted-reason']
+  return getIndividualClaimDetails(req.params.claimId)
+    .then(function (data) {
+      claimDeductions = data.deductions
 
-        return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
-      }
+      var claimDecision = new ClaimDecision(
+      req.user.email,
+      req.body.assistedDigitalCaseworker,
+      req.body.decision,
+      req.body.additionalInfoApprove,
+      req.body.additionalInfoRequest,
+      req.body.additionalInfoReject,
+      req.body.nomisCheck,
+      req.body.dwpCheck,
+      req.body.visitConfirmationCheck,
+      claimExpenses,
+      claimDeductions,
+      req.body.isAdvanceClaim
+      )
+      return SubmitClaimResponse(req.params.claimId, claimDecision)
+        .then(function () {
+          if (claimDecision.decision === claimDecisionEnum.APPROVED) {
+            var isTrusted = req.body['is-trusted'] === 'on'
+            var untrustedReason = req.body['untrusted-reason']
+
+            return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
+          }
+        })
     })
 }
 

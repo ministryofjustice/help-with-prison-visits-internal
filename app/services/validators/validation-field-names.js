@@ -5,6 +5,7 @@ module.exports = {
   'decision': 'Decision',
   'claim-expense': 'Claim expense status',
   'approve-cost': 'New approved cost',
+  'total-approved-cost': 'Total approved cost',
   'nomis-check': 'NOMIS check',
   'dwp-check': 'Benefit check',
   'visit-confirmation-check': 'Visit confirmation check',
