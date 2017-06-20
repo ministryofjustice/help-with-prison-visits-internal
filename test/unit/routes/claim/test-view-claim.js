@@ -26,10 +26,12 @@ var stubUpdateEligibilityTrustedStatus
 var stubUpdateAssignmentOfClaims
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
+const VALID_CLAIMDEDUCTION_DATA = [{Amount: '20.00'}]
 const VALID_CLAIMEXPENSE_DATA = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
 const VALID_DATA_APPROVE = {
   'decision': 'APPROVED',
-  'claimExpenses': VALID_CLAIMEXPENSE_DATA
+  'claimExpenses': VALID_CLAIMEXPENSE_DATA,
+  'claimDeductions': VALID_CLAIMDEDUCTION_DATA
 }
 const VALID_DATA_ADD_DEDUCTION = {
   'add-deduction': 'Submit',
@@ -134,6 +136,7 @@ describe('routes/claim/view-claim', function () {
       stubSubmitClaimResponse.resolves()
       stubClaimDecision.returns(newClaimDecision)
       stubGetClaimExpenseResponses.returns(newClaimExpenseResponse)
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
 
       return supertest(app)
         .post('/claim/123')
@@ -146,6 +149,7 @@ describe('routes/claim/view-claim', function () {
           expect(stubGetClaimExpenseResponses.calledOnce).to.be.true
           expect(stubClaimDecision.calledOnce).to.be.true
           expect(stubSubmitClaimResponse.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
 
@@ -169,6 +173,7 @@ describe('routes/claim/view-claim', function () {
       stubClaimDecision.returns(newClaimDecision)
       stubGetClaimExpenseResponses.returns(newClaimExpenseResponse)
       stubUpdateEligibilityTrustedStatus.resolves()
+      stubGetIndividualClaimDetails.resolves(CLAIM_RETURN)
 
       return supertest(app)
         .post('/claim/123')
@@ -182,6 +187,7 @@ describe('routes/claim/view-claim', function () {
           expect(stubClaimDecision.calledOnce).to.be.true
           expect(stubSubmitClaimResponse.calledOnce).to.be.true
           expect(stubUpdateEligibilityTrustedStatus.calledOnce).to.be.true
+          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true
         })
     })
 

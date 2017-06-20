@@ -52,9 +52,6 @@ class ClaimDecision {
 
   IsValid () {
     var errors = ErrorHandler()
-    var totalExpenseCost = 0.00
-    var totalDeductionCost = 0.00
-    var total = 0.00
 
     if (this.caseworker === this.assistedDigitalCaseworker) {
       throw new ValidationError({'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim]})
@@ -81,6 +78,7 @@ class ClaimDecision {
       }
     })
 
+    var totalExpenseCost = 0.00
     var allExpensesRejected = true
     this.claimExpenseResponses.forEach(function (expense) {
       if (expense.status !== claimDecisionEnum.REJECTED) {
@@ -93,10 +91,12 @@ class ClaimDecision {
       errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
     }
 
+    var totalDeductionCost = 0.00
     this.claimDeductionResponses.forEach(function (deduction) {
       totalDeductionCost += parseFloat(deduction.Amount)
     })
 
+    var total = 0.00
     total = totalExpenseCost - totalDeductionCost
 
     FieldValidator(total, 'total-approved-cost', errors)
