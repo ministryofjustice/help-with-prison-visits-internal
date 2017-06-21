@@ -6,7 +6,7 @@ module.exports = {
   getIsCurrency: function (displayName) { return `${displayName} must be a valid currency` },
   getIsGreaterThan: function (displayName) { return `${displayName} must be greater than zero` },
   getIsGreaterThanOrEqualTo: function (displayName) { return `${displayName} must be greater than or equal to zero` },
-  isGreaterThanMinimumClaim: function (displayName) { return `${displayName} must be greater than one` },
+  isGreaterThanMinimumClaim: function (displayName) { return `${displayName} must be greater than £1` },
   getAssistedDigitalCaseworkerSameClaim: 'You cannot process this claim since you filled it in on behalf of a visitor',
   getUploadTooLarge: 'File uploaded too large',
   getUploadIncorrectType: 'File uploaded was not an image or pdf',
