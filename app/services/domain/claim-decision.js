@@ -99,8 +99,10 @@ class ClaimDecision {
     var total = 0.00
     total = totalExpenseCost - totalDeductionCost
 
-    FieldValidator(total, 'total-approved-cost', errors)
-      .isGreaterThanMinimumClaim()
+    if (this.decision === claimDecisionEnum.APPROVED) {
+      FieldValidator(total, 'total-approved-cost', errors)
+        .isGreaterThanMinimumClaim()
+    }
 
     FieldValidator(this.nomisCheck, 'nomis-check', errors)
       .isRequired(ERROR_MESSAGES.getPrisonerCheckRequired)
