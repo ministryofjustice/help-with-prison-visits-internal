@@ -84,7 +84,10 @@ class ClaimDecision {
       if (expense.status !== claimDecisionEnum.REJECTED) {
         allExpensesRejected = false
       }
-      totalExpenseCost += parseFloat(expense.approvedCost)
+
+      if (expense.approvedCost) {
+        totalExpenseCost += parseFloat(expense.approvedCost)
+      }
     })
 
     if (this.decision === claimDecisionEnum.APPROVED && allExpensesRejected) {
