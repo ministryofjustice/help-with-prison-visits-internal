@@ -12,6 +12,6 @@ module.exports = function (claimId, note, email) {
     .update({'Status': claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, 'LastUpdated': dateFormatter.now().toDate()})
       .then(function (updatedClaimData) {
         var claim = updatedClaimData[0]
-        return insertClaimEvent(claim.Reference, claim.EligibilityId, claimId, claimEventEnum.CLOSE_ADVANCE_CLAIM.value, null, note, email, true)
+        return insertClaimEvent(claim.Reference, claim.EligibilityId, claimId, claimEventEnum.CLOSE_ADVANCE_CLAIM.value, null, note, email, false)
       })
 }
