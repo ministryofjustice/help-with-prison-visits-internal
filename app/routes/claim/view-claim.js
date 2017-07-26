@@ -118,8 +118,9 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/close-advance-claim', function (req, res, next) {
     var needAssignmentCheck = true
+    console.log(req.user.email)
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'])
+      return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'], req.user.email)
     })
   })
 
