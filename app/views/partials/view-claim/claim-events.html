@@ -3,9 +3,6 @@
 <ul class="claim-dialog">
   {% for claimEvent in claimEvents %}
     {% if claimEvent.IsInternal %}<li class="internal">
-      {% if claimEvent.Caseworker %}
-        <h2>{{ claimEvent.Caseworker }}</h2>
-      {% endif %}
       <h2>{{ displayHelper.getClaimEventDisplayName(claimEvent.Event) }}</h2>
 
     {% elif claimEvent.Caseworker %}<li class="caseworker">
