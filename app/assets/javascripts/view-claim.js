@@ -77,6 +77,9 @@ function totalApproved () {
         approvedCost += parseFloat(this.value)
       }
     })
+    $('td.deduction').each(function () {
+      approvedCost += +$(this).text().replace('£', '')
+    })
   }
 
   $('.claim-expense-approvedCostText').text('£' + (approvedCost + manuallyProcessed).toFixed(2))
