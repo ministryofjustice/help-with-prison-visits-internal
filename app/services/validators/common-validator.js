@@ -26,7 +26,7 @@ exports.isGreaterThanOrEqualToZero = function (value) {
 }
 
 exports.isGreaterThanMinimumClaim = function (value) {
-  return value > 1
+  return value >= 0
 }
 
 exports.isLessThanMaximumDifferentApprovedAmount = function (value) {
