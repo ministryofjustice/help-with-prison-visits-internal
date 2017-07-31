@@ -78,7 +78,7 @@ function totalApproved () {
       }
     })
     $('td.deduction').each(function () {
-      approvedCost += +$(this).text().replace('£', '')      
+      approvedCost += +$(this).text().replace('£', '')
     })
   }
 
