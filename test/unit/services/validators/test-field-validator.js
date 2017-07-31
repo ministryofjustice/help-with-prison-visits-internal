@@ -209,7 +209,7 @@ describe('services/validators/field-validator', function () {
 
   describe('isGreaterThanMinimumClaim', function () {
     const VALID_INPUT = '2'
-    const INVALID_INPUT = '0.99'
+    const INVALID_INPUT = '-0.01'
 
     it('should return an error object if passed null', function (done) {
       var errorHandler = ErrorHandler()
@@ -247,7 +247,7 @@ describe('services/validators/field-validator', function () {
       done()
     })
 
-    it('should return an error object if passed a value less than one', function (done) {
+    it('should return an error object if passed a value less than zero', function (done) {
       var errorHandler = ErrorHandler()
       FieldValidator(INVALID_INPUT, FIELD_NAME, errorHandler)
         .isGreaterThanMinimumClaim()
