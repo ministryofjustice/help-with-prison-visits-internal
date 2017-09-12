@@ -2,14 +2,15 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const moment = require('moment')
 const dateFormatter = require('../date-formatter')
+const log = require('../log')
 
 module.exports = function (query, offset, limit) {
-  console.log('get-claim-list-for-search')
+  log.info('get-claim-list-for-search')
 
   query = `%${query}%` // wrap in % for where clause
 
-  console.log('get-claim-list-for-search query')
-  console.log(query)
+  log.info('get-claim-list-for-search query')
+  log.info(query)
 
   return knex('Claim')
     .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')

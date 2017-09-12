@@ -1,14 +1,15 @@
 const authorisation = require('../services/authorisation')
 const getClaimListForSearch = require('../services/data/get-claim-list-for-search')
 const displayHelper = require('../views/helpers/display-helper')
+const log = require('../services/log')
 
 module.exports = function (router) {
   router.get('/search', function (req, res) {
     authorisation.isCaseworker(req)
     var query = req.query.q
 
-    console.log('search GET')
-    console.log(query)
+    log.info('search GET')
+    log.info(query)
 
     return res.render('search', { query: query })
   })
@@ -17,11 +18,11 @@ module.exports = function (router) {
     authorisation.isCaseworker(req)
     var searchQuery = req.query.q || ''
 
-    console.log('search-results GET')
-    console.log(searchQuery)
+    log.info('search-results GET')
+    log.info(searchQuery)
 
     if (!searchQuery) {
-      console.log('search-results IF')
+      log.info('search-results IF')
 
       return res.json({
         draw: 0,
@@ -30,20 +31,20 @@ module.exports = function (router) {
         claims: []
       })
     } else {
-      console.log('search-results ELSE')
+      log.info('search-results ELSE')
 
       getClaimListForSearch(searchQuery, parseInt(req.query.start), parseInt(req.query.length))
         .then(function (data) {
           var claims = data.claims
 
-          console.log('search-results ELSE getClaimListForSearch')
-          console.dir(claims)
+          log.info('search-results ELSE getClaimListForSearch')
+          log.info(claims)
 
           claims.map(function (claim) {
             claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
           })
 
-          console.log('search-results ELSE getClaimListForSearch MAP')
+          log.info('search-results ELSE getClaimListForSearch MAP')
 
           return res.json({
             draw: req.query.draw,
@@ -53,7 +54,7 @@ module.exports = function (router) {
           })
         })
       .catch(function (error) {
-        console.log('search-results ELSE getClaimListForSearch ERROR')
+        log.info('search-results ELSE getClaimListForSearch ERROR')
         res.status(500).send(error)
       })
     }
