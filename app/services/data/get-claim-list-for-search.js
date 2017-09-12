@@ -4,7 +4,13 @@ const moment = require('moment')
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (query, offset, limit) {
+  console.log('get-claim-list-for-search')
+
   query = `%${query}%` // wrap in % for where clause
+
+  console.log('get-claim-list-for-search query')
+  console.log(query)
+
   return knex('Claim')
     .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
     .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
