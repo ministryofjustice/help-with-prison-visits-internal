@@ -7,13 +7,22 @@ module.exports = function (router) {
     authorisation.isCaseworker(req)
     var query = req.query.q
 
+    console.log('search GET')
+    console.log(query)
+
     return res.render('search', { query: query })
   })
 
   router.get('/search-results', function (req, res) {
     authorisation.isCaseworker(req)
     var searchQuery = req.query.q || ''
+
+    console.log('search-results GET')
+    console.log(searchQuery)
+
     if (!searchQuery) {
+      console.log('search-results IF')
+
       return res.json({
         draw: 0,
         recordsTotal: 0,
@@ -21,12 +30,20 @@ module.exports = function (router) {
         claims: []
       })
     } else {
+      console.log('search-results ELSE')
+
       getClaimListForSearch(searchQuery, parseInt(req.query.start), parseInt(req.query.length))
         .then(function (data) {
           var claims = data.claims
+
+          console.log('search-results ELSE getClaimListForSearch')
+          console.dir(claims)
+
           claims.map(function (claim) {
             claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
           })
+
+          console.log('search-results ELSE getClaimListForSearch MAP')
 
           return res.json({
             draw: req.query.draw,
@@ -36,6 +53,7 @@ module.exports = function (router) {
           })
         })
       .catch(function (error) {
+        console.log('search-results ELSE getClaimListForSearch ERROR')
         res.status(500).send(error)
       })
     }
