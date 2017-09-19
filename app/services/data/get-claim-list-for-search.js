@@ -34,6 +34,8 @@ module.exports = function (query, offset, limit) {
         .offset(offset)
         .then(function (claims) {
           claims.forEach(function (claim) {
+            log.info('get-claim-list-for-search claims.forEach')
+            log.info(claim)
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.Name = claim.FirstName + ' ' + claim.LastName
             if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
