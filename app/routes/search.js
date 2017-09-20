@@ -6,7 +6,6 @@ module.exports = function (router) {
   router.get('/search', function (req, res) {
     authorisation.isCaseworker(req)
     var query = req.query.q
-
     return res.render('search', { query: query })
   })
 
@@ -29,7 +28,6 @@ module.exports = function (router) {
           claims.map(function (claim) {
             claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
           })
-
           return res.json({
             draw: req.query.draw,
             recordsTotal: data.total.Count,
