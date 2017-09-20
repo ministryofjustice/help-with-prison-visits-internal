@@ -2,10 +2,8 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const moment = require('moment')
 const dateFormatter = require('../date-formatter')
-const log = require('../log')
 
 module.exports = function (query, offset, limit) {
-
   query = `%${query}%` // wrap in % for where clause
 
   return knex('Claim')
@@ -36,7 +34,7 @@ module.exports = function (query, offset, limit) {
             }
             claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
           })
-          return {claims: claims.slice(0,limit), total: count[0]}
+          return {claims: claims.slice(0, limit), total: count[0]}
         })
     })
 }
