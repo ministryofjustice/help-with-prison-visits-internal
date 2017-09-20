@@ -5,12 +5,8 @@ const dateFormatter = require('../date-formatter')
 const log = require('../log')
 
 module.exports = function (query, offset, limit) {
-  log.info('get-claim-list-for-search')
 
   query = `%${query}%` // wrap in % for where clause
-
-  log.info('get-claim-list-for-search query')
-  log.info(query)
 
   return knex('Claim')
     .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
@@ -30,7 +26,6 @@ module.exports = function (query, offset, limit) {
         .orWhere('Prisoner.PrisonNumber', 'like', query)
         .select('Claim.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Claim.ClaimType', 'Claim.ClaimId', 'Claim.AssignedTo', 'Claim.AssignmentExpiry')
         .orderBy('Claim.DateSubmitted', 'asc')
-        .limit(limit)
         .offset(offset)
         .then(function (claims) {
           claims.forEach(function (claim) {
@@ -41,7 +36,7 @@ module.exports = function (query, offset, limit) {
             }
             claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
           })
-          return {claims: claims, total: count[0]}
+          return {claims: claims.slice(0,limit), total: count[0]}
         })
     })
 }
