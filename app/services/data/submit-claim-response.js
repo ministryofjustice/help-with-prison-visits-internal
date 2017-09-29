@@ -7,7 +7,7 @@ const paymentMethodEnum = require('../../constants/payment-method-enum')
 const insertClaimEvent = require('./insert-claim-event')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 const updateRelatedClaimRemainingOverpaymentAmount = require('./update-related-claims-remaining-overpayment-amount')
-const log = require('../log');
+const log = require('../log')
 
 module.exports = function (claimId, claimDecision) {
   return knex('Claim').where('ClaimId', claimId)
@@ -56,7 +56,7 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
   }
 
   return knex('Claim').where('ClaimId', claimId).update(updateObject).then(
-    log.info('Claim ID ' + claimId +  ' Closed with Status: ' +updateObject.Status)
+    log.info('Claim ID ' + claimId + ' Closed with Status: ' + updateObject.Status)
   )
 }
 
