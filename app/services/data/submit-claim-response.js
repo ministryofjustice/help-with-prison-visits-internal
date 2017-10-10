@@ -25,21 +25,21 @@ module.exports = function (claimId, claimDecision) {
       var allExpensesManuallyProcessed = areAllExpensesManuallyProcessed(claimDecision.claimExpenseResponses)
 
       return Promise.all([updateEligibility(eligibilityId, decision),
-      updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed),
-      updateVisitor(eligibilityId, dwpCheck),
-      updatePrisoner(eligibilityId, nomisCheck),
-      updateClaimExpenses(claimDecision.claimExpenseResponses),
-      insertClaimEventForDecision(reference, eligibilityId, claimId, decision, note, caseworker),
-      updateRemainingOverpaymentAmounts(claimId, reference, decision),
-      sendClaimNotification(reference, eligibilityId, claimId, decision)])
+        updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed),
+        updateVisitor(eligibilityId, dwpCheck),
+        updatePrisoner(eligibilityId, nomisCheck),
+        updateClaimExpenses(claimDecision.claimExpenseResponses),
+        insertClaimEventForDecision(reference, eligibilityId, claimId, decision, note, caseworker),
+        updateRemainingOverpaymentAmounts(claimId, reference, decision),
+        sendClaimNotification(reference, eligibilityId, claimId, decision)])
     })
 }
 
-function updateEligibility(eligibilityId, decision) {
+function updateEligibility (eligibilityId, decision) {
   return knex('Eligibility').where('EligibilityId', eligibilityId).update('Status', decision)
 }
 
-function updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed) {
+function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed) {
   var updateObject = {}
   if (decision === claimDecisionEnum.APPROVED) {
     updateObject = {
@@ -87,15 +87,15 @@ function updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck
   )
 }
 
-function updateVisitor(eligibilityId, dwpCheck) {
+function updateVisitor (eligibilityId, dwpCheck) {
   return knex('Visitor').where('EligibilityId', eligibilityId).update('DWPCheck', dwpCheck)
 }
 
-function updatePrisoner(eligibilityId, nomisCheck) {
+function updatePrisoner (eligibilityId, nomisCheck) {
   return knex('Prisoner').where('EligibilityId', eligibilityId).update('NomisCheck', nomisCheck)
 }
 
-function updateClaimExpenses(claimExpenseResponses) {
+function updateClaimExpenses (claimExpenseResponses) {
   var updates = []
   if (claimExpenseResponses) {
     claimExpenseResponses.forEach(function (claimExpenseResponse) {
@@ -105,19 +105,19 @@ function updateClaimExpenses(claimExpenseResponses) {
   return Promise.all(updates)
 }
 
-function updateClaimExpense(claimExpenseResponse) {
+function updateClaimExpense (claimExpenseResponse) {
   return knex('ClaimExpense').where('ClaimExpenseId', claimExpenseResponse.claimExpenseId).update({
     'ApprovedCost': claimExpenseResponse.approvedCost,
     'Status': claimExpenseResponse.status
   })
 }
 
-function insertClaimEventForDecision(reference, eligibilityId, claimId, decision, note, caseworker) {
+function insertClaimEventForDecision (reference, eligibilityId, claimId, decision, note, caseworker) {
   const event = `CLAIM-${decision}`
   return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, caseworker, false)
 }
 
-function updateRemainingOverpaymentAmounts(claimId, reference, decision) {
+function updateRemainingOverpaymentAmounts (claimId, reference, decision) {
   if (decision === claimDecisionEnum.APPROVED) {
     return updateRelatedClaimRemainingOverpaymentAmount(claimId, reference)
   } else {
@@ -125,7 +125,7 @@ function updateRemainingOverpaymentAmounts(claimId, reference, decision) {
   }
 }
 
-function sendClaimNotification(reference, eligibilityId, claimId, decision) {
+function sendClaimNotification (reference, eligibilityId, claimId, decision) {
   var notificationType
   if (decision === claimDecisionEnum.APPROVED) {
     notificationType = tasksEnum.ACCEPT_CLAIM_NOTIFICATION
@@ -138,7 +138,7 @@ function sendClaimNotification(reference, eligibilityId, claimId, decision) {
   return insertTaskSendClaimNotification(notificationType, reference, eligibilityId, claimId)
 }
 
-function areAllExpensesManuallyProcessed(claimExpenseResponses) {
+function areAllExpensesManuallyProcessed (claimExpenseResponses) {
   var result = true
 
   claimExpenseResponses.forEach(function (claimExpenseResponse) {
