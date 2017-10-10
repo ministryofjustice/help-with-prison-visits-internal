@@ -6,5 +6,5 @@ const dateFormatter = require('../date-formatter')
 module.exports = function (reference, claimId) {
   return knex('Claim')
     .where({'Reference': reference, 'ClaimId': claimId})
-    .update({ 'Status': claimStatusEnum.REQUEST_INFO_PAYMENT.value, 'PaymentStatus': null, 'LastUpdated': dateFormatter.now().toDate() })
+    .update({ 'Status': claimStatusEnum.REQUEST_INFO_PAYMENT.value, 'PaymentStatus': null, 'LastUpdated': dateFormatter.now().toDate(), 'DateApproved': null})
 }
