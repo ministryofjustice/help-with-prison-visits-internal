@@ -53,7 +53,7 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
       'LastUpdated': dateFormatter.now().toDate(),
       'DateApproved': dateFormatter.now().toDate()
     }
-  } else if (decision === claimDecisionEnum.REJECTED) {
+  } else if (decision === claimDecisionEnum.REJECTED || decision === claimDecisionEnum.REQUEST_INFORMATION) {
     updateObject = {
       'Caseworker': caseworker,
       'Status': decision,
