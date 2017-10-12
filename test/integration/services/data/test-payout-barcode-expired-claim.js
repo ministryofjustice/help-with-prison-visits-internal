@@ -30,6 +30,7 @@ describe('services/data/payout-barcode-expired-claim', function () {
           return knex('Claim').first().where('ClaimId', claimId)
             .then(function (claim) {
               expect(claim.Status).to.equal(claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value)
+              expect(claim.DateApproved).to.be.null
               expect(claim.lastUpdated).to.not.equal(previousLastUpdated)
               return knex('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
             })

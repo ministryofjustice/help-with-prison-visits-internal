@@ -40,15 +40,42 @@ function updateEligibility (eligibilityId, decision) {
 }
 
 function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed) {
-  var updateObject = {
-    'Caseworker': caseworker,
-    'Status': decision,
-    'Note': note,
-    'VisitConfirmationCheck': visitConfirmationCheck,
-    'DateReviewed': dateFormatter.now().toDate(),
-    'AssignedTo': null, // clear assignment
-    'AssignmentExpiry': null,
-    'LastUpdated': dateFormatter.now().toDate()
+  var updateObject = {}
+  if (decision === claimDecisionEnum.APPROVED) {
+    updateObject = {
+      'Caseworker': caseworker,
+      'Status': decision,
+      'Note': note,
+      'VisitConfirmationCheck': visitConfirmationCheck,
+      'DateReviewed': dateFormatter.now().toDate(),
+      'AssignedTo': null, // clear assignment
+      'AssignmentExpiry': null,
+      'LastUpdated': dateFormatter.now().toDate(),
+      'DateApproved': dateFormatter.now().toDate()
+    }
+  } else if (decision === claimDecisionEnum.REJECTED || decision === claimDecisionEnum.REQUEST_INFORMATION) {
+    updateObject = {
+      'Caseworker': caseworker,
+      'Status': decision,
+      'Note': note,
+      'VisitConfirmationCheck': visitConfirmationCheck,
+      'DateReviewed': dateFormatter.now().toDate(),
+      'AssignedTo': null, // clear assignment
+      'AssignmentExpiry': null,
+      'LastUpdated': dateFormatter.now().toDate(),
+      'DateApproved': null
+    }
+  } else {
+    updateObject = {
+      'Caseworker': caseworker,
+      'Status': decision,
+      'Note': note,
+      'VisitConfirmationCheck': visitConfirmationCheck,
+      'DateReviewed': dateFormatter.now().toDate(),
+      'AssignedTo': null, // clear assignment
+      'AssignmentExpiry': null,
+      'LastUpdated': dateFormatter.now().toDate()
+    }
   }
 
   if (allExpensesManuallyProcessed) {

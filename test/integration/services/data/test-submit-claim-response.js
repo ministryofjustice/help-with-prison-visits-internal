@@ -114,6 +114,75 @@ describe('services/data/submit-claim-response', function () {
       })
   })
 
+  it('should add a DateApproved if claim is approved', function () {
+    var claimId = newIds.claimId
+    var claimResponse = {
+      'caseworker': caseworker,
+      'decision': claimDecisionEnum.APPROVED,
+      'nomisCheck': claimDecisionEnum.APPROVED,
+      'dwpCheck': claimDecisionEnum.APPROVED,
+      'claimExpenseResponses': [
+        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.APPROVED},
+        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.APPROVED}
+      ]
+    }
+
+    return submitClaimResponse(claimId, claimResponse)
+      .then(function (result) {
+        return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+          .first()
+          .then(function (result) {
+            expect(result.DateApproved).not.to.be.null
+          })
+      })
+  })
+
+  it('should set DateApproved to null if claim is rejected', function () {
+    var claimId = newIds.claimId
+    var claimResponse = {
+      'caseworker': caseworker,
+      'decision': claimDecisionEnum.REJECTED,
+      'nomisCheck': claimDecisionEnum.REJECTED,
+      'dwpCheck': claimDecisionEnum.REJECTED,
+      'claimExpenseResponses': [
+        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REJECTED},
+        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REJECTED}
+      ]
+    }
+
+    return submitClaimResponse(claimId, claimResponse)
+      .then(function (result) {
+        return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+          .first()
+          .then(function (result) {
+            expect(result.DateApproved).to.be.null
+          })
+      })
+  })
+
+  it('should set DateApproved to null if caseworker requests more information', function () {
+    var claimId = newIds.claimId
+    var claimResponse = {
+      'caseworker': caseworker,
+      'decision': claimDecisionEnum.REQUEST_INFORMATION,
+      'nomisCheck': claimDecisionEnum.REQUEST_INFORMATION,
+      'dwpCheck': claimDecisionEnum.REQUEST_INFORMATION,
+      'claimExpenseResponses': [
+        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REQUEST_INFORMATION},
+        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
+      ]
+    }
+
+    return submitClaimResponse(claimId, claimResponse)
+      .then(function (result) {
+        return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+          .first()
+          .then(function (result) {
+            expect(result.DateApproved).to.be.null
+          })
+      })
+  })
+
   it('should set payment method to manually processed if all claim expenses have been manually processed', function () {
     var claimId = newIds.claimId
     var claimResponse = {
