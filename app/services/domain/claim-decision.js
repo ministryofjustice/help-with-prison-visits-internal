@@ -65,6 +65,11 @@ class ClaimDecision {
         .isRequired(ERROR_MESSAGES.getAdditionalInformationRequired)
     }
 
+    if (this.note) {
+      FieldValidator(this.note, noteId, errors)
+        .isLessThanLength(2000)
+    }
+
     this.claimExpenseResponses.forEach(function (expense) {
       FieldValidator(expense.status, 'claim-expenses', errors)
         .isRequired(ERROR_MESSAGES.getExpenseCheckRequired)

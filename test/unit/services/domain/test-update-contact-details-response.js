@@ -41,7 +41,7 @@ describe('services/domain/update-contact-details-response', function () {
       expect.fail()
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['PhoneNumber']).to.contain('Phone number must be shorter than 20 characters')
+      expect(e.validationErrors['PhoneNumber']).to.contain('Phone number must be 20 characters or shorter')
     }
   })
 })

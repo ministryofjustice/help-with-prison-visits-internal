@@ -81,6 +81,20 @@ class FieldValidator {
     }
     return this
   }
+
+  isInteger () {
+    if (!validator.isInteger(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getIsIntegerFormat)
+    }
+    return this
+  }
+
+  isMaxIntOrLess () {
+    if (!validator.isMaxIntOrLess(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getValueIsTooLarge)
+    }
+    return this
+  }
 }
 
 module.exports = function (data, fieldName, errors) {

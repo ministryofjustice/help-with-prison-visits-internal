@@ -2,7 +2,7 @@
 <h1 class="table-heading">Deduction</h1>
 <table>
   <tbody>
-    <tr>
+    <tr {% if errors['deductionType'][0] or errors['deductionAmount'][0] %} class="warning" {% endif %}>
       <td>
         Type: <select id="deductionType" name="deductionType" class="form-control">
           <option selected>Select</option>

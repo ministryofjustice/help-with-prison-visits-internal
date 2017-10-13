@@ -32,6 +32,10 @@ module.exports = function (claim, overpaymentResponse) {
     updateClaim.RemainingOverpaymentAmount = overpaymentResponse.remaining
   }
 
+  if(updateClaim.OverpaymentReason > 250) {
+    updateClaim.OverpaymentReason = updateClaim.OverpaymentReason.substring(0, 250);
+  }
+
   return knex('Claim')
     .where('ClaimId', claim.ClaimId)
     .update(updateClaim)

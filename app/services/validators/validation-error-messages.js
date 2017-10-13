@@ -21,5 +21,7 @@ module.exports = {
   getUserAssignmentConflict: function (user) { return `This claim has been assigned to ${user}` },
   getUserNotAssigned: function () { return 'You have not assigned yourself to this claim' },
   getIsValidFormat: function (displayName) { return `${displayName} must have valid format` },
-  getIsLessThanLengthMessage: function (displayName, options) { return `${displayName} must be shorter than ${options.length} characters` }
+  getIsLessThanLengthMessage: function (displayName, options) { return `${displayName} must be ${options.length} characters or shorter` },
+  getIsIntegerFormat: function (displayName) { return `${displayName} must be a whole number` },
+  getValueIsTooLarge: function (displayName) { return `${displayName} value is too large for this field` }
 }
