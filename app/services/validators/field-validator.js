@@ -2,7 +2,6 @@ const validator = require('./common-validator')
 const ERROR_MESSAGES = require('./validation-error-messages')
 
 class FieldValidator {
-
   /**
    * Build a validator for validating fields.
    * @param data A single element to validate.

@@ -45,4 +45,3 @@ describe('services/data/get-direct-payment-files', function () {
     })
   })
 })
-

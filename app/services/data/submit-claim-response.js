@@ -78,8 +78,8 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
     }
   }
 
-  if(updateObject.Note.length > 250) {
-    updateObject.Note = updateObject.Note.substring(0, 250);
+  if (updateObject.Note.length > 250) {
+    updateObject.Note = updateObject.Note.substring(0, 250)
   }
 
   if (allExpensesManuallyProcessed) {
