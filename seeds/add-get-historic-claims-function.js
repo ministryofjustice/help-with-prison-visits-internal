@@ -33,7 +33,8 @@ exports.seed = function (knex, Promise) {
                 Claim.VisitConfirmationCheck,
                 Claim.IsAdvanceClaim,
                 Prisoner.NomisCheck,
-                Claim.DateSubmitted
+                Claim.DateSubmitted,
+                Visitor.DWPBenefitCheckerResult
               FROM IntSchema.Claim AS Claim
                 JOIN IntSchema.Visitor AS Visitor ON Visitor.EligibilityId = Claim.EligibilityId
                 JOIN IntSchema.Prisoner AS Prisoner ON Prisoner.EligibilityId = Claim.EligibilityId
