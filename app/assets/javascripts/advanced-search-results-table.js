@@ -34,6 +34,8 @@ $(document).ready(function () {
         {'data': 'Reference', 'render': cleanColumnOutput},
         {'data': 'Name', 'render': cleanColumnOutput},
         {'data': 'DateSubmittedFormatted'},
+        {'data': 'DateOfJourneyFormatted'},
+        {'data': 'DisplayStatus'},
         {'data': 'ClaimType',
           'createdCell': function (td, cellData, rowData, row, col) {
             $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
@@ -49,7 +51,7 @@ $(document).ready(function () {
 
       columnDefs: [
         {
-          'targets': [0, 1, 2, 3, 4, 5],
+          'targets': [0, 1, 2, 3, 4, 5, 6, 7],
           'visible': true,
           'searchable': false,
           'orderable': false
