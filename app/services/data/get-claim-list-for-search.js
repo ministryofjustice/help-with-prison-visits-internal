@@ -2,6 +2,7 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const moment = require('moment')
 const dateFormatter = require('../date-formatter')
+const statusFormatter = require('../claim-status-formatter')
 
 module.exports = function (query, offset, limit) {
   query = `%${query}%` // wrap in % for where clause
@@ -22,12 +23,14 @@ module.exports = function (query, offset, limit) {
         .orWhere('Visitor.NationalInsuranceNumber', 'like', query)
         .orWhereRaw(`CONCAT(Visitor.FirstName, ' ', Visitor.LastName) like '${query}'`)
         .orWhere('Prisoner.PrisonNumber', 'like', query)
-        .select('Claim.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Claim.ClaimType', 'Claim.ClaimId', 'Claim.AssignedTo', 'Claim.AssignmentExpiry')
+        .select('Claim.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Claim.ClaimType', 'Claim.ClaimId', 'Claim.AssignedTo', 'Claim.AssignmentExpiry', 'Claim.Status')
         .orderBy('Claim.DateSubmitted', 'asc')
         .offset(offset)
         .then(function (claims) {
           claims.forEach(function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
+            claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+            claim.DisplayStatus = statusFormatter(claim.Status)
             claim.Name = claim.FirstName + ' ' + claim.LastName
             if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
               claim.AssignedTo = null
