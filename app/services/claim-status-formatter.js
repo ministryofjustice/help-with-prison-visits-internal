@@ -2,12 +2,14 @@ module.exports = function (status) {
   var displayStatus = ''
   switch (status) {
     case 'APPROVED':
-    case 'AUTO-APPROVED':
     case 'REJECTED':
     case 'UPDATED':
     case 'PENDING':
     case 'NEW':
       displayStatus = status.charAt(0) + status.slice(1).toLowerCase()
+      break
+    case 'AUTO-APPROVED':
+      displayStatus = 'Auto-Approved'
       break
     case 'APPROVED-ADVANCE-CLOSED':
       displayStatus = 'Closed'
