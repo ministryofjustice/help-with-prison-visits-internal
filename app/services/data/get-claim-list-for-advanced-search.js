@@ -4,6 +4,7 @@ const moment = require('moment')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const rulesEnum = require('../../../app/constants/region-rules-enum')
 const dateFormatter = require('../date-formatter')
+const statusFormatter = require('../claim-status-formatter')
 
 const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value ]
 const IN_PROGRESS_STATUS_VALUES = [ claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value ]
@@ -44,7 +45,8 @@ const ADVANCED_SEARCH_FIELDS = [
   'Claim.ClaimType',
   'Claim.ClaimId',
   'Claim.AssignedTo',
-  'Claim.AssignmentExpiry'
+  'Claim.AssignmentExpiry',
+  'Claim.Status'
 ]
 const EXPORT_CLAIMS_FIELDS = [
   'Visitor.FirstName',
@@ -207,6 +209,8 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
         .then(function (claims) {
           claims.forEach(function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
+            claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+            claim.DisplayStatus = statusFormatter(claim.Status)
             claim.Name = claim.FirstName + ' ' + claim.LastName
             if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
               claim.AssignedTo = null

@@ -53,7 +53,7 @@
       {% endif %}
       <br/>
 
-      {% if displayHelper.getBenefitRequireUpload(Claim['Benefit']) %}
+      {% if displayHelper.getBenefitRequireUpload(Claim['Benefit']) or Claim.benefitDocument.length > 0 %}
       {% for document in Claim.benefitDocument %}
         <br>
         {% if document['DocumentStatus'] == 'uploaded' %}
