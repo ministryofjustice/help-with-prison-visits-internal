@@ -5,6 +5,7 @@ const config = require('../../../config')
  */
 const validator = require('validator')
 const SQL_MAX_INT = 2147483647
+const SQL_DEC_8_COMMA_2 = 999999.99
 
 exports.isNullOrUndefined = function (value) {
   return !value
@@ -48,4 +49,8 @@ exports.isInteger = function (value) {
 
 exports.isMaxIntOrLess = function (value) {
   return value <= SQL_MAX_INT
+}
+
+exports.isMaxCostOrLess = function (value) {
+  return value <= SQL_DEC_8_COMMA_2
 }

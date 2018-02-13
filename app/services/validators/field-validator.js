@@ -94,6 +94,13 @@ class FieldValidator {
     }
     return this
   }
+
+  isMaxCostOrLess () {
+    if (!validator.isMaxCostOrLess(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getValueIsTooLarge)
+    }
+    return this
+  }
 }
 
 module.exports = function (data, fieldName, errors) {
