@@ -75,5 +75,13 @@ module.exports.getPaymentMethodDisplayName = function (paymentMethodValue) {
 }
 
 module.exports.toDecimal = function (value) {
-  return `${Number(value).toFixed(2)}`
+  if (value !== null) {
+    if (value.toString().indexOf("e") === -1 && value.toString().indexOf("E") === -1) {
+      return `${Number(value).toFixed(2)}`
+    } else {
+      return value
+    }
+  } else {
+    return value
+  }
 }

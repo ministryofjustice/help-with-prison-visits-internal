@@ -75,7 +75,8 @@ module.exports = function (router) {
     var needAssignmentCheck = true
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       var deductionType = req.body.deductionType
-      var amount = Number(req.body.deductionAmount).toFixed(2)
+      // var amount = Number(req.body.deductionAmount).toFixed(2)
+      var amount = req.body.deductionAmount
       var claimDeduction = new ClaimDeduction(deductionType, amount)
       claimExpenses = getClaimExpenseResponses(req.body)
 

@@ -63,7 +63,7 @@ function totalApproved () {
 
   if ($('#unassign').length) {
     $('input.approved-amount').each(function () {
-      if (!isNaN(this.value) && this.value.length !== 0) {
+      if (!isNaN(this.value) && this.value.length !== 0 && this.value.indexOf("e") === -1 && this.value.indexOf("E") === -1) {
         manuallyProcessed += parseFloat(this.value)
       }
     })
