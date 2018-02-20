@@ -19,7 +19,7 @@ class ClaimDeduction {
       .isRequired()
       .isCurrency()
       .isGreaterThanZero()
-      .isMaxIntOrLess()
+      .isMaxCostOrLess()
 
     var validationErrors = errors.get()
 

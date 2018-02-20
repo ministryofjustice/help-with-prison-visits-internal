@@ -26,7 +26,7 @@ class OverpaymentResponse {
         .isRequired()
         .isGreaterThanZero()
         .isCurrency()
-        .isMaxIntOrLess()
+        .isMaxCostOrLess()
     }
 
     FieldValidator(this.reason, 'reason', errors)
