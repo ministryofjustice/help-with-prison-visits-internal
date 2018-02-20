@@ -37,13 +37,13 @@ class AutoApprovalConfig {
       .isRequired()
       .isNumeric()
       .isGreaterThanZero()
-      .isMaxIntOrLess()
+      .isMaxCostOrLess()
 
     FieldValidator(this.maxClaimTotal, 'max-claim-total', errors)
       .isRequired()
       .isNumeric()
       .isGreaterThanZero()
-      .isMaxIntOrLess()
+      .isMaxCostOrLess()
 
     FieldValidator(this.maxDaysAfterAPVUVisit, 'max-days-after-apvu-visit', errors)
       .isRequired()
