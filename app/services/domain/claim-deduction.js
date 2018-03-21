@@ -12,13 +12,14 @@ class ClaimDeduction {
   IsValid () {
     var errors = ErrorHandler()
 
-    FieldValidator(this.deductionType, 'deduction-type', errors)
+    FieldValidator(this.deductionType, 'deductionType', errors)
       .isRequired()
 
-    FieldValidator(this.amount, 'deduction-amount', errors)
+    FieldValidator(this.amount, 'deductionAmount', errors)
       .isRequired()
       .isCurrency()
       .isGreaterThanZero()
+      .isMaxCostOrLess()
 
     var validationErrors = errors.get()
 

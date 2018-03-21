@@ -4,6 +4,8 @@ const config = require('../../../config')
  * three higher level validators: FieldValidator, FieldSetValidator, and UrlPathValidator.
  */
 const validator = require('validator')
+const SQL_MAX_INT = 2147483647
+const SQL_DEC_8_COMMA_2 = 999999.99
 
 exports.isNullOrUndefined = function (value) {
   return !value
@@ -39,4 +41,16 @@ exports.isEmail = function (value) {
 
 exports.isLessThanLength = function (value, length) {
   return validator.isLength(value, { max: length })
+}
+
+exports.isInteger = function (value) {
+  return validator.isInt(value)
+}
+
+exports.isMaxIntOrLess = function (value) {
+  return value <= SQL_MAX_INT
+}
+
+exports.isMaxCostOrLess = function (value) {
+  return value <= SQL_DEC_8_COMMA_2
 }

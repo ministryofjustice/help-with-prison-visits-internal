@@ -20,7 +20,7 @@
 
       <div class="form-group">
         <label class="form-label-bold" for="additional-info-accept">Note to claimant (optional)</label>
-        <textarea type="text" class="form-control" id="additional-info-approve" name="additionalInfoApprove">{{ claimDecision['additionalInfoApprove'] }}</textarea>
+        <textarea type="text" class="form-control" id="additional-info-approve" name="additionalInfoApprove" maxlength="2000">{{ claimDecision['additionalInfoApprove'] }}</textarea>
       </div>
 
       <div class="form-group">
@@ -32,7 +32,7 @@
           <br >
           <label class='form-label-bold'>Why aren’t you allowing auto-approval?</label>
           <span class="text-secondary">The claimant won’t see this</span>
-          <textarea type="text" class='form-control ' name="untrusted-reason" id='untrusted-reason'></textarea>
+          <textarea type="text" class='form-control ' name="untrusted-reason" id='untrusted-reason' maxlength="2000"></textarea>
         </div>
       </div>
 
@@ -46,7 +46,7 @@
         {% if errors['additional-info-request'][0] %}
           <span class="error-message" id="error-message-note-request">{{ errors['additional-info-request'][0] }}</span>
         {% endif %}
-        <textarea type="text" class="form-control" id="additional-info-request" name="additionalInfoRequest">{{ claimDecision['additionalInfoRequest'] }}</textarea>
+        <textarea type="text" class="form-control" id="additional-info-request" name="additionalInfoRequest" maxlength="2000">{{ claimDecision['additionalInfoRequest'] }}</textarea>
       </div>
 
       <input type="submit" class="button" name="request" value="Send request email">
@@ -59,7 +59,7 @@
         {% if errors['additional-info-reject'][0] %}
           <span class="error-message" id="error-message-note-reject">{{ errors['additional-info-reject'][0] }}</span>
         {% endif %}
-        <textarea type="text" class="form-control" id="additional-info-reject" name="additionalInfoReject">{{ claimDecision['additionalInfoReject'] }}</textarea>
+        <textarea type="text" class="form-control" id="additional-info-reject" name="additionalInfoReject" maxlength="2000">{{ claimDecision['additionalInfoReject'] }}</textarea>
       </div>
 
       <input type="submit" class="button" name="reject" value="Send rejection email">

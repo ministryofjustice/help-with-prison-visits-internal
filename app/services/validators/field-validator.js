@@ -2,7 +2,6 @@ const validator = require('./common-validator')
 const ERROR_MESSAGES = require('./validation-error-messages')
 
 class FieldValidator {
-
   /**
    * Build a validator for validating fields.
    * @param data A single element to validate.
@@ -78,6 +77,27 @@ class FieldValidator {
     var message = (!specificMessage) ? ERROR_MESSAGES.getIsLessThanLengthMessage : specificMessage
     if (!validator.isLessThanLength(this.data, length)) {
       this.errors.add(this.fieldName, message, { length: length })
+    }
+    return this
+  }
+
+  isInteger () {
+    if (!validator.isInteger(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getIsIntegerFormat)
+    }
+    return this
+  }
+
+  isMaxIntOrLess () {
+    if (!validator.isMaxIntOrLess(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getValueIsTooLarge)
+    }
+    return this
+  }
+
+  isMaxCostOrLess () {
+    if (!validator.isMaxCostOrLess(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getValueIsTooLarge)
     }
     return this
   }
