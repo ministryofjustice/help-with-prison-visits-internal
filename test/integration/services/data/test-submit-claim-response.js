@@ -121,6 +121,7 @@ describe('services/data/submit-claim-response', function () {
       'decision': claimDecisionEnum.APPROVED,
       'nomisCheck': claimDecisionEnum.APPROVED,
       'dwpCheck': claimDecisionEnum.APPROVED,
+      'note': '',
       'claimExpenseResponses': [
         {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.APPROVED},
         {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.APPROVED}
@@ -144,6 +145,7 @@ describe('services/data/submit-claim-response', function () {
       'decision': claimDecisionEnum.REJECTED,
       'nomisCheck': claimDecisionEnum.REJECTED,
       'dwpCheck': claimDecisionEnum.REJECTED,
+      'note': '',
       'claimExpenseResponses': [
         {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REJECTED},
         {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REJECTED}
@@ -167,6 +169,7 @@ describe('services/data/submit-claim-response', function () {
       'decision': claimDecisionEnum.REQUEST_INFORMATION,
       'nomisCheck': claimDecisionEnum.REQUEST_INFORMATION,
       'dwpCheck': claimDecisionEnum.REQUEST_INFORMATION,
+      'note': '',
       'claimExpenseResponses': [
         {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REQUEST_INFORMATION},
         {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
