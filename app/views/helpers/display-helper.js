@@ -82,6 +82,6 @@ module.exports.toDecimal = function (value) {
       return value
     }
   } else {
-    return value
+    return `${Number(value).toFixed(2)}`
   }
 }

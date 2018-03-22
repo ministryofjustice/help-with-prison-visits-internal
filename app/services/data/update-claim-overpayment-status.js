@@ -24,15 +24,16 @@ module.exports = function (claim, overpaymentResponse) {
     updateClaim.OverpaymentAmount = overpaymentResponse.amount
     updateClaim.RemainingOverpaymentAmount = overpaymentResponse.amount
     updateClaim.OverpaymentReason = overpaymentResponse.reason
-    if (updateClaim.OverpaymentReason > 250) {
-      updateClaim.OverpaymentReason = updateClaim.OverpaymentReason.substring(0, 250)
-    }
   } else if (toBeResolved) {
     updateClaim.RemainingOverpaymentAmount = overpaymentResponse.remaining
   } else if (toBeUpdated) {
     note = buildUpdateNote(claim.RemainingOverpaymentAmount, overpaymentResponse.remaining, overpaymentResponse.reason)
 
     updateClaim.RemainingOverpaymentAmount = overpaymentResponse.remaining
+  }
+
+  if (updateClaim.OverpaymentReason > 250) {
+    updateClaim.OverpaymentReason = updateClaim.OverpaymentReason.substring(0, 250)
   }
 
   return knex('Claim')
