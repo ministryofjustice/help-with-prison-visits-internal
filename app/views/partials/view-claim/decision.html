@@ -55,11 +55,18 @@
     <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.REJECTED %}js-hidden{% endif %}" id="reject-input">
 
       <div class="form-group">
-        <label class="form-label-bold {% if errors['additional-info-reject'][0] %} error {% endif %}" for="additional-info-reject">Note to claimant</label>
+        <label class="form-label-bold {% if errors['additional-info-reject'][0] %} error {% endif %}" for="additional-info-reject">Reason For Rejection</label>
         {% if errors['additional-info-reject'][0] %}
           <span class="error-message" id="error-message-note-reject">{{ errors['additional-info-reject'][0] }}</span>
         {% endif %}
-        <textarea type="text" class="form-control" id="additional-info-reject" name="additionalInfoReject" maxlength="2000">{{ claimDecision['additionalInfoReject'] }}</textarea>
+        <select class="form-control rejection-reason" id="additional-info-reject" name="additionalInfoReject">
+          <option value="">Select</option>
+          {% for reason in rejectionReasons %}
+            {% if reason.enabled %}
+              <option value="{{ reason.reason }}" {% if selectedRejectReason === reason.reason %} selected {% endif %}>{{ reason.reason }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
       </div>
 
       <input type="submit" class="button" name="reject" value="Send rejection email">

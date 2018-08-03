@@ -28,6 +28,8 @@ const claimDecisionEnum = require('../../../app/constants/claim-decision-enum')
 const updateAssignmentOfClaims = require('../../services/data/update-assignment-of-claims')
 const checkUserAssignment = require('../../services/check-user-assignment')
 const Promise = require('bluebird')
+const getRejectionReasons = require('../../services/data/get-rejection-reasons')
+const getRejectionReasonId = require('../../services/data/get-rejection-reason-id')
 
 var claimExpenses
 var claimDeductions
@@ -198,29 +200,32 @@ function submitClaimDecision (req, res, claimExpenses) {
   return getIndividualClaimDetails(req.params.claimId)
     .then(function (data) {
       claimDeductions = data.deductions
+      return getRejectionReasonId(req.body.additionalInfoReject)
+        .then(function (rejectionReasonId) {
+          var claimDecision = new ClaimDecision(
+            req.user.email,
+            req.body.assistedDigitalCaseworker,
+            req.body.decision,
+            req.body.additionalInfoApprove,
+            req.body.additionalInfoRequest,
+            req.body.additionalInfoReject,
+            req.body.nomisCheck,
+            req.body.dwpCheck,
+            req.body.visitConfirmationCheck,
+            claimExpenses,
+            claimDeductions,
+            req.body.isAdvanceClaim,
+            rejectionReasonId
+            )
+            return SubmitClaimResponse(req.params.claimId, claimDecision)
+              .then(function () {
+                if (claimDecision.decision === claimDecisionEnum.APPROVED) {
+                  var isTrusted = req.body['is-trusted'] === 'on'
+                  var untrustedReason = req.body['untrusted-reason']
 
-      var claimDecision = new ClaimDecision(
-      req.user.email,
-      req.body.assistedDigitalCaseworker,
-      req.body.decision,
-      req.body.additionalInfoApprove,
-      req.body.additionalInfoRequest,
-      req.body.additionalInfoReject,
-      req.body.nomisCheck,
-      req.body.dwpCheck,
-      req.body.visitConfirmationCheck,
-      claimExpenses,
-      claimDeductions,
-      req.body.isAdvanceClaim
-      )
-      return SubmitClaimResponse(req.params.claimId, claimDecision)
-        .then(function () {
-          if (claimDecision.decision === claimDecisionEnum.APPROVED) {
-            var isTrusted = req.body['is-trusted'] === 'on'
-            var untrustedReason = req.body['untrusted-reason']
-
-            return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
-          }
+                  return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
+                }
+              })
         })
     })
 }
@@ -240,8 +245,12 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
       if (keepUnsubmittedChanges) {
         populateNewData(data, req)
       }
-      var error = {ValidationError: null}
-      return res.render('./claim/view-claim', renderValues(data, req, error))
+      return getRejectionReasons()
+        .then(function (rejectionReasons) {
+          data.rejectionReasons = rejectionReasons
+          var error = {ValidationError: null}
+          return res.render('./claim/view-claim', renderValues(data, req, error))
+        })
     })
 }
 
@@ -252,7 +261,11 @@ function handleError (error, req, res, updateConflict, next) {
         if (data.claim && data.claimExpenses && !updateConflict && claimExpenses) {
           populateNewData(data, req)
         }
-        return res.status(400).render('./claim/view-claim', renderValues(data, req, error))
+        return getRejectionReasons()
+        .then(function (rejectionReasons) {
+          data.rejectionReasons = rejectionReasons
+          return res.status(400).render('./claim/view-claim', renderValues(data, req, error))
+        })
       })
   } else {
     next(error)
@@ -267,7 +280,7 @@ function populateNewData (data, req) {
 }
 
 function renderValues (data, req, error) {
-  return {
+  var displayJson = {
     title: 'APVS Claim',
     Claim: data.claim,
     Expenses: data.claimExpenses,
@@ -289,4 +302,11 @@ function renderValues (data, req, error) {
     errors: error.validationErrors,
     unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry)
   }
+  if (data.rejectionReasons) {
+    displayJson.rejectionReasons = data.rejectionReasons
+  }
+  if (req.body.additionalInfoReject) {
+    displayJson.selectedRejectReason = req.body.additionalInfoReject
+  }
+  return displayJson
 }

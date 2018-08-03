@@ -18,7 +18,8 @@ class ClaimDecision {
                visitConfirmationCheck,
                claimExpenseResponses,
                claimDeductionResponses,
-               isAdvanceClaim) {
+               isAdvanceClaim,
+               rejectionReasonId) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
 
@@ -32,6 +33,11 @@ class ClaimDecision {
     } else {
       this.note = additionalInfoRequest
       noteId = 'additional-info-request'
+    }
+    if (rejectionReasonId) {
+      this.rejectionReasonId = rejectionReasonId
+    } else {
+      this.rejectionReasonId = null
     }
     this.nomisCheck = nomisCheck
     this.dwpCheck = dwpCheck

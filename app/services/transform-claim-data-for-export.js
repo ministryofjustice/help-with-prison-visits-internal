@@ -26,6 +26,7 @@ const IS_ADVANCE_CLAIM_HEADER = 'Is Advance Claim?'
 const TOTAL_AMOUNT_PAID_HEADER = 'Total amount paid'
 const CLAIM_EXPENSES_HEADER = 'Claim Expenses'
 const PAYMENT_METHOD_HEADER = 'Payment Method'
+const REJECTION_REASON_HEADER = 'Rejection Reason'
 
 module.exports = function (claims) {
   return Promise.map(claims, function (claim) {
@@ -60,6 +61,7 @@ module.exports = function (claims) {
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
         returnValue[CLAIM_EXPENSES_HEADER] = getFormattedClaimExpenseString(claimExpenses)
         returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
+        returnValue[REJECTION_REASON_HEADER] = claim.RejectionReason
 
         return returnValue
       })
