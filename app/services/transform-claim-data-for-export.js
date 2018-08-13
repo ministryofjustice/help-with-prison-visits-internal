@@ -26,6 +26,9 @@ const IS_ADVANCE_CLAIM_HEADER = 'Is Advance Claim?'
 const TOTAL_AMOUNT_PAID_HEADER = 'Total amount paid'
 const CLAIM_EXPENSES_HEADER = 'Claim Expenses'
 const PAYMENT_METHOD_HEADER = 'Payment Method'
+const CLAIM_EXPENSE_TYPE_HEADER = 'Expense Type '
+const EXPENSE_APPROVED_COST_HEADER = 'Approved Cost '
+var highestExpenseCount = 0
 
 module.exports = function (claims) {
   return Promise.map(claims, function (claim) {
@@ -60,7 +63,16 @@ module.exports = function (claims) {
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
         returnValue[CLAIM_EXPENSES_HEADER] = getFormattedClaimExpenseString(claimExpenses)
         returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
-
+        var expenseCount = 1
+        claimExpenses.forEach(function (expense) {
+          returnValue[CLAIM_EXPENSE_TYPE_HEADER + expenseCount] = expense.ExpenseType
+          returnValue[EXPENSE_APPROVED_COST_HEADER + expenseCount] = expense.ApprovedCost ? expense.ApprovedCost : 0
+          expenseCount = expenseCount + 1
+        })
+        if ((expenseCount - 1) > highestExpenseCount) {
+          highestExpenseCount = (expenseCount - 1)
+          console.log(highestExpenseCount)
+        }
         return returnValue
       })
   })
