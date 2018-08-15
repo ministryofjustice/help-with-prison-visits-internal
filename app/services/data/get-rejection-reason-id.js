@@ -8,7 +8,7 @@ module.exports = function (reason) {
     .then(function (result) {
       if (result) {
         return result['ClaimRejectionReasonId']
-      } else{
+      } else {
         return null
       }
     })

@@ -217,16 +217,16 @@ function submitClaimDecision (req, res, claimExpenses) {
             req.body.isAdvanceClaim,
             rejectionReasonId
             )
-            return SubmitClaimResponse(req.params.claimId, claimDecision)
-              .then(function () {
-                if (claimDecision.decision === claimDecisionEnum.APPROVED) {
-                  var isTrusted = req.body['is-trusted'] === 'on'
-                  var untrustedReason = req.body['untrusted-reason']
+          return SubmitClaimResponse(req.params.claimId, claimDecision)
+            .then(function () {
+              if (claimDecision.decision === claimDecisionEnum.APPROVED) {
+                var isTrusted = req.body['is-trusted'] === 'on'
+                var untrustedReason = req.body['untrusted-reason']
 
-                  return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
-                }
-              })
-        })
+                return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
+              }
+            })
+      })
     })
 }
 

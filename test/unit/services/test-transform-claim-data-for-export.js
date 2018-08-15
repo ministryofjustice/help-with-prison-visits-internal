@@ -2,6 +2,7 @@ const expect = require('chai').expect
 const sinon = require('sinon')
 require('sinon-bluebird')
 const proxyquire = require('proxyquire')
+const log = require('../../../app/services/log')
 
 const dateFormatter = require('../../../app/services/date-formatter')
 const prisonsEnum = require('../../../app/constants/prisons-enum')
@@ -14,6 +15,8 @@ var getFormattedClaimExpenseStringStub
 var getClaimEscortStub
 var getClaimChildCountStub
 var getClaimExpensesStub
+
+var rejectionReason = 'Applicant is not sole visit/next of kin'
 
 const TEST_CLAIM_DATA_MIXED = [
   {
@@ -78,6 +81,28 @@ const TEST_CLAIM_DATA_MANUAL = [
   }
 ]
 
+const TEST_CLAIM_DATA_REJECTED = [
+  {
+    ClaimId: 1,
+    PaymentAmount: 0,
+    ManuallyProcessedAmount: 0,
+    Name: 'Test Claimant',
+    NameOfPrison: prisonsEnum.MAGHABERRY.value,
+    Relationship: 'partner',
+    DateOfJourney: dateFormatter.now().subtract(1, 'days').toDate(),
+    DateSubmitted: dateFormatter.now().subtract(2, 'days').toDate(),
+    Benefit: benefitsEnum.INCOME_SUPPORT.value,
+    AssistedDigitalCaseworker: 'Assisted Digital Caseworker',
+    Caseworker: 'Caseworker',
+    IsTrusted: true,
+    Status: claimStatusEnum.REJECTED.value,
+    DateReviewed: dateFormatter.now().subtract(3, 'days').toDate(),
+    IsAdvanceClaim: false,
+    PaymentMethod: paymentMethodEnum.PAYOUT.value,
+    RejectionReason: rejectionReason
+  }
+]
+
 const TEST_CLAIM_EXPENSE_STRING = 'Bus Journey: 5|Ferry Journey: 100'
 const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
@@ -121,6 +146,7 @@ describe('services/transform-claim-data-for-export', function () {
         expect(headers).to.contain('Total amount paid')
         expect(headers).to.contain('Claim Expenses')
         expect(headers).to.contain('Payment Method')
+        expect(headers).to.contain('Rejection Reason')
       })
   })
 
@@ -152,6 +178,13 @@ describe('services/transform-claim-data-for-export', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
         expect(result[0]['Total amount paid']).to.equal(15)
+      })
+  })
+
+  it('should return the rejection reason for a rejected claim', function () {
+    return transformClaimDataForExport(TEST_CLAIM_DATA_REJECTED)
+      .then(function (result) {
+        expect(result[0]['Rejection Reason']).to.equal(rejectionReason)
       })
   })
 })
