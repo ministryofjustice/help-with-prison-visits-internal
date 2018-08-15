@@ -2,7 +2,6 @@ const expect = require('chai').expect
 const sinon = require('sinon')
 require('sinon-bluebird')
 const proxyquire = require('proxyquire')
-const log = require('../../../app/services/log')
 
 const dateFormatter = require('../../../app/services/date-formatter')
 const prisonsEnum = require('../../../app/constants/prisons-enum')

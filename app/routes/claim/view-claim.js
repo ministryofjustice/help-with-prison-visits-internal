@@ -226,7 +226,7 @@ function submitClaimDecision (req, res, claimExpenses) {
                 return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
               }
             })
-      })
+        })
     })
 }
 
