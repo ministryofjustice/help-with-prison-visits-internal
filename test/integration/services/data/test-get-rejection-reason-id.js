@@ -4,16 +4,15 @@ const getRejectionReasons = require('../../../../app/services/data/get-rejection
 var rejectionReasons
 
 describe('services/data/get-rejection-reason-id', function () {
-
   before(function () {
     return getRejectionReasons()
-      .then(function (reasons){
+      .then(function (reasons) {
         rejectionReasons = reasons
       })
   })
 
   it('should retrieve the rejection reason id for each given rejection reason', function (done) {
-    rejectionReasons.forEach(function (reason){
+    rejectionReasons.forEach(function (reason) {
       getRejectionReasonId(reason).then(function (id) {
         expect(id).to.eq(reason.id)
         done()
