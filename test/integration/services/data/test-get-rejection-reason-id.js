@@ -13,10 +13,10 @@ describe('services/data/get-rejection-reason-id', function () {
 
   it('should retrieve the rejection reason id for each given rejection reason', function (done) {
     rejectionReasons.forEach(function (reason) {
-      getRejectionReasonId(reason).then(function (id) {
+      getRejectionReasonId(reason.reason).then(function (id) {
         expect(id).to.eq(reason.id)
-        done()
       })
     })
+    done()
   })
 })
