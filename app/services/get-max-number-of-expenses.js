@@ -16,5 +16,5 @@ module.exports = function (claims) {
       highestExpenseCount = Object.keys(claim).length - numberOfColumsBeforeExpenses
     }
   })
-  return highestExpenseCount / 2 //divide by 2 as there are 2 columns for each expense
+  return highestExpenseCount / 2 // divide by 2 as there are 2 columns for each expense
 }
