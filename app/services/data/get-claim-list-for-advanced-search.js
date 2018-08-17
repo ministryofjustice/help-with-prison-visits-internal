@@ -46,7 +46,8 @@ const ADVANCED_SEARCH_FIELDS = [
   'Claim.ClaimId',
   'Claim.AssignedTo',
   'Claim.AssignmentExpiry',
-  'Claim.Status'
+  'Claim.Status',
+  'ClaimRejectionReason.RejectionReason'
 ]
 const EXPORT_CLAIMS_FIELDS = [
   'Visitor.FirstName',
@@ -66,7 +67,8 @@ const EXPORT_CLAIMS_FIELDS = [
   'Claim.PaymentMethod',
   'Claim.ClaimId',
   'Eligibility.IsTrusted',
-  'Prisoner.NameOfPrison'
+  'Prisoner.NameOfPrison',
+  'ClaimRejectionReason.RejectionReason'
 ]
 
 module.exports = function (searchCriteria, offset, limit, isExport) {
@@ -347,12 +349,14 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
       .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
       .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
+      .leftJoin('ClaimRejectionReason', 'Claim.RejectionReasonId', '=', 'ClaimRejectionReason.ClaimRejectionReasonId')
       .count('Claim.ClaimId AS Count')
 
     selectQuery = knex('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
       .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
       .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
+      .leftJoin('ClaimRejectionReason', 'Claim.RejectionReasonId', '=', 'ClaimRejectionReason.ClaimRejectionReasonId')
       .select(selectFields)
       .orderBy('Claim.DateSubmitted', 'asc')
       .limit(limit)

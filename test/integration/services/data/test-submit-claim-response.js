@@ -24,6 +24,7 @@ var submitClaimResponse = proxyquire('../../../../app/services/data/submit-claim
 var reference = 'SUBC456'
 var newIds = {}
 var caseworker = 'adam@adams.gov'
+var rejectionReasonIdentifier = 1
 
 describe('services/data/submit-claim-response', function () {
   before(function () {
@@ -70,6 +71,7 @@ describe('services/data/submit-claim-response', function () {
       'note': 'Could not verify in NOMIS',
       'nomisCheck': claimDecisionEnum.REJECTED,
       'dwpCheck': claimDecisionEnum.REJECTED,
+      'rejectionReasonId': rejectionReasonIdentifier,
       'claimExpenseResponses': [
         {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REJECTED},
         {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
@@ -97,7 +99,7 @@ describe('services/data/submit-claim-response', function () {
             expect(result.DWPCheck).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.LastUpdated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
             expect(result.DateReviewed).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
-
+            expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
             expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).to.be.true
             expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true
             expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).to.be.true
@@ -146,6 +148,7 @@ describe('services/data/submit-claim-response', function () {
       'nomisCheck': claimDecisionEnum.REJECTED,
       'dwpCheck': claimDecisionEnum.REJECTED,
       'note': '',
+      'rejectionReason': rejectionReasonIdentifier,
       'claimExpenseResponses': [
         {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REJECTED},
         {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REJECTED}
@@ -158,6 +161,7 @@ describe('services/data/submit-claim-response', function () {
           .first()
           .then(function (result) {
             expect(result.DateApproved).to.be.null
+            expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
           })
       })
   })

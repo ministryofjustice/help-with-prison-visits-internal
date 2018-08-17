@@ -24,6 +24,8 @@ var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
 var stubUpdateEligibilityTrustedStatus
 var stubUpdateAssignmentOfClaims
+var stubRejectionReasonId
+var stubRejectionReasons
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 const VALID_CLAIMDEDUCTION_DATA = [{Amount: '20.00'}]
@@ -88,6 +90,8 @@ describe('routes/claim/view-claim', function () {
     stubRequestNewBankDetails = sinon.stub()
     stubUpdateEligibilityTrustedStatus = sinon.stub()
     stubUpdateAssignmentOfClaims = sinon.stub()
+    stubRejectionReasonId = sinon.stub().resolves()
+    stubRejectionReasons = sinon.stub().resolves()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -108,7 +112,9 @@ describe('routes/claim/view-claim', function () {
       '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
       '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
       '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus,
-      '../../services/data/update-assignment-of-claims': stubUpdateAssignmentOfClaims
+      '../../services/data/update-assignment-of-claims': stubUpdateAssignmentOfClaims,
+      '../../services/data/get-rejection-reasons': stubRejectionReasons,
+      '../../services/data/get-rejection-reason-id': stubRejectionReasonId
     })
     app = routeHelper.buildApp(route)
     route(app)

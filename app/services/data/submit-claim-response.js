@@ -22,10 +22,11 @@ module.exports = function (claimId, claimDecision) {
       var nomisCheck = claimDecision.nomisCheck
       var dwpCheck = claimDecision.dwpCheck
       var visitConfirmationCheck = claimDecision.visitConfirmationCheck
+      var rejectionReasonId = claimDecision.rejectionReasonId
       var allExpensesManuallyProcessed = areAllExpensesManuallyProcessed(claimDecision.claimExpenseResponses)
 
       return Promise.all([updateEligibility(eligibilityId, decision),
-        updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed),
+        updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed, rejectionReasonId),
         updateVisitor(eligibilityId, dwpCheck),
         updatePrisoner(eligibilityId, nomisCheck),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
@@ -39,7 +40,7 @@ function updateEligibility (eligibilityId, decision) {
   return knex('Eligibility').where('EligibilityId', eligibilityId).update('Status', decision)
 }
 
-function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed) {
+function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed, rejectionReasonId) {
   var updateObject = {}
   if (decision === claimDecisionEnum.APPROVED) {
     updateObject = {
@@ -63,7 +64,8 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
       'AssignedTo': null, // clear assignment
       'AssignmentExpiry': null,
       'LastUpdated': dateFormatter.now().toDate(),
-      'DateApproved': null
+      'DateApproved': null,
+      'RejectionReasonId': rejectionReasonId
     }
   } else {
     updateObject = {
