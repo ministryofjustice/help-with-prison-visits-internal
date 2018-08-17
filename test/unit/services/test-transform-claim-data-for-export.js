@@ -10,7 +10,6 @@ const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const paymentMethodEnum = require('../../../app/constants/payment-method-enum')
 
 var transformClaimDataForExport
-var getFormattedClaimExpenseStringStub
 var getClaimEscortStub
 var getClaimChildCountStub
 var getClaimExpensesStub
@@ -78,20 +77,17 @@ const TEST_CLAIM_DATA_MANUAL = [
   }
 ]
 
-const TEST_CLAIM_EXPENSE_STRING = 'Bus Journey: 5|Ferry Journey: 100'
 const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
 const CLAIM_CHILD_COUNT = [{Count: 1}]
 
 describe('services/transform-claim-data-for-export', function () {
   beforeEach(function () {
-    getFormattedClaimExpenseStringStub = sinon.stub().returns(TEST_CLAIM_EXPENSE_STRING)
     getClaimEscortStub = sinon.stub().resolves(CLAIM_ESCORT)
     getClaimChildCountStub = sinon.stub().resolves(CLAIM_CHILD_COUNT)
     getClaimExpensesStub = sinon.stub().resolves(CLAIM_EXPENSES)
 
     transformClaimDataForExport = proxyquire('../../../app/services/transform-claim-data-for-export', {
-      '../services/get-formatted-claim-expense-string': getFormattedClaimExpenseStringStub,
       '../services/data/get-claim-escort': getClaimEscortStub,
       '../services/data/get-claim-child-count': getClaimChildCountStub,
       '../services/data/get-claim-expenses': getClaimExpensesStub
@@ -119,7 +115,6 @@ describe('services/transform-claim-data-for-export', function () {
         expect(headers).to.contain('Date Reviewed by Caseworker')
         expect(headers).to.contain('Is Advance Claim?')
         expect(headers).to.contain('Total amount paid')
-        expect(headers).to.contain('Claim Expenses')
         expect(headers).to.contain('Payment Method')
       })
   })
@@ -127,7 +122,6 @@ describe('services/transform-claim-data-for-export', function () {
   it('should call all relevant functions', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
-        expect(getFormattedClaimExpenseStringStub.calledWith(CLAIM_EXPENSES)).to.be.true
         expect(getClaimEscortStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true
         expect(getClaimExpensesStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true
         expect(getClaimChildCountStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true

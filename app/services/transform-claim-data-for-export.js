@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
-const getFormattedClaimExpenseString = require('../services/get-formatted-claim-expense-string')
+const claimExpenseTypes = require('../../app/views/helpers/display-field-names')
 const getClaimEscort = require('../services/data/get-claim-escort')
 const getClaimChildCount = require('../services/data/get-claim-child-count')
 const getClaimExpenses = require('../services/data/get-claim-expenses')
@@ -24,11 +24,9 @@ const CLAIM_STATUS_HEADER = 'Status'
 const DATE_REVIEWED_BY_CASEWORKER_HEADER = 'Date Reviewed by Caseworker'
 const IS_ADVANCE_CLAIM_HEADER = 'Is Advance Claim?'
 const TOTAL_AMOUNT_PAID_HEADER = 'Total amount paid'
-const CLAIM_EXPENSES_HEADER = 'Claim Expenses'
 const PAYMENT_METHOD_HEADER = 'Payment Method'
 const CLAIM_EXPENSE_TYPE_HEADER = 'Expense Type '
 const EXPENSE_APPROVED_COST_HEADER = 'Approved Cost '
-var highestExpenseCount = 0
 
 module.exports = function (claims) {
   return Promise.map(claims, function (claim) {
@@ -61,18 +59,13 @@ module.exports = function (claims) {
         returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = claim.DateReviewed ? dateHelper.shortDate(claim.DateReviewed) : null
         returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
-        returnValue[CLAIM_EXPENSES_HEADER] = getFormattedClaimExpenseString(claimExpenses)
         returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
         var expenseCount = 1
         claimExpenses.forEach(function (expense) {
-          returnValue[CLAIM_EXPENSE_TYPE_HEADER + expenseCount] = expense.ExpenseType
+          returnValue[CLAIM_EXPENSE_TYPE_HEADER + expenseCount] = claimExpenseTypes[expense.ExpenseType]
           returnValue[EXPENSE_APPROVED_COST_HEADER + expenseCount] = expense.ApprovedCost ? expense.ApprovedCost : 0
           expenseCount = expenseCount + 1
         })
-        if ((expenseCount - 1) > highestExpenseCount) {
-          highestExpenseCount = (expenseCount - 1)
-          console.log(highestExpenseCount)
-        }
         return returnValue
       })
   })
