@@ -25,8 +25,12 @@ const DATE_REVIEWED_BY_CASEWORKER_HEADER = 'Date Reviewed by Caseworker'
 const IS_ADVANCE_CLAIM_HEADER = 'Is Advance Claim?'
 const TOTAL_AMOUNT_PAID_HEADER = 'Total amount paid'
 const PAYMENT_METHOD_HEADER = 'Payment Method'
+<<<<<<< HEAD
 const CLAIM_EXPENSE_TYPE_HEADER = 'Expense Type '
 const EXPENSE_APPROVED_COST_HEADER = 'Approved Cost '
+=======
+const REJECTION_REASON_HEADER = 'Rejection Reason'
+>>>>>>> 1f4a5540a0fbdf8433554128be93c268f8c36fe4
 
 module.exports = function (claims) {
   return Promise.map(claims, function (claim) {
@@ -60,12 +64,17 @@ module.exports = function (claims) {
         returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
         returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
+<<<<<<< HEAD
         var expenseCount = 1
         claimExpenses.forEach(function (expense) {
           returnValue[CLAIM_EXPENSE_TYPE_HEADER + expenseCount] = claimExpenseTypes[expense.ExpenseType]
           returnValue[EXPENSE_APPROVED_COST_HEADER + expenseCount] = expense.ApprovedCost ? expense.ApprovedCost : 0
           expenseCount = expenseCount + 1
         })
+=======
+        returnValue[REJECTION_REASON_HEADER] = claim.RejectionReason
+
+>>>>>>> 1f4a5540a0fbdf8433554128be93c268f8c36fe4
         return returnValue
       })
   })
