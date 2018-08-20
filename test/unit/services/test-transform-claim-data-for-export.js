@@ -101,7 +101,6 @@ const TEST_CLAIM_DATA_REJECTED = [
   }
 ]
 
-const TEST_CLAIM_EXPENSE_STRING = 'Bus Journey: 5|Ferry Journey: 100'
 const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
 const CLAIM_CHILD_COUNT = [{Count: 1}]
