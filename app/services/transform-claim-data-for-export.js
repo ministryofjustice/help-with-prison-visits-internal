@@ -61,13 +61,13 @@ module.exports = function (claims) {
         returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
         returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
+        returnValue[REJECTION_REASON_HEADER] = claim.RejectionReason
         var expenseCount = 1
         claimExpenses.forEach(function (expense) {
           returnValue[CLAIM_EXPENSE_TYPE_HEADER + expenseCount] = claimExpenseTypes[expense.ExpenseType]
           returnValue[EXPENSE_APPROVED_COST_HEADER + expenseCount] = expense.ApprovedCost ? expense.ApprovedCost : 0
           expenseCount = expenseCount + 1
         })
-        returnValue[REJECTION_REASON_HEADER] = claim.RejectionReason
 
         return returnValue
       })
