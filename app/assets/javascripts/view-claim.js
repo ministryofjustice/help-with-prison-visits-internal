@@ -1,6 +1,11 @@
 $(function () {
   totalApproved()
 
+  if (document.getElementById('additional-info-reject').value = 'Other') {
+    document.getElementById('additional-info-reject-manual').disabled = false
+    document.getElementById('additional-info-reject-manual').visible = true
+  }
+  
   $('.claim-expense-status').change(function () {
     var id = $(this).attr('data-id')
     var value = $(this).val()
@@ -54,6 +59,18 @@ $(function () {
 
   $('#request-new-payment-details-toggle').change(function () {
     showClosedClaimActionSection('#request-new-payment-details-input')
+  })
+
+  $('#additional-info-reject').change(function () {
+    if (this[this.selectedIndex].value === 'Other') {
+      document.getElementById('additional-info-reject-manual').disabled = false
+      document.getElementById('additional-info-reject-manual').visible = true
+
+    } else {
+      document.getElementById('additional-info-reject-manual').disabled = true
+      document.getElementById('additional-info-reject-manual').visible = false
+      document.getElementById('additional-info-reject-manual').value = ''
+    }
   })
 })
 

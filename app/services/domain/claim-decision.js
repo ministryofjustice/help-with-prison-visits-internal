@@ -19,7 +19,8 @@ class ClaimDecision {
                claimExpenseResponses,
                claimDeductionResponses,
                isAdvanceClaim,
-               rejectionReasonId) {
+               rejectionReasonId,
+               additionalInfoRejectManual) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
 
@@ -28,8 +29,12 @@ class ClaimDecision {
       this.note = additionalInfoApprove
       noteId = 'additional-info-approve'
     } else if (decision === claimDecisionEnum.REJECTED) {
-      this.note = additionalInfoReject
-      noteId = 'additional-info-reject'
+        this.note = additionalInfoReject
+        noteId = 'additional-info-reject'
+        if (additionalInfoReject === 'Other') {
+          this.note = additionalInfoRejectManual
+          noteId = 'additional-info-reject-manual'
+        }
     } else {
       this.note = additionalInfoRequest
       noteId = 'additional-info-request'

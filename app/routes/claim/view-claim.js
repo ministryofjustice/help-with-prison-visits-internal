@@ -215,7 +215,8 @@ function submitClaimDecision (req, res, claimExpenses) {
             claimExpenses,
             claimDeductions,
             req.body.isAdvanceClaim,
-            rejectionReasonId
+            rejectionReasonId,
+            req.body.additionalInfoRejectManual
             )
           return SubmitClaimResponse(req.params.claimId, claimDecision)
             .then(function () {
