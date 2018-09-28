@@ -62,7 +62,7 @@ module.exports = function (claims) {
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
         returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
         returnValue[REJECTION_REASON_HEADER] = claim.RejectionReason
-        if (claim.RejectionReason === 'Other'){
+        if (claim.RejectionReason === 'Other') {
           returnValue[REJECTION_REASON_HEADER] = claim.Note
         }
         var expenseCount = 1
