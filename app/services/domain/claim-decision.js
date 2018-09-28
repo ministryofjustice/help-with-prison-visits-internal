@@ -29,12 +29,12 @@ class ClaimDecision {
       this.note = additionalInfoApprove
       noteId = 'additional-info-approve'
     } else if (decision === claimDecisionEnum.REJECTED) {
-        this.note = additionalInfoReject
-        noteId = 'additional-info-reject'
-        if (additionalInfoReject === 'Other') {
-          this.note = additionalInfoRejectManual
-          noteId = 'additional-info-reject-manual'
-        }
+      this.note = additionalInfoReject
+      noteId = 'additional-info-reject'
+      if (additionalInfoReject === 'Other') {
+        this.note = additionalInfoRejectManual
+        noteId = 'additional-info-reject-manual'
+      }
     } else {
       this.note = additionalInfoRequest
       noteId = 'additional-info-request'
