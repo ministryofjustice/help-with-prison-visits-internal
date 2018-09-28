@@ -1,7 +1,7 @@
 $(function () {
   totalApproved()
 
-  if (document.getElementById('additional-info-reject').value = 'Other') {
+  if (document.getElementById('additional-info-reject').value === 'Other') {
     document.getElementById('additional-info-reject-manual').disabled = false
     document.getElementById('additional-info-reject-manual').visible = true
   }
