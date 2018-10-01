@@ -71,7 +71,7 @@
         <br/>
         <label id="manual-label" class="form-label-bold {% if errors['additional-info-reject-manual'][0] %} error {% endif %}" for="additional-info-reject-manual">Enter a reason not in the dropdown</label>
         {% if errors['additional-info-reject-manual'][0] %}
-          <span class="error-message" id="error-message-note-reject">{{ errors['additional-info-reject-manual'][0] }}</span>
+          <span class="error-message" id="error-message-note-reject-manual">{{ errors['additional-info-reject-manual'][0] }}</span>
         {% endif %}
         <textarea type="text" class="form-control" id="additional-info-reject-manual" name="additionalInfoRejectManual" maxlength="2000" disabled="true">{{ claimDecision['additionalInfoRejectManual'] }}</textarea>
       </div>

@@ -23,12 +23,13 @@ class ClaimDecision {
                additionalInfoRejectManual) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
-
+    this.rejectionReasonId = null
     this.decision = decision
     if (this.decision === claimDecisionEnum.APPROVED) {
       this.note = additionalInfoApprove
       noteId = 'additional-info-approve'
     } else if (decision === claimDecisionEnum.REJECTED) {
+      this.rejectionReasonId = rejectionReasonId
       this.note = additionalInfoReject
       noteId = 'additional-info-reject'
       if (additionalInfoReject === 'Other') {
@@ -38,11 +39,6 @@ class ClaimDecision {
     } else {
       this.note = additionalInfoRequest
       noteId = 'additional-info-request'
-    }
-    if (rejectionReasonId) {
-      this.rejectionReasonId = rejectionReasonId
-    } else {
-      this.rejectionReasonId = null
     }
     this.nomisCheck = nomisCheck
     this.dwpCheck = dwpCheck
