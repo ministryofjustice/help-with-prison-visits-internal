@@ -123,4 +123,13 @@ describe('services/domain/claim-decision', function () {
       expect(e.validationErrors['assisted-digital-caseworker'][0]).to.equal('You cannot process this claim since you filled it in on behalf of a visitor')
     }
   })
+
+  it('should return error if the "Other" Reason is chosen and a manual rejection reason is not entered', function () {
+    try {
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '')
+    } catch (e) {
+      expect(e).to.be.instanceof(ValidationError)
+      expect(e.validationErrors['additional-info-reject-manual'][0]).to.equal('More information needed')
+    }
+  })
 })
