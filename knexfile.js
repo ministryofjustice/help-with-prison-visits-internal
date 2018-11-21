@@ -16,8 +16,7 @@ module.exports = {
       min: 2,
       max: 10
     },
-    acquireConnectionTimeout: 500000,
-    debug: true
+    acquireConnectionTimeout: 500000
   },
 
   migrations: {
