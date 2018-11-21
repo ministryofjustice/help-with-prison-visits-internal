@@ -68,7 +68,8 @@ const EXPORT_CLAIMS_FIELDS = [
   'Claim.ClaimId',
   'Eligibility.IsTrusted',
   'Prisoner.NameOfPrison',
-  'ClaimRejectionReason.RejectionReason'
+  'ClaimRejectionReason.RejectionReason',
+  'Claim.Note'
 ]
 
 module.exports = function (searchCriteria, offset, limit, isExport) {
