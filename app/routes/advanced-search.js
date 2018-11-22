@@ -38,7 +38,7 @@ module.exports = function (router) {
   })
 
   router.get('/advanced-search-results/export', function (req, res) {
-    res.connection.setTimeout(500000);
+    res.connection.setTimeout(500000)
     authorisation.isCaseworker(req)
 
     var searchCriteria = extractSearchCriteria(req.query)
