@@ -1,9 +1,11 @@
 $(function () {
   totalApproved()
 
-  if (document.getElementById('additional-info-reject').value === 'Other') {
-    document.getElementById('additional-info-reject-manual').style.display = 'block'
-    document.getElementById('manual-label').style.display = 'block'
+  if (document.getElementById('additional-info-reject') !== null) {
+    if (document.getElementById('additional-info-reject').value === 'Other') {
+      document.getElementById('additional-info-reject-manual').style.display = 'block'
+      document.getElementById('manual-label').style.display = 'block'
+    }
   }
 
   $('.claim-expense-status').change(function () {
