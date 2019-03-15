@@ -46,7 +46,7 @@ function updateClaim (claimId, note) {
 
 function insertClaimEventForNote (reference, eligibilityId, claimId, decision, note, caseworker) {
   const event = `CLAIM-NOTE`
-  return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, 'Note', false)
+  return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, 'Note', true)
 }
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {
