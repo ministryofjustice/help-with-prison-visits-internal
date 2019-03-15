@@ -151,7 +151,7 @@ module.exports = function (router) {
         return handleError('Note must not be blank.', req, res, false, next)
     } else {
       return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-        return insertNote(req.params.claimId, req.body['note-information'])
+        return insertNote(req.params.claimId, req.body['note-information'], req.user.email)
       })
     }
   })

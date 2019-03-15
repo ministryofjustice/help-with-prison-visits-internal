@@ -6,14 +6,14 @@ const insertClaimEvent = require('./insert-claim-event')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 const log = require('../log')
 
-module.exports = function (claimId, claimNote) {
+module.exports = function (claimId, claimNote, user) {
   return knex('Claim').where('ClaimId', claimId)
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .first('Eligibility.EligibilityId', 'Eligibility.Reference')
     .then(function (result) {
       var eligibilityId = result.EligibilityId
       var reference = result.Reference
-      var caseworker = result.caseworker
+      var caseworker = user
       var decision = result.decision
       var note = claimNote
       var nomisCheck = result.nomisCheck
@@ -46,7 +46,8 @@ function updateClaim (claimId, note) {
 
 function insertClaimEventForNote (reference, eligibilityId, claimId, decision, note, caseworker) {
   const event = `CLAIM-NOTE`
-  return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, 'Note', true)
+  log.info(caseworker)
+  return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, caseworker, true)
 }
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {
