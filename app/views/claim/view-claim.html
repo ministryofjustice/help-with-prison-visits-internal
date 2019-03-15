@@ -114,6 +114,12 @@
       {% include "partials/view-claim/close-advance-claim.html" %}
   </form>
 
+  <form action="/claim/{{ Claim['ClaimId'] }}/disable-reference-no" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    {% include "partials/view-claim/manage-overpayments.html" %}
+  </form>
+
   <form action="/claim/{{ Claim['ClaimId'] }}/request-new-payment-details" method="post" class="form">
     {% include "partials/csrf-hidden-input.html" %}
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
