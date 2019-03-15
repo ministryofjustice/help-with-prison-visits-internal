@@ -93,12 +93,21 @@
     <br>
 
     {% include "partials/view-claim/claim-events.html" %}
-
+      
     <br>
     <br>
 
     {% include "partials/view-claim/decision.html" %}
 
+  </form>
+
+  <br>
+  <br>
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/insert-note" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    {% include "partials/view-claim/insert-note.html" %}
   </form>
 
   {% include "partials/view-claim/closed-claim-actions.html" %}
