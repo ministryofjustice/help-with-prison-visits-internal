@@ -20,6 +20,7 @@ var stubUpdateClaimOverpaymentStatus
 var stubOverpaymentResponse
 var stubCloseAdvanceClaim
 var stubPayoutBarcodeExpiredClaim
+var stubInsertNote
 var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
 var stubUpdateEligibilityTrustedStatus

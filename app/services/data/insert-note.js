@@ -16,10 +16,6 @@ module.exports = function (claimId, claimNote, user) {
       var caseworker = user
       var decision = result.decision
       var note = claimNote
-      var nomisCheck = result.nomisCheck
-      var dwpCheck = result.dwpCheck
-      var visitConfirmationCheck = result.visitConfirmationCheck
-      var rejectionReasonId = result.rejectionReasonId
 
       return Promise.all([updateClaim(claimId, note),
         insertClaimEventForNote(reference, eligibilityId, claimId, decision, note, caseworker),
@@ -52,8 +48,8 @@ function insertClaimEventForNote (reference, eligibilityId, claimId, decision, n
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {
   var notificationType
-  
+
   notificationType = tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION
-  
+
   return insertTaskSendClaimNotification(notificationType, reference, eligibilityId, claimId)
 }
