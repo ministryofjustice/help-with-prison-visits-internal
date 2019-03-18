@@ -20,6 +20,7 @@ var stubUpdateClaimOverpaymentStatus
 var stubOverpaymentResponse
 var stubCloseAdvanceClaim
 var stubPayoutBarcodeExpiredClaim
+var stubInsertNote
 var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
 var stubUpdateEligibilityTrustedStatus
@@ -56,6 +57,12 @@ const VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM = {
   'payout-barcode-expired': 'PAYOUT-BARCODE-EXPIRED',
   'payout-barcode-expired-additional-information': 'Expiry reason'
 }
+const VALID_DATA_INSERT_NOTE = {
+  'note-information': 'This is a note'
+}
+const INVALID_DATA_INSERT_NOTE = {
+  'note-information': ''
+}
 const VALID_DATA_REQUEST_BANK_DETAILS = {
   'closed-claim-action': 'REQUEST-NEW-PAYMENT-DETAILS',
   'payment-details-additional-information': ''
@@ -86,6 +93,7 @@ describe('routes/claim/view-claim', function () {
     stubOverpaymentResponse = sinon.stub()
     stubCloseAdvanceClaim = sinon.stub()
     stubPayoutBarcodeExpiredClaim = sinon.stub()
+    stubInsertNote = sinon.stub()
     stubMergeClaimExpensesWithSubmittedResponses = sinon.stub()
     stubRequestNewBankDetails = sinon.stub()
     stubUpdateEligibilityTrustedStatus = sinon.stub()
@@ -109,6 +117,7 @@ describe('routes/claim/view-claim', function () {
       '../../services/domain/overpayment-response': stubOverpaymentResponse,
       '../../services/data/close-advance-claim': stubCloseAdvanceClaim,
       '../../services/data/payout-barcode-expired-claim': stubPayoutBarcodeExpiredClaim,
+      '../../services/data/insert-note': stubInsertNote,
       '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
       '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
       '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus,
@@ -624,6 +633,33 @@ describe('routes/claim/view-claim', function () {
       return supertest(app)
         .post('/claim/123/payout-barcode-expired')
         .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
+        .expect(500)
+    })
+  })
+
+  describe('POST /claim/:claimId/insert-note', function () {
+    it('should respond with 302 when valid data entered', function () {
+      stubInsertNote.resolves()
+      stubCheckUserAndLastUpdated.resolves()
+
+      return supertest(app)
+        .post('/claim/123/insert-note')
+        .send(VALID_DATA_INSERT_NOTE)
+        .expect(302)
+        .expect(function () {
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true
+          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true
+          expect(stubInsertNote.calledWith('123', 'This is a note')).to.be.true
+        })
+    })
+
+    it('should respond with a 500 when no field blank', function () {
+      stubInsertNote.resolves()
+      stubCheckUserAndLastUpdated.resolves()
+
+      return supertest(app)
+        .post('/claim/123/insert-note')
+        .send(INVALID_DATA_INSERT_NOTE)
         .expect(500)
     })
   })

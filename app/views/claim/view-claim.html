@@ -93,13 +93,25 @@
     <br>
 
     {% include "partials/view-claim/claim-events.html" %}
-
+      
     <br>
     <br>
 
     {% include "partials/view-claim/decision.html" %}
 
   </form>
+
+  <br>
+  <br>
+
+  {% if Claim['AssignedTo'] %}
+  {% else %}
+    <form action="/claim/{{ Claim['ClaimId'] }}/insert-note" method="post" class="form">
+      {% include "partials/csrf-hidden-input.html" %}
+      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+      {% include "partials/view-claim/insert-note.html" %}
+    </form>
+  {% endif %}
 
   {% include "partials/view-claim/closed-claim-actions.html" %}
   <form action="/claim/{{ Claim['ClaimId'] }}/update-overpayment-status" method="post" class="form">
