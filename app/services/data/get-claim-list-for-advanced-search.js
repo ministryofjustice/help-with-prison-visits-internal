@@ -47,6 +47,7 @@ const ADVANCED_SEARCH_FIELDS = [
   'Claim.AssignedTo',
   'Claim.AssignmentExpiry',
   'Claim.Status',
+  'Claim.LastUpdated',
   'ClaimRejectionReason.RejectionReason'
 ]
 const EXPORT_CLAIMS_FIELDS = [
@@ -66,6 +67,7 @@ const EXPORT_CLAIMS_FIELDS = [
   'Claim.ManuallyProcessedAmount',
   'Claim.PaymentMethod',
   'Claim.ClaimId',
+  'Claim.LastUpdated',
   'Eligibility.IsTrusted',
   'Prisoner.NameOfPrison',
   'ClaimRejectionReason.RejectionReason',
@@ -359,7 +361,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
       .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
       .leftJoin('ClaimRejectionReason', 'Claim.RejectionReasonId', '=', 'ClaimRejectionReason.ClaimRejectionReasonId')
       .select(selectFields)
-      .orderBy('Claim.DateSubmitted', 'asc')
+      .orderBy('Claim.LastUpdated', 'dsc')
       .limit(limit)
       .offset(offset)
   }
