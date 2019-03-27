@@ -3,6 +3,7 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
+const MAX_TOTAL_APPROVED_AMOUNT = require('../../../config').MAX_TOTAL_APPROVED_AMOUNT
 
 var noteId
 
@@ -101,6 +102,10 @@ class ClaimDecision {
         totalExpenseCost += parseFloat(expense.approvedCost)
       }
     })
+
+    if (totalExpenseCost > parseInt(MAX_TOTAL_APPROVED_AMOUNT)) {
+      errors.add('total-approved-cost', ERROR_MESSAGES.getApprovedCostTooHigh, parseInt(MAX_TOTAL_APPROVED_AMOUNT) )
+    }
 
     if (this.decision === claimDecisionEnum.APPROVED && allExpensesRejected) {
       errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
