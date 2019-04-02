@@ -122,6 +122,14 @@
     {% include "partials/view-claim/disable-reference-number.html" %}
   </form>
 
+  <form action="/claim/{{ Claim['ClaimId'] }}/re-enable-reference-number" method="post" class="form">
+
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    <input type="hidden" name="referenceToBeReEnabled" value="{{ Claim['Reference'] }}">
+    {% include "partials/view-claim/re-enable-reference-number.html" %}
+  </form>
+
   <form action="/claim/{{ Claim['ClaimId'] }}/request-new-payment-details" method="post" class="form">
     {% include "partials/csrf-hidden-input.html" %}
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
