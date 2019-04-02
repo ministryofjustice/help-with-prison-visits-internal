@@ -12,7 +12,7 @@ module.exports = function (claimId, reference, note) {
           .where('ClaimId', claimId)
           .first('EligibilityId')
           .then(function (eligibility) {
-            eligibilityId = eligibility['EligibilityId']
+            var eligibilityId = eligibility['EligibilityId']
             return insertClaimEvent(reference, eligibilityId, claimId, claimEventEnum.REFERENCE_DISABLED.value, null, note, null, true)
           })
       })
