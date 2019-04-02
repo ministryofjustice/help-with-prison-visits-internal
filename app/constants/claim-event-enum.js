@@ -82,5 +82,9 @@ module.exports = {
   UPDATED_CONTACT_DETAILS: {
     value: 'UPDATED-CONTACT-DETAILS',
     displayName: 'Updated contact details'
+  },
+  REFERENCE_DISABLED: {
+    value: 'REFERENCE-NUMBER-DISABLED',
+    displayName: 'Reference Number Disabled'
   }
 }

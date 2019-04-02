@@ -22,6 +22,7 @@ const updateClaimOverpaymentStatus = require('../../services/data/update-claim-o
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
 const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 const payoutBarcodeExpiredClaim = require('../../services/data/payout-barcode-expired-claim')
+const disableReferenceNumber = require('../../services/data/disable-reference-number')
 const updateEligibilityTrustedStatus = require('../../services/data/update-eligibility-trusted-status')
 const requestNewBankDetails = require('../../services/data/request-new-bank-details')
 const claimDecisionEnum = require('../../../app/constants/claim-decision-enum')
@@ -140,6 +141,13 @@ module.exports = function (router) {
     var needAssignmentCheck = true
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return payoutBarcodeExpiredClaim(req.params.claimId, req.body['payout-barcode-expired-additional-information'])
+    })
+  })
+
+  router.post('/claim/:claimId/disable-reference-number', function (req, res, next) {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return disableReferenceNumber(req.params.claimId, req.body['referenceToBeDisabled'], req.body['disable-reference-number-additional-information'])
     })
   })
 
