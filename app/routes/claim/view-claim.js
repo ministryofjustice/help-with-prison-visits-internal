@@ -147,7 +147,7 @@ module.exports = function (router) {
   router.post('/claim/:claimId/disable-reference-number', function (req, res, next) {
     var needAssignmentCheck = true
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return disableReferenceNumber(req.params.claimId, req.body['referenceToBeDisabled'], req.body['disable-reference-number-additional-information'])
+      return disableReferenceNumber(req.params.claimId, req.body['referenceToBeDisabled'], req.body['disable-reference-number-additional-information'], req.user.email)
     })
   })
 
