@@ -1,6 +1,5 @@
 const authorisation = require('../services/authorisation')
 const getClaimsListAndCount = require('../services/data/get-claim-list-and-count')
-const getClaimsListAndCountUpdated = require('../services/data/get-claim-list-and-count-by-updated')
 const claimStatusEnum = require('../constants/claim-status-enum')
 const displayHelper = require('../views/helpers/display-helper')
 
@@ -17,6 +16,9 @@ module.exports = function (router) {
   router.get('/claims/:status', function (req, res) {
     authorisation.isCaseworker(req)
 
+    var sortType = 'Claim.DateSubmitted'
+    var sortOrder = 'asc'
+
     var advanceClaims = false
     var status = req.params.status
     if (status === 'ADVANCE') {
@@ -30,7 +32,7 @@ module.exports = function (router) {
       status = claimStatusEnum.UPDATED.value
     }
 
-    getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email)
+    getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
       .then(function (data) {
         var claims = data.claims
         claims.map(function (claim) {
@@ -52,6 +54,9 @@ module.exports = function (router) {
   router.get('/claims/:status/updated', function (req, res) {
     authorisation.isCaseworker(req)
 
+    var sortType = 'Claim.LastUpdated'
+    var sortOrder = 'desc'
+
     var advanceClaims = false
     var status = req.params.status
     if (status === 'ADVANCE') {
@@ -65,7 +70,7 @@ module.exports = function (router) {
       status = claimStatusEnum.UPDATED.value
     }
 
-    getClaimsListAndCountUpdated(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email)
+    getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
       .then(function (data) {
         var claims = data.claims
         claims.map(function (claim) {
