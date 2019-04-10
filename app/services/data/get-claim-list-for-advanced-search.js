@@ -361,7 +361,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
       .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
       .leftJoin('ClaimRejectionReason', 'Claim.RejectionReasonId', '=', 'ClaimRejectionReason.ClaimRejectionReasonId')
       .select(selectFields)
-      .orderBy('Claim.LastUpdated', 'desc')
+      .orderBy('Claim.DateSubmitted', 'asc')
       .limit(limit)
       .offset(offset)
   }
