@@ -25,7 +25,7 @@ module.exports = function (status, advanceClaims, offset, limit, user) {
         .where({'Claim.Status': status, 'Claim.IsAdvanceClaim': advanceClaims})
         .andWhere('ClaimId', 'in', subquery)
         .select('Eligibility.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Claim.ClaimType', 'Claim.ClaimId', 'Claim.AssignedTo', 'Claim.AssignmentExpiry', 'Claim.Status', 'Claim.LastUpdated')
-        .orderBy('Claim.DateSubmitted', 'asc')
+        .orderBy('Claim.LastUpdated', 'desc')
         .limit(limit)
         .offset(offset)
         .then(function (claims) {
