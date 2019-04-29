@@ -150,6 +150,20 @@ function extractSearchCriteria (query) {
   if (query.visitRules) {
     searchCriteria.visitRules = query.visitRules
   }
+
+  if (query.overpaymentStatus) {
+    var overpaymentStatus = null
+    switch (query.overpaymentStatus) {
+      case 'yes':
+        overpaymentStatus = 'true'
+        break
+      case 'no':
+        overpaymentStatus = 'false'
+        break
+    }
+    searchCriteria.overpaymentStatus = overpaymentStatus
+  }
+
   var visitDateFrom = processDate(
     'visitDateFrom',
     query.visitDateFromDay,
