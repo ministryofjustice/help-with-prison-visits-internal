@@ -14,10 +14,12 @@
       </label>
       {% endif %}
 
+      {% if Claim['PaymentMethod'] == 'bank' %}
       <label id="request-new-payment-details-label" class="block-label inline" data-target="request-new-payment-details-input">
         <input type="radio" name="closed-claim-action" value="REQUEST-NEW-PAYMENT-DETAILS" id="request-new-payment-details-toggle">
-        <span>Request new payment details</span>
+        <span>Request new bank payment details</span>
       </label>
+      {% endif %}
 
       {% if Claim['PaymentMethod'] == 'payout' %}
       <label class="block-label inline" data-target="payout-barcode-expired-input">
