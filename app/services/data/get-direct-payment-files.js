@@ -12,7 +12,7 @@ module.exports = function () {
   return Promise.all([
     getPaymentFiles(ACCESSPAY_FILE, NUMBER_OF_PAYMENT_FILES),
     getPaymentFiles(ADI_JOURNAL_FILE, NUMBER_OF_PAYMENT_FILES),
-    getPaymentFiles(APVU_ACCESSPAY_FILE, NUMBER_OF_PAYMENT_FILES),
+    getPaymentFiles(APVU_ACCESSPAY_FILE, NUMBER_OF_PAYMENT_FILES)
   ])
   .then(function (results) {
     return {
