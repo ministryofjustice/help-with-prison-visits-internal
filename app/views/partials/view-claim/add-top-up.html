@@ -1,0 +1,16 @@
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
+<!-- Top Up -->
+  <div class="panel js-hidden" id="top-up-input">
+
+    <div class="form-group" id='top-up-amount-group' >
+      <label class="form-label-bold" for="top-up-amount">Amount</label>
+      <input type='text' name='top-up-amount' id='top-up-amount' class='form-control'>
+    </div>
+    <div class="form-group" id='top-up-reason-group'>
+      <label class="form-label-bold" for="top-up-reason">Reason</label>
+      <textarea name='top-up-reason' id='top-up-reason' maxlength='250'></textarea>
+    </div>
+    <input type="submit" class="button" name="add-top-up" id="add-top-up" value="Add Top Up">
+  </div>
+<!-- End of Top Up -->
+{% endif %}

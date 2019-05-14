@@ -43,6 +43,10 @@ module.exports = {
     value: 'PAYOUT-BARCODE-EXPIRED',
     displayName: 'Payout barcode expired'
   },
+  TOP_UP_SUBMITTED: {
+    value: 'TOP-UP-SUBMITTED',
+    displayName: 'Top up submitted'
+  },
   REQUEST_NEW_BANK_DETAILS: {
     value: 'REQUEST-NEW-BANK-DETAILS',
     displayName: 'New bank details requested'
