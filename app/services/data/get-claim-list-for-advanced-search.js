@@ -225,7 +225,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
             }
             claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
             if (claim.PaymentDate) {
-              claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment,'days')
+              claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
             } else {
               claim.DaysUntilPayment = 'N/A'
             }
