@@ -48,7 +48,8 @@ const ADVANCED_SEARCH_FIELDS = [
   'Claim.AssignmentExpiry',
   'Claim.Status',
   'Claim.LastUpdated',
-  'ClaimRejectionReason.RejectionReason'
+  'ClaimRejectionReason.RejectionReason',
+  'Claim.PaymentDate'
 ]
 const EXPORT_CLAIMS_FIELDS = [
   'Visitor.FirstName',
@@ -71,7 +72,8 @@ const EXPORT_CLAIMS_FIELDS = [
   'Eligibility.IsTrusted',
   'Prisoner.NameOfPrison',
   'ClaimRejectionReason.RejectionReason',
-  'Claim.Note'
+  'Claim.Note',
+  'Claim.PaymentDate'
 ]
 
 module.exports = function (searchCriteria, offset, limit, isExport) {
@@ -215,12 +217,19 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
           claims.forEach(function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+            claim.DateSubmittedMoment = moment(claim.DateSubmitted)
             claim.DisplayStatus = statusFormatter(claim.Status)
             claim.Name = claim.FirstName + ' ' + claim.LastName
             if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
               claim.AssignedTo = null
             }
             claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
+            if (claim.PaymentDate) {
+              claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment,'days')
+            } else {
+              claim.DaysUntilPayment = 'N/A'
+            }
+            console.log(claim.DaysUntilPayment)
           })
           return {
             claims: claims,
