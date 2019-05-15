@@ -1,0 +1,42 @@
+<label for='release-date-is-set' class="block-label" data-target="release-date-is-set-section">
+    <input type="checkbox" name='release-date-is-set' id='release-date-is-set' {% if Claim['ReleaseDateIsSet'] === true %} checked {% endif %} />
+    <span>Release Date is set?</span>
+  </label>
+
+<br/>
+<br/>
+<br/>
+
+<div id="release-date-is-set-section" class="form-date {% if Claim['ReleaseDateIsSet'] === false or Claim['ReleaseDateIsSet'] === null %} js-hidden" {% endif %}>
+  <fieldset>
+      <div class="form-group form-group-day">
+          <label id="release-day" for="release-day-input">Day</label>
+          <input id="release-day-input"
+                type="number"
+                name="release-day"
+                autocomplete="off"
+                value="{{ Claim['release-day'] }}"
+                class="form-control">
+        </div>
+
+        <div class="form-group form-group-month">
+          <label id="release-month" for="release-month-input">Month</label>
+          <input id="release-month-input"
+                type="number"
+                name="release-month"
+                autocomplete="off"
+                value="{{ Claim['release-month'] }}"
+                class="form-control">
+        </div>
+
+        <div class="form-group form-group-year">
+          <label id="release-year" for="release-year-input">Year</label>
+          <input id="release-year-input"
+                type="number"
+                name="release-year"
+                autocomplete="off"
+                value="{{ Claim['release-year'] }}"
+                class="form-control">
+        </div>
+  </fieldset>
+</div>
