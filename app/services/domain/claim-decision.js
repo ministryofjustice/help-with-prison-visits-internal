@@ -104,7 +104,7 @@ class ClaimDecision {
     })
 
     if (totalExpenseCost > parseInt(MAX_TOTAL_APPROVED_AMOUNT)) {
-      errors.add('total-approved-cost', ERROR_MESSAGES.getApprovedCostTooHigh, parseInt(MAX_TOTAL_APPROVED_AMOUNT) )
+      errors.add('total-approved-cost', ERROR_MESSAGES.getApprovedCostTooHigh, parseInt(MAX_TOTAL_APPROVED_AMOUNT))
     }
 
     if (this.decision === claimDecisionEnum.APPROVED && allExpensesRejected) {
