@@ -229,7 +229,6 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
             } else {
               claim.DaysUntilPayment = 'N/A'
             }
-            console.log(claim.DaysUntilPayment)
           })
           return {
             claims: claims,
