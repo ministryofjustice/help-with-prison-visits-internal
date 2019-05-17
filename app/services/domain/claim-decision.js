@@ -3,6 +3,7 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
+const dateFormatter = require('../date-formatter')
 
 var noteId
 
@@ -20,7 +21,11 @@ class ClaimDecision {
                claimDeductionResponses,
                isAdvanceClaim,
                rejectionReasonId,
-               additionalInfoRejectManual) {
+               additionalInfoRejectManual,
+               releaseDateIsSet,
+               releaseDay,
+               releaseMonth,
+               releaseYear) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
     this.rejectionReasonId = null
@@ -54,6 +59,17 @@ class ClaimDecision {
     })
     this.claimDeductionResponses = claimDeductionResponses
     this.isAdvanceClaim = isAdvanceClaim
+    if (releaseDateIsSet) {
+      this.releaseDateIsSet = true
+    } else {
+      this.releaseDateIsSet = false
+    }
+    this.releaseDateFields = [
+      releaseDay,
+      releaseMonth,
+      releaseYear
+    ]
+    this.releaseDate = dateFormatter.build(releaseDay, releaseMonth, releaseYear)
     this.IsValid()
   }
 
@@ -128,6 +144,14 @@ class ClaimDecision {
     if (!this.isAdvanceClaim) {
       FieldValidator(this.visitConfirmationCheck, 'visit-confirmation-check', errors)
         .isRequired(ERROR_MESSAGES.getVisitConfirmationRequired)
+    }
+
+    if(this.releaseDateIsSet) {
+      console.log(this.releaseDateFields)
+      FieldValidator(this.releaseDateFields, 'release-date-section', errors)
+        .isDateRequired(ERROR_MESSAGES.getReleaseDateIsRequired)
+        .isValidDate(this.releaseDate)
+        .isFutureDate(this.releaseDate)
     }
 
     var validationErrors = errors.get()

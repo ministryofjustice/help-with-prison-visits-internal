@@ -6,6 +6,8 @@ const config = require('../../../config')
 const validator = require('validator')
 const SQL_MAX_INT = 2147483647
 const SQL_DEC_8_COMMA_2 = 999999.99
+const moment = require('moment')
+const dateFormatter = require('../date-formatter')
 
 exports.isNullOrUndefined = function (value) {
   return !value
@@ -53,4 +55,17 @@ exports.isMaxIntOrLess = function (value) {
 
 exports.isMaxCostOrLess = function (value) {
   return value <= SQL_DEC_8_COMMA_2
+}
+
+exports.isValidDate = function (date) {
+  if (this.isNullOrUndefined(date)) {
+    return false
+  }
+  return date instanceof moment &&
+    date.isValid()
+}
+
+exports.isDateInTheFuture = function (date) {
+  return this.isValidDate(date) &&
+    date > dateFormatter.now()
 }

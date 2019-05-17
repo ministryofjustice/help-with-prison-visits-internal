@@ -101,6 +101,33 @@ class FieldValidator {
     }
     return this
   }
+
+  isValidDate (date) {
+    if (!validator.isValidDate(date)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getInvalidDateFormatMessage)
+    }
+    return this
+  }
+
+  isDateRequired (specificMessage) {
+    var message = (!specificMessage) ? ERROR_MESSAGES.getIsRequired : specificMessage
+    var self = this
+    if (this.data instanceof Array) {
+      this.data.forEach(function (data) {
+        if (validator.isNullOrUndefined(data)) {
+          self.errors.add(self.fieldName, message)
+        }
+      })
+    }
+    return this
+  }
+
+  isFutureDate (date) {
+    if (!validator.isDateInTheFuture(date)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getFutureDateMessage)
+    }
+    return this
+  }
 }
 
 module.exports = function (data, fieldName, errors) {

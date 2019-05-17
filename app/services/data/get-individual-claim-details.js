@@ -111,7 +111,9 @@ function getClaimantDetails (claimId) {
       'Prisoner.DateOfBirth AS PrisonerDateOfBirth',
       'Prisoner.PrisonNumber',
       'Prisoner.NameOfPrison',
-      'Prisoner.NomisCheck')
+      'Prisoner.NomisCheck',
+      'Prisoner.ReleaseDateIsSet',
+      'Prisoner.ReleaseDate')
     .then(function (data) {
       if (data.AssignedTo && data.AssignmentExpiry < dateFormatter.now().toDate()) {
         data.AssignedTo = null
