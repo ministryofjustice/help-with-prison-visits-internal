@@ -87,6 +87,33 @@
     </td>
   </tr>
 
+  <tr class="form-date">
+    <td>Benefit Expiry</td>
+    <td>
+      {% if unlock %}
+        <div class="form-group form-group-day">
+          <label id="expiry-day" for="expiry-day-input">Day</label>
+          <input id="expiry-day-input" type="number" name="expiry-day" autocomplete="off"
+                value="{{ Claim['expiryDay'] }}" class="form-control">
+        </div>
+
+        <div class="form-group form-group-month">
+          <label id="expiry-month" for="expiry-month-input">Month</label>
+          <input id="expiry-month-input" type="number" name="expiry-month" autocomplete="off"
+                value="{{ Claim['expiryMonth'] }}" class="form-control">
+        </div>
+
+        <div class="form-group form-group-year">
+          <label id="expiry-year" for="expiry-year-input">Year</label>
+          <input id="expiry-year-input" type="number" name="expiry-year" autocomplete="off"
+                value="{{ Claim['expiryYear'] }}" class="form-control">
+        </div>
+      {% else %}
+        20/06/2019
+      {% endif %}
+    </td>
+  </tr>
+
   {% set childNum = 1 %}
   {% for child in Children %}
   <tr>
