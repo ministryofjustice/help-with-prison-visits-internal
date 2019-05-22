@@ -25,6 +25,24 @@
     <br>
   </div>
 
+  <div>
+    {% if active == undefined %}
+      <br><a href="/?status=NEW/updated" class="link margin-left">Order By Last Updated</a>
+    {% elif active == 'UPDATED' %}
+      <br><a href="/?status=UPDATED/updated" class="link margin-left">Order By Last Updated</a>
+    {% elif active == 'PENDING' %}
+      <br><a href="/?status=PENDING/updated" class="link margin-left">Order By Last Updated</a>
+    {% elif active == 'ADVANCE'%}
+      <br><a href="/?status=ADVANCE/updated" class="link margin-left ">Order By Last Updated</a>
+    {% elif active == 'ADVANCE-APPROVED' %}
+      <br><a href="/?status=ADVANCE-APPROVED/updated" class="link margin-left">Order By Last Updated</a>
+    {% elif active == 'ADVANCE-UPDATED' %}
+      <br><a href="/?status=ADVANCE-UPDATED/updated" class="link margin-left">Order By Last Updated</a>
+    {% else %}
+      <br><a href="/" class="link margin-left">Order By Date Submitted</a>
+    {% endif %}
+  </div>
+
   <ul class="sub-tabs">
     <li><a href="/" {% if active == undefined %} class="active">New <span class="badge"></span>{% else %}>New{% endif %}</a></li>
     <li><a href="/?status=UPDATED"{% if active == 'UPDATED' %} %} class="active">Updated <span class="badge"></span>{% else %}>Updated{% endif %}</a></li>

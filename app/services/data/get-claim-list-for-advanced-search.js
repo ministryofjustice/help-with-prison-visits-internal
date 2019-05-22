@@ -48,6 +48,7 @@ const ADVANCED_SEARCH_FIELDS = [
   'Claim.AssignedTo',
   'Claim.AssignmentExpiry',
   'Claim.Status',
+  'Claim.LastUpdated',
   'ClaimRejectionReason.RejectionReason'
 ]
 const EXPORT_CLAIMS_FIELDS = [
@@ -67,6 +68,7 @@ const EXPORT_CLAIMS_FIELDS = [
   'Claim.ManuallyProcessedAmount',
   'Claim.PaymentMethod',
   'Claim.ClaimId',
+  'Claim.LastUpdated',
   'Eligibility.IsTrusted',
   'Prisoner.NameOfPrison',
   'ClaimRejectionReason.RejectionReason',

@@ -23,7 +23,7 @@ module.exports = function (query, offset, limit) {
         .orWhere('Visitor.NationalInsuranceNumber', 'like', query)
         .orWhereRaw(`CONCAT(Visitor.FirstName, ' ', Visitor.LastName) like '${query}'`)
         .orWhere('Prisoner.PrisonNumber', 'like', query)
-        .select('Claim.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Claim.ClaimType', 'Claim.ClaimId', 'Claim.AssignedTo', 'Claim.AssignmentExpiry', 'Claim.Status')
+        .select('Claim.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Claim.ClaimType', 'Claim.ClaimId', 'Claim.AssignedTo', 'Claim.AssignmentExpiry', 'Claim.Status', 'Claim.LastUpdated')
         .orderBy('Claim.DateSubmitted', 'asc')
         .offset(offset)
         .then(function (claims) {
