@@ -233,6 +233,10 @@ function extractSearchCriteria (query) {
     }
   }
 
+  if (query.paymentMethod) {
+    searchCriteria.paymentMethod = query.paymentMethod
+  }
+
   return searchCriteria
 }
 

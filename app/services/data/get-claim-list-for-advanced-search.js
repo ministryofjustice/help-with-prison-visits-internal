@@ -33,7 +33,8 @@ var validSearchOptions = [
   'dateRejectedFrom',
   'dateRejectedTo',
   'approvedClaimAmountFrom',
-  'approvedClaimAmountTo'
+  'approvedClaimAmountTo',
+  'paymentMethod'
 ]
 
 const ADVANCED_SEARCH_FIELDS = [
@@ -47,6 +48,7 @@ const ADVANCED_SEARCH_FIELDS = [
   'Claim.AssignedTo',
   'Claim.AssignmentExpiry',
   'Claim.Status',
+  'Claim.LastUpdated',
   'ClaimRejectionReason.RejectionReason'
 ]
 const EXPORT_CLAIMS_FIELDS = [
@@ -66,6 +68,7 @@ const EXPORT_CLAIMS_FIELDS = [
   'Claim.ManuallyProcessedAmount',
   'Claim.PaymentMethod',
   'Claim.ClaimId',
+  'Claim.LastUpdated',
   'Eligibility.IsTrusted',
   'Prisoner.NameOfPrison',
   'ClaimRejectionReason.RejectionReason',
@@ -206,6 +209,11 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     applyApprovedClaimAmountToFilter(selectQuery, searchCriteria.approvedClaimAmountTo)
   }
 
+  if (searchCriteria.paymentMethod) {
+    applyPaymentMethodFilter(countQuery, searchCriteria.paymentMethod)
+    applyPaymentMethodFilter(selectQuery, searchCriteria.paymentMethod)
+  }
+
   return countQuery
     .then(function (count) {
       return selectQuery
@@ -343,6 +351,10 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   function applyApprovedClaimAmountToFilter (query, approvedClaimAmountTo) {
     query.where('Claim.PaymentAmount', '<=', approvedClaimAmountTo)
       .whereIn('Claim.Status', APPROVED_STATUS_VALUES)
+  }
+
+  function applyPaymentMethodFilter (query, paymentMethod) {
+    query.where('Claim.PaymentMethod', paymentMethod)
   }
 
   function createBaseQueries (limit, offset) {

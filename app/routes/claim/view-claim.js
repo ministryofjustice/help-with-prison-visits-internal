@@ -24,6 +24,7 @@ const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 const payoutBarcodeExpiredClaim = require('../../services/data/payout-barcode-expired-claim')
 const disableReferenceNumber = require('../../services/data/disable-reference-number')
 const reEnableReferenceNumber = require('../../services/data/re-enable-reference-number')
+const insertNote = require('../../services/data/insert-note')
 const updateEligibilityTrustedStatus = require('../../services/data/update-eligibility-trusted-status')
 const requestNewBankDetails = require('../../services/data/request-new-bank-details')
 const claimDecisionEnum = require('../../../app/constants/claim-decision-enum')
@@ -157,6 +158,18 @@ module.exports = function (router) {
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return reEnableReferenceNumber(req.params.claimId, req.body['referenceToBeReEnabled'], req.body['re-enable-reference-number-additional-information'], req.user.email)
     })
+  })
+  
+  router.post('/claim/:claimId/insert-note', function (req, res, next) {
+    var needAssignmentCheck = false
+
+    if (!req.body['note-information']) {
+      return handleError('Note must not be blank.', req, res, false, next)
+    } else {
+      return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+        return insertNote(req.params.claimId, req.body['note-information'], req.user.email)
+      })
+    }
   })
 
   router.post('/claim/:claimId/assign-self', function (req, res, next) {
