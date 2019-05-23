@@ -106,6 +106,7 @@ function getClaimantDetails (claimId) {
       'Visitor.Benefit',
       'Visitor.DWPBenefitCheckerResult',
       'Visitor.DWPCheck',
+      'Visitor.BenefitExpiryDate',
       'Prisoner.FirstName AS PrisonerFirstName',
       'Prisoner.LastName AS PrisonerLastName',
       'Prisoner.DateOfBirth AS PrisonerDateOfBirth',

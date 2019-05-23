@@ -4,6 +4,7 @@ const ErrorHandler = require('../validators/error-handler')
 const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const MAX_TOTAL_APPROVED_AMOUNT = require('../../../config').MAX_TOTAL_APPROVED_AMOUNT
+const dateFormatter = require('../date-formatter')
 
 var noteId
 
@@ -21,7 +22,10 @@ class ClaimDecision {
                claimDeductionResponses,
                isAdvanceClaim,
                rejectionReasonId,
-               additionalInfoRejectManual) {
+               additionalInfoRejectManual,
+               expiryDay,
+               expiryMonth,
+               expiryYear) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
     this.rejectionReasonId = null
@@ -55,6 +59,12 @@ class ClaimDecision {
     })
     this.claimDeductionResponses = claimDeductionResponses
     this.isAdvanceClaim = isAdvanceClaim
+    this.expiryDateFields = [
+      expiryDay,
+      expiryMonth,
+      expiryYear
+    ]
+    this.expiryDate = dateFormatter.build(expiryDay, expiryMonth, expiryYear)
     this.IsValid()
   }
 
@@ -134,6 +144,11 @@ class ClaimDecision {
       FieldValidator(this.visitConfirmationCheck, 'visit-confirmation-check', errors)
         .isRequired(ERROR_MESSAGES.getVisitConfirmationRequired)
     }
+
+    FieldValidator(this.expiryDateFields, 'benefit-expiry', errors)
+        .isDateRequired(ERROR_MESSAGES.getExpiryDateIsRequired)
+        .isValidDate(this.expiryDate)
+        .isFutureDate(this.expiryDate)
 
     var validationErrors = errors.get()
 

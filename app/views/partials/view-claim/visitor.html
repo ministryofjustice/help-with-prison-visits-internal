@@ -87,10 +87,10 @@
     </td>
   </tr>
 
-  <tr class="form-date">
+  <tr class="form-date {% if errors['benefit-expiry'][0] %} warning {% endif %}" id="benefit-expiry">
     <td>Benefit Expiry</td>
-    <td>
       {% if unlock %}
+      <td>
         <div class="form-group form-group-day">
           <label id="expiry-day" for="expiry-day-input">Day</label>
           <input id="expiry-day-input" type="number" name="expiry-day" autocomplete="off"
@@ -108,10 +108,14 @@
           <input id="expiry-year-input" type="number" name="expiry-year" autocomplete="off"
                 value="{{ Claim['expiryYear'] }}" class="form-control">
         </div>
+      </td>
       {% else %}
-        20/06/2019
+        {% if Claim['ReleaseDate'] %}
+          <td>{{ getDateFormatted.shortDate(Claim['BenefitExpiryDate']) }}</td>
+        {% else %}
+          <td><span class="text-pending">Pending</span></td>
+        {% endif %}
       {% endif %}
-    </td>
   </tr>
 
   {% set childNum = 1 %}
