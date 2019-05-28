@@ -52,6 +52,12 @@
               <span class="text-warning">Receipt required</span>
 
             {% endif %}
+          {% else %}
+            {% if receiptAndProcessedManuallyEnum[expense.ExpenseType].receiptOptional %}
+              {% if expense.DocumentStatus == 'uploaded' %}
+                <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ expense['ClaimDocumentId'] }}">View receipt</a>
+              {% endif %}
+            {% endif %}
           {% endif %}
         </td>
 
