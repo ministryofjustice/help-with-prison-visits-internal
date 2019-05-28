@@ -16,10 +16,10 @@ module.exports.getDay = function (date) {
   return moment.utc(date).format('D')
 }
 
- module.exports.getMonth = function (date) {
+module.exports.getMonth = function (date) {
   return moment.utc(date).format('M')
 }
 
- module.exports.getYear = function (date) {
+module.exports.getYear = function (date) {
   return moment.utc(date).format('YYYY')
 }

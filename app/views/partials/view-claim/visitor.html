@@ -110,7 +110,7 @@
         </div>
       </td>
       {% else %}
-        {% if Claim['ReleaseDate'] %}
+        {% if Claim['BenefitExpiryDate'] %}
           <td>{{ getDateFormatted.shortDate(Claim['BenefitExpiryDate']) }}</td>
         {% else %}
           <td><span class="text-pending">Pending</span></td>

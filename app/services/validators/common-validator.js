@@ -65,7 +65,7 @@ exports.isValidDate = function (date) {
     date.isValid()
 }
 
- exports.isDateInTheFuture = function (date) {
+exports.isDateInTheFuture = function (date) {
   return this.isValidDate(date) &&
     date > dateFormatter.now()
 }

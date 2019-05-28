@@ -109,7 +109,7 @@ class FieldValidator {
     return this
   }
 
-   isDateRequired (specificMessage) {
+  isDateRequired (specificMessage) {
     var message = (!specificMessage) ? ERROR_MESSAGES.getIsRequired : specificMessage
     var self = this
     if (this.data instanceof Array) {
@@ -122,7 +122,7 @@ class FieldValidator {
     return this
   }
 
-   isFutureDate (date) {
+  isFutureDate (date) {
     if (!validator.isDateInTheFuture(date)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getFutureDateMessage)
     }
