@@ -263,7 +263,7 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
       if (keepUnsubmittedChanges) {
         populateNewData(data, req)
       }
-      if(data.claim.ReleaseDate) {
+      if (data.claim.ReleaseDate) {
         data.claim.releaseDay = getDateFormatted.getDay(data.claim.ReleaseDate)
         data.claim.releaseMonth = getDateFormatted.getMonth(data.claim.ReleaseDate)
         data.claim.releaseYear = getDateFormatted.getYear(data.claim.ReleaseDate)
@@ -300,7 +300,7 @@ function populateNewData (data, req) {
   data.claim.DWPCheck = req.body.dwpCheck
   data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
   data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
-  if(req.body['release-date-is-set']) {
+  if (req.body['release-date-is-set']) {
     data.claim.ReleaseDateIsSet = true
   } else {
     data.claim.ReleaseDateIsSet = false

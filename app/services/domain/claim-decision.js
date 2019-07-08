@@ -146,7 +146,7 @@ class ClaimDecision {
         .isRequired(ERROR_MESSAGES.getVisitConfirmationRequired)
     }
 
-    if(this.releaseDateIsSet) {
+    if (this.releaseDateIsSet) {
       console.log(this.releaseDateFields)
       FieldValidator(this.releaseDateFields, 'release-date-section', errors)
         .isDateRequired(ERROR_MESSAGES.getReleaseDateIsRequired)
