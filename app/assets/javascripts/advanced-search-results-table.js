@@ -41,6 +41,7 @@ $(document).ready(function () {
             $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
           }
         },
+        {'data': 'DaysUntilPayment'},
         {'data': 'AssignedTo'},
         {'data': 'ClaimId',
           'createdCell': function (td, cellData, rowData, row, col) {
@@ -51,10 +52,13 @@ $(document).ready(function () {
 
       columnDefs: [
         {
-          'targets': [0, 1, 2, 3, 4, 5, 6, 7],
+          'targets': [0, 1, 2, 3, 4, 5, 6, 7, 8],
           'visible': true,
           'searchable': false,
-          'orderable': false
+          'orderable': false,
+          'createdCell': function (td, cellData, rowData, row, col) {
+            $(td).css('padding', '10px')
+          }
         }
       ],
 
