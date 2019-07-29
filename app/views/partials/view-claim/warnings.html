@@ -29,6 +29,13 @@
   </div>
 {% endif %}
 
+{% if Claim['ReferenceDisabled'] %}
+  <div class="banner">
+    <p class="heading-small">This Reference has been disabled</p>
+    <p>Reason: {{ Claim['DisabledReason'] }}</p>
+  </div>
+{% endif %}
+
 {% if Claim['IsTrusted'] === false %}
   <div class="banner">
     <p class="heading-small">Auto-approval has been switched off for this claimant</p>

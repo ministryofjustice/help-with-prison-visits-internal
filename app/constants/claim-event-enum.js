@@ -83,6 +83,14 @@ module.exports = {
     value: 'UPDATED-CONTACT-DETAILS',
     displayName: 'Updated contact details'
   },
+  REFERENCE_DISABLED: {
+    value: 'REFERENCE-NUMBER-DISABLED',
+    displayName: 'Reference Number Disabled'
+  },
+  REFERENCE_RE_ENABLED: {
+    value: 'REFERENCE-NUMBER-RE-ENABLED',
+    displayName: 'Reference Number Re-Enabled'
+  },
   CLAIM_NOTE: {
     value: 'CLAIM-NOTE',
     displayName: 'Note'

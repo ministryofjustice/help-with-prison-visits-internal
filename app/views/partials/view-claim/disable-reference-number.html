@@ -1,0 +1,11 @@
+{% if Claim['Status'] == 'REJECTED' %}
+<!-- Manage Overpayments -->
+  <div class="panel js-hidden" id="disable-reference-number-input">
+    <div class="form-group" id='disable-reference-number-details'>
+      <label class="form-label-bold" for="disable-reference-number-additional-information">Reason why this Reference is being Disabled (optional)</label>
+      <textarea type='text' name='disable-reference-number-additional-information' id='disable-reference-number-additional-information' class='form-control' maxlength="2000"></textarea>
+    </div>
+    <input type="submit" class="button grey" name="disable-reference-number" id="disable-reference-number" value="Submit">
+  </div>
+<!-- End of Manage Overpayments -->
+{% endif %}
