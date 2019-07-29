@@ -159,7 +159,7 @@ module.exports = function (router) {
       return reEnableReferenceNumber(req.params.claimId, req.body['referenceToBeReEnabled'], req.body['re-enable-reference-number-additional-information'], req.user.email)
     })
   })
-  
+
   router.post('/claim/:claimId/insert-note', function (req, res, next) {
     var needAssignmentCheck = false
 
