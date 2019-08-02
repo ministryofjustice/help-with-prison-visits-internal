@@ -3,28 +3,28 @@ module.exports = {
     value: 'income-support',
     requireBenefitUpload: false,
     displayName: 'Income Support',
-    multipage: false
+    multipage: true
   },
 
   JOBSEEKERS_ALLOWANCE: {
     value: 'jobseekers-allowance',
     requireBenefitUpload: false,
     displayName: 'Jobseeker’s Allowance',
-    multipage: false
+    multipage: true
   },
 
   EMPLOYMENT_SUPPORT: {
     value: 'employment-support',
     requireBenefitUpload: false,
     displayName: 'Employment and Support Allowance',
-    multipage: false
+    multipage: true
   },
 
   UNIVERSAL_CREDIT: {
     value: 'universal-credit',
     requireBenefitUpload: true,
     displayName: 'Universal Credit',
-    multipage: false
+    multipage: true
   },
 
   WORKING_TAX_CREDIT: {
@@ -45,20 +45,20 @@ module.exports = {
     value: 'hc2',
     requireBenefitUpload: true,
     displayName: 'Health Certificate (HC2)',
-    multipage: false
+    multipage: true
   },
 
   HC3: {
     value: 'hc3',
     requireBenefitUpload: true,
     displayName: 'Health Certificate (HC3)',
-    multipage: false
+    multipage: true
   },
 
   NHS_TAX_CREDIT: {
     value: 'nhs-tax-credit',
     requireBenefitUpload: true,
     displayName: 'NHS Tax Credit Exemption Certificate',
-    multipage: false
+    multipage: true
   }
 }

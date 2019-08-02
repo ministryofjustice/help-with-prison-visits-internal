@@ -16,9 +16,9 @@
 <h1 class="heading-large">Download payment files</h1>
 
 <div class="grid-row">
-    <div class="column-one-half">
+    <div class="column-one-third">
 
-      <h3 class="heading-medium">Access Pay file</h3>
+      <h3 class="heading-medium">SSCL Access Pay file</h3>
       {% if topAccessPayFile %}
       <a href="/download-payment-files/download?id={{ topAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(topAccessPayFile.DateCreated) }}</a>
       {% endif %}
@@ -41,7 +41,32 @@
       {% endif %}
     </div>
 
-    <div class="column-one-half">
+    <div class="column-one-third">
+
+        <h3 class="heading-medium">APVU Access Pay file</h3>
+        {% if topApvuAccessPayFile %}
+        <a href="/download-payment-files/download?id={{ topApvuAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(topApvuAccessPayFile.DateCreated) }}</a>
+        {% endif %}
+        <br>
+        <br>
+  
+        {% if previousApvuAccessPayFiles %}
+        <div class="form-group">
+          <details role="group">
+            <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Previous Apvu AccessPay files</span></summary>
+            <div class="panel panel-border-narrow" id="" aria-hidden="false">
+              <ul class="list list-bullet">
+                {% for previousApvuAccessPayFile in previousApvuAccessPayFiles %}
+                <li><a href="/download-payment-files/download?id={{ previousApvuAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(previousApvuAccessPayFile.DateCreated) }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </details>
+        </div>
+        {% endif %}
+      </div>
+
+    <div class="column-one-third">
 
       <h3 class="heading-medium">ADI Journal</h3>
         {% if topAdiJournalFile %}

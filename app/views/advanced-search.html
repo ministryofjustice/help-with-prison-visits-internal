@@ -220,6 +220,24 @@
     </div>
 
     <div class="grid-row">
+        <div class="column-one-third">
+          <h3 class="heading-small">Payment Method</h3>
+          <div class="form-group">
+            <label for="paymentMethodBank" class="block-label inline">
+              Bank
+              <input id="paymentMethodBank" type="radio" name="paymentMethod" value="bank" {% if query.paymentMethod == 'bank' %} checked {% endif %}>
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="paymentMethodVoucher" class="block-label inline">
+              Voucher
+              <input id="paymentMethodVoucher"type="radio" name="paymentMethod" value="payout" {% if query.paymentMethod == 'payout' %} checked {% endif %}>
+            </label>
+          </div>
+        </div>
+    </div>
+
+    <div class="grid-row">
       <div class="column-one-half">
         <h3 class="heading-small">Date of visit</h3>
 
@@ -515,6 +533,7 @@
         <th class="sorting_disabled">Visit Date</th>
         <th class="sorting_disabled">Status</th>
         <th class="sorting_disabled">Claim type</th>
+        <th class="sorting_disabled">Days until Payment</th>
         <th class="sorting_disabled">Assigned to</th>
         <th class="sorting_disabled"></th>
       </tr>

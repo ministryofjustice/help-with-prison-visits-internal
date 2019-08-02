@@ -22,15 +22,16 @@ describe('services/data/payout-barcode-expired-claim', function () {
       })
     })
 
-    it(`should set claim status to ${claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value} and create claim event`, function () {
+    it(`should set claim status to ${claimStatusEnum.APPROVED.value} and create claim event`, function () {
       var reason = 'Test reason'
 
       return payoutBarcodeExpiredClaim(claimId, reason)
         .then(function () {
           return knex('Claim').first().where('ClaimId', claimId)
             .then(function (claim) {
-              expect(claim.Status).to.equal(claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value)
+              expect(claim.Status).to.equal(claimStatusEnum.APPROVED.value)
               expect(claim.DateApproved).to.be.null
+              expect(claim.PaymentStatus).to.be.null
               expect(claim.lastUpdated).to.not.equal(previousLastUpdated)
               return knex('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
             })

@@ -14,15 +14,31 @@
       </label>
       {% endif %}
 
+      {% if Claim['PaymentMethod'] == 'bank' %}
       <label id="request-new-payment-details-label" class="block-label inline" data-target="request-new-payment-details-input">
         <input type="radio" name="closed-claim-action" value="REQUEST-NEW-PAYMENT-DETAILS" id="request-new-payment-details-toggle">
-        <span>Request new payment details</span>
+        <span>Request new bank payment details</span>
       </label>
+      {% endif %}
 
       {% if Claim['PaymentMethod'] == 'payout' %}
       <label class="block-label inline" data-target="payout-barcode-expired-input">
         <input type="radio" name="closed-claim-action" value="PAYOUT-BARCODE-EXPIRED" id="payout-barcode-expired-toggle">
         <span>Payout barcode expired</span>
+      </label>
+      {% endif %}
+      
+      {% if Claim['Status'] === 'REJECTED' and (Claim['ReferenceDisabled'] === false or Claim['ReferenceDisabled'] == null) %}
+      <label id="disable-reference-number-label" class="block-label inline" data-target="disable-reference-number-input">
+        <input type="radio" name="closed-claim-action" value="DISABLE-REFERENCE-NUMBER" id="disable-reference-number-toggle">
+        <span>Disable this Reference No</span>
+      </label>
+      {% endif %}
+
+      {% if Claim['ReferenceDisabled'] === true %}
+      <label id="re-enable-reference-number-label" class="block-label inline" data-target="re-enable-reference-number-input">
+        <input type="radio" name="closed-claim-action" value="RE-ENABLE-REFERENCE-NUMBER" id="re-enable-reference-number-toggle">
+        <span>Re-enable this Reference No</span>
       </label>
       {% endif %}
     </fieldset>
