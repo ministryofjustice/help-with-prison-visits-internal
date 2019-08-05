@@ -34,6 +34,7 @@ var validSearchOptions = [
   'dateRejectedTo',
   'approvedClaimAmountFrom',
   'approvedClaimAmountTo',
+  'overpaymentStatus',
   'paymentMethod'
 ]
 
@@ -159,6 +160,11 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   if (searchCriteria.visitRules) {
     applyVisitRulesFilter(countQuery, searchCriteria.visitRules)
     applyVisitRulesFilter(selectQuery, searchCriteria.visitRules)
+  }
+
+  if (searchCriteria.overpaymentStatus) {
+    applyOverpaymentStatusFilter(countQuery, searchCriteria.overpaymentStatus)
+    applyOverpaymentStatusFilter(selectQuery, searchCriteria.overpaymentStatus)
   }
 
   if (searchCriteria.visitDateFrom) {
@@ -312,6 +318,17 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
       query.where('Visitor.Country', rulesEnum.SCOTLAND.value)
     } else if (visitRules === 'northernIreland') {
       query.where('Visitor.Country', rulesEnum.NI.value)
+    }
+  }
+
+  function applyOverpaymentStatusFilter (query, overpaymentStatus) {
+    if (overpaymentStatus === 'false') {
+      query.where(function () {
+        this.where('Claim.IsOverpaid', false)
+        .orWhereNull('Claim.IsOverpaid')
+      })
+    } else {
+      query.orWhere('Claim.IsOverpaid', true)
     }
   }
 
