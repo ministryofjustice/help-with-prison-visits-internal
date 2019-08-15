@@ -94,5 +94,9 @@ module.exports = {
   CLAIM_NOTE: {
     value: 'CLAIM-NOTE',
     displayName: 'Note'
+  },
+  PAYMENT_REISSUED: {
+    value: 'PAYMENT-REISSUED',
+    displayName: 'Payment Re-issued'
   }
 }

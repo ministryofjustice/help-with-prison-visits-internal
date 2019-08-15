@@ -13,5 +13,8 @@ module.exports = function (claimId, note) {
       .then(function (updatedClaimData) {
         var claim = updatedClaimData[0]
         return insertClaimEvent(claim.Reference, claim.EligibilityId, claimId, claimEventEnum.PAYOUT_BARCODE_EXPIRED.value, null, note, null, true)
+        .then(function () {
+          return insertClaimEvent(claim.Reference, claim.EligibilityId, claimId, claimEventEnum.PAYMENT_REISSUED.value, null, null, null, true)
+        })
       })
 }
