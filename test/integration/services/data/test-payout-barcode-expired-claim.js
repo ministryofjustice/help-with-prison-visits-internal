@@ -38,6 +38,11 @@ describe('services/data/payout-barcode-expired-claim', function () {
             .then(function (claimEvent) {
               expect(claimEvent.Event).to.equal(claimEventEnum.PAYMENT_REISSUED.value)
               expect(claimEvent.Note).to.equal(null)
+              return knex('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc').limit(1).offset(1)
+            })
+            .then(function (claimEvent) {
+              expect(claimEvent.Event).to.equal(claimEventEnum.PAYOUT_BARCODE_EXPIRED.value)
+              expect(claimEvent.Note).to.equal(reason)
             })
         })
         .catch(function (error) {
