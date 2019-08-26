@@ -32,5 +32,6 @@ module.exports = {
   'approvedClaimAmountFrom': 'Approved claim amount (from)',
   'approvedClaimAmountTo': 'Approved claim amount (to)',
   'EmailAddress': 'Email address',
-  'PhoneNumber': 'Phone number'
+  'PhoneNumber': 'Phone number',
+  'top-up-amount': 'A Top-up amount',
 }

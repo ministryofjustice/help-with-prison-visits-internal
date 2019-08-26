@@ -19,7 +19,9 @@ const insertDeduction = require('../../services/data/insert-deduction')
 const disableDeduction = require('../../services/data/disable-deduction')
 const ClaimDeduction = require('../../services/domain/claim-deduction')
 const updateClaimOverpaymentStatus = require('../../services/data/update-claim-overpayment-status')
+const insertTopUp = require('../../services/data/insert-top-up')
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
+const TopupResponse = require('../../services/domain/topup-response')
 const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 const payoutBarcodeExpiredClaim = require('../../services/data/payout-barcode-expired-claim')
 const insertNote = require('../../services/data/insert-note')
@@ -133,6 +135,21 @@ module.exports = function (router) {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
+        })
+    })
+  })
+
+  router.post('/claim/:claimId/add-top-up', function (req, res, next) {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          var claim = data.claim
+          var topupAmount = req.body['top-up-amount']
+          var topupReason = req.body['top-up-reason']
+
+          var topupResponse = new TopupResponse(topupAmount, topupReason)
+          return insertTopUp(claim, topupResponse, req.user.email)
         })
     })
   })
