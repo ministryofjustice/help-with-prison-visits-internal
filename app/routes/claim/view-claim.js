@@ -328,6 +328,7 @@ function renderValues (data, req, error) {
     duplicates: data.duplicates,
     claimEvents: data.claimEvents,
     overpaidClaims: data.overpaidClaims,
+    claimantDuplicates: data.claimantDuplicates,
     claimDecisionEnum: claimDecisionEnum,
     errors: error.validationErrors,
     unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry)
