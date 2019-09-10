@@ -9,6 +9,17 @@
   </div>
 {% endif %}
 
+{% if claimantDuplicates.length > 0 %}
+  <div class="banner">
+    <p class="heading-small">Another Claimant has a claim for this Prisoner on this date</p>
+    <ul class="list">
+    {% for claim in claimantDuplicates %}
+      <li><a href='/claim/{{ claim.ClaimId }}'>{{ claim.Reference }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
 {% if overpaidClaims.length > 0 %}
   <div class="banner">
     <p class="heading-small">This claim is for a claimant that has been overpaid</p>

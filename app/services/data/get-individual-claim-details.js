@@ -1,6 +1,7 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const duplicateClaimCheck = require('./duplicate-claim-check')
+const getClaimsForPrisonNumberAndVisitDate = require('./get-claims-for-prison-number-and-visit-date')
 const getClaimTotalAmount = require('../get-claim-total-amount')
 const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
@@ -14,6 +15,7 @@ module.exports = function (claimId) {
   var claimEscort
   var claimDeductions
   var claimDuplicatesExist
+  var claimantDuplicates
   var claimDetails
   var claimEvents
   var reference
@@ -31,7 +33,8 @@ module.exports = function (claimId) {
         getClaimEscort(claimId),
         duplicateClaimCheck(claimId, claim.NationalInsuranceNumber, claim.PrisonNumber, claim.DateOfJourney),
         getClaimEvents(claimId),
-        getOverpaidClaimsByReference(reference, claimId)
+        getOverpaidClaimsByReference(reference, claimId),
+        getClaimsForPrisonNumberAndVisitDate(claimId, claim.PrisonNumber, claim.DateOfJourney)
       ])
     })
     .then(function (results) {
@@ -43,6 +46,7 @@ module.exports = function (claimId) {
       claimDuplicatesExist = results[5]
       claimEvents = results[6]
       var overpaidClaimData = results[7]
+      claimantDuplicates = results[8]
 
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
       claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
@@ -55,7 +59,8 @@ module.exports = function (claimId) {
         claimEvents: claimEvents,
         deductions: claimDeductions,
         duplicates: claimDuplicatesExist,
-        overpaidClaims: overpaidClaimData
+        overpaidClaims: overpaidClaimData,
+        claimantDuplicates: claimantDuplicates
       }
 
       return claimDetails
