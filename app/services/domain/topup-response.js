@@ -19,8 +19,9 @@ class TopupResponse {
       .isCurrency()
       .isMaxCostOrLess()
 
-    FieldValidator(this.reason, 'reason', errors)
+    FieldValidator(this.reason, 'top-up-reason', errors)
       .isLessThanLength(2000)
+      .isRequired()
 
     var validationErrors = errors.get()
 

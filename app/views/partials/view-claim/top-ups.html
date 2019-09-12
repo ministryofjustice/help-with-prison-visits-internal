@@ -12,7 +12,7 @@
       {% for TopUp in TopUps %}
         <tr>
           <td>{{ getDateFormatted.shortDateAndTime(TopUp.DateAdded) }}</td>
-          <td>{{ TopUp['TopUpAmount'] }}</td>
+          <td>£{{ TopUp['TopUpAmount'] }}</td>
           <td>{{ TopUp['Caseworker'] }}</td>
           {% if TopUp.IsPaid %}
             <td><span class="text-success">Paid</span></td>
