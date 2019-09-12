@@ -47,7 +47,6 @@ module.exports = function (claimId) {
       var overpaidClaimData = results[7]
       TopUps = results[8]
 
-
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
       claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
 
@@ -183,7 +182,7 @@ function getClaimEvents (claimId) {
 }
 
 function getTopUp (claimId) {
-  return knex.select('TopUpId', 'ClaimId',  'IsPaid',  'Caseworker',  'TopUpAmount', 'Reason').from('TopUp')
+  return knex.select('TopUpId', 'ClaimId', 'IsPaid', 'Caseworker', 'TopUpAmount', 'Reason').from('TopUp')
     .where('ClaimId', claimId)
 }
 
