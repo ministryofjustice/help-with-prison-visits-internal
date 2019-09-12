@@ -328,6 +328,7 @@ function renderValues (data, req, error) {
     deductions: data.deductions,
     duplicates: data.duplicates,
     claimEvents: data.claimEvents,
+    TopUps: data.TopUps,
     overpaidClaims: data.overpaidClaims,
     claimDecisionEnum: claimDecisionEnum,
     errors: error.validationErrors,

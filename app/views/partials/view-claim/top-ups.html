@@ -1,3 +1,4 @@
+{% if TopUps.length > 0 %}
 <table class="col-2 no-pad-right">
   <thead>
     <tr>
@@ -8,35 +9,18 @@
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>25/02/2019</td>
-      <td>£25.50</td>
-      <td>joe.bloggs@noms.gov.uk</td>
-      <td><span class="text-success">Paid</span></td>
-    </tr>
-    <tr>
-      <td>01/03/2019</td>
-      <td>£11.20</td>
-      <td>joe.bloggs@noms.gov.uk</td>
-      <td><span class="text-success">Paid</span></td>
-    </tr>
-    <tr>
-      <td>15/03/2019</td>
-      <td>£5.00</td>
-      <td>joe.bloggs@noms.gov.uk</td>
-      <td><span class="text-success">Paid</span></td>
-    </tr>
-    <tr>
-      <td>25/04/2019</td>
-      <td>£10.99</td>
-      <td>joe.bloggs@noms.gov.uk</td>
-      <td><span class="text-success">Paid</span></td>
-    </tr>
-    <tr>
-      <td>14/05/2019</td>
-      <td>£5.10</td>
-      <td>joe.bloggs@noms.gov.uk</td>
-      <td><span class="text-pending">Pending</span></td>
-    </tr>
+      {% for TopUp in TopUps %}
+        <tr>
+          <td>{{ getDateFormatted.shortDateAndTime(TopUp.DateAdded) }}</td>
+          <td>{{ TopUp['TopUpAmount'] }}</td>
+          <td>{{ TopUp['Caseworker'] }}</td>
+          {% if TopUp.IsPaid %}
+            <td><span class="text-success">Paid</span></td>
+          {% else %}
+            <td><span class="text-pending">Pending</span></td>
+          {% endif %}
+        </tr>
+      {% endfor %}
   </tbody>
 </table>
+{% endif %}

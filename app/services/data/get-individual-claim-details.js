@@ -17,6 +17,7 @@ module.exports = function (claimId) {
   var claimDetails
   var claimEvents
   var reference
+  var TopUps
 
   return getClaimantDetails(claimId)
     .then(function (claimData) {
@@ -31,7 +32,8 @@ module.exports = function (claimId) {
         getClaimEscort(claimId),
         duplicateClaimCheck(claimId, claim.NationalInsuranceNumber, claim.PrisonNumber, claim.DateOfJourney),
         getClaimEvents(claimId),
-        getOverpaidClaimsByReference(reference, claimId)
+        getOverpaidClaimsByReference(reference, claimId),
+        getTopUp(claimId)
       ])
     })
     .then(function (results) {
@@ -43,6 +45,8 @@ module.exports = function (claimId) {
       claimDuplicatesExist = results[5]
       claimEvents = results[6]
       var overpaidClaimData = results[7]
+      TopUps = results[8]
+
 
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
       claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
@@ -55,7 +59,8 @@ module.exports = function (claimId) {
         claimEvents: claimEvents,
         deductions: claimDeductions,
         duplicates: claimDuplicatesExist,
-        overpaidClaims: overpaidClaimData
+        overpaidClaims: overpaidClaimData,
+        TopUps: TopUps
       }
 
       return claimDetails
@@ -174,6 +179,11 @@ function getClaimEscort (claimId) {
 
 function getClaimEvents (claimId) {
   return knex('ClaimEvent')
+    .where('ClaimId', claimId)
+}
+
+function getTopUp (claimId) {
+  return knex.select('TopUpId', 'ClaimId',  'IsPaid',  'Caseworker',  'TopUpAmount', 'Reason').from('TopUp')
     .where('ClaimId', claimId)
 }
 
