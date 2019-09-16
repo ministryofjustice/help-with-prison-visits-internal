@@ -28,6 +28,7 @@ const PAYMENT_METHOD_HEADER = 'Payment Method'
 const CLAIM_EXPENSE_TYPE_HEADER = 'Expense Type '
 const EXPENSE_APPROVED_COST_HEADER = 'Approved Cost '
 const REJECTION_REASON_HEADER = 'Rejection Reason'
+const DAYS_UNTIL_PAYMENT_HEADER = 'Days Until Payment'
 
 module.exports = function (claims) {
   return Promise.map(claims, function (claim) {
@@ -62,6 +63,7 @@ module.exports = function (claims) {
         returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
         returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
         returnValue[REJECTION_REASON_HEADER] = claim.RejectionReason
+        returnValue[DAYS_UNTIL_PAYMENT_HEADER] = claim.DaysUntilPayment
         if (claim.RejectionReason === 'Other') {
           returnValue[REJECTION_REASON_HEADER] = claim.Note
         }

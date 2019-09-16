@@ -34,6 +34,7 @@ var validSearchOptions = [
   'dateRejectedTo',
   'approvedClaimAmountFrom',
   'approvedClaimAmountTo',
+  'overpaymentStatus',
   'paymentMethod'
 ]
 
@@ -49,7 +50,8 @@ const ADVANCED_SEARCH_FIELDS = [
   'Claim.AssignmentExpiry',
   'Claim.Status',
   'Claim.LastUpdated',
-  'ClaimRejectionReason.RejectionReason'
+  'ClaimRejectionReason.RejectionReason',
+  'Claim.PaymentDate'
 ]
 const EXPORT_CLAIMS_FIELDS = [
   'Visitor.FirstName',
@@ -72,7 +74,8 @@ const EXPORT_CLAIMS_FIELDS = [
   'Eligibility.IsTrusted',
   'Prisoner.NameOfPrison',
   'ClaimRejectionReason.RejectionReason',
-  'Claim.Note'
+  'Claim.Note',
+  'Claim.PaymentDate'
 ]
 
 module.exports = function (searchCriteria, offset, limit, isExport) {
@@ -159,6 +162,11 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     applyVisitRulesFilter(selectQuery, searchCriteria.visitRules)
   }
 
+  if (searchCriteria.overpaymentStatus) {
+    applyOverpaymentStatusFilter(countQuery, searchCriteria.overpaymentStatus)
+    applyOverpaymentStatusFilter(selectQuery, searchCriteria.overpaymentStatus)
+  }
+
   if (searchCriteria.visitDateFrom) {
     applyVisitDateFromFilter(countQuery, searchCriteria.visitDateFrom)
     applyVisitDateFromFilter(selectQuery, searchCriteria.visitDateFrom)
@@ -221,12 +229,18 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
           claims.forEach(function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+            claim.DateSubmittedMoment = moment(claim.DateSubmitted)
             claim.DisplayStatus = statusFormatter(claim.Status)
             claim.Name = claim.FirstName + ' ' + claim.LastName
             if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
               claim.AssignedTo = null
             }
             claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
+            if (claim.PaymentDate) {
+              claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
+            } else {
+              claim.DaysUntilPayment = 'N/A'
+            }
           })
           return {
             claims: claims,
@@ -304,6 +318,17 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
       query.where('Visitor.Country', rulesEnum.SCOTLAND.value)
     } else if (visitRules === 'northernIreland') {
       query.where('Visitor.Country', rulesEnum.NI.value)
+    }
+  }
+
+  function applyOverpaymentStatusFilter (query, overpaymentStatus) {
+    if (overpaymentStatus === 'false') {
+      query.where(function () {
+        this.where('Claim.IsOverpaid', false)
+        .orWhereNull('Claim.IsOverpaid')
+      })
+    } else {
+      query.orWhere('Claim.IsOverpaid', true)
     }
   }
 

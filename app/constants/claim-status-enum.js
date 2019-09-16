@@ -38,5 +38,9 @@ module.exports = {
   REQUEST_INFORMATION: {
     value: 'REQUEST-INFORMATION',
     closed: false
+  },
+  REFERENCE_DISBALED: {
+    value: 'REFERENCE-DISABLED',
+    closed: true
   }
 }

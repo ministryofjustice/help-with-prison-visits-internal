@@ -22,6 +22,8 @@ const updateClaimOverpaymentStatus = require('../../services/data/update-claim-o
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
 const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 const payoutBarcodeExpiredClaim = require('../../services/data/payout-barcode-expired-claim')
+const disableReferenceNumber = require('../../services/data/disable-reference-number')
+const reEnableReferenceNumber = require('../../services/data/re-enable-reference-number')
 const insertNote = require('../../services/data/insert-note')
 const updateEligibilityTrustedStatus = require('../../services/data/update-eligibility-trusted-status')
 const requestNewBankDetails = require('../../services/data/request-new-bank-details')
@@ -141,6 +143,20 @@ module.exports = function (router) {
     var needAssignmentCheck = true
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return payoutBarcodeExpiredClaim(req.params.claimId, req.body['payout-barcode-expired-additional-information'])
+    })
+  })
+
+  router.post('/claim/:claimId/disable-reference-number', function (req, res, next) {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return disableReferenceNumber(req.params.claimId, req.body['referenceToBeDisabled'], req.body['disable-reference-number-additional-information'], req.user.email)
+    })
+  })
+
+  router.post('/claim/:claimId/re-enable-reference-number', function (req, res, next) {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return reEnableReferenceNumber(req.params.claimId, req.body['referenceToBeReEnabled'], req.body['re-enable-reference-number-additional-information'], req.user.email)
     })
   })
 
@@ -312,6 +328,7 @@ function renderValues (data, req, error) {
     duplicates: data.duplicates,
     claimEvents: data.claimEvents,
     overpaidClaims: data.overpaidClaims,
+    claimantDuplicates: data.claimantDuplicates,
     claimDecisionEnum: claimDecisionEnum,
     errors: error.validationErrors,
     unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry)

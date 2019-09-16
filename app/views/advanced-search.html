@@ -147,7 +147,7 @@
     </div>
 
     <div class="grid-row">
-      <div class="column-one-third">
+      <div class="column-one-quarter">
         <h3 class="heading-small">Mode of approval</h3>
         <div class="form-group">
           <label for="modeOfApprovalAuto" class="block-label inline">
@@ -163,7 +163,7 @@
         </div>
       </div>
 
-      <div class="column-one-third">
+      <div class="column-one-quarter">
         <h3 class="heading-small">Type of claim</h3>
         <div class="form-group">
           <label for="typeOfClaimPast" class="block-label inline">
@@ -179,7 +179,7 @@
         </div>
       </div>
 
-      <div class="column-one-third">
+      <div class="column-one-quarter">
         <h3 class="heading-small">Visit rules</h3>
         <div class="form-group">
           <label for="visitRulesEnglandWales" class="block-label inline">
@@ -197,6 +197,22 @@
           <label for="visitRulesNorthernIreland" class="block-label inline">
             Northern Ireland
             <input id="visitRulesNorthernIreland" type="radio" name="visitRules" value="northernIreland" {% if query.visitRules == 'northernIreland' %} checked {% endif %}>
+          </label>
+        </div>
+      </div>
+
+      <div class="column-one-quarter">
+        <h3 class="heading-small">Is Claim Overpaid?</h3>
+        <div class="form-group">
+          <label for="overpaymentYes" class="block-label inline">
+            Yes
+            <input id="overpaymentYes" type="radio" name="overpaymentStatus" value="yes" {% if query.overpaymentStatus == 'yes' %} checked {% endif %}>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="overpaymentNo" class="block-label inline">
+            No
+            <input id="overpaymentNo" type="radio" name="overpaymentStatus" value="no" {% if query.overpaymentStatus == 'no' %} checked {% endif %}>
           </label>
         </div>
       </div>
@@ -517,6 +533,7 @@
         <th class="sorting_disabled">Visit Date</th>
         <th class="sorting_disabled">Status</th>
         <th class="sorting_disabled">Claim type</th>
+        <th class="sorting_disabled">Days until Payment</th>
         <th class="sorting_disabled">Assigned to</th>
         <th class="sorting_disabled"></th>
       </tr>

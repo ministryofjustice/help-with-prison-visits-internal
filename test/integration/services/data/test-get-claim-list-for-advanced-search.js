@@ -33,7 +33,8 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
                 'AssistedDigitalCaseworker': 'test@test.com',
                 'DateOfJourney': date.toDate(),
                 'DateReviewed': date.toDate(),
-                'PaymentAmount': '12'
+                'PaymentAmount': '12',
+                'PaymentDate': date.add(5, 'days').toDate()
               })
               .where('Reference', reference1)
             var reference2ClaimUpdate = knex('Claim')
@@ -81,6 +82,18 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         expect(result.claims[0].Reference, `Reference should equal ${reference1}`).to.equal(reference1)
         expect(result.claims[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
         expect(result.claims.length, 'Claims length should equal 1').to.equal(1)
+        expect(result.claims[0].DaysUntilPayment, 'Days Until Payment should equal 5').to.equal(5)
+      })
+  })
+
+  it('should return "N/A" for days until payment if payment date is null', function () {
+    var searchCriteria = {
+      reference: reference2
+    }
+
+    return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
+      .then(function (result) {
+        expect(result.claims[0].DaysUntilPayment, 'Days Until Payment should equal N/A').to.equal('N/A')
       })
   })
 
