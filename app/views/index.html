@@ -15,7 +15,8 @@
     {{nav.active('/')}}
 
   <div class="column-one-half search">
-    <form action="/search">
+    <form action="/search" method="POST">
+      {% include "partials/csrf-hidden-input.html" %}
       <label for="input-search-query">
         <input type="text" name="q" class="form-control" id="input-search-query">
       </label>

@@ -15,33 +15,45 @@ module.exports = function (router) {
     return res.render('advanced-search')
   })
 
-  router.get('/advanced-search', function (req, res) {
+  router.post('/advanced-search', function (req, res) {
     authorisation.isCaseworker(req)
     validationErrors = {}
-    extractSearchCriteria(req.query)
+    extractSearchCriteria(req.body)
 
     for (var field in validationErrors) {
       if (validationErrors.hasOwnProperty(field)) {
         if (validationErrors[ field ].length > 0) {
-          return res.status(400).render('advanced-search', { query: req.query, errors: validationErrors })
+          return res.status(400).render('advanced-search', { query: req.body, errors: validationErrors, startSearching: false })
         }
       }
     }
 
     var queryIndex = req.url.indexOf('?')
     var rawQueryString = queryIndex > -1 ? req.url.substr(queryIndex + 1) : ''
+    var stringifiedBody = Object.assign({}, req.body)
+    stringifiedBody = JSON.stringify(stringifiedBody)
 
     return res.render('advanced-search', {
-      query: req.query,
-      rawQuery: rawQueryString
+      query: req.body,
+      rawQuery: rawQueryString,
+      startSearching: true,
+      stringifiedBody: stringifiedBody
     })
   })
 
-  router.get('/advanced-search-results/export', function (req, res) {
+  router.post('/advanced-search-results/export', function (req, res) {
     res.connection.setTimeout(500000)
     authorisation.isCaseworker(req)
 
-    var searchCriteria = extractSearchCriteria(req.query)
+    var searchCriteria = extractSearchCriteria(req.body)
+
+    for (var field in validationErrors) {
+      if (validationErrors.hasOwnProperty(field)) {
+        if (validationErrors[ field ].length > 0) {
+          return res.status(400).render('advanced-search', { query: req.body, errors: validationErrors, startSearching: false })
+        }
+      }
+    }
 
     var timestamp = dateFormatter.now().toDate().toISOString()
       .replace('Z', '')

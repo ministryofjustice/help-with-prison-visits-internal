@@ -2,7 +2,6 @@ const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const express = require('express')
-const queryString = require('querystring')
 const bodyParser = require('body-parser')
 const dateFormatter = require('../../../app/services/date-formatter')
 const path = require('path')
@@ -190,7 +189,7 @@ describe('routes/index', function () {
   describe('GET /advanced-search', function () {
     it('should respond with a 200 for no query string', function () {
       return supertest(app)
-        .get('/advanced-search')
+        .post('/advanced-search')
         .expect(200)
         .expect(function () {
           expect(isCaseworkerStub.calledOnce).to.be.true
@@ -199,7 +198,8 @@ describe('routes/index', function () {
 
     it('should respond with a 200 with query string', function () {
       return supertest(app)
-        .get('/advanced-search?Reference=V123456')
+        .post('/advanced-search')
+        .send({Reference: 'V123456'})
         .expect(200)
         .expect(function () {
           expect(isCaseworkerStub.calledOnce).to.be.true
@@ -207,10 +207,11 @@ describe('routes/index', function () {
     })
 
     it('should return validation errors for invalid data', function () {
-      var searchQueryString = `${queryString.stringify(INVALID_DATE_FIELDS)}&${queryString.stringify(INVALID_AMOUNTS)}`
+      var sendObject = Object.assign({},INVALID_DATE_FIELDS, INVALID_AMOUNTS, {draw: draw, start: start, length: length})
 
       return supertest(app)
-        .get(`/advanced-search?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)
+        .post(`/advanced-search`)
+        .send(sendObject)
         .expect(function (response) {
           expect(errorsReturnedToView).to.deep.equal(EXPECTED_VALIDATION_ERRORS)
         })
@@ -259,10 +260,10 @@ describe('routes/index', function () {
     })
   })
 
-  describe('GET /advanced-search-results/export', function () {
+  describe('POST /advanced-search-results/export', function () {
     it('should respond with a 200', function () {
       return supertest(app)
-        .get('/advanced-search-results/export?')
+        .post('/advanced-search-results/export')
         .expect(200)
         .expect(function () {
           expect(isCaseworkerStub.calledOnce).to.be.true

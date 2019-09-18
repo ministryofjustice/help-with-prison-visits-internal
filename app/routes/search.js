@@ -6,12 +6,20 @@ module.exports = function (router) {
   router.get('/search', function (req, res) {
     authorisation.isCaseworker(req)
     var query = req.query.q
-    return res.render('search', { query: query })
+    return res.render('search', { query: query, startSearching: false })
   })
 
-  router.get('/search-results', function (req, res) {
+  router.post('/search', function (req, res) {
     authorisation.isCaseworker(req)
-    var searchQuery = req.query.q || ''
+    var query = req.body.q
+    var stringifiedBody = Object.assign({}, req.body)
+    stringifiedBody = JSON.stringify(stringifiedBody)
+    return res.render('search', { query: query, stringifiedBody:stringifiedBody, startSearching: true })
+  })
+
+  router.post('/search-results', function (req, res) {
+    authorisation.isCaseworker(req)
+    var searchQuery = req.body.q || ''
 
     if (!searchQuery) {
       return res.json({
@@ -21,7 +29,7 @@ module.exports = function (router) {
         claims: []
       })
     } else {
-      getClaimListForSearch(searchQuery, parseInt(req.query.start), parseInt(req.query.length))
+      getClaimListForSearch(searchQuery, parseInt(req.body.start), parseInt(req.body.length))
         .then(function (data) {
           var claims = data.claims
 

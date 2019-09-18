@@ -4,11 +4,13 @@ function cleanColumnOutput (data, type, row) {
 }
 
 $(document).ready(function () {
-  var searchQuery = decodeURIComponent(window.location.search.substring(1))
+  var search = document.getElementById('rawQuery').value
+  if (search) {
+    search = JSON.parse(search)
+  }
 
-  var search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}')
-
-  if (searchQuery) {
+  var startSearching = document.getElementById('startSearching').value
+  if (startSearching === 'true') {
     $('#search-results-header').show()
     $('#advanced-search-results').show()
     var dataReference = '/advanced-search-results'

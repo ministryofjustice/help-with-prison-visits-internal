@@ -60,7 +60,8 @@ describe('routes/index', function () {
       var searchQuery = 'Joe Bloggs'
       getClaimListForSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
       return supertest(app)
-        .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
+        .post(`/search-results`)
+        .send({q: searchQuery, draw: draw, start: start, length: length})
         .expect(200)
         .expect(function (response) {
           expect(isCaseworkerStub.calledOnce).to.be.true
@@ -73,7 +74,8 @@ describe('routes/index', function () {
     it('should not call data object when provided an empty query', function () {
       var searchQuery = ''
       return supertest(app)
-        .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
+        .post(`/search-results`)
+        .send({q: searchQuery, draw: draw, start: start, length: length})
         .expect(200)
         .expect(function (response) {
           expect(getClaimListForSearch.notCalled).to.be.true

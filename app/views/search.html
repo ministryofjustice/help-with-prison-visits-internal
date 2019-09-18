@@ -14,7 +14,10 @@
     {{nav.active('')}}
 
   <div class="search">
-    <form action="/search">
+    <form action="/search" method="POST">
+      {% include "partials/csrf-hidden-input.html" %}
+      <input id="rawQuery" type="hidden" name="rawQuery" value="{{ stringifiedBody }}">
+      <input id="startSearching" type="hidden" name="startSearching" value="{{ startSearching }}">
       <label for="input-search-query">
         <input id="input-search-query" type="text" name="q" class="form-control" value="{{ query }}">
       </label>
