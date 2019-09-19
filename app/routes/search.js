@@ -14,7 +14,7 @@ module.exports = function (router) {
     var query = req.body.q
     var stringifiedBody = Object.assign({}, req.body)
     stringifiedBody = JSON.stringify(stringifiedBody)
-    return res.render('search', { query: query, stringifiedBody:stringifiedBody, startSearching: true })
+    return res.render('search', { query: query, stringifiedBody: stringifiedBody, startSearching: true })
   })
 
   router.post('/search-results', function (req, res) {

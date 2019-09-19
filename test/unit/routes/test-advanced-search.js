@@ -207,7 +207,7 @@ describe('routes/index', function () {
     })
 
     it('should return validation errors for invalid data', function () {
-      var sendObject = Object.assign({},INVALID_DATE_FIELDS, INVALID_AMOUNTS, {draw: draw, start: start, length: length})
+      var sendObject = Object.assign({}, INVALID_DATE_FIELDS, INVALID_AMOUNTS, {draw: draw, start: start, length: length})
 
       return supertest(app)
         .post(`/advanced-search`)
