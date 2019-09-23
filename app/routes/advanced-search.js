@@ -15,6 +15,11 @@ module.exports = function (router) {
     return res.render('advanced-search')
   })
 
+  router.get('/advanced-search', function (req, res) {
+    authorisation.isCaseworker(req)
+    return res.redirect('/advanced-search-input')
+  })
+
   router.post('/advanced-search', function (req, res) {
     authorisation.isCaseworker(req)
     validationErrors = {}
