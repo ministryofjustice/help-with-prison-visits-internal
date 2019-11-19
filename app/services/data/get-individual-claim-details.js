@@ -184,6 +184,12 @@ function getClaimEvents (claimId) {
 function getTopUp (claimId) {
   return knex.select('TopUpId', 'ClaimId', 'IsPaid', 'Caseworker', 'TopUpAmount', 'Reason').from('TopUp')
     .where('ClaimId', claimId)
+    .then(function(TopUpResults){
+      TopUpResults.forEach(function(TopUpResult){
+        TopUpResult.TopUpAmount = Number(TopUpResult.TopUpAmount).toFixed(2) 
+      })
+      return TopUpResults
+    })
 }
 
 function setClaimExpenseStatusForCarJourneys (claimExpenses) {
