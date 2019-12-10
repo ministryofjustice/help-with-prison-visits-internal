@@ -186,7 +186,7 @@ function getTopUp (claimId) {
     .where('ClaimId', claimId)
     .then(function (TopUpResults) {
       TopUpResults.forEach(function (TopUpResult) {
-        TopUpResult.TopUpAmount = Number(TopUpResult.TopUpAmount).toFixed(2) 
+        TopUpResult.TopUpAmount = Number(TopUpResult.TopUpAmount).toFixed(2)
       })
       return TopUpResults
     })
