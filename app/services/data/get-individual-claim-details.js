@@ -182,10 +182,10 @@ function getClaimEvents (claimId) {
 }
 
 function getTopUp (claimId) {
-  return knex.select('TopUpId', 'ClaimId', 'IsPaid', 'Caseworker', 'TopUpAmount', 'Reason').from('TopUp')
+  return knex.select('TopUpId', 'ClaimId', 'IsPaid', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded').from('TopUp')
     .where('ClaimId', claimId)
-    .then(function(TopUpResults){
-      TopUpResults.forEach(function(TopUpResult){
+    .then(function (TopUpResults) {
+      TopUpResults.forEach(function (TopUpResult) {
         TopUpResult.TopUpAmount = Number(TopUpResult.TopUpAmount).toFixed(2) 
       })
       return TopUpResults
