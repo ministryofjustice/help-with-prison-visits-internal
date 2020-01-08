@@ -12,6 +12,8 @@ module.exports = function (router) {
         var previousAccessPayFiles
         var topAdiJournalFile
         var previousAdiJournalFiles
+        var topApvuAccessPayFile
+        var previousApvuAccessPayFiles
 
         if (directPaymentFiles) {
           if (directPaymentFiles.accessPayFiles && directPaymentFiles.accessPayFiles.length > 0) {
@@ -22,12 +24,18 @@ module.exports = function (router) {
             topAdiJournalFile = directPaymentFiles.adiJournalFiles[0]
             previousAdiJournalFiles = directPaymentFiles.adiJournalFiles.slice(1)
           }
+          if (directPaymentFiles.apvuAccessPayFiles && directPaymentFiles.apvuAccessPayFiles.length > 0) {
+            topApvuAccessPayFile = directPaymentFiles.apvuAccessPayFiles[0]
+            previousApvuAccessPayFiles = directPaymentFiles.apvuAccessPayFiles.slice(1)
+          }
         }
 
         return res.render('download-payment-files', {
           title: 'APVS Download payment files',
           topAccessPayFile: topAccessPayFile,
           previousAccessPayFiles: previousAccessPayFiles,
+          topApvuAccessPayFile: topApvuAccessPayFile,
+          previousApvuAccessPayFiles: previousApvuAccessPayFiles,
           topAdiJournalFile: topAdiJournalFile,
           previousAdiJournalFiles: previousAdiJournalFiles,
           dateHelper: dateHelper
@@ -48,6 +56,9 @@ module.exports = function (router) {
           var matchingFile = directPaymentFiles.accessPayFiles.find(function (file) { return file.PaymentFileId === id })
           if (!matchingFile && directPaymentFiles.adiJournalFiles) {
             matchingFile = directPaymentFiles.adiJournalFiles.find(function (file) { return file.PaymentFileId === id })
+          }
+          if (!matchingFile && directPaymentFiles.apvuAccessPayFiles) {
+            matchingFile = directPaymentFiles.apvuAccessPayFiles.find(function (file) { return file.PaymentFileId === id })
           }
           if (!matchingFile) {
             throw new Error('Unable to find file')

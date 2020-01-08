@@ -17,6 +17,7 @@ module.exports = function () {
     'Total amount paid',
     'Payment Method',
     'Rejection Reason',
+    'Days Until Payment',
     'Expense Type 1',
     'Approved Cost 1',
     'Expense Type 2',
