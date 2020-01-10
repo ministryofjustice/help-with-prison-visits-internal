@@ -20,6 +20,11 @@ module.exports = function (claimId, claimDecision) {
       var decision = claimDecision.decision
       var note = claimDecision.note
       var nomisCheck = claimDecision.nomisCheck
+      var releaseDateIsSet = claimDecision.releaseDateIsSet
+      var releaseDate = null
+      if (claimDecision.releaseDateIsSet) {
+        releaseDate = claimDecision.releaseDate.toDate()
+      }
       var dwpCheck = claimDecision.dwpCheck
       var visitConfirmationCheck = claimDecision.visitConfirmationCheck
       var rejectionReasonId = claimDecision.rejectionReasonId
@@ -28,7 +33,7 @@ module.exports = function (claimId, claimDecision) {
       return Promise.all([updateEligibility(eligibilityId, decision),
         updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed, rejectionReasonId),
         updateVisitor(eligibilityId, dwpCheck),
-        updatePrisoner(eligibilityId, nomisCheck),
+        updatePrisoner(eligibilityId, nomisCheck, releaseDateIsSet, releaseDate),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
         insertClaimEventForDecision(reference, eligibilityId, claimId, decision, note, caseworker),
         updateRemainingOverpaymentAmounts(claimId, reference, decision),
@@ -97,8 +102,12 @@ function updateVisitor (eligibilityId, dwpCheck) {
   return knex('Visitor').where('EligibilityId', eligibilityId).update('DWPCheck', dwpCheck)
 }
 
-function updatePrisoner (eligibilityId, nomisCheck) {
-  return knex('Prisoner').where('EligibilityId', eligibilityId).update('NomisCheck', nomisCheck)
+function updatePrisoner (eligibilityId, nomisCheck, releaseDateIsSet, releaseDate) {
+  return knex('Prisoner').where('EligibilityId', eligibilityId).update({
+    'NomisCheck': nomisCheck,
+    'ReleaseDateIsSet': releaseDateIsSet,
+    'ReleaseDate': releaseDate
+  })
 }
 
 function updateClaimExpenses (claimExpenseResponses) {
