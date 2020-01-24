@@ -63,7 +63,9 @@
 
   {% include "includes/validation-error-messages.html" %}
 
+  <br>
   <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
+  </br>
 
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
 
@@ -74,7 +76,18 @@
 
     {% include "partials/view-claim/visitor.html" %}
 
+    
+    {% if ClaimEligibleChild.FirstName %}
+      <br>
+      <h1 class="table-heading">Eligible Child</h1>
+      </br>
+    {% endif %}
+
+    {% include "partials/view-claim/eligible-child.html" %}
+
+    <br>
     <h1 class="table-heading">Prisoner</h1>
+    </br>
 
     {% include "partials/view-claim/prisoner.html" %}
 
