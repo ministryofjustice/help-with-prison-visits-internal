@@ -7,7 +7,6 @@ const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const dateFormatter = require('../date-formatter')
 const moment = require('moment')
-const log = require('../log')
 
 module.exports = function (claimId) {
   var claim
