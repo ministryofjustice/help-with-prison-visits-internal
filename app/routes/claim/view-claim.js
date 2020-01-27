@@ -330,6 +330,7 @@ function renderValues (data, req, error) {
   var displayJson = {
     title: 'APVS Claim',
     Claim: data.claim,
+    ClaimEligibleChild: data.claimEligibleChild,
     Expenses: data.claimExpenses,
     Children: data.claimChild,
     Escort: data.claimEscort,

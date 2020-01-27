@@ -1,0 +1,36 @@
+{% if ClaimEligibleChild.FirstName %}
+  <table class="col-2 no-pad-right">
+
+    <tr>
+      <td>Name</td>
+      <td>{{ ClaimEligibleChild.FirstName }} {{ ClaimEligibleChild.LastName }}</td>
+    </tr>
+
+    <tr>
+      <td>Date of birth</td>
+      <td>{{ getDateFormatted.shortDate(ClaimEligibleChild.DateOfBirth) }}</td>
+    </tr>
+
+    <tr>
+      <td>Prisoner Relationship</td>
+      <td>{{ ClaimEligibleChild.ChildRelationship }}</td>
+    </tr>
+
+    <tr>
+      <td>Parent</td>
+      <td>{{ ClaimEligibleChild.ParentFirstName }} {{ ClaimEligibleChild.ParentLastName }}</td>
+    </tr>
+
+    <tr>
+      <td>Address</td>
+      <td>
+        {{ ClaimEligibleChild.HouseNumberAndStreet }}</br> 
+        {{ ClaimEligibleChild.Town }}</br> 
+        {{ ClaimEligibleChild.County }}</br> 
+        {{ ClaimEligibleChild.PostCode }}</br> 
+        {{ ClaimEligibleChild.Country }}</br>
+      </td>
+    </tr>
+
+  </table>
+{% endif %}
