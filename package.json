@@ -46,6 +46,7 @@
     ]
   },
   "dependencies": {
+    "applicationinsights": "^1.7.0",
     "bluebird": "^3.4.6",
     "body-parser": "~1.15.1",
     "bunyan": "^1.8.1",
