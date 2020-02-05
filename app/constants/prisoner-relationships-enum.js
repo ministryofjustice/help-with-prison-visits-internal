@@ -15,5 +15,6 @@ module.exports = {
   'brother': {'displayName': 'Brother'},
   'sister': {'displayName': 'Sister'},
   'son': {'displayName': 'Son'},
-  'daughter': {'displayName': 'Daughter'}
+  'daughter': {'displayName': 'Daughter'},
+  'eligible-child': {'displayName': 'Escorting an Eligible Child'},
 }
