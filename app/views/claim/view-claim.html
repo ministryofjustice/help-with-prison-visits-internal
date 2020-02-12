@@ -77,9 +77,9 @@
     {% include "partials/view-claim/visitor.html" %}
 
     
-    {% if ClaimEligibleChild.FirstName %}
+    {% if ClaimEligibleChild.length > 0 %}
       <br>
-      <h1 class="table-heading">Eligible Child</h1>
+      <h1 class="table-heading">Eligible Children</h1>
       </br>
     {% endif %}
 
