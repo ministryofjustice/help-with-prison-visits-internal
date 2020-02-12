@@ -1,36 +1,36 @@
-{% if ClaimEligibleChild.FirstName %}
+{% if ClaimEligibleChild.length > 0 %}
   <table class="col-2 no-pad-right">
-
+  {% for eligibleChild in ClaimEligibleChild %}
     <tr>
-      <td>Name</td>
-      <td>{{ ClaimEligibleChild.FirstName }} {{ ClaimEligibleChild.LastName }}</td>
+      <td>Eligible child name</td>
+      <td>{{ eligibleChild.FirstName }} {{ eligibleChild.LastName }}</td>
     </tr>
 
     <tr>
       <td>Date of birth</td>
-      <td>{{ getDateFormatted.shortDate(ClaimEligibleChild.DateOfBirth) }}</td>
+      <td>{{ getDateFormatted.shortDate(eligibleChild.DateOfBirth) }}</td>
     </tr>
 
     <tr>
       <td>Prisoner Relationship</td>
-      <td>{{ ClaimEligibleChild.ChildRelationship }}</td>
+      <td>{{ eligibleChild.ChildRelationship }}</td>
     </tr>
 
     <tr>
       <td>Parent</td>
-      <td>{{ ClaimEligibleChild.ParentFirstName }} {{ ClaimEligibleChild.ParentLastName }}</td>
+      <td>{{ eligibleChild.ParentFirstName }} {{ eligibleChild.ParentLastName }}</td>
     </tr>
 
     <tr>
       <td>Address</td>
       <td>
-        {{ ClaimEligibleChild.HouseNumberAndStreet }}</br> 
-        {{ ClaimEligibleChild.Town }}</br> 
-        {{ ClaimEligibleChild.County }}</br> 
-        {{ ClaimEligibleChild.PostCode }}</br> 
-        {{ ClaimEligibleChild.Country }}</br>
+        {{ eligibleChild.HouseNumberAndStreet }}</br> 
+        {{ eligibleChild.Town }}</br> 
+        {{ eligibleChild.County }}</br> 
+        {{ eligibleChild.PostCode }}</br> 
+        {{ eligibleChild.Country }}</br>
       </td>
     </tr>
-
+  {% endfor %}
   </table>
 {% endif %}

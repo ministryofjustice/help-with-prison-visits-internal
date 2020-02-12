@@ -150,7 +150,6 @@ function getClaimEligibleChild (reference, eligibilityId) {
       'EligibleChild.County',
       'EligibleChild.PostCode',
       'EligibleChild.Country')
-    .first()
 }
 
 function getClaimDocuments (claimId, reference, eligibilityId) {
