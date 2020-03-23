@@ -12,6 +12,7 @@ module.exports = {
   'father': {'displayName': 'Father'},
   'grandmother': {'displayName': 'Grandmother'},
   'grandfather': {'displayName': 'Grandfather'},
+  'grandchild': {'displayName': 'Grandchild'},
   'brother': {'displayName': 'Brother'},
   'sister': {'displayName': 'Sister'},
   'son': {'displayName': 'Son'},
