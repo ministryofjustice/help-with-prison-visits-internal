@@ -1,0 +1,49 @@
+{% if unlock %}
+<label for='release-date-is-set' class="block-label" data-target="release-date-section">
+  <input type="checkbox" name='release-date-is-set' id='release-date-is-set' {% if Claim['ReleaseDateIsSet'] === true %} checked {% endif %} />
+  <span>Release Date is set?</span>
+</label>
+
+<br/>
+<br/>
+<br/>
+
+<div id="release-date-section" name="release-date-section" class="form-date {% if not Claim['ReleaseDateIsSet'] %} js-hidden {% endif %} {% if errors['release-date-section'][0] %} warning {% endif %}">
+  <fieldset>
+    <div class="form-group form-group-day">
+      <label id="release-day" for="release-day-input">Day</label>
+      <input id="release-day-input" type="number" name="release-day" autocomplete="off" 
+            value="{{ Claim['releaseDay'] }}" class="form-control">
+    </div>
+
+    <div class="form-group form-group-month">
+      <label id="release-month" for="release-month-input">Month</label>
+      <input id="release-month-input" type="number" name="release-month" autocomplete="off"
+            value="{{ Claim['releaseMonth'] }}" class="form-control">
+    </div>
+
+    <div class="form-group form-group-year">
+      <label id="release-year" for="release-year-input">Year</label>
+      <input id="release-year-input" type="number" name="release-year" autocomplete="off"
+            value="{{ Claim['releaseYear'] }}" class="form-control">
+    </div>
+  </fieldset>
+</div>
+
+{% else %}
+
+<table class="col-2 no-pad-right">
+
+  <tr>
+    <td>Release Date</td>
+    {% if Claim['ReleaseDate'] %}
+      <td>{{ getDateFormatted.shortDate(Claim['ReleaseDate']) }}</td>
+    {% else %}
+      <td><span class="text-pending">Pending</span></td>
+    {% endif %}
+  </tr>
+
+</table>
+
+
+{% endif %}

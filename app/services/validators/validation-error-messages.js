@@ -27,5 +27,6 @@ module.exports = {
   getApprovedCostTooHigh: function (displayName, approvedCostLimit) { return `${displayName} must not be greater than £${approvedCostLimit}` },
   getInvalidDateFormatMessage: function (displayName) { return `${displayName} was invalid` },
   getFutureDateMessage: function (displayName) { return `${displayName} must be in the future` },
-  getExpiryDateIsRequired: function () { return 'Please enter the Benefit Expiry date' }
+  getExpiryDateIsRequired: function () { return 'Please enter the Benefit Expiry date' },
+  getReleaseDateIsRequired: function () { return 'Please enter the release date' },
 }

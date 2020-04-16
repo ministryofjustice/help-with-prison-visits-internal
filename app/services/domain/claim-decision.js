@@ -25,7 +25,11 @@ class ClaimDecision {
                additionalInfoRejectManual,
                expiryDay,
                expiryMonth,
-               expiryYear) {
+               expiryYear,
+               releaseDateIsSet,
+               releaseDay,
+               releaseMonth,
+               releaseYear) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
     this.rejectionReasonId = null
@@ -65,6 +69,17 @@ class ClaimDecision {
       expiryYear
     ]
     this.expiryDate = dateFormatter.build(expiryDay, expiryMonth, expiryYear)
+    if (releaseDateIsSet) {
+      this.releaseDateIsSet = true
+    } else {
+      this.releaseDateIsSet = false
+    }
+    this.releaseDateFields = [
+      releaseDay,
+      releaseMonth,
+      releaseYear
+    ]
+    this.releaseDate = dateFormatter.build(releaseDay, releaseMonth, releaseYear)
     this.IsValid()
   }
 
@@ -113,10 +128,6 @@ class ClaimDecision {
       }
     })
 
-    if (totalExpenseCost > parseInt(MAX_TOTAL_APPROVED_AMOUNT)) {
-      errors.add('total-approved-cost', ERROR_MESSAGES.getApprovedCostTooHigh, parseInt(MAX_TOTAL_APPROVED_AMOUNT))
-    }
-
     if (this.decision === claimDecisionEnum.APPROVED && allExpensesRejected) {
       errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
     }
@@ -149,6 +160,13 @@ class ClaimDecision {
         .isDateRequired(ERROR_MESSAGES.getExpiryDateIsRequired)
         .isValidDate(this.expiryDate)
         .isFutureDate(this.expiryDate)
+
+    if (this.releaseDateIsSet) {
+      FieldValidator(this.releaseDateFields, 'release-date-section', errors)
+        .isDateRequired(ERROR_MESSAGES.getReleaseDateIsRequired)
+        .isValidDate(this.releaseDate)
+        .isFutureDate(this.releaseDate)
+    }
 
     var validationErrors = errors.get()
 

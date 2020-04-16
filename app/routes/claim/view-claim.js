@@ -22,6 +22,8 @@ const updateClaimOverpaymentStatus = require('../../services/data/update-claim-o
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
 const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 const payoutBarcodeExpiredClaim = require('../../services/data/payout-barcode-expired-claim')
+const disableReferenceNumber = require('../../services/data/disable-reference-number')
+const reEnableReferenceNumber = require('../../services/data/re-enable-reference-number')
 const insertNote = require('../../services/data/insert-note')
 const updateEligibilityTrustedStatus = require('../../services/data/update-eligibility-trusted-status')
 const requestNewBankDetails = require('../../services/data/request-new-bank-details')
@@ -144,6 +146,20 @@ module.exports = function (router) {
     })
   })
 
+  router.post('/claim/:claimId/disable-reference-number', function (req, res, next) {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return disableReferenceNumber(req.params.claimId, req.body['referenceToBeDisabled'], req.body['disable-reference-number-additional-information'], req.user.email)
+    })
+  })
+
+  router.post('/claim/:claimId/re-enable-reference-number', function (req, res, next) {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return reEnableReferenceNumber(req.params.claimId, req.body['referenceToBeReEnabled'], req.body['re-enable-reference-number-additional-information'], req.user.email)
+    })
+  })
+
   router.post('/claim/:claimId/insert-note', function (req, res, next) {
     var needAssignmentCheck = false
 
@@ -232,7 +248,11 @@ function submitClaimDecision (req, res, claimExpenses) {
             req.body.additionalInfoRejectManual,
             req.body['expiry-day'],
             req.body['expiry-month'],
-            req.body['expiry-year']
+            req.body['expiry-year'],
+            req.body['release-date-is-set'],
+            req.body['release-day'],
+            req.body['release-month'],
+            req.body['release-year']
             )
           return SubmitClaimResponse(req.params.claimId, claimDecision)
             .then(function () {
@@ -266,6 +286,11 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
         data.claim.expiryDay = getDateFormatted.getDay(data.claim.BenefitExpiryDate)
         data.claim.expiryMonth = getDateFormatted.getMonth(data.claim.BenefitExpiryDate)
         data.claim.expiryYear = getDateFormatted.getYear(data.claim.BenefitExpiryDate)
+      }
+      if (data.claim.ReleaseDate) {
+        data.claim.releaseDay = getDateFormatted.getDay(data.claim.ReleaseDate)
+        data.claim.releaseMonth = getDateFormatted.getMonth(data.claim.ReleaseDate)
+        data.claim.releaseYear = getDateFormatted.getYear(data.claim.ReleaseDate)
       }
       return getRejectionReasons()
         .then(function (rejectionReasons) {
@@ -302,12 +327,21 @@ function populateNewData (data, req) {
   data.claim.expiryDay = req.body['expiry-day']
   data.claim.expiryMonth = req.body['expiry-month']
   data.claim.expiryYear = req.body['expiry-year']
+  if (req.body['release-date-is-set']) {
+    data.claim.ReleaseDateIsSet = true
+  } else {
+    data.claim.ReleaseDateIsSet = false
+  }
+  data.claim.releaseDay = req.body['release-day']
+  data.claim.releaseMonth = req.body['release-month']
+  data.claim.releaseYear = req.body['release-year']
 }
 
 function renderValues (data, req, error) {
   var displayJson = {
     title: 'APVS Claim',
     Claim: data.claim,
+    ClaimEligibleChild: data.claimEligibleChild,
     Expenses: data.claimExpenses,
     Children: data.claimChild,
     Escort: data.claimEscort,
@@ -323,6 +357,7 @@ function renderValues (data, req, error) {
     duplicates: data.duplicates,
     claimEvents: data.claimEvents,
     overpaidClaims: data.overpaidClaims,
+    claimantDuplicates: data.claimantDuplicates,
     claimDecisionEnum: claimDecisionEnum,
     errors: error.validationErrors,
     unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry)
