@@ -26,10 +26,13 @@ module.exports = function (router) {
       status = claimStatusEnum.NEW.value
     } else if (status === 'ADVANCE-APPROVED') {
       advanceClaims = true
-      status = claimStatusEnum.APPROVED.value
+      status = [claimStatusEnum.APPROVED.value, claimStatusEnum.REQUEST_INFORMATION.value]
     } else if (status === 'ADVANCE-UPDATED') {
       advanceClaims = true
       status = claimStatusEnum.UPDATED.value
+    } else if (status === 'PENDING') {
+      advanceClaims = false
+      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value]
     }
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
