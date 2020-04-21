@@ -85,7 +85,7 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE-APPROVED?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith(claimStatusEnum.APPROVED.value, true, 0, 10)).to.be.true
+          expect(getClaimsListAndCount.calledWith([claimStatusEnum.APPROVED.value, claimStatusEnum.REQUEST_INFORMATION.value], true, 0, 10)).to.be.true
         })
     })
 
