@@ -36,7 +36,7 @@ app.use(helmet.contentSecurityPolicy({
       "'sha256-G29/qSW/JHHANtFhlrZVDZW1HOkCDRc78ggbqwwIJ2g='",
       'www.google-analytics.com'],
     styleSrc: ["'self'"],
-    fontSrc: ['data:'],
+    fontSrc: ["'self'", 'data:'],
     imgSrc: ["'self'", 'www.google-analytics.com']
   }
 }))
