@@ -78,7 +78,6 @@ function getClaimantDetails (claimId) {
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
     .join('Prisoner', 'Eligibility.EligibilityId', '=', 'Prisoner.EligibilityId')
-    .leftJoin('Benefit', 'Eligibility.EligibilityId', '=', 'Benefit.EligibilityId')
     .where('Claim.ClaimId', claimId)
     .first(
       'Eligibility.Reference',
@@ -127,11 +126,7 @@ function getClaimantDetails (claimId) {
       'Prisoner.NameOfPrison',
       'Prisoner.NomisCheck',
       'Prisoner.ReleaseDateIsSet',
-      'Prisoner.ReleaseDate',
-      'Benefit.FirstName AS BenefitOwnerFirstName',
-      'Benefit.LastName AS BenefitOwnerLastName',
-      'Benefit.DateOfBirth AS BenefitOwnerDateOfBirth',
-      'Benefit.NationalInsuranceNumber AS BenefitOwnerNationalInsuranceNumber')
+      'Prisoner.ReleaseDate')
     .then(function (data) {
       if (data.AssignedTo && data.AssignmentExpiry < dateFormatter.now().toDate()) {
         data.AssignedTo = null
