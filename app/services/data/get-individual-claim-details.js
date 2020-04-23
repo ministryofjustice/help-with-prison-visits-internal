@@ -10,6 +10,8 @@ const moment = require('moment')
 
 module.exports = function (claimId) {
   var claim
+  var claimEligibleChild
+  var claimDocumentData
   var claimExpenses
   var claimChildren
   var claimEscort
@@ -18,6 +20,7 @@ module.exports = function (claimId) {
   var claimantDuplicates
   var claimDetails
   var claimEvents
+  var overpaidClaimData
   var reference
 
   return getClaimantDetails(claimId)
@@ -26,6 +29,7 @@ module.exports = function (claimId) {
       reference = claim.Reference
       claim.lastUpdatedHidden = moment(claim.LastUpdated)
       return Promise.all([
+        getClaimEligibleChild(reference, claim.EligibilityId),
         getClaimDocuments(claimId, reference, claim.EligibilityId),
         getClaimExpenses(claimId),
         getClaimDeductions(claimId),
@@ -38,21 +42,23 @@ module.exports = function (claimId) {
       ])
     })
     .then(function (results) {
-      var claimDocumentData = results[0]
-      claimExpenses = results[1]
-      claimDeductions = results[2]
-      claimChildren = results[3]
-      claimEscort = results[4]
-      claimDuplicatesExist = results[5]
-      claimEvents = results[6]
-      var overpaidClaimData = results[7]
-      claimantDuplicates = results[8]
+      claimEligibleChild = results[0]
+      claimDocumentData = results[1]
+      claimExpenses = results[2]
+      claimDeductions = results[3]
+      claimChildren = results[4]
+      claimEscort = results[5]
+      claimDuplicatesExist = results[6]
+      claimEvents = results[7]
+      overpaidClaimData = results[8]
+      claimantDuplicates = results[9]
 
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
       claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
 
       claimDetails = {
         claim: claim,
+        claimEligibleChild: claimEligibleChild,
         claimExpenses: setClaimExpenseStatusForCarJourneys(claimExpenses),
         claimChild: claimChildren,
         claimEscort: claimEscort,
@@ -118,13 +124,32 @@ function getClaimantDetails (claimId) {
       'Prisoner.DateOfBirth AS PrisonerDateOfBirth',
       'Prisoner.PrisonNumber',
       'Prisoner.NameOfPrison',
-      'Prisoner.NomisCheck')
+      'Prisoner.NomisCheck',
+      'Prisoner.ReleaseDateIsSet',
+      'Prisoner.ReleaseDate')
     .then(function (data) {
       if (data.AssignedTo && data.AssignmentExpiry < dateFormatter.now().toDate()) {
         data.AssignedTo = null
       }
       return data
     })
+}
+
+function getClaimEligibleChild (reference, eligibilityId) {
+  return knex('EligibleChild')
+    .where({'EligibleChild.Reference': reference, 'EligibleChild.EligibilityId': eligibilityId})
+    .select(
+      'EligibleChild.FirstName',
+      'EligibleChild.LastName',
+      'EligibleChild.ChildRelationship',
+      'EligibleChild.DateOfBirth',
+      'EligibleChild.ParentFirstName',
+      'EligibleChild.ParentLastName',
+      'EligibleChild.HouseNumberAndStreet',
+      'EligibleChild.Town',
+      'EligibleChild.County',
+      'EligibleChild.PostCode',
+      'EligibleChild.Country')
 }
 
 function getClaimDocuments (claimId, reference, eligibilityId) {

@@ -245,7 +245,11 @@ function submitClaimDecision (req, res, claimExpenses) {
             claimDeductions,
             req.body.isAdvanceClaim,
             rejectionReasonId,
-            req.body.additionalInfoRejectManual
+            req.body.additionalInfoRejectManual,
+            req.body['release-date-is-set'],
+            req.body['release-day'],
+            req.body['release-month'],
+            req.body['release-year']
             )
           return SubmitClaimResponse(req.params.claimId, claimDecision)
             .then(function () {
@@ -274,6 +278,11 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
     .then(function (data) {
       if (keepUnsubmittedChanges) {
         populateNewData(data, req)
+      }
+      if (data.claim.ReleaseDate) {
+        data.claim.releaseDay = getDateFormatted.getDay(data.claim.ReleaseDate)
+        data.claim.releaseMonth = getDateFormatted.getMonth(data.claim.ReleaseDate)
+        data.claim.releaseYear = getDateFormatted.getYear(data.claim.ReleaseDate)
       }
       return getRejectionReasons()
         .then(function (rejectionReasons) {
@@ -307,12 +316,21 @@ function populateNewData (data, req) {
   data.claim.DWPCheck = req.body.dwpCheck
   data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
   data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
+  if (req.body['release-date-is-set']) {
+    data.claim.ReleaseDateIsSet = true
+  } else {
+    data.claim.ReleaseDateIsSet = false
+  }
+  data.claim.releaseDay = req.body['release-day']
+  data.claim.releaseMonth = req.body['release-month']
+  data.claim.releaseYear = req.body['release-year']
 }
 
 function renderValues (data, req, error) {
   var displayJson = {
     title: 'APVS Claim',
     Claim: data.claim,
+    ClaimEligibleChild: data.claimEligibleChild,
     Expenses: data.claimExpenses,
     Children: data.claimChild,
     Escort: data.claimEscort,

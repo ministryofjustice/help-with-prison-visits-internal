@@ -1,0 +1,36 @@
+{% if ClaimEligibleChild.length > 0 %}
+  <table class="col-2 no-pad-right">
+  {% for eligibleChild in ClaimEligibleChild %}
+    <tr>
+      <td>Eligible child name</td>
+      <td>{{ eligibleChild.FirstName }} {{ eligibleChild.LastName }}</td>
+    </tr>
+
+    <tr>
+      <td>Date of birth</td>
+      <td>{{ getDateFormatted.shortDate(eligibleChild.DateOfBirth) }}</td>
+    </tr>
+
+    <tr>
+      <td>Prisoner Relationship</td>
+      <td>{{ eligibleChild.ChildRelationship }}</td>
+    </tr>
+
+    <tr>
+      <td>Parent</td>
+      <td>{{ eligibleChild.ParentFirstName }} {{ eligibleChild.ParentLastName }}</td>
+    </tr>
+
+    <tr>
+      <td>Address</td>
+      <td>
+        {{ eligibleChild.HouseNumberAndStreet }}</br> 
+        {{ eligibleChild.Town }}</br> 
+        {{ eligibleChild.County }}</br> 
+        {{ eligibleChild.PostCode }}</br> 
+        {{ eligibleChild.Country }}</br>
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+{% endif %}
