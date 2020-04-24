@@ -74,7 +74,7 @@ module.exports = function (router) {
     } else if (status === 'ADVANCE-UPDATED') {
       advanceClaims = true
       status = claimStatusEnum.UPDATED.value
-    }  else if (status === 'PENDING') {
+    } else if (status === 'PENDING') {
       advanceClaims = false
       status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value]
     } else if (status === 'ADVANCE-PENDING-INFORMATION') {
