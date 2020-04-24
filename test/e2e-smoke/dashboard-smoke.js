@@ -1,4 +1,5 @@
 const config = require('../../config')
+const expect = require('chai').expect
 
 describe('Smoke test', () => {
   before(function () {
@@ -13,10 +14,12 @@ describe('Smoke test', () => {
     }
   })
 
-  it('should display the dashboard which calls the database', () => {
-    return browser.url('/')
-      // Dashboard
-      .url('/dashboard')
-      .waitForExist('#dashboard')
+  it('should display the dashboard which calls the database', async () => {
+    await browser.url('/')
+
+    // Dashboard
+    await browser.url('/dashboard')
+    var title = await browser.getTitle()
+    expect(title).to.be.equal('Help with Prison Visits')
   })
 })
