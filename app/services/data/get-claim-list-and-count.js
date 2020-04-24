@@ -15,14 +15,14 @@ module.exports = function (status, advanceClaims, offset, limit, user, sortType,
   return knex('Claim')
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
-    .where({'Claim.Status': status, 'Claim.IsAdvanceClaim': advanceClaims})
+    .where({ 'Claim.Status': status, 'Claim.IsAdvanceClaim': advanceClaims })
     .andWhere('ClaimId', 'in', subquery)
     .count('Claim.ClaimId AS Count')
     .then(function (count) {
       return knex('Claim')
         .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
         .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
-        .where({'Claim.Status': status, 'Claim.IsAdvanceClaim': advanceClaims})
+        .where({ 'Claim.Status': status, 'Claim.IsAdvanceClaim': advanceClaims })
         .andWhere('ClaimId', 'in', subquery)
         .select('Eligibility.Reference', 'Visitor.FirstName', 'Visitor.LastName', 'Claim.DateSubmitted', 'Claim.DateOfJourney', 'Claim.ClaimType', 'Claim.ClaimId', 'Claim.AssignedTo', 'Claim.AssignmentExpiry', 'Claim.Status', 'Claim.LastUpdated')
         .orderBy(sortType, sortOrder)
@@ -35,7 +35,7 @@ module.exports = function (status, advanceClaims, offset, limit, user, sortType,
             claim.DisplayStatus = statusFormatter(claim.Status)
             claim.Name = claim.FirstName + ' ' + claim.LastName
           })
-          return {claims: claims, total: count[0]}
+          return { claims: claims, total: count[0] }
         })
     })
 }

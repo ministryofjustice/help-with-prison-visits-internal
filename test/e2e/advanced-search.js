@@ -25,10 +25,10 @@ describe('Advanced search flow', () => {
 
         var reference1Update = knex('IntSchema.Claim')
           .update({
-            'AssistedDigitalCaseworker': 'test@test.com',
-            'DateOfJourney': date.toDate(),
-            'DateReviewed': date.toDate(),
-            'PaymentAmount': '12'
+            AssistedDigitalCaseworker: 'test@test.com',
+            DateOfJourney: date.toDate(),
+            DateReviewed: date.toDate(),
+            PaymentAmount: '12'
           })
           .where('Reference', reference1)
 
@@ -41,21 +41,21 @@ describe('Advanced search flow', () => {
           .then(function () {
             return knex('IntSchema.Claim')
               .update({
-                'DateReviewed': date.toDate()
+                DateReviewed: date.toDate()
               })
               .where('Reference', reference2)
           })
       })
-    .then(function () {
-      if (config.AUTHENTICATION_ENABLED === 'true') {
-        return browser.url(config.TOKEN_HOST)
-          .waitForExist('#user_email')
-          .setValue('#user_email', config.TEST_SSO_EMAIL)
-          .setValue('#user_password', config.TEST_SSO_PASSWORD)
-          .click('[name="commit"]')
-          .waitForExist('[href="/users/sign_out"]')
-      }
-    })
+      .then(function () {
+        if (config.AUTHENTICATION_ENABLED === 'true') {
+          return browser.url(config.TOKEN_HOST)
+            .waitForExist('#user_email')
+            .setValue('#user_email', config.TEST_SSO_EMAIL)
+            .setValue('#user_password', config.TEST_SSO_PASSWORD)
+            .click('[name="commit"]')
+            .waitForExist('[href="/users/sign_out"]')
+        }
+      })
   })
 
   it('should display the advanced search page and return existing claims', () => {

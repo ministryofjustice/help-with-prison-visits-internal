@@ -21,8 +21,8 @@ module.exports = function (router) {
     extractSearchCriteria(req.query)
 
     for (var field in validationErrors) {
-      if (validationErrors.hasOwnProperty(field)) {
-        if (validationErrors[ field ].length > 0) {
+      if (Object.prototype.hasOwnProperty.call(validationErrors, field)) {
+        if (validationErrors[field].length > 0) {
           return res.status(400).render('advanced-search', { query: req.query, errors: validationErrors })
         }
       }

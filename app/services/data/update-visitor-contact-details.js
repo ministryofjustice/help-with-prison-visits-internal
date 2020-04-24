@@ -9,7 +9,7 @@ const tasksEnum = require('../../constants/tasks-enum')
 module.exports = function (reference, eligibilityId, claimId, emailAddress, phoneNumber, previousEmailAddress, previousPhoneNumber, caseworker) {
   return knex('Visitor')
     .where('EligibilityId', eligibilityId)
-    .update({ 'EmailAddress': emailAddress, 'PhoneNumber': phoneNumber })
+    .update({ EmailAddress: emailAddress, PhoneNumber: phoneNumber })
     .then(function () {
       var note = `Updated email address from ${previousEmailAddress} to ${emailAddress}, phone number from ${previousPhoneNumber} to ${phoneNumber}`
       return insertClaimEvent(reference, eligibilityId, claimId, claimEventEnum.UPDATED_CONTACT_DETAILS.value, null, note, caseworker, false)

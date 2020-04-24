@@ -18,17 +18,17 @@ describe('First time claim viewing flow', () => {
       expenseId1 = ids.expenseId1
       expenseId2 = ids.expenseId2
     })
-    .then(function () {
+      .then(function () {
       // IF SSO ENABLED LOGIN TO SSO
-      if (config.AUTHENTICATION_ENABLED === 'true') {
-        return browser.url(config.TOKEN_HOST)
-          .waitForExist('#user_email')
-          .setValue('#user_email', config.TEST_SSO_EMAIL)
-          .setValue('#user_password', config.TEST_SSO_PASSWORD)
-          .click('[name="commit"]')
-          .waitForExist('[href="/users/sign_out"]')
-      }
-    })
+        if (config.AUTHENTICATION_ENABLED === 'true') {
+          return browser.url(config.TOKEN_HOST)
+            .waitForExist('#user_email')
+            .setValue('#user_email', config.TEST_SSO_EMAIL)
+            .setValue('#user_password', config.TEST_SSO_PASSWORD)
+            .click('[name="commit"]')
+            .waitForExist('[href="/users/sign_out"]')
+        }
+      })
   })
 
   it('should display a list of claims and approve a claim', () => {

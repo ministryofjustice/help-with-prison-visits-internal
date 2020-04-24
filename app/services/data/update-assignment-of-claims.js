@@ -9,6 +9,6 @@ module.exports = function (claimId, assignedTo) {
     assignmentExpiry = dateFormatter.now().add(environmentVariables.ASSIGNMENT_EXPIRY_TIME, 'minutes').toDate()
   }
   return knex('Claim')
-    .where({'ClaimId': claimId})
-    .update({ 'AssignedTo': assignedTo, 'AssignmentExpiry': assignmentExpiry, 'LastUpdated': dateFormatter.now().toDate() })
+    .where({ ClaimId: claimId })
+    .update({ AssignedTo: assignedTo, AssignmentExpiry: assignmentExpiry, LastUpdated: dateFormatter.now().toDate() })
 }

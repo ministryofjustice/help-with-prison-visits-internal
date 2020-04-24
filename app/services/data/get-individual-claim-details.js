@@ -137,7 +137,7 @@ function getClaimantDetails (claimId) {
 
 function getClaimEligibleChild (reference, eligibilityId) {
   return knex('EligibleChild')
-    .where({'EligibleChild.Reference': reference, 'EligibleChild.EligibilityId': eligibilityId})
+    .where({ 'EligibleChild.Reference': reference, 'EligibleChild.EligibilityId': eligibilityId })
     .select(
       'EligibleChild.FirstName',
       'EligibleChild.LastName',
@@ -154,13 +154,14 @@ function getClaimEligibleChild (reference, eligibilityId) {
 
 function getClaimDocuments (claimId, reference, eligibilityId) {
   return knex('ClaimDocument')
-    .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null})
+    .where({ 'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null })
     .orWhere({
       'ClaimDocument.ClaimId': null,
       'ClaimDocument.Reference': reference,
       'ClaimDocument.EligibilityId': eligibilityId,
       'ClaimDocument.IsEnabled': true,
-      'ClaimDocument.ClaimExpenseId': null})
+      'ClaimDocument.ClaimExpenseId': null
+    })
     .select(
       'ClaimDocument.ClaimDocumentId',
       'ClaimDocument.DocumentStatus',
@@ -185,7 +186,7 @@ function getClaimExpenses (claimId) {
 
 function getClaimDeductions (claimId) {
   return knex('ClaimDeduction')
-    .where({'ClaimId': claimId, 'IsEnabled': true})
+    .where({ ClaimId: claimId, IsEnabled: true })
 }
 
 function getClaimChildren (claimId) {
@@ -199,7 +200,7 @@ function getClaimChildren (claimId) {
 function getClaimEscort (claimId) {
   return knex('ClaimEscort')
     .first()
-    .where({ 'ClaimId': claimId, 'IsEnabled': true })
+    .where({ ClaimId: claimId, IsEnabled: true })
     .select()
     .orderBy('FirstName')
 }

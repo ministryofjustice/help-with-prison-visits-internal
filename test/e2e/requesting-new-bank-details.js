@@ -13,17 +13,17 @@ describe('Requesting bank details flow', () => {
     return databaseHelper.insertTestData(reference, date, 'APPROVED').then(function (ids) {
       claimId = ids.claimId
     })
-    .then(function () {
+      .then(function () {
       // IF SSO ENABLED LOGIN TO SSO
-      if (config.AUTHENTICATION_ENABLED === 'true') {
-        return browser.url(config.TOKEN_HOST)
-          .waitForExist('#user_email')
-          .setValue('#user_email', config.TEST_SSO_EMAIL)
-          .setValue('#user_password', config.TEST_SSO_PASSWORD)
-          .click('[name="commit"]')
-          .waitForExist('[href="/users/sign_out"]')
-      }
-    })
+        if (config.AUTHENTICATION_ENABLED === 'true') {
+          return browser.url(config.TOKEN_HOST)
+            .waitForExist('#user_email')
+            .setValue('#user_email', config.TEST_SSO_EMAIL)
+            .setValue('#user_password', config.TEST_SSO_PASSWORD)
+            .click('[name="commit"]')
+            .waitForExist('[href="/users/sign_out"]')
+        }
+      })
   })
 
   it('request new bank account details from an approved claim', () => {

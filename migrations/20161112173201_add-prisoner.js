@@ -10,10 +10,10 @@ exports.up = function (knex, Promise) {
     table.string('NameOfPrison', 100).notNullable()
     table.string('NomisCheck', 20)
   })
-  .catch(function (error) {
-    console.log(error)
-    throw error
-  })
+    .catch(function (error) {
+      console.log(error)
+      throw error
+    })
 }
 
 exports.down = function (knex, Promise) {

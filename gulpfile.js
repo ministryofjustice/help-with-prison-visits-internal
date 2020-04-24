@@ -48,10 +48,10 @@ gulp.task('sass', function (done) {
   done()
 })
 
-gulp.task('generate-assets',  gulp.series(gulp.parallel('assets', 'templates', 'sync', 'sass')))
+gulp.task('generate-assets', gulp.series(gulp.parallel('assets', 'templates', 'sync', 'sass')))
 
-gulp.task('generate-assets-and-start',  gulp.series('generate-assets', function () {
+gulp.task('generate-assets-and-start', gulp.series('generate-assets', function () {
   spawn('node', ['app/bin/www'], { stdio: 'inherit' })
 }))
 
-gulp.task('default',  gulp.series('generate-assets-and-start'))
+gulp.task('default', gulp.series('generate-assets-and-start'))

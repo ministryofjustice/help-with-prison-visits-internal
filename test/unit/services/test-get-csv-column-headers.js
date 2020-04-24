@@ -1,6 +1,5 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 const getCSVTestClaims = require('../../helpers/csv-tests/get-test-csv-claims')
 const getCSVTestHeaders = require('../../helpers/csv-tests/get-test-csv-headers')
@@ -14,9 +13,9 @@ describe('services/get-csv-column-headers', function () {
   beforeEach(function () {
     claimJSONInput = getCSVTestClaims()
     expectedCSVHeaders = getCSVTestHeaders()
-    getMaxNumberOfExpensesStub = sinon.stub()
+    getMaxNumberOfExpensesStub = sinon.stub().returns(14)
     getCSVColumnHeaders = proxyquire('../../../app/services/get-csv-column-headers', {
-      './servicesx/get-max-number-of-expenses': getMaxNumberOfExpensesStub
+      './get-max-number-of-expenses': getMaxNumberOfExpensesStub
     })
   })
 

@@ -5,7 +5,7 @@ var webdriver = require('gulp-webdriver')
 let seleniumServer
 
 gulp.task('selenium', (done) => {
-  selenium.install({logger: console.log}, () => {
+  selenium.install({ logger: console.log }, () => {
     selenium.start((err, child) => {
       if (err) { return done(err) }
       seleniumServer = child
@@ -14,7 +14,7 @@ gulp.task('selenium', (done) => {
   })
 })
 
-gulp.task('e2e',  gulp.series('selenium'), (done) => {
+gulp.task('e2e', gulp.series('selenium'), (done) => {
   gulp.src('test/wdio.conf.js')
     .pipe(webdriver()).on('error', () => {
       seleniumServer.kill()
@@ -31,7 +31,7 @@ gulp.task('e2e',  gulp.series('selenium'), (done) => {
   done()
 })
 
-gulp.task('e2e-smoke',  gulp.series('selenium'), (done) => {
+gulp.task('e2e-smoke', gulp.series('selenium'), (done) => {
   gulp.src('test/wdio.conf.smoke.js')
     .pipe(webdriver()).on('error', () => {
       seleniumServer.kill()
@@ -48,4 +48,4 @@ gulp.task('e2e-smoke',  gulp.series('selenium'), (done) => {
   done()
 })
 
-gulp.task('default',  gulp.series('e2e'))
+gulp.task('default', gulp.series('e2e'))

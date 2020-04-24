@@ -1,6 +1,5 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
@@ -45,8 +44,8 @@ describe('services/data/update-visitor-contact-details', function () {
           .then(function (visitor) {
             expect(visitor.EmailAddress).to.equal(NEW_EMAIL_ADDRESS)
             expect(visitor.PhoneNumber).to.equal(NEW_PHONE_NUMBER)
-            expect(stubInsertClaimEvent.calledOnce).to.be.true
-            expect(stubInsertTaskSendClaimNotification.calledTwice).to.be.true
+            expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
+            expect(stubInsertTaskSendClaimNotification.calledTwice).to.be.true //eslint-disable-line
           })
       })
   })

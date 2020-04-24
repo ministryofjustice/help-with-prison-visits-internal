@@ -29,7 +29,7 @@ describe('services/data/insert-task-send-first-time-claim-notification', functio
   it('should insert a new task to send the first time claim notification', function () {
     return insertTaskSendClaimNotification(tasksEnum.ACCEPT_CLAIM_NOTIFICATION, reference, eligibilityId, claimId)
       .then(function () {
-        return knex.first().from('IntSchema.Task').where({Reference: reference, ClaimId: claimId})
+        return knex.first().from('IntSchema.Task').where({ Reference: reference, ClaimId: claimId })
           .then(function (task) {
             expect(task.Task).to.equal(tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
             expect(task.Reference).to.equal(reference)
