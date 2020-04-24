@@ -27,16 +27,22 @@
             <td>
               Controls whether claims that meet the rules below will be automatically approved
             </td>
-            <td width="20%">
+            <td width="25%">
               <div class="pull-right">
-                <label for="auto-approval-on" class="block-label inline">
-                  <input id="auto-approval-on" type="radio" name="AutoApprovalEnabled" value="true" {% if autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
-                  <span>On</span>
-                </label>
-                <label for="auto-approval-off" class="block-label inline no-right-padding">
-                  <input id="auto-approval-off" type="radio" name="AutoApprovalEnabled" value="false" {% if not autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
-                  <span>Off</span>
-                </label>
+                <fieldset class="inline">
+                  <div class="multiple-choice">
+                    <input id="auto-approval-on" type="radio" name="AutoApprovalEnabled" value="true" {% if autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
+                    <label for="auto-approval-on" class="block-label inline">
+                      <span>On</span>
+                    </label>
+                  </div>
+                  <div class="multiple-choice">
+                    <input id="auto-approval-off" type="radio" name="AutoApprovalEnabled" value="false" {% if not autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
+                    <label for="auto-approval-off" class="block-label inline no-right-padding">
+                      <span>Off</span>
+                    </label>
+                  </div>
+                </fieldset>
               </div>
             </td>
           </tr>
@@ -155,9 +161,10 @@
             </td>
             <td>
               <div class="form-group">
-                <label for="check-{{ rule.value }}" class="block-label">
+                <div class="multiple-choice">
                   <input type="checkbox" id="check-{{ rule.value }}" name="rulesEnabled" value="{{ rule.value }}" class="form-control" {% if rule.value not in rulesDisabled %} checked {% endif %}>
-                </label>
+                  <label for="check-{{ rule.value }}" class="block-label"></label>
+                </div>
               </div>
             </td>
           </tr>
