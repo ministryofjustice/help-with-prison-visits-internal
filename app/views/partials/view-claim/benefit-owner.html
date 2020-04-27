@@ -1,0 +1,36 @@
+{% if Claim['BenefitOwnerFirstName'] %}
+  <table class="col-2 no-pad-right">
+    <tr>
+      <td>Name</td>
+      <td id="benefit-owner-name">{{ Claim['BenefitOwnerFirstName'] }} {{ Claim['BenefitOwnerLastName'] }}</td>
+    </tr>
+
+    <tr>
+      <td>Date of birth</td>
+      <td>{{ getDateFormatted.shortDate(Claim['BenefitOwnerDateOfBirth']) }}</td>
+    </tr>
+
+    <tr>
+      <td>National Insurance number</td>
+      <td>{{ Claim['BenefitOwnerNationalInsuranceNumber'] }}</td>
+    </tr>
+  </table>
+{% else %}
+{# The visitor is the benefit owner #}
+<table class="col-2 no-pad-right">
+  <tr>
+    <td>Name</td>
+    <td id="benefit-owner-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
+  </tr>
+
+  <tr>
+    <td>Date of birth</td>
+    <td>{{ getDateFormatted.shortDate(Claim['DateOfBirth']) }}</td>
+  </tr>
+
+  <tr>
+    <td>National Insurance number</td>
+    <td>{{ Claim['NationalInsuranceNumber'] }}</td>
+  </tr>
+</table>
+{% endif %}
