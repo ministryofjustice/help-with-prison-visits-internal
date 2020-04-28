@@ -44,12 +44,14 @@ $(document).ready(function () {
       {'data': 'DateOfJourneyFormatted', 'orderable': true},
       {'data': 'UpdatedDateFormatted', 'orderable': true},
       {'data': 'DisplayStatus', 'orderable': false},
-      {'data': 'ClaimType', 'orderable': false,
+      {'data': 'ClaimType',
+        'orderable': false,
         'createdCell': function (td, cellData, rowData, row, col) {
           $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
         }
       },
-      {'data': 'ClaimId', 'orderable': false,
+      {'data': 'ClaimId',
+        'orderable': false,
         'createdCell': function (td, cellData, rowData, row, col) {
           $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
         }
@@ -60,7 +62,7 @@ $(document).ready(function () {
       {
         'targets': [0, 1, 2, 3, 4, 5, 6, 7],
         'visible': true,
-        'searchable': false,
+        'searchable': false
       }
     ],
 

@@ -20,7 +20,7 @@ module.exports = function (router) {
     var sortOrder
 
     if (req.query.order) {
-      switch(req.query.order[0].column) {
+      switch (req.query.order[0].column) {
         case '2':
           sortType = 'Claim.DateSubmitted'
           sortOrder = req.query.order[0].dir
@@ -87,7 +87,7 @@ module.exports = function (router) {
     var sortOrder = 'desc'
 
     if (req.query.order) {
-      switch(req.query.order[0].column) {
+      switch (req.query.order[0].column) {
         case '2':
           sortType = 'Claim.DateSubmitted'
           sortOrder = req.query.order[0].dir
