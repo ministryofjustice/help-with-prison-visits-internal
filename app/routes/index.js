@@ -16,8 +16,31 @@ module.exports = function (router) {
   router.get('/claims/:status', function (req, res) {
     authorisation.isCaseworker(req)
 
-    var sortType = 'Claim.DateSubmitted'
-    var sortOrder = 'asc'
+    var sortType
+    var sortOrder
+
+    if (req.query.order) {
+      switch(req.query.order[0].column) {
+        case '2':
+          sortType = 'Claim.DateSubmitted'
+          sortOrder = req.query.order[0].dir
+          break
+        case '3':
+          sortType = 'Claim.DateOfJourney'
+          sortOrder = req.query.order[0].dir
+          break
+        case '4':
+          sortType = 'Claim.LastUpdated'
+          sortOrder = req.query.order[0].dir
+          break
+        default:
+          sortType = 'Claim.DateSubmitted'
+          sortOrder = 'asc'
+      }
+    } else {
+      sortType = 'Claim.DateSubmitted'
+      sortOrder = 'asc'
+    }
 
     var advanceClaims = false
     var status = req.params.status
@@ -57,11 +80,37 @@ module.exports = function (router) {
     })
   })
 
-  router.get('/claims/:status/updated', function (req, res) {
+  router.get('/claims/:status/:sortType', function (req, res) {
     authorisation.isCaseworker(req)
 
-    var sortType = 'Claim.LastUpdated'
+    var sortType
     var sortOrder = 'desc'
+
+    if (req.query.order) {
+      switch(req.query.order[0].column) {
+        case '2':
+          sortType = 'Claim.DateSubmitted'
+          sortOrder = req.query.order[0].dir
+          break
+        case '3':
+          sortType = 'Claim.DateOfJourney'
+          sortOrder = req.query.order[0].dir
+          break
+        case '4':
+          sortType = 'Claim.LastUpdated'
+          sortOrder = req.query.order[0].dir
+          break
+        default:
+          sortType = 'Claim.DateSubmitted'
+          sortOrder = 'asc'
+      }
+    } else if (req.params.sortType === 'updated') {
+      sortType = 'Claim.LastUpdated'
+    } else if (req.params.sortType === 'visit') {
+      sortType = 'Claim.DateOfJourney'
+    } else {
+      sortType = 'Claim.DateSubmitted'
+    }
 
     var advanceClaims = false
     var status = req.params.status

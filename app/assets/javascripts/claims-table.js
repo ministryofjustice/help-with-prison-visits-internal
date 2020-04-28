@@ -26,6 +26,7 @@ $(document).ready(function () {
     serverSide: true,
     searching: false,
     lengthChange: false,
+    sorting: true,
     order: [],
     ajax: {
       url: dataReference,
@@ -37,17 +38,18 @@ $(document).ready(function () {
     },
 
     columns: [
-      {'data': 'Reference', 'render': cleanColumnOutput},
-      {'data': 'Name', 'render': cleanColumnOutput},
-      {'data': 'DateSubmittedFormatted'},
-      {'data': 'DateOfJourneyFormatted'},
-      {'data': 'DisplayStatus'},
-      {'data': 'ClaimType',
+      {'data': 'Reference', 'render': cleanColumnOutput, 'orderable': false},
+      {'data': 'Name', 'render': cleanColumnOutput, 'orderable': false},
+      {'data': 'DateSubmittedFormatted', 'orderable': true},
+      {'data': 'DateOfJourneyFormatted', 'orderable': true},
+      {'data': 'UpdatedDateFormatted', 'orderable': true},
+      {'data': 'DisplayStatus', 'orderable': false},
+      {'data': 'ClaimType', 'orderable': false,
         'createdCell': function (td, cellData, rowData, row, col) {
           $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
         }
       },
-      {'data': 'ClaimId',
+      {'data': 'ClaimId', 'orderable': false,
         'createdCell': function (td, cellData, rowData, row, col) {
           $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
         }
@@ -56,10 +58,9 @@ $(document).ready(function () {
 
     columnDefs: [
       {
-        'targets': [0, 1, 2, 3, 4, 5, 6],
+        'targets': [0, 1, 2, 3, 4, 5, 6, 7],
         'visible': true,
         'searchable': false,
-        'orderable': false
       }
     ],
 
