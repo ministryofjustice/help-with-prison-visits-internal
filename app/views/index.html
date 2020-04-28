@@ -43,7 +43,7 @@
       <a href="/?status=ADVANCE-APPROVED/visit" class="link margin-left">Order By Visit Date</a>
     {% elif active == 'ADVANCE-UPDATED' %}
       <br><a href="/?status=ADVANCE-UPDATED/updated" class="link margin-left margin-right">Order By Last Updated</a>
-      <a href="/?status=ADVANCE-APPROVED/visit" class="link margin-left">Order By Visit Date</a>
+      <a href="/?status=ADVANCE-UPDATED/visit" class="link margin-left">Order By Visit Date</a>
     {% elif active == 'ADVANCE-PENDING-INFORMATION' %}
       <br><a href="/?status=ADVANCE-PENDING-INFORMATION/updated" class="link margin-left margin-right">Order By Last Updated</a>
       <a href="/?status=ADVANCE-PENDING-INFORMATION/visit" class="link margin-left">Order By Visit Date</a>
@@ -65,7 +65,7 @@
       <a href="/?status=ADVANCE-APPROVED/visit" class="link margin-left margin-right">Order By Visit Date</a>
     {% elif active == 'ADVANCE-UPDATED/updated' %}
       <br><a href="/?status=ADVANCE-UPDATED" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE-APPROVED/visit" class="link margin-left">Order By Visit Date</a>
+      <a href="/?status=ADVANCE-UPDATED/visit" class="link margin-left">Order By Visit Date</a>
     {% elif active == 'ADVANCE-PENDING-INFORMATION/updated' %}
       <br><a href="/?status=ADVANCE-PENDING-INFORMATION" class="link margin-left margin-right">Order By Date Submitted</a>
       <a href="/?status=ADVANCE-PENDING-INFORMATION/visit" class="link margin-left">Order By Visit Date</a>
@@ -87,7 +87,7 @@
       <a href="/?status=ADVANCE-APPROVED/updated" class="link margin-left margin-right">Order By Last Updated</a>
     {% elif active == 'ADVANCE-UPDATED/visit' %}
       <br><a href="/?status=ADVANCE-UPDATED" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE-APPROVED/updated" class="link margin-left">Order By Last Updated</a>
+      <a href="/?status=ADVANCE-UPDATED/updated" class="link margin-left">Order By Last Updated</a>
     {% elif active == 'ADVANCE-PENDING-INFORMATION/visit' %}
       <br><a href="/?status=ADVANCE-PENDING-INFORMATION" class="link margin-left margin-right">Order By Date Submitted</a>
       <a href="/?status=ADVANCE-PENDING-INFORMATION/updated" class="link margin-left">Order By Last Updated</a>
@@ -98,7 +98,7 @@
     <li><a href="/" {% if active == undefined or active == 'NEW/updated' or active == 'NEW/visit' %} class="active">New <span class="badge"></span>{% else %}>New{% endif %}</a></li>
     <li><a href="/?status=UPDATED"{% if active == 'UPDATED' or active == 'UPDATED/updated' or active == 'UPDATED/visit' %} class="active">Updated <span class="badge"></span>{% else %}>Updated{% endif %}</a></li>
     <li><a href="/?status=PENDING"{% if active == 'PENDING' or active == 'PENDING/updated' or active == 'PENDING/visit' %} class="active">Pending <span class="badge"></span>{% else %}>Pending{% endif %}</a></li>
-    <li><a href="/?status=ADVANCE"{% if active == 'ADVANCE' or active == 'ADVANCE/updated' %} class="active">Advance <span class="badge"></span>{% else %}>Advance{% endif %}</a></li>
+    <li><a href="/?status=ADVANCE"{% if active == 'ADVANCE' or active == 'ADVANCE/updated' or active == 'ADVANCE/visit' %} class="active">Advance <span class="badge"></span>{% else %}>Advance{% endif %}</a></li>
     <li><a href="/?status=ADVANCE-APPROVED"{% if active == 'ADVANCE-APPROVED' or active == 'ADVANCE-APPROVED/updated' or active == 'ADVANCE-APPROVED/visit' %} class="active">Advance pending<span class="badge"></span>{% else %}>Advance pending{% endif %}</a></li>
     <li><a href="/?status=ADVANCE-UPDATED"{% if active == 'ADVANCE-UPDATED' or active == 'ADVANCE-UPDATED/updated' or active == 'ADVANCE-UPDATED/visit' %} class="active">Advance updated<span class="badge"></span>{% else %}>Advance updated{% endif %}</a></li>
     <li><a href="/?status=ADVANCE-PENDING-INFORMATION"{% if active == 'ADVANCE-PENDING-INFORMATION' or active == 'ADVANCE-PENDING-INFORMATION/updated' or active == 'ADVANCE-PENDING-INFORMATION/visit' %} class="active">Advance awaiting information<span class="badge"></span>{% else %}>Advance awaiting information{% endif %}</a></li>
