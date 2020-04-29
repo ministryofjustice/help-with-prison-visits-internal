@@ -3,7 +3,6 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
-const MAX_TOTAL_APPROVED_AMOUNT = require('../../../config').MAX_TOTAL_APPROVED_AMOUNT
 const dateFormatter = require('../date-formatter')
 
 var noteId

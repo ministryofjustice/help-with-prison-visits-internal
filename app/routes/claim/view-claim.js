@@ -282,7 +282,7 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
       if (keepUnsubmittedChanges) {
         populateNewData(data, req)
       }
-      if(data.claim.BenefitExpiryDate) {
+      if (data.claim.BenefitExpiryDate) {
         data.claim.expiryDay = getDateFormatted.getDay(data.claim.BenefitExpiryDate)
         data.claim.expiryMonth = getDateFormatted.getMonth(data.claim.BenefitExpiryDate)
         data.claim.expiryYear = getDateFormatted.getYear(data.claim.BenefitExpiryDate)
