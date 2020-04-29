@@ -165,7 +165,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return error if the Release Date checkbox is checked and the release date boxes are blank', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', 'on', '', '', '')
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', '', '', '', 'on', '', '', '')
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['release-date-section'][0]).to.equal('Please enter the release date')
@@ -174,7 +174,7 @@ describe('services/domain/claim-decision', function () {
 
   it('should return error if the Release Date checkbox is checked and the release date boxes contain a past date', function () {
     try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', 'on', '22', '4', '2019')
+      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', '22', '4', '2019', 'on', '22', '4', '2020')
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['release-date-section'][0]).to.equal('Release Date must be in the future')
