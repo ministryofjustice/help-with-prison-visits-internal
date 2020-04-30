@@ -35,7 +35,7 @@ module.exports = function (router) {
       status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value]
     } else if (status === 'ADVANCE-PENDING-INFORMATION') {
       advanceClaims = true
-      status = claimStatusEnum.REQUEST_INFORMATION.value
+      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value]
     }
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
