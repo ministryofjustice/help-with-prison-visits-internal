@@ -34,5 +34,6 @@ module.exports = {
   'EmailAddress': 'Email address',
   'PhoneNumber': 'Phone number',
   'top-up-amount': 'A Top-up amount',
-  'top-up-reason': 'A top-up reason'
+  'top-up-reason': 'A top-up reason',
+  'release-date-section': 'Release Date'
 }

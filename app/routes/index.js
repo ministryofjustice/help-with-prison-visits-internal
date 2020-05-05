@@ -30,6 +30,12 @@ module.exports = function (router) {
     } else if (status === 'ADVANCE-UPDATED') {
       advanceClaims = true
       status = claimStatusEnum.UPDATED.value
+    } else if (status === 'PENDING') {
+      advanceClaims = false
+      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
+    } else if (status === 'ADVANCE-PENDING-INFORMATION') {
+      advanceClaims = true
+      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
     }
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
@@ -68,6 +74,12 @@ module.exports = function (router) {
     } else if (status === 'ADVANCE-UPDATED') {
       advanceClaims = true
       status = claimStatusEnum.UPDATED.value
+    } else if (status === 'PENDING') {
+      advanceClaims = false
+      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value]
+    } else if (status === 'ADVANCE-PENDING-INFORMATION') {
+      advanceClaims = true
+      status = claimStatusEnum.REQUEST_INFORMATION.value
     }
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)

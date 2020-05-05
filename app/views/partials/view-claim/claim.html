@@ -26,11 +26,7 @@
           <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
         </td>
 
-        {% if expense.ExpenseType == 'train' and Claim.IsAdvanceClaim %}
-          <td></td>
-        {% else %}
-          <td class="cost">£{{ displayHelper.toDecimal(expense['Cost']) }}</td>
-        {% endif %}
+        <td class="cost">£{{ displayHelper.toDecimal(expense['Cost']) }}</td>
 
         <td>
           {% if receiptAndProcessedManuallyEnum[expense.ExpenseType].receiptRequired %}

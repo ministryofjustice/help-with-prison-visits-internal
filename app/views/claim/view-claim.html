@@ -63,7 +63,9 @@
 
   {% include "includes/validation-error-messages.html" %}
 
+  <br>
   <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
+  </br>
 
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
 
@@ -74,9 +76,25 @@
 
     {% include "partials/view-claim/visitor.html" %}
 
+    
+    {% if ClaimEligibleChild.length > 0 %}
+      <br>
+      <h1 class="table-heading">Eligible Children</h1>
+      </br>
+    {% endif %}
+
+    {% include "partials/view-claim/eligible-child.html" %}
+
+    <br>
     <h1 class="table-heading">Prisoner</h1>
+    </br>
 
     {% include "partials/view-claim/prisoner.html" %}
+
+    <br>
+    <h1 class="table-heading">Release information</h1>
+    <br>
+    {% include "partials/view-claim/release-date.html" %}
 
     <h1 class="table-heading">Visit</h1>
 
@@ -134,6 +152,22 @@
       {% include "partials/csrf-hidden-input.html" %}
       <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
       {% include "partials/view-claim/close-advance-claim.html" %}
+  </form>
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/disable-reference-number" method="post" class="form">
+
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    <input type="hidden" name="referenceToBeDisabled" value="{{ Claim['Reference'] }}">
+    {% include "partials/view-claim/disable-reference-number.html" %}
+  </form>
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/re-enable-reference-number" method="post" class="form">
+
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    <input type="hidden" name="referenceToBeReEnabled" value="{{ Claim['Reference'] }}">
+    {% include "partials/view-claim/re-enable-reference-number.html" %}
   </form>
 
   <form action="/claim/{{ Claim['ClaimId'] }}/request-new-payment-details" method="post" class="form">

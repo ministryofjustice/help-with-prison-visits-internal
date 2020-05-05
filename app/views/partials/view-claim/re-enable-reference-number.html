@@ -1,0 +1,11 @@
+{% if Claim['ReferenceDisabled'] === true %}
+<!-- Re-enable Reference -->
+  <div class="panel js-hidden" id="re-enable-reference-number-input">
+    <div class="form-group" id='re-enable-reference-number-details'>
+      <label class="form-label-bold" for="re-enable-reference-number-additional-information">Reason why this Reference is being Re-enabled (optional)</label>
+      <textarea type='text' name='re-enable-reference-number-additional-information' id='re-enable-reference-number-additional-information' class='form-control' maxlength="2000"></textarea>
+    </div>
+    <input type="submit" class="button grey" name="re-enable-reference-number" id="re-enable-reference-number" value="Submit">
+  </div>
+<!-- Re-enable Reference -->
+{% endif %}

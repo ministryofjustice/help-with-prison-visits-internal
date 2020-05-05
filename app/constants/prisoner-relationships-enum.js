@@ -5,5 +5,17 @@ module.exports = {
   'sibling': {'displayName': 'Brother or sister'},
   'child': {'displayName': 'Son or daughter'},
   'sole-visitor': {'displayName': 'Sole visitor'},
-  'next-of-kin': {'displayName': 'Next of kin'}
+  'next-of-kin': {'displayName': 'Next of kin'},
+  'husband': {'displayName': 'Husband'},
+  'wife': {'displayName': 'Wife'},
+  'mother': {'displayName': 'Mother'},
+  'father': {'displayName': 'Father'},
+  'grandmother': {'displayName': 'Grandmother'},
+  'grandfather': {'displayName': 'Grandfather'},
+  'grandchild': {'displayName': 'Grandchild'},
+  'brother': {'displayName': 'Brother'},
+  'sister': {'displayName': 'Sister'},
+  'son': {'displayName': 'Son'},
+  'daughter': {'displayName': 'Daughter'},
+  'eligible-child': {'displayName': 'Escorting an Eligible Child'}
 }
