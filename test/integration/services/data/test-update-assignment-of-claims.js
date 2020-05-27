@@ -19,7 +19,7 @@ describe('services/data/update-assignment-of-claim', function () {
       })
     })
 
-    it(`should assign a claim, setting the time and updating when it was last updated`, function () {
+    it('should assign a claim, setting the time and updating when it was last updated', function () {
       var assignedTo = 'test@test.com'
       var expiryTime = parseInt(environmentVariables.ASSIGNMENT_EXPIRY_TIME)
       var currentDate = dateFormatter.now()

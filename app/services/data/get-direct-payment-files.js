@@ -14,19 +14,19 @@ module.exports = function () {
     getPaymentFiles(ADI_JOURNAL_FILE, NUMBER_OF_PAYMENT_FILES),
     getPaymentFiles(APVU_ACCESSPAY_FILE, NUMBER_OF_PAYMENT_FILES)
   ])
-  .then(function (results) {
-    return {
-      accessPayFiles: results[0],
-      adiJournalFiles: results[1],
-      apvuAccessPayFiles: results[2]
-    }
-  })
+    .then(function (results) {
+      return {
+        accessPayFiles: results[0],
+        adiJournalFiles: results[1],
+        apvuAccessPayFiles: results[2]
+      }
+    })
 }
 
 function getPaymentFiles (fileType, limit) {
   return knex('DirectPaymentFile')
     .select()
-    .where({'FileType': fileType, 'IsEnabled': true})
+    .where({ FileType: fileType, IsEnabled: true })
     .orderBy('DateCreated', 'desc')
     .limit(limit)
 }

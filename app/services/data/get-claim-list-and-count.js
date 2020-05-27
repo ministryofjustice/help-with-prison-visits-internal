@@ -37,7 +37,7 @@ module.exports = function (status, advanceClaims, offset, limit, user, sortType,
             claim.DisplayStatus = statusFormatter(claim.Status)
             claim.Name = claim.FirstName + ' ' + claim.LastName
           })
-          return {claims: claims, total: count[0]}
+          return { claims: claims, total: count[0] }
         })
     })
 }

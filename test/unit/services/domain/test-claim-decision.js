@@ -10,10 +10,10 @@ describe('services/domain/claim-decision', function () {
   const VALID_DECISION_REQUESTED = 'REQUEST_INFORMATION'
   const VALID_DECISION_APPROVED = 'APPROVED'
   const VALID_NOTE_REJECTION = 'rejection note'
-  const VALID_CLAIMEXPENSES = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED'}]
-  const VALID_CLAIMEXPENSES_REJECTED = [{claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'REJECTED'}]
-  const INVALID_CLAIMEXPENSES = [{claimExpenseId: '1', approvedCost: '20.00', cost: '-1', status: 'APPROVED'}]
-  const VALID_CLAIMDEDUCTION = [{Amount: '10.00'}]
+  const VALID_CLAIMEXPENSES = [{ claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED' }]
+  const VALID_CLAIMEXPENSES_REJECTED = [{ claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'REJECTED' }]
+  const INVALID_CLAIMEXPENSES = [{ claimExpenseId: '1', approvedCost: '20.00', cost: '-1', status: 'APPROVED' }]
+  const VALID_CLAIMDEDUCTION = [{ Amount: '10.00' }]
   const VALID_NOMIS_CHECK = 'APPROVED'
   const VALID_DWP_CHECK = 'APPROVED'
   const VALID_VISIT_CONFIRMATION_CHECK = 'APPROVED'
@@ -39,10 +39,10 @@ describe('services/domain/claim-decision', function () {
   it('should return isRequired error for decision given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, '', '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM)
-      expect(false, 'should have thrown validation error').to.be.true
+      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['decision'][0]).to.equal('Decision is required')
+      expect(e.validationErrors.decision[0]).to.equal('Decision is required')
     }
   })
 
@@ -67,7 +67,7 @@ describe('services/domain/claim-decision', function () {
   it('should return isRequired error for nomis-check given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM)
-      expect(false, 'should have thrown validation error').to.be.true
+      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['nomis-check'][0]).to.equal('Decide on prisoner check')
@@ -77,7 +77,7 @@ describe('services/domain/claim-decision', function () {
   it('should return isRequired error for dwp-check given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM)
-      expect(false, 'should have thrown validation error').to.be.true
+      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['dwp-check'][0]).to.equal('Decide if benefit check needed')
@@ -87,7 +87,7 @@ describe('services/domain/claim-decision', function () {
   it('should return isRequired error for visit-confirmation-check given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', '', VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM)
-      expect(false, 'should have thrown validation error').to.be.true
+      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['visit-confirmation-check'][0]).to.equal('Decide on visit confirmation')
@@ -97,7 +97,7 @@ describe('services/domain/claim-decision', function () {
   it('should return error for invalid claim expenses', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, INVALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM)
-      expect(false, 'should have thrown validation error').to.be.true
+      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['approve-cost'][0]).to.equal('New approved cost must be greater than zero')
@@ -107,7 +107,7 @@ describe('services/domain/claim-decision', function () {
   it('should return error if approving with all expenses rejected', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_APPROVED, '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM)
-      expect(false, 'should have thrown validation error').to.be.true
+      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['claim-expenses'][0]).to.equal('At least one expense must not be rejected for the claim to be approved')
@@ -117,7 +117,7 @@ describe('services/domain/claim-decision', function () {
   it('should return error if same caseworker as assisted digital caseworker', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_CASEWORKER, '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM)
-      expect(false, 'should have thrown validation error').to.be.true
+      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
       expect(e.validationErrors['assisted-digital-caseworker'][0]).to.equal('You cannot process this claim since you filled it in on behalf of a visitor')

@@ -27,7 +27,7 @@ describe('services/data/disable-deduction', function () {
             .then(function (deduction) {
               claimDeduction = deduction
 
-              expect(claimDeduction.IsEnabled).to.be.false
+              expect(claimDeduction.IsEnabled).to.be.false //eslint-disable-line
             })
         })
         .catch(function (error) {

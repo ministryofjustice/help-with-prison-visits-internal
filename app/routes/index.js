@@ -52,9 +52,9 @@ module.exports = function (router) {
           claims: claims
         })
       })
-    .catch(function (error) {
-      res.status(500).send(error)
-    })
+      .catch(function (error) {
+        res.status(500).send(error)
+      })
   })
 
   router.get('/claims/:status/updated', function (req, res) {
@@ -96,8 +96,8 @@ module.exports = function (router) {
           claims: claims
         })
       })
-    .catch(function (error) {
-      res.status(500).send(error)
-    })
+      .catch(function (error) {
+        res.status(500).send(error)
+      })
   })
 }

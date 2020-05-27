@@ -40,7 +40,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return list of claims and total when AssignedTo is null', function () {
-      return knex('Claim').where({'ClaimId': claimId}).update({'AssignedTo': null})
+      return knex('Claim').where({ ClaimId: claimId }).update({ AssignedTo: null })
         .then(function () {
           return getClaimListAndCount('TESTING', false, 0, 1, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
             .then(function (result) {
@@ -62,7 +62,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return list of claims and total when AssignedTo is another user, but it is after AssignmentExpiry', function () {
-      return knex('Claim').where({'ClaimId': claimId}).update({'AssignmentExpiry': dateFormatter.now().subtract('10', 'minutes').toDate()})
+      return knex('Claim').where({ ClaimId: claimId }).update({ AssignmentExpiry: dateFormatter.now().subtract('10', 'minutes').toDate() })
         .then(function () {
           return getClaimListAndCount('TESTING', false, 0, 1, 'AnotherTestUser@test.com', 'Claim.DateSubmitted', 'asc')
             .then(function (result) {
