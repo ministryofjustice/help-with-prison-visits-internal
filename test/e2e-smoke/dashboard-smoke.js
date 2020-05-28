@@ -2,15 +2,16 @@ const config = require('../../config')
 const expect = require('chai').expect
 
 describe('Smoke test', () => {
-  before(function () {
+  before(async function () {
     // IF SSO ENABLED LOGIN TO SSO
     if (config.AUTHENTICATION_ENABLED === 'true') {
-      return browser.url(config.TOKEN_HOST)
-        .waitForExist('#user_email')
-        .setValue('#user_email', config.TEST_SSO_EMAIL)
-        .setValue('#user_password', config.TEST_SSO_PASSWORD)
-        .click('[name="commit"]')
-        .waitForExist('[href="/users/sign_out"]')
+      await browser.url(config.TOKEN_HOST)
+      var email = await $('#user_email')
+      var password = await $('#user_password')
+      var commit = await $('[name="commit"]')
+      await email.setValue(config.TEST_SSO_EMAIL)
+      await password.setValue(config.TEST_SSO_PASSWORD)
+      await commit.click()
     }
   })
 
