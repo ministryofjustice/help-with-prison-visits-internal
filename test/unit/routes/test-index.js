@@ -60,7 +60,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function (response) {
           expect(isCaseworkerStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimsListAndCount.calledWith('TEST', false, 0, 10)).to.be.true //eslint-disable-line
+          expect(getClaimsListAndCount.calledWith(['TEST'], false, 0, 10)).to.be.true //eslint-disable-line
           expect(response.body.recordsTotal).to.equal(0)
           expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
         })
@@ -73,7 +73,7 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith(claimStatusEnum.NEW.value, true, 0, 10)).to.be.true //eslint-disable-line
+          expect(getClaimsListAndCount.calledWith([claimStatusEnum.NEW.value], true, 0, 10)).to.be.true //eslint-disable-line
         })
     })
 
@@ -84,7 +84,7 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE-APPROVED?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith(claimStatusEnum.APPROVED.value, true, 0, 10)).to.be.true //eslint-disable-line
+          expect(getClaimsListAndCount.calledWith([claimStatusEnum.APPROVED.value], true, 0, 10)).to.be.true //eslint-disable-line
         })
     })
 
@@ -95,7 +95,7 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE-UPDATED?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith(claimStatusEnum.UPDATED.value, true, 0, 10)).to.be.true //eslint-disable-line
+          expect(getClaimsListAndCount.calledWith([claimStatusEnum.UPDATED.value], true, 0, 10)).to.be.true //eslint-disable-line
         })
     })
 
@@ -104,6 +104,10 @@ describe('routes/index', function () {
       return supertest(app)
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(500)
+    })
+
+    afterEach(function () {
+      getClaimsListAndCount.resetHistory()
     })
   })
 })

@@ -6,7 +6,7 @@ const knex = require('knex')(config)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
-var sandbox = sinon.sandbox.create()
+var sandbox = sinon.createSandbox()
 var stubInsertClaimEvent = sandbox.stub().resolves()
 
 const updateEligibilityTrustedStatus = proxyquire('../../../../app/services/data/update-eligibility-trusted-status', {
