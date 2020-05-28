@@ -57,6 +57,10 @@ module.exports = function (claimId) {
       TopUps = results[10]
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
       claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
+      var latestUnpaidTopUp = TopUps.filter(topup => topup.PaymentStatus === 'PENDING')
+      if (latestUnpaidTopUp.length > 0) {
+        latestUnpaidTopUp = latestUnpaidTopUp[0]
+      }
 
       claimDetails = {
         claim: claim,
@@ -69,7 +73,8 @@ module.exports = function (claimId) {
         duplicates: claimDuplicatesExist,
         overpaidClaims: overpaidClaimData,
         TopUps: TopUps,
-        claimantDuplicates: claimantDuplicates
+        claimantDuplicates: claimantDuplicates,
+        latestUnpaidTopUp: latestUnpaidTopUp
       }
 
       return claimDetails
@@ -107,6 +112,7 @@ function getClaimantDetails (claimId) {
       'Claim.PaymentMethod',
       'Claim.AssignedTo',
       'Claim.AssignmentExpiry',
+      'Claim.PaymentStatus',
       'Visitor.FirstName',
       'Visitor.LastName',
       'Visitor.DateOfBirth',
@@ -213,12 +219,17 @@ function getClaimEvents (claimId) {
 }
 
 function getTopUp (claimId) {
-  return knex.select('TopUpId', 'ClaimId', 'IsPaid', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded').from('TopUp')
+  return knex.select('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded').from('TopUp')
     .where('ClaimId', claimId)
     .then(function (TopUpResults) {
+      var allTopUpsPaid = true
       TopUpResults.forEach(function (TopUpResult) {
+        if (TopUpResult.PaymentStatus === 'PENDING') {
+          allTopUpsPaid = false
+        }
         TopUpResult.TopUpAmount = Number(TopUpResult.TopUpAmount).toFixed(2)
       })
+      TopUpResults.allTopUpsPaid = allTopUpsPaid
       return TopUpResults
     })
 }

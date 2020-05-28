@@ -148,6 +148,12 @@
     {% include "partials/view-claim/add-top-up.html" %}
   </form>
 
+  <form action="/claim/{{ Claim['ClaimId'] }}/update-top-up" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    {% include "partials/view-claim/update-top-up.html" %}
+  </form>
+
   <form action="/claim/{{ Claim['ClaimId'] }}/close-advance-claim" method="post" class="form">
       {% include "partials/csrf-hidden-input.html" %}
       <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">

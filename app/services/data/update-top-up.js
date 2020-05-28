@@ -6,14 +6,13 @@ const dateFormatter = require('../date-formatter')
 
 module.exports = function (claim, topup, caseworker) {
   return knex('IntSchema.TopUp')
-    .insert({
-      ClaimId: claim.ClaimId,
-      PaymentStatus: 'PENDING',
-      Caseworker: caseworker,
+    .update({
       TopUpAmount: topup.amount,
       Reason: topup.reason,
       DateAdded: dateFormatter.now().toDate()
-    }).then(function () {
-      return insertClaimEvent(claim.Reference, claim.EligibilityId, claim.ClaimId, claimEventEnum.TOP_UP_SUBMITTED.value, null, topup.reason, caseworker, true)
+    })
+    .where({'ClaimId': claim.ClaimId, 'PaymentStatus': 'PENDING'})
+    .then(function () {
+      return insertClaimEvent(claim.Reference, claim.EligibilityId, claim.ClaimId, claimEventEnum.TOP_UP_UPDATED.value, null, topup.reason, caseworker, true)
     })
 }
