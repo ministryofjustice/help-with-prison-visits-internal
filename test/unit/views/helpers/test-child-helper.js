@@ -15,7 +15,7 @@ describe('views/helpers/child-helper', function () {
     expect(getChildHelper(PRISONERS_CHILD)).to.equal("Prisoner's child")
   })
 
-  it(`should return the original input if passed a non-matching value`, function () {
+  it('should return the original input if passed a non-matching value', function () {
     expect(getChildHelper(NON_MATCHING)).to.equal(NON_MATCHING)
   })
 })

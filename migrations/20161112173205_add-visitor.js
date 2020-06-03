@@ -19,10 +19,10 @@ exports.up = function (knex, Promise) {
     table.string('DWPBenefitCheckerResult', 100)
     table.string('DWPCheck', 20)
   })
-  .catch(function (error) {
-    console.log(error)
-    throw error
-  })
+    .catch(function (error) {
+      console.log(error)
+      throw error
+    })
 }
 
 exports.down = function (knex, Promise) {

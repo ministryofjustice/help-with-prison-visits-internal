@@ -5,9 +5,9 @@ const applyFilter = require('./apply-filter')
 
 module.exports = function (filter) {
   return applyFilter(
-      knex('Claim')
-        .count('ClaimId AS Count')
-        .where('Status', claimStatusEnum.REJECTED.value),
-      filter
-    )
+    knex('Claim')
+      .count('ClaimId AS Count')
+      .where('Status', claimStatusEnum.REJECTED.value),
+    filter
+  )
 }

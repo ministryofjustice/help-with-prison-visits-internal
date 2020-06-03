@@ -41,15 +41,15 @@ describe('services/data/get-claim-list-for-search', function () {
         .then(function (ids) {
           return knex('Visitor')
             .update({
-              'NationalInsuranceNumber': '00000',
-              'FirstName': 'Ref3FirstName',
-              'LastName': 'Ref3LastName'
+              NationalInsuranceNumber: '00000',
+              FirstName: 'Ref3FirstName',
+              LastName: 'Ref3LastName'
             })
             .where('Reference', reference3)
             .then(function () {
               return knex('Prisoner')
                 .update({
-                  'PrisonNumber': '00000'
+                  PrisonNumber: '00000'
                 })
                 .where('Reference', reference3)
             })

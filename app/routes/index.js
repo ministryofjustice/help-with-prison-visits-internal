@@ -46,19 +46,21 @@ module.exports = function (router) {
     var status = req.params.status
     if (status === 'ADVANCE') {
       advanceClaims = true
-      status = claimStatusEnum.NEW.value
+      status = [claimStatusEnum.NEW.value]
     } else if (status === 'ADVANCE-APPROVED') {
       advanceClaims = true
-      status = claimStatusEnum.APPROVED.value
+      status = [claimStatusEnum.APPROVED.value]
     } else if (status === 'ADVANCE-UPDATED') {
       advanceClaims = true
-      status = claimStatusEnum.UPDATED.value
+      status = [claimStatusEnum.UPDATED.value]
     } else if (status === 'PENDING') {
       advanceClaims = false
-      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value]
+      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
     } else if (status === 'ADVANCE-PENDING-INFORMATION') {
       advanceClaims = true
-      status = claimStatusEnum.REQUEST_INFORMATION.value
+      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
+    } else {
+      status = [status]
     }
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
@@ -75,9 +77,9 @@ module.exports = function (router) {
           claims: claims
         })
       })
-    .catch(function (error) {
-      res.status(500).send(error)
-    })
+      .catch(function (error) {
+        res.status(500).send(error)
+      })
   })
 
   router.get('/claims/:status/:sortType', function (req, res) {
@@ -116,19 +118,21 @@ module.exports = function (router) {
     var status = req.params.status
     if (status === 'ADVANCE') {
       advanceClaims = true
-      status = claimStatusEnum.NEW.value
+      status = [claimStatusEnum.NEW.value]
     } else if (status === 'ADVANCE-APPROVED') {
       advanceClaims = true
-      status = claimStatusEnum.APPROVED.value
+      status = [claimStatusEnum.APPROVED.value]
     } else if (status === 'ADVANCE-UPDATED') {
       advanceClaims = true
-      status = claimStatusEnum.UPDATED.value
+      status = [claimStatusEnum.UPDATED.value]
     } else if (status === 'PENDING') {
       advanceClaims = false
       status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value]
     } else if (status === 'ADVANCE-PENDING-INFORMATION') {
       advanceClaims = true
-      status = claimStatusEnum.REQUEST_INFORMATION.value
+      status = [claimStatusEnum.REQUEST_INFORMATION.value]
+    } else {
+      status = [status]
     }
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
@@ -145,8 +149,8 @@ module.exports = function (router) {
           claims: claims
         })
       })
-    .catch(function (error) {
-      res.status(500).send(error)
-    })
+      .catch(function (error) {
+        res.status(500).send(error)
+      })
   })
 }

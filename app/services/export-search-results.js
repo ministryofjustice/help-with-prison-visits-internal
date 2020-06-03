@@ -16,7 +16,7 @@ module.exports = function (searchCriteria) {
       } else {
         columnHeaders = []
       }
-      return generateCsvString(transformedData, {columns: columnHeaders, header: true})
+      return generateCsvString(transformedData, { columns: columnHeaders, header: true })
     })
     .then(function (csvString) {
       return csvString

@@ -7,7 +7,7 @@ module.exports = function (reason) {
     .where('RejectionReason', reason)
     .then(function (result) {
       if (result) {
-        return result['ClaimRejectionReasonId']
+        return result.ClaimRejectionReasonId
       } else {
         return null
       }

@@ -13,16 +13,16 @@ exports.up = function (knex, Promise) {
     table.boolean('IsEnabled')
     table.string('Status', 20)
   })
-  .catch(function (error) {
-    console.log(error)
-    throw error
-  })
+    .catch(function (error) {
+      console.log(error)
+      throw error
+    })
 }
 
 exports.down = function (knex, Promise) {
   return knex.schema.dropTable('ClaimDocument')
-  .catch(function (error) {
-    console.log(error)
-    throw error
-  })
+    .catch(function (error) {
+      console.log(error)
+      throw error
+    })
 }

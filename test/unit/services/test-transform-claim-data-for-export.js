@@ -1,6 +1,5 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 
 const dateFormatter = require('../../../app/services/date-formatter')
@@ -103,7 +102,7 @@ const TEST_CLAIM_DATA_REJECTED = [
 
 const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
-const CLAIM_CHILD_COUNT = [{Count: 1}]
+const CLAIM_CHILD_COUNT = [{ Count: 1 }]
 
 describe('services/transform-claim-data-for-export', function () {
   beforeEach(function () {
@@ -147,9 +146,9 @@ describe('services/transform-claim-data-for-export', function () {
   it('should call all relevant functions', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
-        expect(getClaimEscortStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true
-        expect(getClaimExpensesStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true
-        expect(getClaimChildCountStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true
+        expect(getClaimEscortStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
+        expect(getClaimExpensesStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
+        expect(getClaimChildCountStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
       })
   })
 

@@ -17,10 +17,10 @@ var log = bunyan.createLogger({
   name: 'internal-web',
   streams: [],
   serializers: {
-    'request': requestSerializer,
-    'response': responseSerializer,
-    'error': errorSerializer,
-    'user': userSerializer
+    request: requestSerializer,
+    response: responseSerializer,
+    error: errorSerializer,
+    user: userSerializer
   }
 })
 

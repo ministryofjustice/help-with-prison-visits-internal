@@ -9,23 +9,23 @@ var noteId
 
 class ClaimDecision {
   constructor (caseworker,
-               assistedDigitalCaseworker,
-               decision,
-               additionalInfoApprove,
-               additionalInfoRequest,
-               additionalInfoReject,
-               nomisCheck,
-               dwpCheck,
-               visitConfirmationCheck,
-               claimExpenseResponses,
-               claimDeductionResponses,
-               isAdvanceClaim,
-               rejectionReasonId,
-               additionalInfoRejectManual,
-               releaseDateIsSet,
-               releaseDay,
-               releaseMonth,
-               releaseYear) {
+    assistedDigitalCaseworker,
+    decision,
+    additionalInfoApprove,
+    additionalInfoRequest,
+    additionalInfoReject,
+    nomisCheck,
+    dwpCheck,
+    visitConfirmationCheck,
+    claimExpenseResponses,
+    claimDeductionResponses,
+    isAdvanceClaim,
+    rejectionReasonId,
+    additionalInfoRejectManual,
+    releaseDateIsSet,
+    releaseDay,
+    releaseMonth,
+    releaseYear) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
     this.rejectionReasonId = null
@@ -77,7 +77,7 @@ class ClaimDecision {
     var errors = ErrorHandler()
 
     if (this.caseworker === this.assistedDigitalCaseworker) {
-      throw new ValidationError({'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim]})
+      throw new ValidationError({ 'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim] })
     }
 
     FieldValidator(this.decision, 'decision', errors)
