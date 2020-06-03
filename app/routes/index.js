@@ -127,10 +127,10 @@ module.exports = function (router) {
       status = [claimStatusEnum.UPDATED.value]
     } else if (status === 'PENDING') {
       advanceClaims = false
-      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value]
+      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
     } else if (status === 'ADVANCE-PENDING-INFORMATION') {
       advanceClaims = true
-      status = [claimStatusEnum.REQUEST_INFORMATION.value]
+      status = [claimStatusEnum.PENDING.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
     } else {
       status = [status]
     }
