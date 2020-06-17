@@ -25,7 +25,7 @@ class FileUpload {
 
     if (this.error) {
       if (this.error instanceof UploadError) {
-        throw new ValidationError({upload: [ERROR_MESSAGES.getUploadIncorrectType]})
+        throw new ValidationError({ upload: [ERROR_MESSAGES.getUploadIncorrectType] })
       } else {
         throw this.error
       }

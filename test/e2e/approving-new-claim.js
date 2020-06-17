@@ -18,49 +18,61 @@ describe('First time claim viewing flow', () => {
       expenseId1 = ids.expenseId1
       expenseId2 = ids.expenseId2
     })
-    .then(function () {
+      .then(async () => {
       // IF SSO ENABLED LOGIN TO SSO
-      if (config.AUTHENTICATION_ENABLED === 'true') {
-        return browser.url(config.TOKEN_HOST)
-          .waitForExist('#user_email')
-          .setValue('#user_email', config.TEST_SSO_EMAIL)
-          .setValue('#user_password', config.TEST_SSO_PASSWORD)
-          .click('[name="commit"]')
-          .waitForExist('[href="/users/sign_out"]')
-      }
-    })
+        if (config.AUTHENTICATION_ENABLED === 'true') {
+          await browser.url(config.TOKEN_HOST)
+          var email = await $('#user_email')
+          var password = await $('#user_password')
+          var commit = await $('[name="commit"]')
+          await email.setValue(config.TEST_SSO_EMAIL)
+          await password.setValue(config.TEST_SSO_PASSWORD)
+          await commit.click()
+        }
+      })
   })
 
-  it('should display a list of claims and approve a claim', () => {
-    return browser.url('/')
+  it('should display a list of claims and approve a claim', async () => {
+    await browser.url('/')
 
-      // Index
-      .waitForExist('#claims_wrapper')
-      .waitForExist('#claim' + claimId)
-      .click('#claim' + claimId)
+    // Index
+    var submitButton = await $('#claim' + claimId)
+    await submitButton.click()
 
-      // View-claim
-      .waitForExist('#reference')
-      .click('#assign-self')
-      .waitForExist('#reference')
-      .getText('#visitor-name').then(function (text) {
-        expect(text).to.be.equal('John Smith')
-      })
-      .selectByVisibleText('#dwp-status', 'Approve')
-      .selectByVisibleText('#nomis-check', 'Approve')
-      .selectByVisibleText('#visit-confirmation-check', 'Approve')
-      .selectByVisibleText(`#claim-expense-${expenseId1}-status`, 'Approve')
-      .selectByVisibleText(`#claim-expense-${expenseId2}-status`, 'Approve')
-      .click('[for="approve"]')
-      .click('#approve-submit')
+    // View-claim
+    var assignSelf = await $('#assign-self')
+    await assignSelf.click()
 
-      // Search for approved claim
-      .waitForExist('#input-search-query')
-      .setValue('#input-search-query', '1111111')
-      .click('#search')
+    var visitorName = await $('#visitor-name')
+    visitorName = await visitorName.getText()
+    expect(visitorName).to.be.equal('John Smith')
 
-      // Check claim is found
-      .waitForExist('#claim' + claimId)
+    var dwpStatus = await $('#dwp-status')
+    var nomisCheck = await $('#nomis-check')
+    var visitConfirmationCheck = await $('#visit-confirmation-check')
+    var expense1 = await $(`#claim-expense-${expenseId1}-status`)
+    var expense2 = await $(`#claim-expense-${expenseId2}-status`)
+    var approve = await $('[for="approve"]')
+    submitButton = await $('#approve-submit')
+
+    await dwpStatus.selectByVisibleText('Approve')
+    await nomisCheck.selectByVisibleText('Approve')
+    await visitConfirmationCheck.selectByVisibleText('Approve')
+    await expense1.selectByVisibleText('Approve')
+    await expense2.selectByVisibleText('Approve')
+    await approve.click()
+    await submitButton.click()
+
+    // Search for approved claim
+    var searchBox = await $('#input-search-query')
+    submitButton = await $('#search')
+
+    await searchBox.setValue('1111111')
+    await submitButton.click()
+
+    var claim = await $('#claim' + claimId)
+    expect(claim).to.not.equal(null)
+    expect(claim).to.not.equal(undefined)
   })
 
   after(function () {

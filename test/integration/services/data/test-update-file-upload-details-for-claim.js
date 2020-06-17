@@ -18,7 +18,7 @@ describe('services/data/update-file-upload-details-for-claim', function () {
     date = dateFormatter.now().toDate()
     return databaseHelper.insertTestData(REFERENCE, date, 'Test').then(function (ids) {
       claimDocumentId = ids.claimDocumentId1
-      testFileUpload = new FileUpload({documentStatus: testData.DocumentStatus, path: 'testPath', dateSubmitted: date}, undefined, claimDocumentId, testData.Caseworker)
+      testFileUpload = new FileUpload({ documentStatus: testData.DocumentStatus, path: 'testPath', dateSubmitted: date }, undefined, claimDocumentId, testData.Caseworker)
     })
   })
 

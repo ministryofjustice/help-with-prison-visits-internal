@@ -62,15 +62,15 @@ module.exports = function (router) {
           }
         })
     })
-    .catch(function (err) {
-      return handleError(err, req, res, false, next)
-    })
+      .catch(function (err) {
+        return handleError(err, req, res, false, next)
+      })
   })
 
   // POST
   router.post('/claim/:claimId', function (req, res, next) {
     var needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/`, function () {
+    return validatePostRequest(req, res, next, needAssignmentCheck, '/', function () {
       claimExpenses = getClaimExpenseResponses(req.body)
       return submitClaimDecision(req, res, claimExpenses)
     })
@@ -149,14 +149,14 @@ module.exports = function (router) {
   router.post('/claim/:claimId/disable-reference-number', function (req, res, next) {
     var needAssignmentCheck = true
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return disableReferenceNumber(req.params.claimId, req.body['referenceToBeDisabled'], req.body['disable-reference-number-additional-information'], req.user.email)
+      return disableReferenceNumber(req.params.claimId, req.body.referenceToBeDisabled, req.body['disable-reference-number-additional-information'], req.user.email)
     })
   })
 
   router.post('/claim/:claimId/re-enable-reference-number', function (req, res, next) {
     var needAssignmentCheck = true
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return reEnableReferenceNumber(req.params.claimId, req.body['referenceToBeReEnabled'], req.body['re-enable-reference-number-additional-information'], req.user.email)
+      return reEnableReferenceNumber(req.params.claimId, req.body.referenceToBeReEnabled, req.body['re-enable-reference-number-additional-information'], req.user.email)
     })
   })
 
@@ -176,9 +176,9 @@ module.exports = function (router) {
     var needAssignmentCheck = false
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return updateAssignmentOfClaims(req.params.claimId, req.user.email)
-      .then(function () {
-        return false
-      })
+        .then(function () {
+          return false
+        })
     })
   })
 
@@ -190,7 +190,7 @@ module.exports = function (router) {
   })
 }
 
- // Functions
+// Functions
 function getClaimDeductionId (requestBody) {
   var deductionId = null
   Object.keys(requestBody).forEach(function (key) {
@@ -220,9 +220,9 @@ function validatePostRequest (req, res, next, needAssignmentCheck, redirectUrl, 
         })
     })
   })
-  .catch(function (error) {
-    return handleError(error, req, res, updateConflict, next)
-  })
+    .catch(function (error) {
+      return handleError(error, req, res, updateConflict, next)
+    })
 }
 
 function submitClaimDecision (req, res, claimExpenses) {
@@ -253,7 +253,7 @@ function submitClaimDecision (req, res, claimExpenses) {
             req.body['release-day'],
             req.body['release-month'],
             req.body['release-year']
-            )
+          )
           return SubmitClaimResponse(req.params.claimId, claimDecision)
             .then(function () {
               if (claimDecision.decision === claimDecisionEnum.APPROVED) {
@@ -295,7 +295,7 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
       return getRejectionReasons()
         .then(function (rejectionReasons) {
           data.rejectionReasons = rejectionReasons
-          var error = {ValidationError: null}
+          var error = { ValidationError: null }
           return res.render('./claim/view-claim', renderValues(data, req, error))
         })
     })
@@ -309,10 +309,10 @@ function handleError (error, req, res, updateConflict, next) {
           populateNewData(data, req)
         }
         return getRejectionReasons()
-        .then(function (rejectionReasons) {
-          data.rejectionReasons = rejectionReasons
-          return res.status(400).render('./claim/view-claim', renderValues(data, req, error))
-        })
+          .then(function (rejectionReasons) {
+            data.rejectionReasons = rejectionReasons
+            return res.status(400).render('./claim/view-claim', renderValues(data, req, error))
+          })
       })
   } else {
     next(error)

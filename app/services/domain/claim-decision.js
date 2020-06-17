@@ -86,7 +86,7 @@ class ClaimDecision {
     var errors = ErrorHandler()
 
     if (this.caseworker === this.assistedDigitalCaseworker) {
-      throw new ValidationError({'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim]})
+      throw new ValidationError({ 'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim] })
     }
 
     FieldValidator(this.decision, 'decision', errors)

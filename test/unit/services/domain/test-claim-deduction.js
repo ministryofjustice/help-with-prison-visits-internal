@@ -19,7 +19,7 @@ describe('services/domain/claim-deduction', function () {
       claimDeduction = new ClaimDeduction('', VALID_AMOUNT)
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['deductionType'][0]).to.equal('A deduction type is required')
+      expect(e.validationErrors.deductionType[0]).to.equal('A deduction type is required')
     }
   })
 
@@ -28,7 +28,7 @@ describe('services/domain/claim-deduction', function () {
       claimDeduction = new ClaimDeduction(VALID_DEDUCTION_TYPE, '')
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['deductionAmount'][0]).to.equal('A deduction amount is required')
+      expect(e.validationErrors.deductionAmount[0]).to.equal('A deduction amount is required')
     }
   })
 })

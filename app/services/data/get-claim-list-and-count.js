@@ -34,10 +34,11 @@ module.exports = function (status, advanceClaims, offset, limit, user, sortType,
           claims.forEach(function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+            claim.UpdatedDateFormatted = moment(claim.LastUpdated).format('DD/MM/YYYY - HH:mm')
             claim.DisplayStatus = statusFormatter(claim.Status)
             claim.Name = claim.FirstName + ' ' + claim.LastName
           })
-          return {claims: claims, total: count[0]}
+          return { claims: claims, total: count[0] }
         })
     })
 }

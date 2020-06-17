@@ -37,7 +37,7 @@ module.exports = function (query, offset, limit) {
             }
             claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
           })
-          return {claims: claims.slice(0, limit), total: count[0]}
+          return { claims: claims.slice(0, limit), total: count[0] }
         })
     })
 }

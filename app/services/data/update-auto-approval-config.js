@@ -11,16 +11,16 @@ module.exports = function (autoApprovalConfig) {
     .then(function (currentAutoApprovalConfig) {
       if (currentAutoApprovalConfig) {
         return insertConfigData(autoApprovalConfig)
-        .then(function (result) {
+          .then(function (result) {
           // only disable current config if new config was set successfully
-          var insertResult = result[0]
-          return knex('AutoApprovalConfig')
-            .where('AutoApprovalConfigId', currentAutoApprovalConfig.AutoApprovalConfigId)
-            .update('IsEnabled', 'false')
-            .then(function () {
-              return insertResult
-            })
-        })
+            var insertResult = result[0]
+            return knex('AutoApprovalConfig')
+              .where('AutoApprovalConfigId', currentAutoApprovalConfig.AutoApprovalConfigId)
+              .update('IsEnabled', 'false')
+              .then(function () {
+                return insertResult
+              })
+          })
       } else {
         return insertConfigData(autoApprovalConfig)
       }

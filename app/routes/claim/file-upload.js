@@ -16,7 +16,7 @@ module.exports = function (router) {
 
     csrfToken = generateCSRFToken(req)
 
-    if (DocumentTypeEnum.hasOwnProperty(req.params.documentType)) {
+    if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params.documentType)) {
       var claimId
       if (req.query.document === 'VISIT_CONFIRMATION' || req.query.document === 'RECEIPT') {
         claimId = req.params.claimId
@@ -48,12 +48,12 @@ module.exports = function (router) {
         }
         if (error) {
           if (error.message === 'File too large') {
-            throw new ValidationError({upload: [ERROR_MESSAGES.getUploadTooLarge]})
+            throw new ValidationError({ upload: [ERROR_MESSAGES.getUploadTooLarge] })
           } else {
             throw error
           }
         } else {
-          if (DocumentTypeEnum.hasOwnProperty(req.params.documentType)) {
+          if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params.documentType)) {
             var fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
             ClaimDocumentUpdate(req.params.referenceId, fileUpload).then(function () {
               res.redirect(`/claim/${req.params.claimId}`)
