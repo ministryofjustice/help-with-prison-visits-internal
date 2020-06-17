@@ -101,8 +101,8 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
 
 function updateVisitor (eligibilityId, dwpCheck, expiryDate) {
   return knex('Visitor').where('EligibilityId', eligibilityId).update({
-    'DWPCheck': dwpCheck,
-    'BenefitExpiryDate': expiryDate
+    DWPCheck: dwpCheck,
+    BenefitExpiryDate: expiryDate
   })
 }
 

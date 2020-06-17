@@ -9,26 +9,26 @@ var noteId
 
 class ClaimDecision {
   constructor (caseworker,
-               assistedDigitalCaseworker,
-               decision,
-               additionalInfoApprove,
-               additionalInfoRequest,
-               additionalInfoReject,
-               nomisCheck,
-               dwpCheck,
-               visitConfirmationCheck,
-               claimExpenseResponses,
-               claimDeductionResponses,
-               isAdvanceClaim,
-               rejectionReasonId,
-               additionalInfoRejectManual,
-               expiryDay,
-               expiryMonth,
-               expiryYear,
-               releaseDateIsSet,
-               releaseDay,
-               releaseMonth,
-               releaseYear) {
+    assistedDigitalCaseworker,
+    decision,
+    additionalInfoApprove,
+    additionalInfoRequest,
+    additionalInfoReject,
+    nomisCheck,
+    dwpCheck,
+    visitConfirmationCheck,
+    claimExpenseResponses,
+    claimDeductionResponses,
+    isAdvanceClaim,
+    rejectionReasonId,
+    additionalInfoRejectManual,
+    expiryDay,
+    expiryMonth,
+    expiryYear,
+    releaseDateIsSet,
+    releaseDay,
+    releaseMonth,
+    releaseYear) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
     this.rejectionReasonId = null
@@ -156,9 +156,9 @@ class ClaimDecision {
     }
 
     FieldValidator(this.expiryDateFields, 'benefit-expiry', errors)
-        .isDateRequired(ERROR_MESSAGES.getExpiryDateIsRequired)
-        .isValidDate(this.expiryDate)
-        .isFutureDate(this.expiryDate)
+      .isDateRequired(ERROR_MESSAGES.getExpiryDateIsRequired)
+      .isValidDate(this.expiryDate)
+      .isFutureDate(this.expiryDate)
 
     if (this.releaseDateIsSet) {
       FieldValidator(this.releaseDateFields, 'release-date-section', errors)
