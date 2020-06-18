@@ -50,6 +50,7 @@ describe('services/data/submit-claim-response', function () {
       note: 'Could not verify in NOMIS',
       nomisCheck: claimDecisionEnum.APPROVED,
       dwpCheck: claimDecisionEnum.APPROVED,
+      expiryDate: dateFormatter.now().add(1, 'days'),
       claimExpenseResponses: [
         { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.APPROVED },
         { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
@@ -71,6 +72,7 @@ describe('services/data/submit-claim-response', function () {
       nomisCheck: claimDecisionEnum.REJECTED,
       dwpCheck: claimDecisionEnum.REJECTED,
       rejectionReasonId: rejectionReasonIdentifier,
+      expiryDate: dateFormatter.now().add(1, 'days'),
       claimExpenseResponses: [
         { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REJECTED },
         { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
@@ -122,6 +124,7 @@ describe('services/data/submit-claim-response', function () {
       decision: claimDecisionEnum.APPROVED,
       nomisCheck: claimDecisionEnum.APPROVED,
       dwpCheck: claimDecisionEnum.APPROVED,
+      expiryDate: dateFormatter.now().add(1, 'days'),
       note: '',
       claimExpenseResponses: [
         { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.APPROVED },
@@ -148,6 +151,7 @@ describe('services/data/submit-claim-response', function () {
       dwpCheck: claimDecisionEnum.REJECTED,
       note: '',
       rejectionReason: rejectionReasonIdentifier,
+      expiryDate: dateFormatter.now().add(1, 'days'),
       claimExpenseResponses: [
         { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REJECTED },
         { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REJECTED }
@@ -173,6 +177,7 @@ describe('services/data/submit-claim-response', function () {
       nomisCheck: claimDecisionEnum.REQUEST_INFORMATION,
       dwpCheck: claimDecisionEnum.REQUEST_INFORMATION,
       note: '',
+      expiryDate: dateFormatter.now().add(1, 'days'),
       claimExpenseResponses: [
         { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REQUEST_INFORMATION },
         { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
@@ -197,6 +202,7 @@ describe('services/data/submit-claim-response', function () {
       nomisCheck: claimDecisionEnum.REQUEST_INFORMATION,
       dwpCheck: claimDecisionEnum.REQUEST_INFORMATION,
       note: '',
+      expiryDate: dateFormatter.now().add(1, 'days'),
       claimExpenseResponses: [
         { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REQUEST_INFORMATION },
         { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
@@ -224,6 +230,7 @@ describe('services/data/submit-claim-response', function () {
       nomisCheck: claimDecisionEnum.REQUEST_INFORMATION,
       dwpCheck: claimDecisionEnum.REQUEST_INFORMATION,
       note: '',
+      expiryDate: dateFormatter.now().add(1, 'days'),
       claimExpenseResponses: [
         { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REQUEST_INFORMATION },
         { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
@@ -252,6 +259,7 @@ describe('services/data/submit-claim-response', function () {
       note: 'Could not verify in NOMIS',
       nomisCheck: claimDecisionEnum.APPROVED,
       dwpCheck: claimDecisionEnum.APPROVED,
+      expiryDate: dateFormatter.now().add(1, 'days'),
       claimExpenseResponses: [
         { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.MANUALLY_PROCESSED },
         { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.MANUALLY_PROCESSED }
