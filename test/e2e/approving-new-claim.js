@@ -2,6 +2,7 @@ const config = require('../../config')
 var moment = require('moment')
 var databaseHelper = require('../helpers/database-setup-for-tests')
 var expect = require('chai').expect
+var dateFormatter = require('../../app/services/date-formatter')
 
 // Variables for creating and deleting a record
 var reference = '1111111'
@@ -9,6 +10,7 @@ var date
 var claimId
 var expenseId1
 var expenseId2
+var expiryDate = dateFormatter.now().add(14, 'days')
 
 describe('First time claim viewing flow', () => {
   before(function () {
@@ -54,8 +56,14 @@ describe('First time claim viewing flow', () => {
     var expense2 = await $(`#claim-expense-${expenseId2}-status`)
     var approve = await $('[for="approve"]')
     submitButton = await $('#approve-submit')
+    var expiryDay = await $('#expiry-day')
+    var expiryMonth = await $('#expiry-month')
+    var expiryYear = await $('#expiry-year')
 
     await dwpStatus.selectByVisibleText('Approve')
+    await expiryDay.setValue(expiryDate.date())
+    await expiryMonth.setValue(expiryDate.month() + 1)
+    await expiryYear.setValue(expiryDate.year())
     await nomisCheck.selectByVisibleText('Approve')
     await visitConfirmationCheck.selectByVisibleText('Approve')
     await expense1.selectByVisibleText('Approve')
