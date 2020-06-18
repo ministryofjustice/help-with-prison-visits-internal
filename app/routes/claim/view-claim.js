@@ -246,6 +246,9 @@ function submitClaimDecision (req, res, claimExpenses) {
             req.body.isAdvanceClaim,
             rejectionReasonId,
             req.body.additionalInfoRejectManual,
+            req.body['expiry-day'],
+            req.body['expiry-month'],
+            req.body['expiry-year'],
             req.body['release-date-is-set'],
             req.body['release-day'],
             req.body['release-month'],
@@ -278,6 +281,11 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
     .then(function (data) {
       if (keepUnsubmittedChanges) {
         populateNewData(data, req)
+      }
+      if (data.claim.BenefitExpiryDate) {
+        data.claim.expiryDay = getDateFormatted.getDay(data.claim.BenefitExpiryDate)
+        data.claim.expiryMonth = getDateFormatted.getMonth(data.claim.BenefitExpiryDate)
+        data.claim.expiryYear = getDateFormatted.getYear(data.claim.BenefitExpiryDate)
       }
       if (data.claim.ReleaseDate) {
         data.claim.releaseDay = getDateFormatted.getDay(data.claim.ReleaseDate)
@@ -316,6 +324,9 @@ function populateNewData (data, req) {
   data.claim.DWPCheck = req.body.dwpCheck
   data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
   data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
+  data.claim.expiryDay = req.body['expiry-day']
+  data.claim.expiryMonth = req.body['expiry-month']
+  data.claim.expiryYear = req.body['expiry-year']
   if (req.body['release-date-is-set']) {
     data.claim.ReleaseDateIsSet = true
   } else {

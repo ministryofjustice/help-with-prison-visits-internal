@@ -33,5 +33,6 @@ module.exports = {
   approvedClaimAmountTo: 'Approved claim amount (to)',
   EmailAddress: 'Email address',
   PhoneNumber: 'Phone number',
+  'benefit-expiry': 'Benefit Expiry Date',
   'release-date-section': 'Release Date'
 }
