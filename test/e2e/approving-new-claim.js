@@ -56,9 +56,9 @@ describe('First time claim viewing flow', () => {
     var expense2 = await $(`#claim-expense-${expenseId2}-status`)
     var approve = await $('[for="approve"]')
     submitButton = await $('#approve-submit')
-    var expiryDay = await $('#expiry-day')
-    var expiryMonth = await $('#expiry-month')
-    var expiryYear = await $('#expiry-year')
+    var expiryDay = await $('#expiry-day-input')
+    var expiryMonth = await $('#expiry-month-input')
+    var expiryYear = await $('#expiry-year-input')
 
     await dwpStatus.selectByVisibleText('Approve')
     await expiryDay.setValue(expiryDate.date())
