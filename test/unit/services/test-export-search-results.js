@@ -1,6 +1,5 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 
 var exportSearchResults
@@ -9,10 +8,10 @@ var transformClaimDataForExportStub
 
 describe('services/export-search-results', function () {
   before(function () {
-    var getClaimListForAdvancedSearchResult = { claims: [] }
+    var getClaimListForAdvancedSearchResult = { claims: [], total: 0 }
 
     getClaimListForAdvancedSearchStub = sinon.stub().resolves(getClaimListForAdvancedSearchResult)
-    transformClaimDataForExportStub = sinon.stub().resolves({})
+    transformClaimDataForExportStub = sinon.stub().resolves([])
 
     exportSearchResults = proxyquire('../../../app/services/export-search-results', {
       '../services/data/get-claim-list-for-advanced-search': getClaimListForAdvancedSearchStub,
@@ -25,8 +24,8 @@ describe('services/export-search-results', function () {
 
     return exportSearchResults(searchCriteria)
       .then(function () {
-        expect(getClaimListForAdvancedSearchStub.calledWith(searchCriteria, 0, Number.MAX_SAFE_INTEGER)).to.be.true
-        expect(transformClaimDataForExportStub.calledOnce).to.be.true
+        expect(getClaimListForAdvancedSearchStub.calledWith(searchCriteria, 0, Number.MAX_SAFE_INTEGER)).to.be.true //eslint-disable-line
+        expect(transformClaimDataForExportStub.calledOnce).to.be.true //eslint-disable-line
       })
   })
 })

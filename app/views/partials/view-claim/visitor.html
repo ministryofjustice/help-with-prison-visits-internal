@@ -87,6 +87,37 @@
     </td>
   </tr>
 
+  <tr class="form-date {% if errors['benefit-expiry'][0] %} warning {% endif %}" id="benefit-expiry">
+    <td>Benefit Expiry</td>
+      {% if unlock %}
+      <td>
+        <div class="form-group form-group-day">
+          <label id="expiry-day" for="expiry-day-input">Day</label>
+          <input id="expiry-day-input" type="number" name="expiry-day" autocomplete="off"
+                value="{{ Claim['expiryDay'] }}" class="form-control">
+        </div>
+
+        <div class="form-group form-group-month">
+          <label id="expiry-month" for="expiry-month-input">Month</label>
+          <input id="expiry-month-input" type="number" name="expiry-month" autocomplete="off"
+                value="{{ Claim['expiryMonth'] }}" class="form-control">
+        </div>
+
+        <div class="form-group form-group-year">
+          <label id="expiry-year" for="expiry-year-input">Year</label>
+          <input id="expiry-year-input" type="number" name="expiry-year" autocomplete="off"
+                value="{{ Claim['expiryYear'] }}" class="form-control">
+        </div>
+      </td>
+      {% else %}
+        {% if Claim['BenefitExpiryDate'] %}
+          <td>{{ getDateFormatted.shortDate(Claim['BenefitExpiryDate']) }}</td>
+        {% else %}
+          <td><span class="text-pending">Pending</span></td>
+        {% endif %}
+      {% endif %}
+  </tr>
+
   {% set childNum = 1 %}
   {% for child in Children %}
   <tr>
@@ -114,4 +145,5 @@
     <td>Payment method</td>
     <td>{{ displayHelper.getPaymentMethodDisplayName(Claim['PaymentMethod']) }}</td>
   </tr>
+
 </table>

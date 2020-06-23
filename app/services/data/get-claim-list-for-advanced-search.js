@@ -8,8 +8,8 @@ const statusFormatter = require('../claim-status-formatter')
 const Promise = require('bluebird').Promise
 const getClosedClaimStatus = require('./get-closed-claim-status')
 
-const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value ]
-const IN_PROGRESS_STATUS_VALUES = [ claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value ]
+const APPROVED_STATUS_VALUES = [claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value]
+const IN_PROGRESS_STATUS_VALUES = [claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
 
 var countQuery
 var selectQuery
@@ -246,21 +246,21 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
             }
             if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
               return getClosedClaimStatus(claim.ClaimId)
-               .then(function (status) {
-                 claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
-                 claimsToReturn.push(claim)
-               })
+                .then(function (status) {
+                  claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
+                  claimsToReturn.push(claim)
+                })
             } else {
               claimsToReturn.push(claim)
               return Promise.resolve()
             }
           })
-          .then(function () {
-            return {
-              claims: claimsToReturn,
-              total: count[0]
-            }
-          })
+            .then(function () {
+              return {
+                claims: claimsToReturn,
+                total: count[0]
+              }
+            })
         })
     })
 
@@ -269,7 +269,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   }
 
   function applyNameFilter (query, name) {
-    query.whereRaw(`CONCAT(Visitor.FirstName, ' ', Visitor.LastName) like ?`, [`%${name}%`])
+    query.whereRaw('CONCAT(Visitor.FirstName, \' \', Visitor.LastName) like ?', [`%${name}%`])
   }
 
   function applyNINumberFilter (query, ninumber) {
@@ -340,7 +340,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     if (overpaymentStatus === 'false') {
       query.where(function () {
         this.where('Claim.IsOverpaid', false)
-        .orWhereNull('Claim.IsOverpaid')
+          .orWhereNull('Claim.IsOverpaid')
       })
     } else {
       query.orWhere('Claim.IsOverpaid', true)

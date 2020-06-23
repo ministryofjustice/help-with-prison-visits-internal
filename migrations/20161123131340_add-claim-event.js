@@ -12,10 +12,10 @@ exports.up = function (knex, Promise) {
     table.string('Caseworker', 100)
     table.boolean('IsInternal').defaultTo(true)
   })
-  .catch(function (error) {
-    console.log(error)
-    throw error
-  })
+    .catch(function (error) {
+      console.log(error)
+      throw error
+    })
 }
 
 exports.down = function (knex, Promise) {

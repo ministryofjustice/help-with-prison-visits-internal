@@ -1,6 +1,5 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
@@ -24,9 +23,9 @@ describe('services/data/request-new-bank-details', function () {
     var user = 'user'
     return requestNewBankDetails(reference, eligibilityId, claimId, additionalInformaiton, user)
       .then(function (result) {
-        expect(updateClaimStatusRequestingBankDetailsStub.calledWith(reference, claimId)).to.be.true
-        expect(insertClaimEventStub.calledWith(reference, eligibilityId, claimId, claimEventEnum.REQUEST_NEW_BANK_DETAILS.value, additionalInformaiton, '', user, false)).to.be.true
-        expect(insertTaskSendClaimNotificationStub.calledWith(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION, reference, eligibilityId, claimId)).to.be.true
+        expect(updateClaimStatusRequestingBankDetailsStub.calledWith(reference, claimId)).to.be.true //eslint-disable-line
+        expect(insertClaimEventStub.calledWith(reference, eligibilityId, claimId, claimEventEnum.REQUEST_NEW_BANK_DETAILS.value, additionalInformaiton, '', user, false)).to.be.true //eslint-disable-line
+        expect(insertTaskSendClaimNotificationStub.calledWith(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION, reference, eligibilityId, claimId)).to.be.true //eslint-disable-line
       })
   })
 })

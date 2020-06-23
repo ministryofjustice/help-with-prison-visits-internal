@@ -42,18 +42,18 @@ module.exports = function (query, offset, limit) {
             claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
             if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
               return getClosedClaimStatus(claim.ClaimId)
-               .then(function (status) {
-                 claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
-                 claimsToReturn.push(claim)
-               })
+                .then(function (status) {
+                  claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
+                  claimsToReturn.push(claim)
+                })
             } else {
               claimsToReturn.push(claim)
               return Promise.resolve()
             }
           })
-          .then(function () {
-            return {claims: claimsToReturn.slice(0, limit), total: count[0]}
-          })
+            .then(function () {
+              return { claims: claimsToReturn.slice(0, limit), total: count[0] }
+            })
         })
     })
 }

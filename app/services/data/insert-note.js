@@ -27,8 +27,8 @@ function updateClaim (claimId, note) {
   var updateObject = {}
 
   updateObject = {
-    'Note': note,
-    'LastUpdated': dateFormatter.now().toDate()
+    Note: note,
+    LastUpdated: dateFormatter.now().toDate()
   }
 
   if (updateObject.Note.length > 250) {
@@ -41,7 +41,7 @@ function updateClaim (claimId, note) {
 }
 
 function insertClaimEventForNote (reference, eligibilityId, claimId, decision, note, caseworker) {
-  const event = `CLAIM-NOTE`
+  const event = 'CLAIM-NOTE'
   log.info(caseworker)
   return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, caseworker, true)
 }

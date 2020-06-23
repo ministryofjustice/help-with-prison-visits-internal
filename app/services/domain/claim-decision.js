@@ -9,23 +9,26 @@ var noteId
 
 class ClaimDecision {
   constructor (caseworker,
-               assistedDigitalCaseworker,
-               decision,
-               additionalInfoApprove,
-               additionalInfoRequest,
-               additionalInfoReject,
-               nomisCheck,
-               dwpCheck,
-               visitConfirmationCheck,
-               claimExpenseResponses,
-               claimDeductionResponses,
-               isAdvanceClaim,
-               rejectionReasonId,
-               additionalInfoRejectManual,
-               releaseDateIsSet,
-               releaseDay,
-               releaseMonth,
-               releaseYear) {
+    assistedDigitalCaseworker,
+    decision,
+    additionalInfoApprove,
+    additionalInfoRequest,
+    additionalInfoReject,
+    nomisCheck,
+    dwpCheck,
+    visitConfirmationCheck,
+    claimExpenseResponses,
+    claimDeductionResponses,
+    isAdvanceClaim,
+    rejectionReasonId,
+    additionalInfoRejectManual,
+    expiryDay,
+    expiryMonth,
+    expiryYear,
+    releaseDateIsSet,
+    releaseDay,
+    releaseMonth,
+    releaseYear) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
     this.rejectionReasonId = null
@@ -59,6 +62,12 @@ class ClaimDecision {
     })
     this.claimDeductionResponses = claimDeductionResponses
     this.isAdvanceClaim = isAdvanceClaim
+    this.expiryDateFields = [
+      expiryDay,
+      expiryMonth,
+      expiryYear
+    ]
+    this.expiryDate = dateFormatter.build(expiryDay, expiryMonth, expiryYear)
     if (releaseDateIsSet) {
       this.releaseDateIsSet = true
     } else {
@@ -77,7 +86,7 @@ class ClaimDecision {
     var errors = ErrorHandler()
 
     if (this.caseworker === this.assistedDigitalCaseworker) {
-      throw new ValidationError({'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim]})
+      throw new ValidationError({ 'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim] })
     }
 
     FieldValidator(this.decision, 'decision', errors)
@@ -146,8 +155,12 @@ class ClaimDecision {
         .isRequired(ERROR_MESSAGES.getVisitConfirmationRequired)
     }
 
+    FieldValidator(this.expiryDateFields, 'benefit-expiry', errors)
+      .isDateRequired(ERROR_MESSAGES.getExpiryDateIsRequired)
+      .isValidDate(this.expiryDate)
+      .isFutureDate(this.expiryDate)
+
     if (this.releaseDateIsSet) {
-      console.log(this.releaseDateFields)
       FieldValidator(this.releaseDateFields, 'release-date-section', errors)
         .isDateRequired(ERROR_MESSAGES.getReleaseDateIsRequired)
         .isValidDate(this.releaseDate)

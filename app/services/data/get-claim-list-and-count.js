@@ -38,22 +38,23 @@ module.exports = function (status, advanceClaims, offset, limit, user, sortType,
           return Promise.each(claims, function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+            claim.UpdatedDateFormatted = moment(claim.LastUpdated).format('DD/MM/YYYY - HH:mm')
             claim.DisplayStatus = statusFormatter(claim.Status)
             claim.Name = claim.FirstName + ' ' + claim.LastName
             if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
               return getClosedClaimStatus(claim.ClaimId)
-               .then(function (status) {
-                 claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
-                 claimsToReturn.push(claim)
-               })
+                .then(function (status) {
+                  claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
+                  claimsToReturn.push(claim)
+                })
             } else {
               claimsToReturn.push(claim)
               return Promise.resolve()
             }
           })
-          .then(function () {
-            return {claims: claimsToReturn, total: count[0]}
-          })
+            .then(function () {
+              return { claims: claimsToReturn, total: count[0] }
+            })
         })
     })
 }
