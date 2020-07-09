@@ -23,13 +23,13 @@ module.exports = function (claimId, claimDecision) {
       var releaseDateIsSet = claimDecision.releaseDateIsSet
       var releaseDate = null
       if (claimDecision.releaseDateIsSet) {
-        releaseDate = claimDecision.releaseDate.toDate()
+        releaseDate = claimDecision.releaseDate.format('YYYY-MM-DD')
       }
       var dwpCheck = claimDecision.dwpCheck
       var visitConfirmationCheck = claimDecision.visitConfirmationCheck
       var rejectionReasonId = claimDecision.rejectionReasonId
       var allExpensesManuallyProcessed = areAllExpensesManuallyProcessed(claimDecision.claimExpenseResponses)
-      var expiryDate = claimDecision.expiryDate.toDate()
+      var expiryDate = claimDecision.expiryDate.format('YYYY-MM-DD')
 
       return Promise.all([updateEligibility(eligibilityId, decision),
         updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed, rejectionReasonId),
