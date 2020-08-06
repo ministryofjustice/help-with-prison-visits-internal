@@ -13,7 +13,7 @@ describe('services/domain/overpayment-response', function () {
 
   it('should construct a domain object given valid input', function () {
     overpaymentResponse = new OverpaymentResponse(OVERPAYMENT_AMOUNT, OVERPAYMENT_REMAINING, REASON, IS_OVERPAID)
-    expect(overpaymentResponse.action).to.not.be.null
+    expect(overpaymentResponse.action).to.not.be.null //eslint-disable-line
     expect(overpaymentResponse.amount).to.equal(OVERPAYMENT_AMOUNT)
     expect(overpaymentResponse.remaining).to.equal(OVERPAYMENT_REMAINING)
     expect(overpaymentResponse.reason).to.equal(REASON)

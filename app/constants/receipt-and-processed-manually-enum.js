@@ -1,10 +1,10 @@
 module.exports = {
-  'car': {
+  car: {
     receiptRequired: false,
     receiptOptional: true,
     processedManually: false
   },
-  'toll': {
+  toll: {
     receiptRequired: false,
     receiptOptional: false,
     processedManually: false
@@ -14,42 +14,42 @@ module.exports = {
     receiptOptional: false,
     processedManually: false
   },
-  'hire': {
+  hire: {
     receiptRequired: true,
     receiptOptional: false,
     processedManually: false
   },
-  'bus': {
+  bus: {
     receiptRequired: true,
     receiptOptional: false,
     processedManually: false
   },
-  'train': {
+  train: {
     receiptRequired: true,
     receiptOptional: false,
     processedManually: true
   },
-  'taxi': {
+  taxi: {
     receiptRequired: true,
     receiptOptional: false,
     processedManually: false
   },
-  'plane': {
+  plane: {
     receiptRequired: true,
     receiptOptional: false,
     processedManually: false
   },
-  'ferry': {
+  ferry: {
     receiptRequired: true,
     receiptOptional: false,
     processedManually: false
   },
-  'refreshment': {
+  refreshment: {
     receiptRequired: false,
     receiptOptional: false,
     processedManually: false
   },
-  'accommodation': {
+  accommodation: {
     receiptRequired: true,
     receiptOptional: false,
     processedManually: false

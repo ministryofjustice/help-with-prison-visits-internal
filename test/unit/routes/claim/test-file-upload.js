@@ -3,7 +3,6 @@ const supertest = require('supertest')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const ValidationError = require('../../../../app/services/errors/validation-error')
-require('sinon-bluebird')
 
 describe('routes/claim/file-upload', function () {
   const REFERENCE = 'V123456'
@@ -36,7 +35,7 @@ describe('routes/claim/file-upload', function () {
       '../../services/domain/file-upload': fileUploadStub,
       '../../services/data/update-file-upload-details-for-claim': claimDocumentUpdateStub,
       '../../services/generate-csrf-token': generateCSRFTokenStub,
-      'csurf': function () { return function () { } }
+      csurf: function () { return function () { } }
     })
     app = routeHelper.buildApp(route)
     route(app)

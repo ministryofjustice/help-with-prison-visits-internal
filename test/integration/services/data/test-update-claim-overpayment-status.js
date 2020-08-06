@@ -41,7 +41,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
               .then(function (claimAfter) {
                 return knex('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
                   .then(function (claimEvent) {
-                    expect(claimAfter.IsOverpaid).to.be.true
+                    expect(claimAfter.IsOverpaid).to.be.true //eslint-disable-line
                     expect(claimAfter.OverpaymentAmount.toString()).to.equal(amount)
                     expect(claimAfter.OverpaymentReason).to.equal(reason)
                     expect(claimAfter.LastUpdated).to.not.equal(previousLastUpdated)
@@ -56,7 +56,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
     var remaining = '25'
     var reason = 'Test Reason'
 
-    return knex('Claim').where('ClaimId', claimId).update({IsOverpaid: true})
+    return knex('Claim').where('ClaimId', claimId).update({ IsOverpaid: true })
       .then(function () {
         return knex('IntSchema.Claim').first().where('ClaimId', claimId)
           .then(function (claimBefore) {
@@ -73,7 +73,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
                   .then(function (claimAfter) {
                     return knex('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
                       .then(function (claimEvent) {
-                        expect(claimAfter.IsOverpaid).to.be.true
+                        expect(claimAfter.IsOverpaid).to.be.true //eslint-disable-line
                         expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)
                         expect(claimAfter.OverpaymentAmount).to.be.equal(claimBefore.OverpaymentAmount)
                         expect(claimAfter.OverpaymentReason).to.not.equal(reason)
@@ -93,7 +93,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
     var remaining = '0'
     var reason = 'Test Reason'
 
-    return knex('Claim').where('ClaimId', claimId).update({IsOverpaid: true})
+    return knex('Claim').where('ClaimId', claimId).update({ IsOverpaid: true })
       .then(function () {
         return knex('IntSchema.Claim').first().where('ClaimId', claimId)
           .then(function (claimBefore) {
@@ -110,7 +110,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
                   .then(function (claimAfter) {
                     return knex('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
                       .then(function (claimEvent) {
-                        expect(claimAfter.IsOverpaid).to.be.false
+                        expect(claimAfter.IsOverpaid).to.be.false //eslint-disable-line
                         expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)
                         expect(claimAfter.OverpaymentAmount).to.be.equal(claimBefore.OverpaymentAmount)
                         expect(claimAfter.OverpaymentReason).to.not.equal(reason)

@@ -2,7 +2,6 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
 const dateFormatter = require('../../../../app/services/date-formatter')
@@ -45,36 +44,38 @@ describe('services/data/submit-claim-response', function () {
   it('should update remaining overpayment amounts if claim is approved', function () {
     var claimId = newIds.claimId
     var claimResponse = {
-      'caseworker': caseworker,
-      'decision': claimDecisionEnum.APPROVED,
-      'reason': 'No valid relationship to prisoner',
-      'note': 'Could not verify in NOMIS',
-      'nomisCheck': claimDecisionEnum.APPROVED,
-      'dwpCheck': claimDecisionEnum.APPROVED,
-      'claimExpenseResponses': [
-        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.APPROVED},
-        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
+      caseworker: caseworker,
+      decision: claimDecisionEnum.APPROVED,
+      reason: 'No valid relationship to prisoner',
+      note: 'Could not verify in NOMIS',
+      nomisCheck: claimDecisionEnum.APPROVED,
+      dwpCheck: claimDecisionEnum.APPROVED,
+      expiryDate: dateFormatter.now().add(1, 'days'),
+      claimExpenseResponses: [
+        { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.APPROVED },
+        { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
       ]
     }
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function () {
-        expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.calledWith(claimId, reference)).to.be.true
+        expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.calledWith(claimId, reference)).to.be.true //eslint-disable-line
       })
   })
 
   it('should update eligibility and claim then call to send notification', function () {
     var claimId = newIds.claimId
     var claimResponse = {
-      'caseworker': caseworker,
-      'decision': claimDecisionEnum.REJECTED,
-      'note': 'Could not verify in NOMIS',
-      'nomisCheck': claimDecisionEnum.REJECTED,
-      'dwpCheck': claimDecisionEnum.REJECTED,
-      'rejectionReasonId': rejectionReasonIdentifier,
-      'claimExpenseResponses': [
-        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REJECTED},
-        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
+      caseworker: caseworker,
+      decision: claimDecisionEnum.REJECTED,
+      note: 'Could not verify in NOMIS',
+      nomisCheck: claimDecisionEnum.REJECTED,
+      dwpCheck: claimDecisionEnum.REJECTED,
+      rejectionReasonId: rejectionReasonIdentifier,
+      expiryDate: dateFormatter.now().add(1, 'days'),
+      claimExpenseResponses: [
+        { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REJECTED },
+        { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
       ]
     }
     var currentDate = dateFormatter.now()
@@ -90,8 +91,8 @@ describe('services/data/submit-claim-response', function () {
           .first()
           .then(function (result) {
             expect(result.Caseworker).to.be.equal(caseworker)
-            expect(result.AssignedTo, 'should clear assignment').to.be.null
-            expect(result.AssignmentExpiry, 'should clear assignment').to.be.null
+            expect(result.AssignedTo, 'should clear assignment').to.be.null //eslint-disable-line
+            expect(result.AssignmentExpiry, 'should clear assignment').to.be.null //eslint-disable-line
             expect(result.Status[0]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Status[1]).to.be.equal(claimDecisionEnum.REJECTED)
             expect(result.Note).to.be.equal(claimResponse.note)
@@ -100,9 +101,9 @@ describe('services/data/submit-claim-response', function () {
             expect(result.LastUpdated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
             expect(result.DateReviewed).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
             expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
-            expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).to.be.true
-            expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true
-            expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).to.be.true
+            expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).to.be.true //eslint-disable-line
+            expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true //eslint-disable-line
+            expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).to.be.true //eslint-disable-line
 
             return knex('IntSchema.ClaimExpense').where('ClaimId', newIds.claimId).select()
               .then(function (claimExpenses) {
@@ -119,14 +120,15 @@ describe('services/data/submit-claim-response', function () {
   it('should add a DateApproved if claim is approved', function () {
     var claimId = newIds.claimId
     var claimResponse = {
-      'caseworker': caseworker,
-      'decision': claimDecisionEnum.APPROVED,
-      'nomisCheck': claimDecisionEnum.APPROVED,
-      'dwpCheck': claimDecisionEnum.APPROVED,
-      'note': '',
-      'claimExpenseResponses': [
-        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.APPROVED},
-        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.APPROVED}
+      caseworker: caseworker,
+      decision: claimDecisionEnum.APPROVED,
+      nomisCheck: claimDecisionEnum.APPROVED,
+      dwpCheck: claimDecisionEnum.APPROVED,
+      expiryDate: dateFormatter.now().add(1, 'days'),
+      note: '',
+      claimExpenseResponses: [
+        { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.APPROVED },
+        { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.APPROVED }
       ]
     }
 
@@ -135,7 +137,7 @@ describe('services/data/submit-claim-response', function () {
         return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
           .first()
           .then(function (result) {
-            expect(result.DateApproved).not.to.be.null
+            expect(result.DateApproved).not.to.be.null //eslint-disable-line
           })
       })
   })
@@ -143,15 +145,16 @@ describe('services/data/submit-claim-response', function () {
   it('should set DateApproved to null if claim is rejected', function () {
     var claimId = newIds.claimId
     var claimResponse = {
-      'caseworker': caseworker,
-      'decision': claimDecisionEnum.REJECTED,
-      'nomisCheck': claimDecisionEnum.REJECTED,
-      'dwpCheck': claimDecisionEnum.REJECTED,
-      'note': '',
-      'rejectionReason': rejectionReasonIdentifier,
-      'claimExpenseResponses': [
-        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REJECTED},
-        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REJECTED}
+      caseworker: caseworker,
+      decision: claimDecisionEnum.REJECTED,
+      nomisCheck: claimDecisionEnum.REJECTED,
+      dwpCheck: claimDecisionEnum.REJECTED,
+      note: '',
+      rejectionReason: rejectionReasonIdentifier,
+      expiryDate: dateFormatter.now().add(1, 'days'),
+      claimExpenseResponses: [
+        { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REJECTED },
+        { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REJECTED }
       ]
     }
 
@@ -160,7 +163,7 @@ describe('services/data/submit-claim-response', function () {
         return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
           .first()
           .then(function (result) {
-            expect(result.DateApproved).to.be.null
+            expect(result.DateApproved).to.be.null //eslint-disable-line
             expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
           })
       })
@@ -169,14 +172,15 @@ describe('services/data/submit-claim-response', function () {
   it('should set DateApproved to null if caseworker requests more information', function () {
     var claimId = newIds.claimId
     var claimResponse = {
-      'caseworker': caseworker,
-      'decision': claimDecisionEnum.REQUEST_INFORMATION,
-      'nomisCheck': claimDecisionEnum.REQUEST_INFORMATION,
-      'dwpCheck': claimDecisionEnum.REQUEST_INFORMATION,
-      'note': '',
-      'claimExpenseResponses': [
-        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.REQUEST_INFORMATION},
-        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.REQUEST_INFORMATION}
+      caseworker: caseworker,
+      decision: claimDecisionEnum.REQUEST_INFORMATION,
+      nomisCheck: claimDecisionEnum.REQUEST_INFORMATION,
+      dwpCheck: claimDecisionEnum.REQUEST_INFORMATION,
+      note: '',
+      expiryDate: dateFormatter.now().add(1, 'days'),
+      claimExpenseResponses: [
+        { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REQUEST_INFORMATION },
+        { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
       ]
     }
 
@@ -185,7 +189,63 @@ describe('services/data/submit-claim-response', function () {
         return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
           .first()
           .then(function (result) {
-            expect(result.DateApproved).to.be.null
+            expect(result.DateApproved).to.be.null //eslint-disable-line
+          })
+      })
+  })
+
+  it('should set the Release Date', function () {
+    var claimId = newIds.claimId
+    var claimResponse = {
+      caseworker: caseworker,
+      decision: claimDecisionEnum.REQUEST_INFORMATION,
+      nomisCheck: claimDecisionEnum.REQUEST_INFORMATION,
+      dwpCheck: claimDecisionEnum.REQUEST_INFORMATION,
+      note: '',
+      expiryDate: dateFormatter.now().add(1, 'days'),
+      claimExpenseResponses: [
+        { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REQUEST_INFORMATION },
+        { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
+      ],
+      releaseDateIsSet: true,
+      releaseDate: dateFormatter.now().add(1, 'years')
+    }
+
+    return submitClaimResponse(claimId, claimResponse)
+      .then(function (result) {
+        return knex('IntSchema.Prisoner').where('IntSchema.Prisoner.Reference', reference)
+          .first()
+          .then(function (result) {
+            expect(result.ReleaseDateIsSet).to.be.equal(true)
+            expect(result.ReleaseDate).not.to.be.null //eslint-disable-line
+          })
+      })
+  })
+
+  it('should not set the Release Date', function () {
+    var claimId = newIds.claimId
+    var claimResponse = {
+      caseworker: caseworker,
+      decision: claimDecisionEnum.REQUEST_INFORMATION,
+      nomisCheck: claimDecisionEnum.REQUEST_INFORMATION,
+      dwpCheck: claimDecisionEnum.REQUEST_INFORMATION,
+      note: '',
+      expiryDate: dateFormatter.now().add(1, 'days'),
+      claimExpenseResponses: [
+        { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.REQUEST_INFORMATION },
+        { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
+      ],
+      releaseDateIsSet: false,
+      releaseDate: null
+    }
+
+    return submitClaimResponse(claimId, claimResponse)
+      .then(function (result) {
+        return knex('IntSchema.Prisoner').where('IntSchema.Prisoner.Reference', reference)
+          .first()
+          .then(function (result) {
+            expect(result.ReleaseDateIsSet).to.be.equal(false)
+            expect(result.ReleaseDate).to.be.null //eslint-disable-line
           })
       })
   })
@@ -193,15 +253,16 @@ describe('services/data/submit-claim-response', function () {
   it('should set payment method to manually processed if all claim expenses have been manually processed', function () {
     var claimId = newIds.claimId
     var claimResponse = {
-      'caseworker': caseworker,
-      'decision': claimDecisionEnum.APPROVED,
-      'reason': 'No valid relationship to prisoner',
-      'note': 'Could not verify in NOMIS',
-      'nomisCheck': claimDecisionEnum.APPROVED,
-      'dwpCheck': claimDecisionEnum.APPROVED,
-      'claimExpenseResponses': [
-        {'claimExpenseId': newIds.expenseId1, 'approvedCost': '10', 'status': claimDecisionEnum.MANUALLY_PROCESSED},
-        {'claimExpenseId': newIds.expenseId2, 'approvedCost': '20', 'status': claimDecisionEnum.MANUALLY_PROCESSED}
+      caseworker: caseworker,
+      decision: claimDecisionEnum.APPROVED,
+      reason: 'No valid relationship to prisoner',
+      note: 'Could not verify in NOMIS',
+      nomisCheck: claimDecisionEnum.APPROVED,
+      dwpCheck: claimDecisionEnum.APPROVED,
+      expiryDate: dateFormatter.now().add(1, 'days'),
+      claimExpenseResponses: [
+        { claimExpenseId: newIds.expenseId1, approvedCost: '10', status: claimDecisionEnum.MANUALLY_PROCESSED },
+        { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.MANUALLY_PROCESSED }
       ]
     }
 

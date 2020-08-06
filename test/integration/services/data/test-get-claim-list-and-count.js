@@ -21,7 +21,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return list of claims and total', function () {
-      return getClaimListAndCount('TESTING', false, 0, 1, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
+      return getClaimListAndCount(['TESTING'], false, 0, 1, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
         .then(function (result) {
           expect(result.claims.length).to.equal(1)
           expect(result.claims[0].Reference).to.equal(reference)
@@ -40,9 +40,9 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return list of claims and total when AssignedTo is null', function () {
-      return knex('Claim').where({'ClaimId': claimId}).update({'AssignedTo': null})
+      return knex('Claim').where({ ClaimId: claimId }).update({ AssignedTo: null })
         .then(function () {
-          return getClaimListAndCount('TESTING', false, 0, 1, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
+          return getClaimListAndCount(['TESTING'], false, 0, 1, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
             .then(function (result) {
               expect(result.claims.length).to.equal(1)
               expect(result.claims[0].Reference).to.equal(reference)
@@ -62,9 +62,9 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return list of claims and total when AssignedTo is another user, but it is after AssignmentExpiry', function () {
-      return knex('Claim').where({'ClaimId': claimId}).update({'AssignmentExpiry': dateFormatter.now().subtract('10', 'minutes').toDate()})
+      return knex('Claim').where({ ClaimId: claimId }).update({ AssignmentExpiry: dateFormatter.now().subtract('10', 'minutes').toDate() })
         .then(function () {
-          return getClaimListAndCount('TESTING', false, 0, 1, 'AnotherTestUser@test.com', 'Claim.DateSubmitted', 'asc')
+          return getClaimListAndCount(['TESTING'], false, 0, 1, 'AnotherTestUser@test.com', 'Claim.DateSubmitted', 'asc')
             .then(function (result) {
               expect(result.claims.length).to.equal(1)
               expect(result.claims[0].Reference).to.equal(reference)
@@ -84,7 +84,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return no data for status with no records', function () {
-      return getClaimListAndCount('TESTING_NONE', false, 0, 10, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
+      return getClaimListAndCount(['TESTING_NONE'], false, 0, 10, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
         .then(function (result) {
           expect(result.total.Count).to.equal(0)
         })
@@ -94,7 +94,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return no data for records assigned to another user and not past AssignmentExpiry', function () {
-      return getClaimListAndCount('TESTING', false, 0, 1, 'AnotherTestUser@test.com', 'Claim.DateSubmitted', 'asc')
+      return getClaimListAndCount(['TESTING'], false, 0, 1, 'AnotherTestUser@test.com', 'Claim.DateSubmitted', 'asc')
         .then(function (result) {
           expect(result.total.Count).to.equal(0)
         })
@@ -104,7 +104,7 @@ describe('services/data/get-claim-list-and-count', function () {
     })
 
     it('should return no data when no advance claims', function () {
-      return getClaimListAndCount('TESTING', true, 0, 10, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
+      return getClaimListAndCount(['TESTING'], true, 0, 10, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
         .then(function (result) {
           expect(result.total.Count).to.equal(0)
         })

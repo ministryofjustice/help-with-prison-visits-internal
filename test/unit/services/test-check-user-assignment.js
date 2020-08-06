@@ -7,20 +7,20 @@ describe('services/check-user-assignment', function () {
     var user = 'testUser'
     var assignedTo = 'testUser'
     var assignmentExpiry = dateFormatter.now().add('30', 'minutes').toDate()
-    expect(checkUserAssignment(user, assignedTo, assignmentExpiry)).to.be.true
+    expect(checkUserAssignment(user, assignedTo, assignmentExpiry)).to.be.true //eslint-disable-line
   })
 
   it('should return false if user is not assigned', function () {
     var user = 'testUser'
     var assignedTo = 'otherUser'
     var assignmentExpiry = dateFormatter.now().toDate()
-    expect(checkUserAssignment(user, assignedTo, assignmentExpiry)).to.be.false
+    expect(checkUserAssignment(user, assignedTo, assignmentExpiry)).to.be.false //eslint-disable-line
   })
 
   it('should return if user is assigned but it is past the assignmentExpiry', function () {
     var user = 'testUser'
     var assignedTo = 'testUser'
     var assignmentExpiry = dateFormatter.now().toDate()
-    expect(checkUserAssignment(user, assignedTo, assignmentExpiry)).to.be.false
+    expect(checkUserAssignment(user, assignedTo, assignmentExpiry)).to.be.false //eslint-disable-line
   })
 })

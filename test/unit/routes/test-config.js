@@ -3,7 +3,6 @@ const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 const ValidationError = require('../../../app/services/errors/validation-error')
 const autoApprovalRulesEnum = require('../../../app/constants/auto-approval-rules-enum')
 
@@ -22,7 +21,7 @@ describe('routes/config', function () {
     AutoApprovalConfigStub = sinon.stub().returns({})
 
     var route = proxyquire('../../../app/routes/config', {
-      '../services/authorisation': { 'isAdmin': isAdmin },
+      '../services/authorisation': { isAdmin: isAdmin },
       '../services/data/get-auto-approval-config': getAutoApprovalConfigStub,
       '../services/data/update-auto-approval-config': updateAutoApprovalConfigStub,
       '../services/domain/auto-approval-config': AutoApprovalConfigStub
@@ -38,8 +37,8 @@ describe('routes/config', function () {
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(isAdmin.calledOnce).to.be.true
-          expect(getAutoApprovalConfigStub.calledOnce).to.be.true
+          expect(isAdmin.calledOnce).to.be.true //eslint-disable-line
+          expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
 
@@ -49,8 +48,8 @@ describe('routes/config', function () {
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(isAdmin.calledOnce).to.be.true
-          expect(getAutoApprovalConfigStub.calledOnce).to.be.true
+          expect(isAdmin.calledOnce).to.be.true //eslint-disable-line
+          expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
 
@@ -68,9 +67,9 @@ describe('routes/config', function () {
         .post('/config')
         .expect(302)
         .expect(function () {
-          expect(isAdmin.calledOnce).to.be.true
-          expect(updateAutoApprovalConfigStub.calledOnce).to.be.true
-          expect(AutoApprovalConfigStub.calledOnce).to.be.true
+          expect(isAdmin.calledOnce).to.be.true //eslint-disable-line
+          expect(updateAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
+          expect(AutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
 
@@ -97,7 +96,7 @@ describe('routes/config', function () {
       return supertest(app)
         .post('/config')
         .send({
-          'rules': allRules
+          rules: allRules
         })
         .expect(function () {
           AutoApprovalConfigStub.calledWith(
@@ -119,7 +118,7 @@ describe('routes/config', function () {
       return supertest(app)
         .post('/config')
         .send({
-          'rules': []
+          rules: []
         })
         .expect(function () {
           AutoApprovalConfigStub.calledWith(

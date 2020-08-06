@@ -21,9 +21,9 @@ describe('services/data/get-overpaid-claims-by-reference', function () {
           claimId3 = ids.claimId + 2
 
           return databaseHelper.insertClaim(claimId2, eligibilityId, reference, twoWeeksAgo, 'APPROVED', true, 50)
-          .then(function () {
-            return databaseHelper.insertClaim(claimId3, eligibilityId, reference, twoWeeksAgo, 'APPROVED', false)
-          })
+            .then(function () {
+              return databaseHelper.insertClaim(claimId3, eligibilityId, reference, twoWeeksAgo, 'APPROVED', false)
+            })
         })
     })
 

@@ -23,5 +23,10 @@ module.exports = {
   getIsValidFormat: function (displayName) { return `${displayName} must have valid format` },
   getIsLessThanLengthMessage: function (displayName, options) { return `${displayName} must be ${options.length} characters or shorter` },
   getIsIntegerFormat: function (displayName) { return `${displayName} must be a whole number` },
-  getValueIsTooLarge: function (displayName) { return `${displayName} value is too large for this field` }
+  getValueIsTooLarge: function (displayName) { return `${displayName} value is too large for this field` },
+  getApprovedCostTooHigh: function (displayName, approvedCostLimit) { return `${displayName} must not be greater than £${approvedCostLimit}` },
+  getInvalidDateFormatMessage: function (displayName) { return `${displayName} was invalid` },
+  getFutureDateMessage: function (displayName) { return `${displayName} must be in the future` },
+  getExpiryDateIsRequired: function () { return 'Please enter the Benefit Expiry date' },
+  getReleaseDateIsRequired: function () { return 'Please enter the release date' }
 }

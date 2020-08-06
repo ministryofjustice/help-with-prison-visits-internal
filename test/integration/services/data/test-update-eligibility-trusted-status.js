@@ -1,13 +1,12 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 const config = require('../../../../knexfile').migrations
 const knex = require('knex')(config)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
-var sandbox = sinon.sandbox.create()
+var sandbox = sinon.createSandbox()
 var stubInsertClaimEvent = sandbox.stub().resolves()
 
 const updateEligibilityTrustedStatus = proxyquire('../../../../app/services/data/update-eligibility-trusted-status', {
@@ -51,8 +50,8 @@ describe('services/data/update-eligibility-trusted-status', function () {
               .then(function (eligibility) {
                 expect(eligibility.IsTrusted).to.equal(isTrusted)
                 expect(eligibility.UntrustedReason).to.equal(untrustedReason)
-                expect(eligibility.UntrustedDate).to.not.be.null
-                expect(stubInsertClaimEvent.calledOnce).to.be.true
+                expect(eligibility.UntrustedDate).to.not.be.null //eslint-disable-line
+                expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
               })
           })
       })
@@ -69,9 +68,9 @@ describe('services/data/update-eligibility-trusted-status', function () {
             return getEligibility(eligibilityId1)
               .then(function (eligibility) {
                 expect(eligibility.IsTrusted).to.equal(isTrusted)
-                expect(eligibility.UntrustedReason).to.be.null
-                expect(eligibility.UntrustedDate).to.be.null
-                expect(stubInsertClaimEvent.calledOnce).to.be.true
+                expect(eligibility.UntrustedReason).to.be.null //eslint-disable-line
+                expect(eligibility.UntrustedDate).to.be.null //eslint-disable-line
+                expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
               })
           })
       })
@@ -85,7 +84,7 @@ describe('services/data/update-eligibility-trusted-status', function () {
             return getEligibility(eligibilityId2)
               .then(function (eligibility) {
                 expect(eligibility.IsTrusted).to.equal(true)
-                expect(stubInsertClaimEvent.notCalled).to.be.true
+                expect(stubInsertClaimEvent.notCalled).to.be.true //eslint-disable-line
               })
           })
       })
@@ -108,6 +107,6 @@ function setEligibilityTrusted (eligibilityId, isTrusted) {
   return knex('Eligibility')
     .where('EligibilityId', eligibilityId)
     .update({
-      'IsTrusted': isTrusted
+      IsTrusted: isTrusted
     })
 }

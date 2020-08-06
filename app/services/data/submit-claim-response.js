@@ -20,15 +20,21 @@ module.exports = function (claimId, claimDecision) {
       var decision = claimDecision.decision
       var note = claimDecision.note
       var nomisCheck = claimDecision.nomisCheck
+      var releaseDateIsSet = claimDecision.releaseDateIsSet
+      var releaseDate = null
+      if (claimDecision.releaseDateIsSet) {
+        releaseDate = claimDecision.releaseDate.format('YYYY-MM-DD')
+      }
       var dwpCheck = claimDecision.dwpCheck
       var visitConfirmationCheck = claimDecision.visitConfirmationCheck
       var rejectionReasonId = claimDecision.rejectionReasonId
       var allExpensesManuallyProcessed = areAllExpensesManuallyProcessed(claimDecision.claimExpenseResponses)
+      var expiryDate = claimDecision.expiryDate.format('YYYY-MM-DD')
 
       return Promise.all([updateEligibility(eligibilityId, decision),
         updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed, rejectionReasonId),
-        updateVisitor(eligibilityId, dwpCheck),
-        updatePrisoner(eligibilityId, nomisCheck),
+        updateVisitor(eligibilityId, dwpCheck, expiryDate),
+        updatePrisoner(eligibilityId, nomisCheck, releaseDateIsSet, releaseDate),
         updateClaimExpenses(claimDecision.claimExpenseResponses),
         insertClaimEventForDecision(reference, eligibilityId, claimId, decision, note, caseworker),
         updateRemainingOverpaymentAmounts(claimId, reference, decision),
@@ -44,39 +50,39 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
   var updateObject = {}
   if (decision === claimDecisionEnum.APPROVED) {
     updateObject = {
-      'Caseworker': caseworker,
-      'Status': decision,
-      'Note': note,
-      'VisitConfirmationCheck': visitConfirmationCheck,
-      'DateReviewed': dateFormatter.now().toDate(),
-      'AssignedTo': null, // clear assignment
-      'AssignmentExpiry': null,
-      'LastUpdated': dateFormatter.now().toDate(),
-      'DateApproved': dateFormatter.now().toDate()
+      Caseworker: caseworker,
+      Status: decision,
+      Note: note,
+      VisitConfirmationCheck: visitConfirmationCheck,
+      DateReviewed: dateFormatter.now().toDate(),
+      AssignedTo: null, // clear assignment
+      AssignmentExpiry: null,
+      LastUpdated: dateFormatter.now().toDate(),
+      DateApproved: dateFormatter.now().toDate()
     }
   } else if (decision === claimDecisionEnum.REJECTED || decision === claimDecisionEnum.REQUEST_INFORMATION) {
     updateObject = {
-      'Caseworker': caseworker,
-      'Status': decision,
-      'Note': note,
-      'VisitConfirmationCheck': visitConfirmationCheck,
-      'DateReviewed': dateFormatter.now().toDate(),
-      'AssignedTo': null, // clear assignment
-      'AssignmentExpiry': null,
-      'LastUpdated': dateFormatter.now().toDate(),
-      'DateApproved': null,
-      'RejectionReasonId': rejectionReasonId
+      Caseworker: caseworker,
+      Status: decision,
+      Note: note,
+      VisitConfirmationCheck: visitConfirmationCheck,
+      DateReviewed: dateFormatter.now().toDate(),
+      AssignedTo: null, // clear assignment
+      AssignmentExpiry: null,
+      LastUpdated: dateFormatter.now().toDate(),
+      DateApproved: null,
+      RejectionReasonId: rejectionReasonId
     }
   } else {
     updateObject = {
-      'Caseworker': caseworker,
-      'Status': decision,
-      'Note': note,
-      'VisitConfirmationCheck': visitConfirmationCheck,
-      'DateReviewed': dateFormatter.now().toDate(),
-      'AssignedTo': null, // clear assignment
-      'AssignmentExpiry': null,
-      'LastUpdated': dateFormatter.now().toDate()
+      Caseworker: caseworker,
+      Status: decision,
+      Note: note,
+      VisitConfirmationCheck: visitConfirmationCheck,
+      DateReviewed: dateFormatter.now().toDate(),
+      AssignedTo: null, // clear assignment
+      AssignmentExpiry: null,
+      LastUpdated: dateFormatter.now().toDate()
     }
   }
 
@@ -93,12 +99,19 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
   )
 }
 
-function updateVisitor (eligibilityId, dwpCheck) {
-  return knex('Visitor').where('EligibilityId', eligibilityId).update('DWPCheck', dwpCheck)
+function updateVisitor (eligibilityId, dwpCheck, expiryDate) {
+  return knex('Visitor').where('EligibilityId', eligibilityId).update({
+    DWPCheck: dwpCheck,
+    BenefitExpiryDate: expiryDate
+  })
 }
 
-function updatePrisoner (eligibilityId, nomisCheck) {
-  return knex('Prisoner').where('EligibilityId', eligibilityId).update('NomisCheck', nomisCheck)
+function updatePrisoner (eligibilityId, nomisCheck, releaseDateIsSet, releaseDate) {
+  return knex('Prisoner').where('EligibilityId', eligibilityId).update({
+    NomisCheck: nomisCheck,
+    ReleaseDateIsSet: releaseDateIsSet,
+    ReleaseDate: releaseDate
+  })
 }
 
 function updateClaimExpenses (claimExpenseResponses) {
@@ -113,8 +126,8 @@ function updateClaimExpenses (claimExpenseResponses) {
 
 function updateClaimExpense (claimExpenseResponse) {
   return knex('ClaimExpense').where('ClaimExpenseId', claimExpenseResponse.claimExpenseId).update({
-    'ApprovedCost': claimExpenseResponse.approvedCost,
-    'Status': claimExpenseResponse.status
+    ApprovedCost: claimExpenseResponse.approvedCost,
+    Status: claimExpenseResponse.status
   })
 }
 
