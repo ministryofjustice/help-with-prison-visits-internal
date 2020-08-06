@@ -11,7 +11,7 @@ module.exports = function (claim, topup, caseworker) {
       Reason: topup.reason,
       DateAdded: dateFormatter.now().toDate()
     })
-    .where({'ClaimId': claim.ClaimId, 'PaymentStatus': 'PENDING'})
+    .where({ ClaimId: claim.ClaimId, PaymentStatus: 'PENDING' })
     .then(function () {
       return insertClaimEvent(claim.Reference, claim.EligibilityId, claim.ClaimId, claimEventEnum.TOP_UP_UPDATED.value, null, topup.reason, caseworker, true)
     })

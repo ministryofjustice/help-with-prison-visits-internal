@@ -3,7 +3,6 @@ const supertest = require('supertest')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const ValidationError = require('../../../../app/services/errors/validation-error')
-require('sinon-bluebird')
 
 describe('routes/claim/update-contact-details', function () {
   const CLAIMID = '1'

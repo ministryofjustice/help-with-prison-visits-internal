@@ -1,9 +1,9 @@
 module.exports = {
-  'car': {
+  car: {
     receiptRequired: false,
     processedManually: false
   },
-  'toll': {
+  toll: {
     receiptRequired: false,
     processedManually: false
   },
@@ -11,35 +11,35 @@ module.exports = {
     receiptRequired: false,
     processedManually: false
   },
-  'hire': {
+  hire: {
     receiptRequired: true,
     processedManually: false
   },
-  'bus': {
+  bus: {
     receiptRequired: true,
     processedManually: false
   },
-  'train': {
+  train: {
     receiptRequired: true,
     processedManually: true
   },
-  'taxi': {
+  taxi: {
     receiptRequired: true,
     processedManually: false
   },
-  'plane': {
+  plane: {
     receiptRequired: true,
     processedManually: false
   },
-  'ferry': {
+  ferry: {
     receiptRequired: true,
     processedManually: false
   },
-  'refreshment': {
+  refreshment: {
     receiptRequired: false,
     processedManually: false
   },
-  'accommodation': {
+  accommodation: {
     receiptRequired: true,
     processedManually: false
   }

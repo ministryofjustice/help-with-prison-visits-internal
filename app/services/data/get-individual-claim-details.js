@@ -86,6 +86,7 @@ function getClaimantDetails (claimId) {
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
     .join('Prisoner', 'Eligibility.EligibilityId', '=', 'Prisoner.EligibilityId')
+    .leftJoin('Benefit', 'Eligibility.EligibilityId', '=', 'Benefit.EligibilityId')
     .where('Claim.ClaimId', claimId)
     .first(
       'Eligibility.Reference',
@@ -128,6 +129,7 @@ function getClaimantDetails (claimId) {
       'Visitor.Benefit',
       'Visitor.DWPBenefitCheckerResult',
       'Visitor.DWPCheck',
+      'Visitor.BenefitExpiryDate',
       'Prisoner.FirstName AS PrisonerFirstName',
       'Prisoner.LastName AS PrisonerLastName',
       'Prisoner.DateOfBirth AS PrisonerDateOfBirth',
@@ -135,7 +137,11 @@ function getClaimantDetails (claimId) {
       'Prisoner.NameOfPrison',
       'Prisoner.NomisCheck',
       'Prisoner.ReleaseDateIsSet',
-      'Prisoner.ReleaseDate')
+      'Prisoner.ReleaseDate',
+      'Benefit.FirstName AS BenefitOwnerFirstName',
+      'Benefit.LastName AS BenefitOwnerLastName',
+      'Benefit.DateOfBirth AS BenefitOwnerDateOfBirth',
+      'Benefit.NationalInsuranceNumber AS BenefitOwnerNationalInsuranceNumber')
     .then(function (data) {
       if (data.AssignedTo && data.AssignmentExpiry < dateFormatter.now().toDate()) {
         data.AssignedTo = null
@@ -146,7 +152,7 @@ function getClaimantDetails (claimId) {
 
 function getClaimEligibleChild (reference, eligibilityId) {
   return knex('EligibleChild')
-    .where({'EligibleChild.Reference': reference, 'EligibleChild.EligibilityId': eligibilityId})
+    .where({ 'EligibleChild.Reference': reference, 'EligibleChild.EligibilityId': eligibilityId })
     .select(
       'EligibleChild.FirstName',
       'EligibleChild.LastName',
@@ -163,13 +169,14 @@ function getClaimEligibleChild (reference, eligibilityId) {
 
 function getClaimDocuments (claimId, reference, eligibilityId) {
   return knex('ClaimDocument')
-    .where({'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null})
+    .where({ 'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null })
     .orWhere({
       'ClaimDocument.ClaimId': null,
       'ClaimDocument.Reference': reference,
       'ClaimDocument.EligibilityId': eligibilityId,
       'ClaimDocument.IsEnabled': true,
-      'ClaimDocument.ClaimExpenseId': null})
+      'ClaimDocument.ClaimExpenseId': null
+    })
     .select(
       'ClaimDocument.ClaimDocumentId',
       'ClaimDocument.DocumentStatus',
@@ -194,7 +201,7 @@ function getClaimExpenses (claimId) {
 
 function getClaimDeductions (claimId) {
   return knex('ClaimDeduction')
-    .where({'ClaimId': claimId, 'IsEnabled': true})
+    .where({ ClaimId: claimId, IsEnabled: true })
 }
 
 function getClaimChildren (claimId) {
@@ -208,7 +215,7 @@ function getClaimChildren (claimId) {
 function getClaimEscort (claimId) {
   return knex('ClaimEscort')
     .first()
-    .where({ 'ClaimId': claimId, 'IsEnabled': true })
+    .where({ ClaimId: claimId, IsEnabled: true })
     .select()
     .orderBy('FirstName')
 }

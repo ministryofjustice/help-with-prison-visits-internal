@@ -181,11 +181,11 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           ClaimId: ids.claimId,
           EligibilityId: ids.eligibilityId,
           Reference: reference,
-          DocumentType: data.ClaimDocument['benefit'].DocumentType,
-          DocumentStatus: data.ClaimDocument['benefit'].DocumentStatus,
+          DocumentType: data.ClaimDocument.benefit.DocumentType,
+          DocumentStatus: data.ClaimDocument.benefit.DocumentStatus,
           Filepath: '/example/path/2',
           DateSubmitted: date,
-          IsEnabled: data.ClaimDocument['benefit'].IsEnabled
+          IsEnabled: data.ClaimDocument.benefit.IsEnabled
         })
     })
     .then(function (result) {
@@ -198,11 +198,11 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           ClaimId: ids.claimId,
           EligibilityId: ids.eligibilityId,
           Reference: reference,
-          DocumentType: data.ClaimDocument['expense'].DocumentType,
-          DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+          DocumentType: data.ClaimDocument.expense.DocumentType,
+          DocumentStatus: data.ClaimDocument.expense.DocumentStatus,
           Filepath: '/example/path/3',
           DateSubmitted: date,
-          IsEnabled: data.ClaimDocument['expense'].IsEnabled
+          IsEnabled: data.ClaimDocument.expense.IsEnabled
         })
     })
     .then(function (result) {
@@ -215,11 +215,11 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           ClaimId: ids.claimId,
           EligibilityId: ids.eligibilityId,
           Reference: reference,
-          DocumentType: data.ClaimDocument['expense'].DocumentType,
-          DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+          DocumentType: data.ClaimDocument.expense.DocumentType,
+          DocumentStatus: data.ClaimDocument.expense.DocumentStatus,
           Filepath: '/example/path/4',
           DateSubmitted: date,
-          IsEnabled: data.ClaimDocument['expense'].IsEnabled
+          IsEnabled: data.ClaimDocument.expense.IsEnabled
         })
     })
     .then(function (result) {
@@ -256,11 +256,11 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimEventId2 = result[0]
-      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction['hc3'].DeductionType, data.ClaimDeduction['hc3'].Amount)
+      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction.hc3.DeductionType, data.ClaimDeduction.hc3.Amount)
     })
     .then(function (result) {
       ids.claimDeductionId1 = result[0]
-      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction['overpayment'].DeductionType, data.ClaimDeduction['overpayment'].Amount)
+      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction.overpayment.DeductionType, data.ClaimDeduction.overpayment.Amount)
     })
     .then(function (result) {
       ids.claimDeductionId2 = result[0]
@@ -293,7 +293,8 @@ module.exports.deleteAll = function (reference) {
 
 module.exports.getTestData = function (reference, status) {
   return {
-    Prisoner: { FirstName: 'TestFirst',
+    Prisoner: {
+      FirstName: 'TestFirst',
       LastName: 'TestLast',
       PrisonNumber: 'A123456',
       NameOfPrison: 'Test'
@@ -352,12 +353,12 @@ module.exports.getTestData = function (reference, status) {
         IsEnabled: 'true',
         Caseworker: 'test@test.com'
       },
-      'benefit': {
+      benefit: {
         DocumentType: 'BENEFIT',
         DocumentStatus: 'uploaded',
         IsEnabled: 'true'
       },
-      'expense': {
+      expense: {
         DocumentType: 'RECEIPT',
         DocumentStatus: 'uploaded',
         IsEnabled: 'true'
@@ -378,12 +379,12 @@ module.exports.getTestData = function (reference, status) {
       }
     ],
     ClaimDeduction: {
-      'overpayment': {
+      overpayment: {
         Amount: 5,
         DeductionType: 'overpayment',
         IsEnabled: true
       },
-      'hc3': {
+      hc3: {
         Amount: 10,
         DeductionType: 'hc3',
         IsEnabled: true

@@ -5,9 +5,11 @@ const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const rulesEnum = require('../../../app/constants/region-rules-enum')
 const dateFormatter = require('../date-formatter')
 const statusFormatter = require('../claim-status-formatter')
+const Promise = require('bluebird').Promise
+const getClosedClaimStatus = require('./get-closed-claim-status')
 
-const APPROVED_STATUS_VALUES = [ claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value ]
-const IN_PROGRESS_STATUS_VALUES = [ claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value ]
+const APPROVED_STATUS_VALUES = [claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value]
+const IN_PROGRESS_STATUS_VALUES = [claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
 
 var countQuery
 var selectQuery
@@ -226,7 +228,8 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     .then(function (count) {
       return selectQuery
         .then(function (claims) {
-          claims.forEach(function (claim) {
+          var claimsToReturn = []
+          return Promise.each(claims, function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
             claim.DateSubmittedMoment = moment(claim.DateSubmitted)
@@ -241,11 +244,23 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
             } else {
               claim.DaysUntilPayment = 'N/A'
             }
+            if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
+              return getClosedClaimStatus(claim.ClaimId)
+                .then(function (status) {
+                  claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
+                  claimsToReturn.push(claim)
+                })
+            } else {
+              claimsToReturn.push(claim)
+              return Promise.resolve()
+            }
           })
-          return {
-            claims: claims,
-            total: count[0]
-          }
+            .then(function () {
+              return {
+                claims: claimsToReturn,
+                total: count[0]
+              }
+            })
         })
     })
 
@@ -254,7 +269,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   }
 
   function applyNameFilter (query, name) {
-    query.whereRaw(`CONCAT(Visitor.FirstName, ' ', Visitor.LastName) like ?`, [`%${name}%`])
+    query.whereRaw('CONCAT(Visitor.FirstName, \' \', Visitor.LastName) like ?', [`%${name}%`])
   }
 
   function applyNINumberFilter (query, ninumber) {
@@ -325,7 +340,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     if (overpaymentStatus === 'false') {
       query.where(function () {
         this.where('Claim.IsOverpaid', false)
-        .orWhereNull('Claim.IsOverpaid')
+          .orWhereNull('Claim.IsOverpaid')
       })
     } else {
       query.orWhere('Claim.IsOverpaid', true)

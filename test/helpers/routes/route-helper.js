@@ -15,9 +15,9 @@ module.exports.buildApp = function (route) {
   app.use(function (req, res, next) {
     req.user = {
       email: 'test@test.com',
-      'first_name': 'Andrew',
-      'last_name': 'Adams',
-      'roles': ['caseworker', 'admin', 'sscl']
+      first_name: 'Andrew',
+      last_name: 'Adams',
+      roles: ['caseworker', 'admin', 'sscl']
     }
     next()
   })

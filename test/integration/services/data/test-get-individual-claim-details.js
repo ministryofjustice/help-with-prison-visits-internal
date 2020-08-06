@@ -1,7 +1,6 @@
 var expect = require('chai').expect
 var sinon = require('sinon')
 var proxyquire = require('proxyquire')
-require('sinon-bluebird')
 var dateFormatter = require('../../../../app/services/date-formatter')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
 
@@ -41,20 +40,20 @@ describe('services/data/get-individual-claim-details', function () {
           expect(result.claim.PrisonNumber).to.equal(testData.Prisoner.PrisonNumber)
           expect(result.claim.NameOfPrison).to.equal(testData.Prisoner.NameOfPrison)
           expect(result.claimExpenses[0].ExpenseType).to.equal(testData.ClaimExpenses[0].ExpenseType)
-          expect(result.claimExpenses[0].DocumentStatus).to.equal(testData.ClaimDocument['expense'].DocumentStatus)
+          expect(result.claimExpenses[0].DocumentStatus).to.equal(testData.ClaimDocument.expense.DocumentStatus)
           expect(result.claimExpenses[1].Cost).to.equal(testData.ClaimExpenses[1].Cost)
           expect(result.claim.visitConfirmation.DocumentStatus).to.equal(testData.ClaimDocument['visit-confirmation'].DocumentStatus)
-          expect(result.claim.benefitDocument[0].DocumentStatus).to.equal(testData.ClaimDocument['benefit'].DocumentStatus)
+          expect(result.claim.benefitDocument[0].DocumentStatus).to.equal(testData.ClaimDocument.benefit.DocumentStatus)
           expect(result.claimChild[0].FirstName).to.equal(testData.ClaimChild[0].FirstName)
           expect(result.claimChild[0].LastName).to.equal(testData.ClaimChild[0].LastName)
           expect(result.claimChild[1].FirstName).to.equal(testData.ClaimChild[1].FirstName)
           expect(result.claimChild[1].LastName).to.equal(testData.ClaimChild[1].LastName)
           expect(result.claimEvents[0].Caseworker).to.equal(testData.ClaimEvent[0].Caseworker)
           expect(result.claimEvents[1].Caseworker).to.equal(testData.ClaimEvent[1].Caseworker)
-          expect(result.deductions[0].DeductionType).to.equal(testData.ClaimDeduction['hc3'].DeductionType)
-          expect(result.deductions[1].DeductionType).to.equal(testData.ClaimDeduction['overpayment'].DeductionType)
+          expect(result.deductions[0].DeductionType).to.equal(testData.ClaimDeduction.hc3.DeductionType)
+          expect(result.deductions[1].DeductionType).to.equal(testData.ClaimDeduction.overpayment.DeductionType)
 
-          expect(stubGetOverpaidClaims.calledWith(reference)).to.be.true
+          expect(stubGetOverpaidClaims.calledWith(reference)).to.be.true //eslint-disable-line
         })
         .catch(function (error) {
           throw error

@@ -6,10 +6,10 @@ exports.up = function (knex, Promise) {
     table.string('Filepath', 250).notNullable()
     table.boolean('IsEnabled').defaultTo(true)
   })
-  .catch(function (error) {
-    console.log(error)
-    throw error
-  })
+    .catch(function (error) {
+      console.log(error)
+      throw error
+    })
 }
 
 exports.down = function (knex, Promise) {
