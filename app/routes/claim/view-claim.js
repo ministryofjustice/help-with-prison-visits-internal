@@ -36,7 +36,6 @@ const checkUserAssignment = require('../../services/check-user-assignment')
 const Promise = require('bluebird')
 const getRejectionReasons = require('../../services/data/get-rejection-reasons')
 const getRejectionReasonId = require('../../services/data/get-rejection-reason-id')
-const log = require('../../services/log')
 
 var claimExpenses
 var claimDeductions

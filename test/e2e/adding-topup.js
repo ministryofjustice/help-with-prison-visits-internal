@@ -1,7 +1,6 @@
 const config = require('../../config')
 var moment = require('moment')
 var databaseHelper = require('../helpers/database-setup-for-tests')
-var expect = require('chai').expect
 
 // Variables for creating and deleting a record
 var reference = '1111111'
