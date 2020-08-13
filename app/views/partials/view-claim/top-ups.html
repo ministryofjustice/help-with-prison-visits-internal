@@ -1,4 +1,3 @@
-{% if TopUps.length > 0 %}
 <table class="col-2 no-pad-right">
   <thead>
     <tr>
@@ -6,6 +5,7 @@
       <th>Amount</th>
       <th>Caseworker</th>
       <th>Payment Status</th>
+      <th>Payment Date</th>
       <th></th>
     </tr>
   </thead>
@@ -22,9 +22,9 @@
           {% elif TopUp.PaymentStatus === 'CANCELLED' %}
             <td><span class="text-warning">Cancelled</span></td>
           {% endif %}
+          <td>{{ getDateFormatted.shortDateAndTime(TopUp.PaymentDate) }}</td>
           <td>{% if unlock and TopUp.PaymentStatus === 'PENDING' %}<input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/cancel-top-up" name='cancel-top-up-{{ TopUp.TopUpId }}' class='button pull-right grey' value='Cancel'>{% endif %}</td>
         </tr>
       {% endfor %}
   </tbody>
 </table>
-{% endif %}

@@ -8,16 +8,9 @@
       </label>
 
       {% if Claim['Status'] == 'APPROVED' and Claim['PaymentStatus'] == 'PROCESSED' and TopUps['allTopUpsPaid'] == true %}
-      <label class="block-label inline" data-target="top-up-input">
+      <label id="top-up-claim-label" class="block-label inline" data-target="top-up-input">
         <input type="radio" name="closed-claim-action" value="TOPUP" id="top-up-toggle">
         <span>Top Up Claim</span>
-      </label>
-      {% endif %}
-
-      {% if Claim['Status'] == 'APPROVED' and Claim['PaymentStatus'] == 'PROCESSED' and TopUps['allTopUpsPaid'] == false and TopUps.length > 0 %}
-      <label class="block-label inline" data-target="update-top-up-input">
-        <input type="radio" name="closed-claim-action" value="UPDATE-TOPUP" id="update-top-up-toggle">
-        <span>Update Top Up</span>
       </label>
       {% endif %}
 

@@ -22,6 +22,9 @@ var stubPayoutBarcodeExpiredClaim
 var stubInsertNote
 var stubMergeClaimExpensesWithSubmittedResponses
 var stubRequestNewBankDetails
+var stubInsertTopUp
+var stubCancelTopUp
+var stubTopupResponse
 var stubUpdateEligibilityTrustedStatus
 var stubUpdateAssignmentOfClaims
 var stubRejectionReasonId
@@ -51,6 +54,12 @@ const VALID_DATA_UPDATE_OVERPAYMENT_STATUS = {
 const VALID_DATA_CLOSE_ADVANCE_CLAIM = {
   'closed-claim-action': 'CLOSE-ADVANCE-CLAIM',
   'close-advance-claim-reason': 'close advance claim reason'
+}
+
+const VALID_DATA_ADD_TOP_UP = {
+  'closed-claim-action': 'TOPUP',
+  'top-up-amount': '140.85',
+  'top-up-reason': 'Testing top up'
 }
 const VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM = {
   'payout-barcode-expired': 'PAYOUT-BARCODE-EXPIRED',
@@ -99,6 +108,9 @@ describe('routes/claim/view-claim', function () {
     stubUpdateAssignmentOfClaims = sinon.stub()
     stubRejectionReasonId = sinon.stub().resolves()
     stubRejectionReasons = sinon.stub().resolves()
+    stubInsertTopUp = sinon.stub().resolves()
+    stubTopupResponse = sinon.stub()
+    stubCancelTopUp = sinon.stub().resolves()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -119,6 +131,9 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/insert-note': stubInsertNote,
       '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
       '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
+      '../../services/data/insert-top-up': stubInsertTopUp,
+      '../../services/domain/topup-response': stubTopupResponse,
+      '../../services/data/cancel-top-up': stubCancelTopUp,
       '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus,
       '../../services/data/update-assignment-of-claims': stubUpdateAssignmentOfClaims,
       '../../services/data/get-rejection-reasons': stubRejectionReasons,
@@ -337,7 +352,7 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
-    it('should respond with 200 when valid data entered (add deduction)', function () {
+    it('should respond with 302 when valid data entered (add deduction)', function () {
       var claimData = {
         claim: {},
         claimExpenses: {}
@@ -352,7 +367,7 @@ describe('routes/claim/view-claim', function () {
       return supertest(app)
         .post('/claim/123/add-deduction')
         .send(VALID_DATA_ADD_DEDUCTION)
-        .expect(200)
+        .expect(302)
         .expect(function () {
           expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).to.be.true //eslint-disable-line
         })
@@ -386,7 +401,7 @@ describe('routes/claim/view-claim', function () {
         })
     })
 
-    it('should respond with 200 when valid data entered (disable deduction)', function () {
+    it('should respond with 302 when valid data entered (disable deduction)', function () {
       var claimData = {
         claim: {},
         claimExpenses: {}
@@ -398,7 +413,7 @@ describe('routes/claim/view-claim', function () {
       return supertest(app)
         .post('/claim/123/remove-deduction')
         .send(VALID_DATA_DISABLE_DEDUCTION)
-        .expect(200)
+        .expect(302)
         .expect(function () {
           expect(stubDisableDeduction.calledWith('1')).to.be.true //eslint-disable-line
         })
@@ -746,6 +761,9 @@ describe('routes/claim/view-claim', function () {
         claim: {
           Reference: 'NEWBANK',
           EligibilityId: '1'
+        },
+        TopUps: {
+          allTopUpsPaid: true
         }
       })
 
@@ -769,6 +787,68 @@ describe('routes/claim/view-claim', function () {
         .post('/claim/123/request-new-payment-details')
         .send(VALID_DATA_DISABLE_DEDUCTION)
         .expect(500)
+    })
+  })
+
+  describe('POST /claim/:claimId/add-top-up', function () {
+    it('should respond with 302 when valid top up data entered', function () {
+      stubCheckUserAndLastUpdated.resolves()
+      stubInsertTopUp.resolves(VALID_DATA_ADD_TOP_UP)
+      stubGetIndividualClaimDetails.resolves({
+        claim: {
+          Reference: 'TOPUP',
+          EligibilityId: '1',
+          PaymentStatus: 'PROCESSED'
+        },
+        TopUps: {
+          allTopUpsPaid: true
+        }
+      })
+
+      var topUpResponse = {
+        amount: VALID_DATA_ADD_TOP_UP['top-up-amount'],
+        reason: VALID_DATA_ADD_TOP_UP['top-up-reason']
+      }
+      stubTopupResponse.returns(topUpResponse)
+
+      return supertest(app)
+        .post('/claim/123/add-top-up')
+        .send(VALID_DATA_ADD_TOP_UP)
+        .expect(302)
+        .expect(function () {
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
+          expect(stubInsertTopUp.calledOnce).to.be.true //eslint-disable-line
+          expect(stubInsertTopUp.calledWith({Reference: 'TOPUP', EligibilityId: '1', PaymentStatus: 'PROCESSED'}, topUpResponse, 'test@test.com')).to.be.true //eslint-disable-line
+        })
+    })
+  })
+
+  describe('POST /claim/:claimId/cancel-top-up', function () {
+    it('should respond with 302 when valid cancel top up data is sent', function () {
+      stubCheckUserAndLastUpdated.resolves()
+      stubCancelTopUp.resolves()
+      stubGetIndividualClaimDetails.resolves({
+        claim: {
+          Reference: 'CANCEL',
+          EligibilityId: '1',
+          PaymentStatus: 'PROCESSED'
+        },
+        TopUps: {
+          allTopUpsPaid: true
+        }
+      })
+
+      return supertest(app)
+        .post('/claim/123/cancel-top-up')
+        .send()
+        .expect(302)
+        .expect(function () {
+          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
+          expect(stubCancelTopUp.calledOnce).to.be.true //eslint-disable-line
+          expect(stubCancelTopUp.calledWith({Reference: 'CANCEL', EligibilityId: '1', PaymentStatus: 'PROCESSED'}, 'test@test.com')).to.be.true //eslint-disable-line
+        })
     })
   })
 })
