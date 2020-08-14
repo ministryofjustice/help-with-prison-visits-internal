@@ -7,8 +7,8 @@ module.exports = {
     receiptRequired: false,
     processedManually: false
   },
-  'parking charge': {
-    receiptRequired: false,
+  parking: {
+    receiptRequired: true,
     processedManually: false
   },
   hire: {
