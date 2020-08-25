@@ -52,15 +52,18 @@ describe('Adding a new top up flow', () => {
 
     var submitButton = await $('#add-top-up')
     await submitButton.click()
-
-    var claimDetails = await getIndividualClaimDetails(claimId)
-    expect(claimDetails.TopUps.length, 'TopUps should be an array of length 1').to.equal(1)
-    expect(claimDetails.TopUps[0].TopUpAmount, 'TopUp Amount be equal to ' + expectedTopUpAmount).to.equal(expectedTopUpAmount)
-    expect(claimDetails.TopUps[0].Reason, 'TopUp Reason be equal to ' + expectedTopUpReason).to.equal(expectedTopUpReason)
-    expect(claimDetails.TopUps[0].PaymentStatus, 'TopUp PaymentStatus should be equal to ' + TopUpStatusEnum.PENDING).to.equal(TopUpStatusEnum.PENDING)
   })
 
   after(function () {
-    return databaseHelper.deleteAll(reference)
+    return getIndividualClaimDetails(claimId)
+      .then(function () {
+        expect(claimDetails.TopUps.length, 'TopUps should be an array of length 1').to.equal(1)
+        expect(claimDetails.TopUps[0].TopUpAmount, 'TopUp Amount be equal to ' + expectedTopUpAmount).to.equal(expectedTopUpAmount)
+        expect(claimDetails.TopUps[0].Reason, 'TopUp Reason be equal to ' + expectedTopUpReason).to.equal(expectedTopUpReason)
+        expect(claimDetails.TopUps[0].PaymentStatus, 'TopUp PaymentStatus should be equal to ' + TopUpStatusEnum.PENDING).to.equal(TopUpStatusEnum.PENDING)
+      })
+      .then(function () {
+        return databaseHelper.deleteAll(reference)
+      })
   })
 })
