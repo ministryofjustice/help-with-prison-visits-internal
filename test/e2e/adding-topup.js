@@ -32,7 +32,9 @@ describe('Adding a new top up flow', () => {
       })
   })
 
-  it('should display a list of claims and approve a claim', async () => {
+  it('should add a top up of ' + expectedTopUpAmount + ' with reason: ' + expectedTopUpReason, async () => {
+    await browser.url('/')
+
     await browser.url('/claim/' + claimId)
 
     // View-claim
