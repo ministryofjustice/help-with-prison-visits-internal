@@ -19,7 +19,10 @@ const insertDeduction = require('../../services/data/insert-deduction')
 const disableDeduction = require('../../services/data/disable-deduction')
 const ClaimDeduction = require('../../services/domain/claim-deduction')
 const updateClaimOverpaymentStatus = require('../../services/data/update-claim-overpayment-status')
+const insertTopUp = require('../../services/data/insert-top-up')
+const cancelTopUp = require('../../services/data/cancel-top-up')
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
+const TopupResponse = require('../../services/domain/topup-response')
 const closeAdvanceClaim = require('../../services/data/close-advance-claim')
 const payoutBarcodeExpiredClaim = require('../../services/data/payout-barcode-expired-claim')
 const disableReferenceNumber = require('../../services/data/disable-reference-number')
@@ -87,7 +90,7 @@ module.exports = function (router) {
 
       return insertDeduction(req.params.claimId, claimDeduction)
         .then(function () {
-          return true
+          return false
         })
     })
   })
@@ -99,7 +102,7 @@ module.exports = function (router) {
 
       return disableDeduction(removeDeductionId)
         .then(function () {
-          return true
+          return false
         })
     })
   })
@@ -134,7 +137,46 @@ module.exports = function (router) {
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
-          return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
+          if (data.TopUps.allTopUpsPaid) {
+            return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
+          } else {
+            throw new Error('Bank payment details cannot be requested for a claim with an outstanding Top Up')
+          }
+        })
+    })
+  })
+
+  router.post('/claim/:claimId/add-top-up', function (req, res, next) {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          if (data.claim.PaymentStatus === 'PROCESSED' && data.TopUps.allTopUpsPaid) {
+            var claim = data.claim
+            var topupAmount = req.body['top-up-amount']
+            var topupReason = req.body['top-up-reason']
+            var topupResponse = new TopupResponse(topupAmount, topupReason)
+            return insertTopUp(claim, topupResponse, req.user.email)
+              .then(function () {
+                return false
+              })
+          } else {
+            throw new Error('A Top Up Cannot be added to Claim with a Pending Payment')
+          }
+        })
+    })
+  })
+
+  router.post('/claim/:claimId/cancel-top-up', function (req, res, next) {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return getIndividualClaimDetails(req.params.claimId)
+        .then(function (data) {
+          var claim = data.claim
+          return cancelTopUp(claim, req.user.email)
+            .then(function () {
+              return false
+            })
         })
     })
   })
@@ -332,6 +374,15 @@ function populateNewData (data, req) {
   } else {
     data.claim.ReleaseDateIsSet = false
   }
+  if (data.latestUnpaidTopUp) {
+    data.latestUnpaidTopUp.TopUpAmount = req.body['top-up-amount']
+    data.latestUnpaidTopUp.Reason = req.body['top-up-reason']
+  } else {
+    data.latestUnpaidTopUp = {
+      TopUpAmount: req.body['top-up-amount'],
+      Reason: req.body['top-up-reason']
+    }
+  }
   data.claim.releaseDay = req.body['release-day']
   data.claim.releaseMonth = req.body['release-month']
   data.claim.releaseYear = req.body['release-year']
@@ -356,11 +407,16 @@ function renderValues (data, req, error) {
     deductions: data.deductions,
     duplicates: data.duplicates,
     claimEvents: data.claimEvents,
+    TopUps: data.TopUps,
     overpaidClaims: data.overpaidClaims,
     claimantDuplicates: data.claimantDuplicates,
     claimDecisionEnum: claimDecisionEnum,
     errors: error.validationErrors,
-    unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry)
+    unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry),
+    latestUnpaidTopUp: data.latestUnpaidTopUp,
+    topUpAmount: req.body['top-up-amount'],
+    topUpReason: req.body['top-up-reason'],
+    errorWasThrown: true
   }
   if (data.rejectionReasons) {
     displayJson.rejectionReasons = data.rejectionReasons

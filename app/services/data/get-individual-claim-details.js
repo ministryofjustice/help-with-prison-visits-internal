@@ -5,6 +5,7 @@ const getClaimsForPrisonNumberAndVisitDate = require('./get-claims-for-prison-nu
 const getClaimTotalAmount = require('../get-claim-total-amount')
 const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
+const topUpStatusEnum = require('../../constants/top-up-status-enum')
 const dateFormatter = require('../date-formatter')
 const moment = require('moment')
 
@@ -22,6 +23,8 @@ module.exports = function (claimId) {
   var claimEvents
   var overpaidClaimData
   var reference
+  var topUps
+  var latestUnpaidTopUp
 
   return getClaimantDetails(claimId)
     .then(function (claimData) {
@@ -38,7 +41,9 @@ module.exports = function (claimId) {
         duplicateClaimCheck(claimId, claim.NationalInsuranceNumber, claim.PrisonNumber, claim.DateOfJourney),
         getClaimEvents(claimId),
         getOverpaidClaimsByReference(reference, claimId),
-        getClaimsForPrisonNumberAndVisitDate(claimId, claim.PrisonNumber, claim.DateOfJourney)
+        getClaimsForPrisonNumberAndVisitDate(claimId, claim.PrisonNumber, claim.DateOfJourney),
+        getTopUp(claimId),
+        getLatestUnpaidTopUp(claimId)
       ])
     })
     .then(function (results) {
@@ -52,7 +57,8 @@ module.exports = function (claimId) {
       claimEvents = results[7]
       overpaidClaimData = results[8]
       claimantDuplicates = results[9]
-
+      topUps = results[10]
+      latestUnpaidTopUp = results[11]
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
       claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
 
@@ -66,7 +72,9 @@ module.exports = function (claimId) {
         deductions: claimDeductions,
         duplicates: claimDuplicatesExist,
         overpaidClaims: overpaidClaimData,
-        claimantDuplicates: claimantDuplicates
+        TopUps: topUps,
+        claimantDuplicates: claimantDuplicates,
+        latestUnpaidTopUp: latestUnpaidTopUp
       }
 
       return claimDetails
@@ -105,6 +113,7 @@ function getClaimantDetails (claimId) {
       'Claim.PaymentMethod',
       'Claim.AssignedTo',
       'Claim.AssignmentExpiry',
+      'Claim.PaymentStatus',
       'Visitor.FirstName',
       'Visitor.LastName',
       'Visitor.DateOfBirth',
@@ -214,6 +223,34 @@ function getClaimEscort (claimId) {
 function getClaimEvents (claimId) {
   return knex('ClaimEvent')
     .where('ClaimId', claimId)
+}
+
+function getTopUp (claimId) {
+  return knex.select('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate').from('TopUp')
+    .where('ClaimId', claimId)
+    .then(function (TopUpResults) {
+      var allTopUpsPaid = true
+      TopUpResults.forEach(function (TopUpResult) {
+        if (TopUpResult.PaymentStatus === topUpStatusEnum.PENDING) {
+          allTopUpsPaid = false
+        }
+        TopUpResult.TopUpAmount = Number(TopUpResult.TopUpAmount).toFixed(2)
+      })
+      TopUpResults.allTopUpsPaid = allTopUpsPaid
+      return TopUpResults
+    })
+}
+
+function getLatestUnpaidTopUp (claimId) {
+  return knex.first('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate').from('TopUp')
+    .where('ClaimId', claimId)
+    .where('PaymentStatus', topUpStatusEnum.PENDING)
+    .then(function (latestUnpaidTopUp) {
+      if (latestUnpaidTopUp) {
+        latestUnpaidTopUp.TopUpAmount = Number(latestUnpaidTopUp.TopUpAmount).toFixed(2)
+      }
+      return latestUnpaidTopUp
+    })
 }
 
 function setClaimExpenseStatusForCarJourneys (claimExpenses) {
