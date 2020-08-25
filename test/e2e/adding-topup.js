@@ -2,7 +2,6 @@ const config = require('../../config')
 var moment = require('moment')
 var databaseHelper = require('../helpers/database-setup-for-tests')
 var expect = require('chai').expect
-const getIndividualClaimDetails = require('../../app/services/data/get-individual-claim-details')
 const TopUpStatusEnum = require('../../app/constants/top-up-status-enum')
 
 // Variables for creating and deleting a record
@@ -32,7 +31,9 @@ describe('Adding a new top up flow', () => {
       })
   })
 
-  it('should display a list of claims and approve a claim', async () => {
+  it('should add a top up of ' + expectedTopUpAmount + ' with reason: ' + expectedTopUpReason, async () => {
+    await browser.url('/')
+
     await browser.url('/claim/' + claimId)
 
     // View-claim
@@ -51,14 +52,10 @@ describe('Adding a new top up flow', () => {
     var submitButton = await $('#add-top-up')
     await submitButton.click()
 
-    var topUpsTable = await $('#top-ups-table')
-    await topUpsTable.click()
-
-    var claimDetails = await getIndividualClaimDetails(claimId)
-    expect(claimDetails.TopUps.length, 'TopUps should be an array of length 1').to.equal(1)
-    expect(claimDetails.TopUps[0].TopUpAmount, 'TopUp Amount be equal to ' + expectedTopUpAmount).to.equal(expectedTopUpAmount)
-    expect(claimDetails.TopUps[0].Reason, 'TopUp Reason be equal to ' + expectedTopUpReason).to.equal(expectedTopUpReason)
-    expect(claimDetails.TopUps[0].PaymentStatus, 'TopUp PaymentStatus should be equal to ' + TopUpStatusEnum.PENDING).to.equal(TopUpStatusEnum.PENDING)
+    var topUp = await databaseHelper.getLastTopUpAdded(claimId)
+    expect(topUp.TopUpAmount, 'TopUp Amount be equal to ' + expectedTopUpAmount).to.equal(expectedTopUpAmount)
+    expect(topUp.Reason, 'TopUp Reason be equal to ' + expectedTopUpReason).to.equal(expectedTopUpReason)
+    expect(topUp.PaymentStatus, 'TopUp PaymentStatus should be equal to ' + TopUpStatusEnum.PENDING).to.equal(TopUpStatusEnum.PENDING)
   })
 
   after(function () {

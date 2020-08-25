@@ -463,4 +463,14 @@ function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
     })
 }
 
+module.exports.getLastTopUpAdded = function getLastTopUpAdded (claimId) {
+  return knex('IntSchema.TopUp')
+    .first()
+    .where('ClaimId', claimId)
+    .then(function (result) {
+      result.TopUpAmount = Number(result.TopUpAmount).toFixed(2)
+      return result
+    })
+}
+
 module.exports.insertClaimDeduction = insertClaimDeduction
