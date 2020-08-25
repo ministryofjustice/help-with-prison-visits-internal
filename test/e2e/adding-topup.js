@@ -53,8 +53,7 @@ describe('Adding a new top up flow', () => {
     var submitButton = await $('#add-top-up')
     await submitButton.click()
 
-    var topUpsTable = await $('#top-ups-table')
-    await topUpsTable.click()
+    await browser.pause(10000)
 
     var claimDetails = await getIndividualClaimDetails(claimId)
     expect(claimDetails.TopUps.length, 'TopUps should be an array of length 1').to.equal(1)
