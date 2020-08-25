@@ -2,7 +2,6 @@ const config = require('../../config')
 var moment = require('moment')
 var databaseHelper = require('../helpers/database-setup-for-tests')
 var expect = require('chai').expect
-const getIndividualClaimDetails = require('../../app/services/data/get-individual-claim-details')
 const TopUpStatusEnum = require('../../app/constants/top-up-status-enum')
 
 // Variables for creating and deleting a record
