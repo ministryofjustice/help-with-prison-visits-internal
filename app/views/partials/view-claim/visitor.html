@@ -108,6 +108,8 @@
           <input id="expiry-year-input" type="number" name="expiry-year" autocomplete="off"
                 value="{{ Claim['expiryYear'] }}" class="form-control">
         </div>
+
+        <input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/update-benefit-expiry-date" class="button pull-right grey" name="update-benefit-expiry-date" id="update-benefit-expiry-date" value="Save benefit expiry date">
       </td>
       {% else %}
         {% if Claim['BenefitExpiryDate'] %}

@@ -18,6 +18,7 @@ const checkUserAndLastUpdated = require('../../services/check-user-and-last-upda
 const insertDeduction = require('../../services/data/insert-deduction')
 const disableDeduction = require('../../services/data/disable-deduction')
 const ClaimDeduction = require('../../services/domain/claim-deduction')
+const BenefitExpiryDate = require('../../services/domain/benefit-expiry-date')
 const updateClaimOverpaymentStatus = require('../../services/data/update-claim-overpayment-status')
 const OverpaymentResponse = require('../../services/domain/overpayment-response')
 const closeAdvanceClaim = require('../../services/data/close-advance-claim')
@@ -33,6 +34,7 @@ const checkUserAssignment = require('../../services/check-user-assignment')
 const Promise = require('bluebird')
 const getRejectionReasons = require('../../services/data/get-rejection-reasons')
 const getRejectionReasonId = require('../../services/data/get-rejection-reason-id')
+const updateVisitorBenefitExpiryDate = require('../../services/data/update-visitor-benefit-expiry-date')
 
 var claimExpenses
 var claimDeductions
@@ -100,6 +102,17 @@ module.exports = function (router) {
       return disableDeduction(removeDeductionId)
         .then(function () {
           return true
+        })
+    })
+  })
+
+  router.post('/claim/:claimId/update-benefit-expiry-date', function (req, res, next) {
+    var needAssignmentCheck = true
+    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      var benefitExpiryDate = new BenefitExpiryDate(req.body['expiry-day'], req.body['expiry-month'], req.body['expiry-year'])
+      return updateVisitorBenefitExpiryDate(req.params.claimId, benefitExpiryDate)
+        .then(function () {
+          return false
         })
     })
   })
@@ -307,6 +320,11 @@ function handleError (error, req, res, updateConflict, next) {
       .then(function (data) {
         if (data.claim && data.claimExpenses && !updateConflict && claimExpenses) {
           populateNewData(data, req)
+        }
+        if (req.route.path.includes('/update-benefit-expiry-date')) {
+          data.claim.expiryDay = req.body['expiry-day']
+          data.claim.expiryMonth = req.body['expiry-month']
+          data.claim.expiryYear = req.body['expiry-year']
         }
         return getRejectionReasons()
           .then(function (rejectionReasons) {
