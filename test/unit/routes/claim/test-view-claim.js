@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
+const dateFormatter = require('../../../../app/services/date-formatter')
 
 var authorisation
 var stubGetIndividualClaimDetails
@@ -26,6 +27,8 @@ var stubUpdateEligibilityTrustedStatus
 var stubUpdateAssignmentOfClaims
 var stubRejectionReasonId
 var stubRejectionReasons
+var stubUpdateVisitorBenefirExpiryDate
+var stubBenefitExpiryDate
 var ValidationError = require('../../../../app/services/errors/validation-error')
 var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 const VALID_CLAIMDEDUCTION_DATA = [{ Amount: '20.00' }]
@@ -66,6 +69,13 @@ const VALID_DATA_REQUEST_BANK_DETAILS = {
   'closed-claim-action': 'REQUEST-NEW-PAYMENT-DETAILS',
   'payment-details-additional-information': ''
 }
+
+const VALID_BENEFIT_EXPIRY_DATA = {
+  'expiry-day-input': '20',
+  'expiry-month-input': '01',
+  'expiry-year-input': '2020'
+}
+
 const INCOMPLETE_DATA = {
   decision: 'REJECTED',
   reasonRejected: '',
@@ -99,6 +109,8 @@ describe('routes/claim/view-claim', function () {
     stubUpdateAssignmentOfClaims = sinon.stub()
     stubRejectionReasonId = sinon.stub().resolves()
     stubRejectionReasons = sinon.stub().resolves()
+    stubUpdateVisitorBenefirExpiryDate = sinon.stub()
+    stubBenefitExpiryDate = sinon.stub()
 
     var route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -122,7 +134,9 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus,
       '../../services/data/update-assignment-of-claims': stubUpdateAssignmentOfClaims,
       '../../services/data/get-rejection-reasons': stubRejectionReasons,
-      '../../services/data/get-rejection-reason-id': stubRejectionReasonId
+      '../../services/data/get-rejection-reason-id': stubRejectionReasonId,
+      '../../services/data/update-visitor-benefit-expiry-date': stubUpdateVisitorBenefirExpiryDate,
+      '../../services/domain/benefit-expiry-date': stubBenefitExpiryDate
     })
     app = routeHelper.buildApp(route)
     route(app)
@@ -769,6 +783,33 @@ describe('routes/claim/view-claim', function () {
         .post('/claim/123/request-new-payment-details')
         .send(VALID_DATA_DISABLE_DEDUCTION)
         .expect(500)
+    })
+  })
+
+  describe('POST /claim/:claimId/update-benefit-expiry-date', function () {
+    it('should respond with 302 when valid benefit expiry date is entered', function () {
+      var claimData = {
+        claim: {},
+        claimExpenses: {}
+      }
+      stubCheckUserAndLastUpdated.resolves()
+      stubUpdateVisitorBenefirExpiryDate.resolves()
+      stubGetIndividualClaimDetails.resolves(claimData)
+
+      var benefitExpiryDate = {
+        expiryDateFields: [VALID_BENEFIT_EXPIRY_DATA['expiry-day-input'], VALID_BENEFIT_EXPIRY_DATA['expiry-month-input'], VALID_BENEFIT_EXPIRY_DATA['expiry-year-input']],
+        expiryDate: dateFormatter.build(VALID_BENEFIT_EXPIRY_DATA['expiry-day-input'], VALID_BENEFIT_EXPIRY_DATA['expiry-month-input'], VALID_BENEFIT_EXPIRY_DATA['expiry-year-input'])
+      }
+
+      stubBenefitExpiryDate.returns(benefitExpiryDate)
+
+      return supertest(app)
+        .post('/claim/123/update-benefit-expiry-date')
+        .send(VALID_BENEFIT_EXPIRY_DATA)
+        .expect(302)
+        .expect(function () {
+          expect(stubUpdateVisitorBenefirExpiryDate.calledWith('123', benefitExpiryDate)).to.be.true //eslint-disable-line
+        })
     })
   })
 })

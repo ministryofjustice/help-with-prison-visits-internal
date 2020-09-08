@@ -7,7 +7,7 @@ module.exports = function (claimId, benefitExpiryDate) {
   return getEligibilityForClaimId(claimId)
     .then(function (eligibility) {
       return knex('Visitor')
-      .where('EligibilityId', eligibility.EligibilityId)
-      .update({ BenefitExpiryDate: expiryDate })
+        .where('EligibilityId', eligibility.EligibilityId)
+        .update({ BenefitExpiryDate: expiryDate })
     })
 }

@@ -16,5 +16,5 @@ module.exports = function (claimId) {
       'Eligibility.ReferenceDisabled',
       'Eligibility.DisabledReason',
       'Eligibility.ReEnabledReason'
-      )
+    )
 }
