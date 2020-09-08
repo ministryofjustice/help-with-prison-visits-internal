@@ -21,7 +21,6 @@ class BenefitExpiryDate {
     FieldValidator(this.expiryDateFields, 'benefit-expiry', errors)
       .isDateRequired(ERROR_MESSAGES.getExpiryDateIsRequired)
       .isValidDate(this.expiryDate)
-      .isFutureDate(this.expiryDate)
 
     var validationErrors = errors.get()
 
