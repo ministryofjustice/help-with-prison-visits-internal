@@ -113,7 +113,7 @@
       </td>
       {% else %}
         {% if Claim['BenefitExpiryDate'] %}
-          <td>{{ getDateFormatted.shortDate(Claim['BenefitExpiryDate']) }}</td>
+          <td id="benefit-expiry-date" id="benefit-expiry-date">{{ getDateFormatted.shortDate(Claim['BenefitExpiryDate']) }}</td>
         {% else %}
           <td><span class="text-pending">Pending</span></td>
         {% endif %}

@@ -322,9 +322,9 @@ function handleError (error, req, res, updateConflict, next) {
           populateNewData(data, req)
         }
         if (req.route.path.includes('/update-benefit-expiry-date')) {
-          data.claim.expiryDay = req.body['expiry-day-input']
-          data.claim.expiryMonth = req.body['expiry-month-input']
-          data.claim.expiryYear = req.body['expiry-year-input']
+          data.claim.expiryDay = req.body['expiry-day']
+          data.claim.expiryMonth = req.body['expiry-month']
+          data.claim.expiryYear = req.body['expiry-year']
         }
         return getRejectionReasons()
           .then(function (rejectionReasons) {
