@@ -48,7 +48,7 @@ describe('Update benefit expiry date flow', () => {
 
     await expiryDay.setValue(expectedDay)
     await expiryMonth.setValue(expectedMonth)
-    await expiryYear.setValue(expectedYear)    
+    await expiryYear.setValue(expectedYear)
     await submitButton.click()
 
     var day = await expiryDay.getValue()
@@ -60,7 +60,6 @@ describe('Update benefit expiry date flow', () => {
 
     var benefitExpiryDateOnWebpage = await $('#benefit-expiry-date')
     benefitExpiryDateOnWebpage = await benefitExpiryDateOnWebpage.getText()
-    console.log(benefitExpiryDateOnWebpage + '\n\n\n\n')
 
     var benefitExpiryDate = await databaseHelper.getBenefitExpiryDate(reference)
     expect(day, 'Benefit Expiry Day should be equal to ' + expiryDay).to.equal(expectedDay)
