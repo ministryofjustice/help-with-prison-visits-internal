@@ -445,4 +445,10 @@ function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
     })
 }
 
+module.exports.getBenefitExpiryDate = function (reference) {
+  return knex('IntSchema.Visitor')
+    .first('BenefitExpiryDate')
+    .where('Reference', reference)
+}
+
 module.exports.insertClaimDeduction = insertClaimDeduction
