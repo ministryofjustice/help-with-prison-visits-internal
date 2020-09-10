@@ -154,15 +154,6 @@ describe('services/domain/claim-decision', function () {
     }
   })
 
-  it('should return an error if the benefit expiry date boxes contain a past date', function () {
-    try {
-      claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', pastDay, pastMonth, pastYear)
-    } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['benefit-expiry'][0]).to.equal('Benefit Expiry Date must be in the future')
-    }
-  })
-
   it('should return error if the Release Date checkbox is checked and the release date boxes are blank', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', '', '', '', 'on', '', '', '')
