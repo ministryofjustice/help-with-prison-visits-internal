@@ -20,7 +20,7 @@ describe('services/data/get-direct-payment-files', function () {
         }
       }
 
-      for (var i = 0; i < 8; i++) {
+      for (var i = 0; i < 32; i++) {
         var descendingDate = new Date(dateFormatter.now().toDate().setDate(new Date().getDate() - i))
         directPaymentFiles.push(getTestDirectPaymentFile('ACCESSPAY_FILE', descendingDate))
         directPaymentFiles.push(getTestDirectPaymentFile('ADI_JOURNAL_FILE', descendingDate))
@@ -29,11 +29,11 @@ describe('services/data/get-direct-payment-files', function () {
       return knex('DirectPaymentFile').insert(directPaymentFiles)
     })
 
-    it('should return list of last seven ACCESSPAY_FILE and ADI_JOURNAL_FILE records', function () {
+    it('should return list of last 31 ACCESSPAY_FILE and ADI_JOURNAL_FILE records', function () {
       return getDirectPaymentFiles()
         .then(function (result) {
-          expect(result.accessPayFiles.length).to.equal(7)
-          expect(result.adiJournalFiles.length).to.equal(7)
+          expect(result.accessPayFiles.length).to.equal(31)
+          expect(result.adiJournalFiles.length).to.equal(31)
         })
         .catch(function (error) {
           throw error
