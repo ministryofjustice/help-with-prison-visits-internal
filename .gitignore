@@ -43,3 +43,6 @@ app/public
 
 # Uploads
 uploads/
+
+# data
+data/

@@ -463,6 +463,12 @@ function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
     })
 }
 
+module.exports.getBenefitExpiryDate = function (reference) {
+  return knex('IntSchema.Visitor')
+    .first('BenefitExpiryDate')
+    .where('Reference', reference)
+}
+
 module.exports.getLastTopUpAdded = function getLastTopUpAdded (claimId) {
   return knex('IntSchema.TopUp')
     .first()

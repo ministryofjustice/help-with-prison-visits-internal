@@ -158,7 +158,6 @@ class ClaimDecision {
     FieldValidator(this.expiryDateFields, 'benefit-expiry', errors)
       .isDateRequired(ERROR_MESSAGES.getExpiryDateIsRequired)
       .isValidDate(this.expiryDate)
-      .isFutureDate(this.expiryDate)
 
     if (this.releaseDateIsSet) {
       FieldValidator(this.releaseDateFields, 'release-date-section', errors)
