@@ -111,6 +111,12 @@
     <br>
 
     {% include "partials/view-claim/add-deduction.html" %}
+    
+    {% if TopUps.length > 0 %}
+      <h1 class="table-heading" name="top-ups-table" id="top-ups-table">Top Ups</h1>
+
+      {% include "partials/view-claim/top-ups.html" %}
+    {% endif %}
 
     <br>
 
@@ -140,6 +146,12 @@
     {% include "partials/csrf-hidden-input.html" %}
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
     {% include "partials/view-claim/manage-overpayments.html" %}
+  </form>
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/add-top-up" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    {% include "partials/view-claim/add-top-up.html" %}
   </form>
 
   <form action="/claim/{{ Claim['ClaimId'] }}/close-advance-claim" method="post" class="form">

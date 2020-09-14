@@ -1,0 +1,5 @@
+module.exports = {
+  PENDING: 'PENDING',
+  CANCELLED: 'CANCELLED',
+  PROCESSED: 'PROCESSED'
+}

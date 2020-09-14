@@ -1,0 +1,30 @@
+<table class="col-2 no-pad-right">
+  <thead>
+    <tr>
+      <th>Date Added</th>
+      <th>Amount</th>
+      <th>Caseworker</th>
+      <th>Payment Status</th>
+      <th>Payment Date</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for TopUp in TopUps %}
+        <tr>
+          <td>{{ getDateFormatted.shortDateAndTime(TopUp.DateAdded) }}</td>
+          <td>£{{ TopUp['TopUpAmount'] }}</td>
+          <td>{{ TopUp['Caseworker'] }}</td>
+          {% if TopUp.PaymentStatus === 'PROCESSED' %}
+            <td><span class="text-success">Paid</span></td>
+          {% elif TopUp.PaymentStatus === 'PENDING' %}
+            <td><span class="text-pending">Pending</span></td>
+          {% elif TopUp.PaymentStatus === 'CANCELLED' %}
+            <td><span class="text-warning">Cancelled</span></td>
+          {% endif %}
+          <td>{{ getDateFormatted.shortDateAndTime(TopUp.PaymentDate) }}</td>
+          <td>{% if unlock and TopUp.PaymentStatus === 'PENDING' %}<input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/cancel-top-up" name='cancel-top-up-{{ TopUp.TopUpId }}' class='button pull-right grey' value='Cancel'>{% endif %}</td>
+        </tr>
+      {% endfor %}
+  </tbody>
+</table>

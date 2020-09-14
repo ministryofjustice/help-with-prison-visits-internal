@@ -2,15 +2,15 @@ var config = require('../../knexfile').migrations
 var knex = require('knex')(config)
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-module.exports.insertTestData = function (reference, date, status, visitDate, increment) {
+module.exports.insertTestData = function (reference, date, status, visitDate, increment, paymentStatus = null) {
   var idIncrement = increment || 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
   var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + idIncrement
 
-  return this.insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3)
+  return this.insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus)
 }
 
-module.exports.insertTestDataForIds = function (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4) {
+module.exports.insertTestDataForIds = function (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus) {
   var data = this.getTestData(reference, status)
 
   var ids = {}
@@ -86,7 +86,8 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           Status: status,
           PaymentMethod: data.Claim.PaymentMethod,
           AssignedTo: data.Claim.AssignedTo,
-          AssignmentExpiry: new Date(date.getTime() + 300000) // current time + 5 minutes
+          AssignmentExpiry: new Date(date.getTime() + 300000), // current time + 5 minutes
+          PaymentStatus: paymentStatus
         })
     })
     .then(function (result) {
@@ -276,6 +277,21 @@ function deleteByReference (schemaTable, reference) {
   return knex(schemaTable).where('Reference', reference).del()
 }
 
+function deleteByClaimIds (schemaTable, claimIds) {
+  return knex(schemaTable).whereIn('ClaimId', claimIds).del()
+}
+
+function getClaimIdsForReference (schemaTable, reference) {
+  return knex(schemaTable).where('Reference', reference).select('ClaimId')
+    .then(function (results) {
+      var claimIdArray = []
+      results.forEach(function (result) {
+        claimIdArray.push(result.ClaimId)
+      })
+      return claimIdArray
+    })
+}
+
 module.exports.deleteAll = function (reference) {
   return deleteByReference('IntSchema.Task', reference)
     .then(function () { return deleteByReference('IntSchema.ClaimEvent', reference) })
@@ -285,6 +301,8 @@ module.exports.deleteAll = function (reference) {
     .then(function () { return deleteByReference('IntSchema.ClaimChild', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimDeduction', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimEscort', reference) })
+    .then(function () { return getClaimIdsForReference('IntSchema.Claim', reference) })
+    .then(function (claimIds) { return deleteByClaimIds('IntSchema.TopUp', claimIds) })
     .then(function () { return deleteByReference('IntSchema.Claim', reference) })
     .then(function () { return deleteByReference('IntSchema.Visitor', reference) })
     .then(function () { return deleteByReference('IntSchema.Prisoner', reference) })
@@ -449,6 +467,16 @@ module.exports.getBenefitExpiryDate = function (reference) {
   return knex('IntSchema.Visitor')
     .first('BenefitExpiryDate')
     .where('Reference', reference)
+}
+
+module.exports.getLastTopUpAdded = function getLastTopUpAdded (claimId) {
+  return knex('IntSchema.TopUp')
+    .first()
+    .where('ClaimId', claimId)
+    .then(function (result) {
+      result.TopUpAmount = Number(result.TopUpAmount).toFixed(2)
+      return result
+    })
 }
 
 module.exports.insertClaimDeduction = insertClaimDeduction
