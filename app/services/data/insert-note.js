@@ -1,9 +1,7 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const dateFormatter = require('../date-formatter')
-const tasksEnum = require('../../constants/tasks-enum')
 const insertClaimEvent = require('./insert-claim-event')
-const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 const log = require('../log')
 
 module.exports = function (claimId, claimNote, user) {
@@ -18,8 +16,7 @@ module.exports = function (claimId, claimNote, user) {
       var note = claimNote
 
       return Promise.all([updateClaim(claimId, note),
-        insertClaimEventForNote(reference, eligibilityId, claimId, decision, note, caseworker),
-        sendClaimNotification(reference, eligibilityId, claimId, decision)])
+        insertClaimEventForNote(reference, eligibilityId, claimId, decision, note, caseworker)])
     })
 }
 
@@ -44,12 +41,4 @@ function insertClaimEventForNote (reference, eligibilityId, claimId, decision, n
   const event = 'CLAIM-NOTE'
   log.info(caseworker)
   return insertClaimEvent(reference, eligibilityId, claimId, event, null, note, caseworker, true)
-}
-
-function sendClaimNotification (reference, eligibilityId, claimId, decision) {
-  var notificationType
-
-  notificationType = tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION
-
-  return insertTaskSendClaimNotification(notificationType, reference, eligibilityId, claimId)
 }
