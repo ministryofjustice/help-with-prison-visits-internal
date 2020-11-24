@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const VIEWS_DIRECTORY = '../../../app/views'
 
 module.exports.buildApp = function (route) {
-  var app = express()
+  const app = express()
   app.use(bodyParser.json())
   app.use(expressSanitized())
   app.use(cookieParser())

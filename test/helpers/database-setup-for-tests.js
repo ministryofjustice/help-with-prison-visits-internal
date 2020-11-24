@@ -1,19 +1,19 @@
-var config = require('../../knexfile').migrations
-var knex = require('knex')(config)
+const config = require('../../knexfile').migrations
+const knex = require('knex')(config)
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
 module.exports.insertTestData = function (reference, date, status, visitDate, increment, paymentStatus = null) {
-  var idIncrement = increment || 0
+  const idIncrement = increment || 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
-  var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + idIncrement
+  const uniqueId = Math.floor(Date.now() / 100) - 14000000000 + idIncrement
 
   return this.insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus)
 }
 
 module.exports.insertTestDataForIds = function (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus) {
-  var data = this.getTestData(reference, status)
+  const data = this.getTestData(reference, status)
 
-  var ids = {}
+  const ids = {}
   return knex('IntSchema.Eligibility')
     .insert({
       EligibilityId: uniqueId,
@@ -284,7 +284,7 @@ function deleteByClaimIds (schemaTable, claimIds) {
 function getClaimIdsForReference (schemaTable, reference) {
   return knex(schemaTable).where('Reference', reference).select('ClaimId')
     .then(function (results) {
-      var claimIdArray = []
+      const claimIdArray = []
       results.forEach(function (result) {
         claimIdArray.push(result.ClaimId)
       })

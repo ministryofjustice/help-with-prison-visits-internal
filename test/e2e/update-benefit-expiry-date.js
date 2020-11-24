@@ -1,16 +1,16 @@
 const config = require('../../config')
-var moment = require('moment')
-var databaseHelper = require('../helpers/database-setup-for-tests')
-var expect = require('chai').expect
+const moment = require('moment')
+const databaseHelper = require('../helpers/database-setup-for-tests')
+const expect = require('chai').expect
 
 // Variables for creating and deleting a record
-var reference = '1111111'
-var date
-var claimId
-var expectedDay = '20'
-var expectedMonth = '1'
-var expectedYear = '2020'
-var expectedDateMoment = moment(expectedDay + '-' + expectedMonth + '-' + expectedYear, 'DD-MM-YYYY')
+const reference = '1111111'
+let date
+let claimId
+const expectedDay = '20'
+const expectedMonth = '1'
+const expectedYear = '2020'
+const expectedDateMoment = moment(expectedDay + '-' + expectedMonth + '-' + expectedYear, 'DD-MM-YYYY')
 
 describe('Update benefit expiry date flow', () => {
   before(function () {
@@ -22,9 +22,9 @@ describe('Update benefit expiry date flow', () => {
       // IF SSO ENABLED LOGIN TO SSO
         if (config.AUTHENTICATION_ENABLED === 'true') {
           await browser.url(config.TOKEN_HOST)
-          var email = await $('#user_email')
-          var password = await $('#user_password')
-          var commit = await $('[name="commit"]')
+          const email = await $('#user_email')
+          const password = await $('#user_password')
+          const commit = await $('[name="commit"]')
           await email.setValue(config.TEST_SSO_EMAIL)
           await password.setValue(config.TEST_SSO_PASSWORD)
           await commit.click()
@@ -38,30 +38,30 @@ describe('Update benefit expiry date flow', () => {
     await browser.url('/claim/' + claimId)
 
     // View-claim
-    var assignSelf = await $('#assign-self')
+    const assignSelf = await $('#assign-self')
     await assignSelf.click()
 
-    var expiryDay = await $('#expiry-day-input')
-    var expiryMonth = await $('#expiry-month-input')
-    var expiryYear = await $('#expiry-year-input')
-    var submitButton = await $('#update-benefit-expiry-date')
+    const expiryDay = await $('#expiry-day-input')
+    const expiryMonth = await $('#expiry-month-input')
+    const expiryYear = await $('#expiry-year-input')
+    const submitButton = await $('#update-benefit-expiry-date')
 
     await expiryDay.setValue(expectedDay)
     await expiryMonth.setValue(expectedMonth)
     await expiryYear.setValue(expectedYear)
     await submitButton.click()
 
-    var day = await expiryDay.getValue()
-    var month = await expiryMonth.getValue()
-    var year = await expiryYear.getValue()
+    const day = await expiryDay.getValue()
+    const month = await expiryMonth.getValue()
+    const year = await expiryYear.getValue()
 
-    var unassign = await $('#unassign')
+    const unassign = await $('#unassign')
     await unassign.click()
 
-    var benefitExpiryDateOnWebpage = await $('#benefit-expiry-date')
+    let benefitExpiryDateOnWebpage = await $('#benefit-expiry-date')
     benefitExpiryDateOnWebpage = await benefitExpiryDateOnWebpage.getText()
 
-    var benefitExpiryDate = await databaseHelper.getBenefitExpiryDate(reference)
+    const benefitExpiryDate = await databaseHelper.getBenefitExpiryDate(reference)
     expect(day, 'Benefit Expiry Day should be equal to ' + expiryDay).to.equal(expectedDay)
     expect(month, 'Benefit Expiry Month should be equal to ' + expiryMonth).to.equal(expectedMonth)
     expect(year, 'Benefit Expiry Year should be equal to ' + expectedYear).to.equal(expectedYear)

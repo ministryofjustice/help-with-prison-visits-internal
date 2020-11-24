@@ -1,12 +1,12 @@
 const config = require('../../config')
-var moment = require('moment')
-var databaseHelper = require('../helpers/database-setup-for-tests')
-var expect = require('chai').expect
+const moment = require('moment')
+const databaseHelper = require('../helpers/database-setup-for-tests')
+const expect = require('chai').expect
 
 // Variables for creating and deleting a record
-var reference = '2222222'
-var date
-var claimId
+const reference = '2222222'
+let date
+let claimId
 
 describe('Requesting bank details flow', () => {
   before(function () {
@@ -18,9 +18,9 @@ describe('Requesting bank details flow', () => {
       // IF SSO ENABLED LOGIN TO SSO
         if (config.AUTHENTICATION_ENABLED === 'true') {
           await browser.url(config.TOKEN_HOST)
-          var email = await $('#user_email')
-          var password = await $('#user_password')
-          var commit = await $('[name="commit"]')
+          const email = await $('#user_email')
+          const password = await $('#user_password')
+          const commit = await $('[name="commit"]')
           await email.setValue(config.TEST_SSO_EMAIL)
           await password.setValue(config.TEST_SSO_PASSWORD)
           await commit.click()
@@ -33,16 +33,16 @@ describe('Requesting bank details flow', () => {
 
     // Go to approved claim and request new bank details
     await browser.url('/?status=APPROVED')
-    var submitButton = await $('#claim' + claimId)
+    let submitButton = await $('#claim' + claimId)
     await submitButton.click()
 
-    var assignSelf = await $('#assign-self')
+    const assignSelf = await $('#assign-self')
     await assignSelf.click()
 
-    var requestNewPaymentDetailsLabel = await $('#request-new-payment-details-label')
+    const requestNewPaymentDetailsLabel = await $('#request-new-payment-details-label')
     await requestNewPaymentDetailsLabel.click()
 
-    var paymentDetailsAdditionalInformation = await $('#payment-details-additional-information')
+    const paymentDetailsAdditionalInformation = await $('#payment-details-additional-information')
     await paymentDetailsAdditionalInformation.setValue('TESTING')
 
     submitButton = await $('#request-new-payment-details')
@@ -50,7 +50,7 @@ describe('Requesting bank details flow', () => {
 
     // Check that claim is pending new bank details
     await browser.url('/?status=REQUEST-INFO-PAYMENT')
-    var claim = await $('#claim' + claimId)
+    const claim = await $('#claim' + claimId)
     expect(claim).to.not.equal(null)
     expect(claim).to.not.equal(undefined)
   })

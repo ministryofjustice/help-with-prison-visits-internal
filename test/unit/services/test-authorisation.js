@@ -1,5 +1,5 @@
-var expect = require('chai').expect
-var authorisation = require('../../../app/services/authorisation')
+const expect = require('chai').expect
+const authorisation = require('../../../app/services/authorisation')
 
 describe('services/authorisation', function () {
   describe('isAuthenticated', function () {

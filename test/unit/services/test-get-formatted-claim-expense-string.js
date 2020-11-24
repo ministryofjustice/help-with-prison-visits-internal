@@ -32,19 +32,19 @@ const multipleClaimExpenses = [
 
 describe('services/get-formatted-claim-expense-string', function () {
   it('should return a correctly formatted string for a single expense', function () {
-    var claimExpenseString = getFormattedClaimExpenseString(singleClaimExpense)
+    const claimExpenseString = getFormattedClaimExpenseString(singleClaimExpense)
 
     expect(claimExpenseString).to.equal('Light refreshment: 5')
   })
 
   it('should return a correctly formatted string for multiple expenses', function () {
-    var claimExpenseString = getFormattedClaimExpenseString(multipleClaimExpenses)
+    const claimExpenseString = getFormattedClaimExpenseString(multipleClaimExpenses)
 
     expect(claimExpenseString).to.equal('Bus journey: 5|Train journey: 10|Ferry journey: 15')
   })
 
   it('should return 0 for claims that dont have an ApprovedCost', function () {
-    var claimExpenseString = getFormattedClaimExpenseString(expenseWithNullApprovedCost)
+    const claimExpenseString = getFormattedClaimExpenseString(expenseWithNullApprovedCost)
 
     expect(claimExpenseString).to.equal('Accommodation: 0')
   })

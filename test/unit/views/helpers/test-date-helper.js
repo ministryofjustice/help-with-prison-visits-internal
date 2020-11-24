@@ -1,5 +1,5 @@
-var expect = require('chai').expect
-var getDateFormatted = require('../../../../app/views/helpers/date-helper')
+const expect = require('chai').expect
+const getDateFormatted = require('../../../../app/views/helpers/date-helper')
 
 // Javascript date class month is zero indexed which is why month entered into date is 10 instead of 11
 describe('views/helpers/date-helper', function () {

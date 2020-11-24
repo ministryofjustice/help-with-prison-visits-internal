@@ -2,20 +2,20 @@
 /* global GOVUK */
 
 function ShowHideContent () {
-  var self = this
+  const self = this
 
   self.escapeElementName = function (str) {
-    var result = str.replace('[', '\\[').replace(']', '\\]')
+    const result = str.replace('[', '\\[').replace(']', '\\]')
     return (result)
   }
 
   self.showHideRadioToggledContent = function () {
     $(".block-label input[type='radio']").each(function () {
-      var $radio = $(this)
-      var $radioGroupName = $radio.attr('name')
-      var $radioLabel = $radio.parent('label')
+      const $radio = $(this)
+      const $radioGroupName = $radio.attr('name')
+      const $radioLabel = $radio.parent('label')
 
-      var dataTarget = $radioLabel.attr('data-target')
+      const dataTarget = $radioLabel.attr('data-target')
 
       // Add ARIA attributes
 
@@ -27,10 +27,10 @@ function ShowHideContent () {
         $radio.on('click', function () {
           // Select radio buttons in the same group
           $radio.closest('form').find('.block-label input[name=' + self.escapeElementName($radioGroupName) + ']').each(function () {
-            var $this = $(this)
+            const $this = $(this)
 
-            var groupDataTarget = $this.parent('label').attr('data-target')
-            var $groupDataTarget = $('#' + groupDataTarget)
+            const groupDataTarget = $this.parent('label').attr('data-target')
+            const $groupDataTarget = $('#' + groupDataTarget)
 
             // Hide toggled content
             $groupDataTarget.addClass('js-hidden')
@@ -39,7 +39,7 @@ function ShowHideContent () {
             $groupDataTarget.attr('aria-hidden', 'true')
           })
 
-          var $dataTarget = $('#' + dataTarget)
+          const $dataTarget = $('#' + dataTarget)
           $dataTarget.removeClass('js-hidden')
           // Set aria-expanded and aria-hidden for clicked radio
           $radio.attr('aria-expanded', 'true')
@@ -52,8 +52,8 @@ function ShowHideContent () {
         $radio.on('click', function () {
           // Select radio buttons in the same group
           $('.block-label input[name=' + self.escapeElementName($radioGroupName) + ']').each(function () {
-            var groupDataTarget = $(this).parent('label').attr('data-target')
-            var $groupDataTarget = $('#' + groupDataTarget)
+            const groupDataTarget = $(this).parent('label').attr('data-target')
+            const $groupDataTarget = $('#' + groupDataTarget)
 
             // Hide toggled content
             $groupDataTarget.addClass('js-hidden')
@@ -67,10 +67,10 @@ function ShowHideContent () {
   }
   self.showHideCheckboxToggledContent = function () {
     $(".block-label input[type='checkbox']").each(function () {
-      var $checkbox = $(this)
-      var $checkboxLabel = $(this).parent()
+      const $checkbox = $(this)
+      const $checkboxLabel = $(this).parent()
 
-      var $dataTarget = $checkboxLabel.attr('data-target')
+      const $dataTarget = $checkboxLabel.attr('data-target')
 
       // Add ARIA attributes
 
@@ -85,7 +85,7 @@ function ShowHideContent () {
 
         // For checkboxes revealing hidden content
         $checkbox.on('click', function () {
-          var state = $(this).attr('aria-expanded') === 'false'
+          const state = $(this).attr('aria-expanded') === 'false'
 
           // Toggle hidden content
           $('#' + $dataTarget).toggleClass('js-hidden')
@@ -102,12 +102,12 @@ function ShowHideContent () {
 $(document).ready(function () {
   // Use GOV.UK selection-buttons.js to set selected
   // and focused states for block labels
-  var $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']")
+  const $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']")
   new GOVUK.SelectionButtons($blockLabels) // eslint-disable-line
 
   // Show and hide toggled content
   // Where .block-label uses the data-target attribute
-  var toggleContent = new ShowHideContent()
+  const toggleContent = new ShowHideContent()
   toggleContent.showHideRadioToggledContent()
   toggleContent.showHideCheckboxToggledContent()
 })

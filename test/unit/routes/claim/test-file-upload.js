@@ -12,13 +12,13 @@ describe('routes/claim/file-upload', function () {
   const BASEROUTE = `/claim/file-upload/${REFERENCE}/${CLAIMID}/`
   const VALIDROUTE = `${BASEROUTE}VISIT_CONFIRMATION?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`
 
-  var authorisation
-  var directoryCheckStub
-  var uploadStub
-  var fileUploadStub
-  var claimDocumentUpdateStub
-  var generateCSRFTokenStub
-  var app
+  let authorisation
+  let directoryCheckStub
+  let uploadStub
+  let fileUploadStub
+  let claimDocumentUpdateStub
+  let generateCSRFTokenStub
+  let app
 
   beforeEach(function () {
     authorisation = { isCaseworker: sinon.stub() }
@@ -28,7 +28,7 @@ describe('routes/claim/file-upload', function () {
     claimDocumentUpdateStub = sinon.stub()
     generateCSRFTokenStub = sinon.stub()
 
-    var route = proxyquire('../../../../app/routes/claim/file-upload', {
+    const route = proxyquire('../../../../app/routes/claim/file-upload', {
       '../../services/authorisation': authorisation,
       '../../services/directory-check': directoryCheckStub,
       '../../services/upload': uploadStub,

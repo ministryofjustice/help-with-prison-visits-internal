@@ -1,7 +1,7 @@
 const UpdateContactDetailsResponse = require('../../../../app/services/domain/update-contact-details-response')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const expect = require('chai').expect
-var updateContactDetailsResponse
+let updateContactDetailsResponse
 
 describe('services/domain/update-contact-details-response', function () {
   const VALID_EMAIL_ADDRESS = 'no.one@none.com'

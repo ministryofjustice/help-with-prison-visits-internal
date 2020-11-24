@@ -1,5 +1,5 @@
 module.exports = function (claimExpenses, claimDeductions) {
-  var total = 0
+  let total = 0
 
   if (claimExpenses && claimExpenses.length > 0) {
     claimExpenses.forEach(function (claimExpense) {

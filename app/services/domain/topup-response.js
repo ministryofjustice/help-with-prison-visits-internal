@@ -11,7 +11,7 @@ class TopupResponse {
   }
 
   IsValid () {
-    var errors = ErrorHandler()
+    const errors = ErrorHandler()
 
     FieldValidator(this.amount, 'top-up-amount', errors)
       .isRequired()
@@ -23,7 +23,7 @@ class TopupResponse {
       .isLessThanLength(2000)
       .isRequired()
 
-    var validationErrors = errors.get()
+    const validationErrors = errors.get()
 
     if (validationErrors) {
       throw new ValidationError(validationErrors)

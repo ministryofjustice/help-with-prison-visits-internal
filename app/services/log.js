@@ -9,11 +9,11 @@ const logstashHost = config.LOGSTASH_HOST
 const logstashPort = config.LOGSTASH_PORT
 
 // Stream to handle pretty printing of Bunyan logs to stdout.
-var prettyStream = new PrettyStream()
+const prettyStream = new PrettyStream()
 prettyStream.pipe(process.stdout)
 
 // Create a base logger for the application.
-var log = bunyan.createLogger({
+const log = bunyan.createLogger({
   name: 'internal-web',
   streams: [],
   serializers: {
@@ -26,7 +26,7 @@ var log = bunyan.createLogger({
 
 // Add stream to push logs to Logstash for aggregation, reattempt connections indefinitely.
 if (logstashHost && logstashPort) {
-  var logstashStream = bunyanLogstash.createStream({
+  const logstashStream = bunyanLogstash.createStream({
     host: logstashHost,
     port: logstashPort,
     max_connect_retries: 10,

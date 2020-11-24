@@ -5,7 +5,7 @@ const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const dateFormatter = require('../date-formatter')
 
-var noteId
+let noteId
 
 class ClaimDecision {
   constructor (caseworker,
@@ -83,7 +83,7 @@ class ClaimDecision {
   }
 
   IsValid () {
-    var errors = ErrorHandler()
+    const errors = ErrorHandler()
 
     if (this.caseworker === this.assistedDigitalCaseworker) {
       throw new ValidationError({ 'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim] })
@@ -115,8 +115,8 @@ class ClaimDecision {
       }
     })
 
-    var totalExpenseCost = 0.00
-    var allExpensesRejected = true
+    let totalExpenseCost = 0.00
+    let allExpensesRejected = true
     this.claimExpenseResponses.forEach(function (expense) {
       if (expense.status !== claimDecisionEnum.REJECTED) {
         allExpensesRejected = false
@@ -131,12 +131,12 @@ class ClaimDecision {
       errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
     }
 
-    var totalDeductionCost = 0.00
+    let totalDeductionCost = 0.00
     this.claimDeductionResponses.forEach(function (deduction) {
       totalDeductionCost += parseFloat(deduction.Amount)
     })
 
-    var total = 0.00
+    let total = 0.00
     total = totalExpenseCost - totalDeductionCost
 
     if (this.decision === claimDecisionEnum.APPROVED) {
@@ -166,7 +166,7 @@ class ClaimDecision {
         .isFutureDate(this.releaseDate)
     }
 
-    var validationErrors = errors.get()
+    const validationErrors = errors.get()
 
     if (validationErrors) {
       throw new ValidationError(validationErrors)

@@ -9,11 +9,11 @@ describe('routes/claim/update-contact-details', function () {
   const ROUTE = `/claim/${CLAIMID}/update-contact-details`
   const REDIRECT_URL = `/claim/${CLAIMID}`
 
-  var authorisation
-  var getIndividualClaimDetails
-  var UpdateContactDetailsResponse
-  var updateVisitorContactDetails
-  var app
+  let authorisation
+  let getIndividualClaimDetails
+  let UpdateContactDetailsResponse
+  let updateVisitorContactDetails
+  let app
 
   beforeEach(function () {
     authorisation = { isCaseworker: sinon.stub() }
@@ -21,7 +21,7 @@ describe('routes/claim/update-contact-details', function () {
     UpdateContactDetailsResponse = sinon.stub()
     updateVisitorContactDetails = sinon.stub().resolves()
 
-    var route = proxyquire('../../../../app/routes/claim/update-contact-details', {
+    const route = proxyquire('../../../../app/routes/claim/update-contact-details', {
       '../../services/authorisation': authorisation,
       '../../services/data/get-individual-claim-details': getIndividualClaimDetails,
       '../../services/domain/update-contact-details-response': UpdateContactDetailsResponse,

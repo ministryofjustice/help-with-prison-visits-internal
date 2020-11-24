@@ -1,11 +1,11 @@
 function cleanColumnOutput (data, type, row) {
-  var unsafeOutputPattern = new RegExp(/>|<|&|"|\/|'/g)
+  const unsafeOutputPattern = />|<|&|"|\/|'/g
   return data.replace(unsafeOutputPattern, '')
 }
 
 $(document).ready(function () {
-  var searchQuery = decodeURIComponent(window.location.search)
-  var dataReference = '/search-results' + searchQuery
+  const searchQuery = decodeURIComponent(window.location.search)
+  const dataReference = '/search-results' + searchQuery
 
   $('#search-results').DataTable({
     processing: true,
@@ -53,7 +53,7 @@ $(document).ready(function () {
     ],
 
     drawCallback: function () {
-      var total = $('#search-results_info').text().split(' ')[6]
+      const total = $('#search-results_info').text().split(' ')[6]
       $('.badge').text(total)
     },
 

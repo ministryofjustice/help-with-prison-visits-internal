@@ -16,13 +16,13 @@ class BenefitExpiryDate {
   }
 
   IsValid () {
-    var errors = ErrorHandler()
+    const errors = ErrorHandler()
 
     FieldValidator(this.expiryDateFields, 'benefit-expiry', errors)
       .isDateRequired(ERROR_MESSAGES.getExpiryDateIsRequired)
       .isValidDate(this.expiryDate)
 
-    var validationErrors = errors.get()
+    const validationErrors = errors.get()
 
     if (validationErrors) {
       throw new ValidationError(validationErrors)

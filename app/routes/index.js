@@ -16,8 +16,8 @@ module.exports = function (router) {
   router.get('/claims/:status', function (req, res) {
     authorisation.isCaseworker(req)
 
-    var sortType
-    var sortOrder
+    let sortType
+    let sortOrder
 
     if (req.query.order) {
       switch (req.query.order[0].column) {
@@ -42,8 +42,8 @@ module.exports = function (router) {
       sortOrder = 'asc'
     }
 
-    var advanceClaims = false
-    var status = req.params.status
+    let advanceClaims = false
+    let status = req.params.status
     if (status === 'ADVANCE') {
       advanceClaims = true
       status = [claimStatusEnum.NEW.value]
@@ -65,9 +65,10 @@ module.exports = function (router) {
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
       .then(function (data) {
-        var claims = data.claims
+        const claims = data.claims
         claims.map(function (claim) {
           claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
+          return claim
         })
 
         return res.json({
@@ -85,8 +86,8 @@ module.exports = function (router) {
   router.get('/claims/:status/:sortType', function (req, res) {
     authorisation.isCaseworker(req)
 
-    var sortType
-    var sortOrder = 'desc'
+    let sortType
+    let sortOrder = 'desc'
 
     if (req.query.order) {
       switch (req.query.order[0].column) {
@@ -114,8 +115,8 @@ module.exports = function (router) {
       sortType = 'Claim.DateSubmitted'
     }
 
-    var advanceClaims = false
-    var status = req.params.status
+    let advanceClaims = false
+    let status = req.params.status
     if (status === 'ADVANCE') {
       advanceClaims = true
       status = [claimStatusEnum.NEW.value]
@@ -137,9 +138,10 @@ module.exports = function (router) {
 
     getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
       .then(function (data) {
-        var claims = data.claims
+        const claims = data.claims
         claims.map(function (claim) {
           claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
+          return claim
         })
 
         return res.json({

@@ -5,19 +5,19 @@ const express = require('express')
 const mockViewEngine = require('./mock-view-engine')
 const sinon = require('sinon')
 
-var isCaseworkerStub
-var getDashboardDataStub
-var authorisation
+let isCaseworkerStub
+let getDashboardDataStub
+let authorisation
 
 describe('routes/index', function () {
-  var app
+  let app
 
   beforeEach(function () {
     getDashboardDataStub = sinon.stub().resolves({})
     isCaseworkerStub = sinon.stub()
     authorisation = { isCaseworker: isCaseworkerStub }
 
-    var route = proxyquire('../../../app/routes/dashboard', {
+    const route = proxyquire('../../../app/routes/dashboard', {
       '../../app/services/data/dashboard/get-dashboard-data': getDashboardDataStub,
       '../services/authorisation': authorisation
     })

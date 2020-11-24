@@ -2,8 +2,7 @@ const Validator = require('../../services/validators/common-validator')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 
 module.exports = function (oldData, nonPersistedData) {
-  var claimExpensesById = {}
-  var newClaimExpenseData
+  const claimExpensesById = {}
 
   if (nonPersistedData) {
     nonPersistedData.forEach(function (claimExpense) {
@@ -11,7 +10,7 @@ module.exports = function (oldData, nonPersistedData) {
     })
 
     oldData.forEach(function (expense) {
-      var postedClaimExpenseResponse = claimExpensesById[expense.ClaimExpenseId.toString()]
+      const postedClaimExpenseResponse = claimExpensesById[expense.ClaimExpenseId.toString()]
       expense.Status = postedClaimExpenseResponse ? postedClaimExpenseResponse.status : null
       if (expense.Status === claimDecisionEnum.APPROVED_DIFF_AMOUNT || expense.Status === claimDecisionEnum.MANUALLY_PROCESSED) {
         expense.ApprovedCost = postedClaimExpenseResponse.approvedCost
@@ -23,6 +22,6 @@ module.exports = function (oldData, nonPersistedData) {
     })
   }
 
-  newClaimExpenseData = oldData
+  const newClaimExpenseData = oldData
   return newClaimExpenseData
 }

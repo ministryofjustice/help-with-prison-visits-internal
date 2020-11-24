@@ -5,10 +5,10 @@ const proxyquire = require('proxyquire')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const sinon = require('sinon')
 
-var getClaimsListAndCount
-var displayHelperStub
-var authorisation
-var isCaseworkerStub
+let getClaimsListAndCount
+let displayHelperStub
+let authorisation
+let isCaseworkerStub
 
 const RETURNED_CLAIM = {
   Reference: 'A123456',
@@ -22,7 +22,7 @@ const RETURNED_CLAIM = {
 }
 
 describe('routes/index', function () {
-  var app
+  let app
 
   beforeEach(function () {
     isCaseworkerStub = sinon.stub()
@@ -31,7 +31,7 @@ describe('routes/index', function () {
     displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
 
-    var route = proxyquire('../../../app/routes/index', {
+    const route = proxyquire('../../../app/routes/index', {
       '../services/authorisation': authorisation,
       '../services/data/get-claim-list-and-count': getClaimsListAndCount,
       '../views/helpers/display-helper': displayHelperStub
