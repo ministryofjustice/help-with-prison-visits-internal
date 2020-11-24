@@ -7,7 +7,7 @@ Beta implementation of the Assisted Prison Visits Scheme internal web applicatio
 ## Requirements
 
 * Docker (Including Docker Compose)
-* Node 6 (Including NPM) - If running locally
+* Node 12 (Including NPM) - If running locally
 
 ## Run
 
@@ -46,7 +46,7 @@ git push heroku master
 
 ```
 npm test                        # checks code against standard JS and runs mocha unit tests.
-npm run-script test-coverage    # unit tests and generates code coverage using Istanbul
+npm run-script test-coverage    # unit tests and generates code coverage using nyc
 npm run-script test-unit        # unit tests
 npm run-script test-integration # integration tests
 npm run-script test-e2e         # e2e tests using selenium standalone against local
