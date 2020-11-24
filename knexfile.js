@@ -9,7 +9,8 @@ module.exports = {
       password: config.INT_WEB_PASSWORD,
       database: config.DATABASE,
       options: {
-        encrypt: true
+        encrypt: true,
+        enableArithAbort: true
       }
     },
     pool: {
@@ -27,7 +28,8 @@ module.exports = {
       password: config.INT_MIGRATION_PASSWORD,
       database: config.DATABASE,
       options: {
-        encrypt: true
+        encrypt: true,
+        enableArithAbort: true
       }
     },
     migrations: {
