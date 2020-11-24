@@ -52,6 +52,7 @@ describe('Adding a new top up flow', () => {
     const submitButton = await $('#add-top-up')
     await submitButton.click()
 
+    await browser.pause(5000)
     const topUp = await databaseHelper.getLastTopUpAdded(claimId)
     expect(topUp.TopUpAmount, 'TopUp Amount be equal to ' + expectedTopUpAmount).to.equal(expectedTopUpAmount)
     expect(topUp.Reason, 'TopUp Reason be equal to ' + expectedTopUpReason).to.equal(expectedTopUpReason)
