@@ -81,10 +81,10 @@
     "validator": "^13.1.17"
   },
   "devDependencies": {
-    "@wdio/cli": "^6.9.1",
-    "@wdio/local-runner": "^6.9.1",
+    "@wdio/cli": "^6.10.0",
+    "@wdio/local-runner": "^6.10.0",
     "@wdio/mocha-framework": "^6.8.0",
-    "@wdio/sauce-service": "^6.8.0",
+    "@wdio/sauce-service": "^6.10.0",
     "assert": "^2.0.0",
     "chai": "^4.2.0",
     "gulp-webdriver": "^4.0.0",
@@ -96,6 +96,6 @@
     "sinon": "^9.2.1",
     "standard": "^16.0.3",
     "supertest": "^6.0.1",
-    "webdriverio": "^6.9.1"
+    "webdriverio": "^6.10.0"
   }
 }
