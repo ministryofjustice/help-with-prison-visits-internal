@@ -27,7 +27,7 @@ module.exports = function (router) {
     authorisation.isCaseworker(req)
 
     try {
-      var updateContactDetailsResponse = new UpdateContactDetailsResponse(req.body.EmailAddress, req.body.PhoneNumber)
+      const updateContactDetailsResponse = new UpdateContactDetailsResponse(req.body.EmailAddress, req.body.PhoneNumber)
 
       return updateVisitorContactDetails(
         req.body.Reference,

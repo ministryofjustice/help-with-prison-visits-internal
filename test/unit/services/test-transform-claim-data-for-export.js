@@ -8,12 +8,12 @@ const benefitsEnum = require('../../../app/constants/benefits-enum')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const paymentMethodEnum = require('../../../app/constants/payment-method-enum')
 
-var transformClaimDataForExport
-var getClaimEscortStub
-var getClaimChildCountStub
-var getClaimExpensesStub
+let transformClaimDataForExport
+let getClaimEscortStub
+let getClaimChildCountStub
+let getClaimExpensesStub
 
-var rejectionReason = 'Applicant is not sole visit/next of kin'
+const rejectionReason = 'Applicant is not sole visit/next of kin'
 
 const TEST_CLAIM_DATA_MIXED = [
   {
@@ -120,7 +120,7 @@ describe('services/transform-claim-data-for-export', function () {
   it('should contain all of the required fields', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
-        var headers = Object.keys(result[0])
+        const headers = Object.keys(result[0])
 
         expect(headers).to.contain('Name')
         expect(headers).to.contain('Prison Name')

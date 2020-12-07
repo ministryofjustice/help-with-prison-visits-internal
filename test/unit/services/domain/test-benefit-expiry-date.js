@@ -2,7 +2,7 @@ const BenefitExpiryDate = require('../../../../app/services/domain/benefit-expir
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const dateFormatter = require('../../../../app/services/date-formatter')
 const expect = require('chai').expect
-var benefitExpiryDate
+let benefitExpiryDate
 
 describe('services/domain/benefit-expiry-date', function () {
   const VALID_DAY = '10'

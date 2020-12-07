@@ -4,8 +4,8 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-var isSscl
-var getDirectPaymentFiles
+let isSscl
+let getDirectPaymentFiles
 
 const FILES = {
   accessPayFiles: [{ FilePath: 'accessPayFile1' }, { PaymentFileId: 1, Filepath: './test/resources/testfile.txt' }],
@@ -13,13 +13,13 @@ const FILES = {
 }
 
 describe('routes/download-payment-files', function () {
-  var app
+  let app
 
   beforeEach(function () {
     isSscl = sinon.stub()
     getDirectPaymentFiles = sinon.stub()
 
-    var route = proxyquire('../../../app/routes/download-payment-files', {
+    const route = proxyquire('../../../app/routes/download-payment-files', {
       '../services/authorisation': { isSscl: isSscl },
       '../services/data/get-direct-payment-files': getDirectPaymentFiles
     })

@@ -6,13 +6,13 @@ const sinon = require('sinon')
 const ValidationError = require('../../../app/services/errors/validation-error')
 const autoApprovalRulesEnum = require('../../../app/constants/auto-approval-rules-enum')
 
-var isAdmin
-var getAutoApprovalConfigStub
-var updateAutoApprovalConfigStub
-var AutoApprovalConfigStub
+let isAdmin
+let getAutoApprovalConfigStub
+let updateAutoApprovalConfigStub
+let AutoApprovalConfigStub
 
 describe('routes/config', function () {
-  var app
+  let app
 
   beforeEach(function () {
     isAdmin = sinon.stub()
@@ -20,7 +20,7 @@ describe('routes/config', function () {
     updateAutoApprovalConfigStub = sinon.stub().resolves()
     AutoApprovalConfigStub = sinon.stub().returns({})
 
-    var route = proxyquire('../../../app/routes/config', {
+    const route = proxyquire('../../../app/routes/config', {
       '../services/authorisation': { isAdmin: isAdmin },
       '../services/data/get-auto-approval-config': getAutoApprovalConfigStub,
       '../services/data/update-auto-approval-config': updateAutoApprovalConfigStub,
@@ -88,8 +88,8 @@ describe('routes/config', function () {
     })
 
     it('should construct empty rulesDisabled array when all rules are enabled', function () {
-      var allRules = []
-      for (var rule in autoApprovalRulesEnum) {
+      const allRules = []
+      for (const rule in autoApprovalRulesEnum) {
         allRules.push(autoApprovalRulesEnum[rule].value)
       }
       const EXPECTED_RULES_DISABLED = []
@@ -111,8 +111,8 @@ describe('routes/config', function () {
     })
 
     it('should construct rulesDisabled array with all rules disabled when none are enabled', function () {
-      var EXPECTED_RULES_DISABLED = []
-      for (var rule in autoApprovalRulesEnum) {
+      const EXPECTED_RULES_DISABLED = []
+      for (const rule in autoApprovalRulesEnum) {
         EXPECTED_RULES_DISABLED.push(autoApprovalRulesEnum[rule].value)
       }
       return supertest(app)

@@ -28,7 +28,7 @@ class AutoApprovalConfig {
   }
 
   IsValid () {
-    var errors = ErrorHandler()
+    const errors = ErrorHandler()
 
     FieldValidator(this.autoApprovalEnabled, 'auto-approval-enabled', errors)
       .isRequired()
@@ -73,7 +73,7 @@ class AutoApprovalConfig {
       .isMaxIntOrLess()
       .isInteger()
 
-    var validationErrors = errors.get()
+    const validationErrors = errors.get()
 
     if (validationErrors) {
       throw new ValidationError(validationErrors)

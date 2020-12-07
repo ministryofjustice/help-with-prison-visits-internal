@@ -1,6 +1,6 @@
-var expect = require('chai').expect
-var claimExpenseHelper = require('../../../../app/views/helpers/claim-expense-helper')
-var ticketOwnerEnum = require('../../../../app/constants/ticket-owner-enum')
+const expect = require('chai').expect
+const claimExpenseHelper = require('../../../../app/views/helpers/claim-expense-helper')
+const ticketOwnerEnum = require('../../../../app/constants/ticket-owner-enum')
 
 describe('views/helpers/claim-expense-helper', function () {
   describe('FormattedDetail', function () {

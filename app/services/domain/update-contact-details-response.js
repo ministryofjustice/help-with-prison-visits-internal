@@ -11,7 +11,7 @@ class UpdateContactDetailsResponse {
   }
 
   IsValid () {
-    var errors = ErrorHandler()
+    const errors = ErrorHandler()
 
     FieldValidator(this.emailAddress, 'EmailAddress', errors)
       .isRequired()
@@ -21,7 +21,7 @@ class UpdateContactDetailsResponse {
     FieldValidator(this.phoneNumber, 'PhoneNumber', errors)
       .isLessThanLength(20)
 
-    var validationErrors = errors.get()
+    const validationErrors = errors.get()
 
     if (validationErrors) {
       throw new ValidationError(validationErrors)

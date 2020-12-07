@@ -1,4 +1,4 @@
-var expect = require('chai').expect
+const expect = require('chai').expect
 const dateFormatter = require('../../../app/services/date-formatter')
 const proxyquire = require('proxyquire')
 const ValidationError = require('../../../app/services/errors/validation-error')
@@ -8,7 +8,7 @@ const sinon = require('sinon')
 const USER = 'test@test.com'
 const OTHER_USER = 'other@test.com'
 
-var checkUserAssignmentStub = sinon.stub()
+const checkUserAssignmentStub = sinon.stub()
 
 const checkUserAndLastUpdated = proxyquire('../../../app/services/check-user-and-last-updated', {
   './check-user-assignment': checkUserAssignmentStub
@@ -16,16 +16,16 @@ const checkUserAndLastUpdated = proxyquire('../../../app/services/check-user-and
 
 describe('services/check-user-and-last-updated', function () {
   describe('Last updated', function () {
-    var needAssignmentCheck = false
+    const needAssignmentCheck = false
     it('should resolve if all details are correct', function () {
-      var lastUpdatedData = { LastUpdated: dateFormatter.now().toDate() }
-      var previousLastUpdated = dateFormatter.now().toString()
+      const lastUpdatedData = { LastUpdated: dateFormatter.now().toDate() }
+      const previousLastUpdated = dateFormatter.now().toString()
       expect(checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)).to.be.ok //eslint-disable-line
     })
 
     it('should throw validation error if lastUpdated is different', function () {
-      var lastUpdatedData = { LastUpdated: dateFormatter.now().toDate() }
-      var previousLastUpdated = dateFormatter.now().add('1', 'day').toString()
+      const lastUpdatedData = { LastUpdated: dateFormatter.now().toDate() }
+      const previousLastUpdated = dateFormatter.now().add('1', 'day').toString()
       try {
         checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)
         expect(false, 'should have throw error').to.be.true //eslint-disable-line
@@ -37,9 +37,9 @@ describe('services/check-user-and-last-updated', function () {
   })
 
   describe('User assignment', function () {
-    var lastUpdatedData
-    var previousLastUpdated
-    var needAssignmentCheck
+    let lastUpdatedData
+    let previousLastUpdated
+    let needAssignmentCheck
 
     before(function () {
       lastUpdatedData = { LastUpdated: dateFormatter.now().toDate(), AssignmentExpiry: dateFormatter.now().add('1', 'day') }

@@ -1,10 +1,10 @@
-var expect = require('chai').expect
-var directoryCheck = require('../../../app/services/directory-check')
+const expect = require('chai').expect
+const directoryCheck = require('../../../app/services/directory-check')
 const config = require('../../../config')
-var fs = require('fs')
-var benefitPath = `${config.FILE_UPLOAD_LOCATION}/REFNUM1/hc2`
-var visitConfirmationPath = `${config.FILE_UPLOAD_LOCATION}/REFNUM1/1234/VISIT_CONFIRMATION`
-var claimExpensePath = `${config.FILE_UPLOAD_LOCATION}/REFNUM1/1234/5678/RECEIPT`
+const fs = require('fs')
+const benefitPath = `${config.FILE_UPLOAD_LOCATION}/REFNUM1/hc2`
+const visitConfirmationPath = `${config.FILE_UPLOAD_LOCATION}/REFNUM1/1234/VISIT_CONFIRMATION`
+const claimExpensePath = `${config.FILE_UPLOAD_LOCATION}/REFNUM1/1234/5678/RECEIPT`
 
 describe('services/directory-check', function () {
   it('check and see creates a directory is created for a doc without claimExpenseId', function () {

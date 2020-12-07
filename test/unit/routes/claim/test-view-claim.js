@@ -5,35 +5,35 @@ const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
-var authorisation
-var stubGetIndividualClaimDetails
-var stubSubmitClaimResponse
-var stubClaimDecision
-var stubGetClaimExpenseResponses
-var stubGetClaimLastUpdated
-var stubCheckUserAndLastUpdated
-var stubInsertDeduction
-var stubDisableDeduction
-var stubClaimDeduction
-var stubGetClaimDocumentFilePath
-var stubUpdateClaimOverpaymentStatus
-var stubOverpaymentResponse
-var stubCloseAdvanceClaim
-var stubPayoutBarcodeExpiredClaim
-var stubInsertNote
-var stubMergeClaimExpensesWithSubmittedResponses
-var stubRequestNewBankDetails
-var stubInsertTopUp
-var stubCancelTopUp
-var stubTopupResponse
-var stubUpdateEligibilityTrustedStatus
-var stubUpdateAssignmentOfClaims
-var stubRejectionReasonId
-var stubRejectionReasons
-var stubUpdateVisitorBenefirExpiryDate
-var stubBenefitExpiryDate
-var ValidationError = require('../../../../app/services/errors/validation-error')
-var deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
+let authorisation
+let stubGetIndividualClaimDetails
+let stubSubmitClaimResponse
+let stubClaimDecision
+let stubGetClaimExpenseResponses
+let stubGetClaimLastUpdated
+let stubCheckUserAndLastUpdated
+let stubInsertDeduction
+let stubDisableDeduction
+let stubClaimDeduction
+let stubGetClaimDocumentFilePath
+let stubUpdateClaimOverpaymentStatus
+let stubOverpaymentResponse
+let stubCloseAdvanceClaim
+let stubPayoutBarcodeExpiredClaim
+let stubInsertNote
+let stubMergeClaimExpensesWithSubmittedResponses
+let stubRequestNewBankDetails
+let stubInsertTopUp
+let stubCancelTopUp
+let stubTopupResponse
+let stubUpdateEligibilityTrustedStatus
+let stubUpdateAssignmentOfClaims
+let stubRejectionReasonId
+let stubRejectionReasons
+let stubUpdateVisitorBenefirExpiryDate
+let stubBenefitExpiryDate
+const ValidationError = require('../../../../app/services/errors/validation-error')
+const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 const VALID_CLAIMDEDUCTION_DATA = [{ Amount: '20.00' }]
 const VALID_CLAIMEXPENSE_DATA = [{ claimExpenseId: '1', approvedCost: '20.00', cost: '20.00', status: 'APPROVED' }]
 const VALID_DATA_APPROVE = {
@@ -93,7 +93,7 @@ const INCOMPLETE_DATA = {
 const CLAIM_RETURN = { claim: {} }
 
 describe('routes/claim/view-claim', function () {
-  var app
+  let app
 
   beforeEach(function () {
     authorisation = { isCaseworker: sinon.stub() }
@@ -124,7 +124,7 @@ describe('routes/claim/view-claim', function () {
     stubTopupResponse = sinon.stub()
     stubCancelTopUp = sinon.stub().resolves()
 
-    var route = proxyquire('../../../../app/routes/claim/view-claim', {
+    const route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
       '../../services/data/get-individual-claim-details': stubGetIndividualClaimDetails,
       '../../services/data/submit-claim-response': stubSubmitClaimResponse,
@@ -173,8 +173,8 @@ describe('routes/claim/view-claim', function () {
 
   describe('POST /claim/:claimId', function () {
     it('should respond with 302 when valid data entered', function () {
-      var newClaimDecision = {}
-      var newClaimExpenseResponse = []
+      const newClaimDecision = {}
+      const newClaimExpenseResponse = []
       stubCheckUserAndLastUpdated.resolves()
       stubSubmitClaimResponse.resolves()
       stubClaimDecision.returns(newClaimDecision)
@@ -209,8 +209,8 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should call updateEligibilityTrustedStatus if claim decision is APPROVED', function () {
-      var newClaimDecision = { decision: 'APPROVED' }
-      var newClaimExpenseResponse = []
+      const newClaimDecision = { decision: 'APPROVED' }
+      const newClaimExpenseResponse = []
       stubCheckUserAndLastUpdated.resolves()
       stubSubmitClaimResponse.resolves()
       stubClaimDecision.returns(newClaimDecision)
@@ -279,7 +279,7 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should populate NomisCheck, DWPCheck and VisitConfirmationCheck when handling error and data is available', function () {
-      var claimDetails = {
+      const claimDetails = {
         claim: {},
         claimExpenses: [{}]
       }
@@ -344,7 +344,7 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 400 including extra data if claim expenses exist and there is no update conflict when a validation error occurs', function () {
-      var claimData = {
+      const claimData = {
         claim: {},
         claimExpenses: {}
       }
@@ -367,11 +367,11 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 302 when valid data entered (add deduction)', function () {
-      var claimData = {
+      const claimData = {
         claim: {},
         claimExpenses: {}
       }
-      var testClaimDecisionObject = { deductionType: 'a', amount: '5' }
+      const testClaimDecisionObject = { deductionType: 'a', amount: '5' }
       stubCheckUserAndLastUpdated.resolves()
       stubInsertDeduction.resolves({})
       stubClaimDeduction.returns(testClaimDecisionObject)
@@ -416,7 +416,7 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 302 when valid data entered (disable deduction)', function () {
-      var claimData = {
+      const claimData = {
         claim: {},
         claimExpenses: {}
       }
@@ -462,7 +462,7 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 200 after calling assignment with users email if no conflicts', function () {
-      var claimData = {
+      const claimData = {
         claim: {},
         claimExpenses: {}
       }
@@ -508,7 +508,7 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 200 after calling assignment with users email if no conflicts', function () {
-      var claimData = {
+      const claimData = {
         claim: {},
         claimExpenses: {}
       }
@@ -554,8 +554,8 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 302 when valid data entered', function () {
-      var claimData = { claim: { IsOverpaid: false } }
-      var overpaymentResponse = {}
+      const claimData = { claim: { IsOverpaid: false } }
+      const overpaymentResponse = {}
       stubGetIndividualClaimDetails.resolves(claimData)
       stubOverpaymentResponse.returns(overpaymentResponse)
       stubUpdateClaimOverpaymentStatus.resolves()
@@ -573,8 +573,8 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 400 when adding an overpayment and a validation error occurs', function () {
-      var claimData = { claim: { IsOverpaid: false } }
-      var overpaymentResponse = {}
+      const claimData = { claim: { IsOverpaid: false } }
+      const overpaymentResponse = {}
       stubGetIndividualClaimDetails.resolves(claimData)
       stubOverpaymentResponse.returns(overpaymentResponse)
       stubCheckUserAndLastUpdated.resolves()
@@ -806,7 +806,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('POST /claim/:claimId/update-benefit-expiry-date', function () {
     it('should respond with 302 when valid benefit expiry date is entered', function () {
-      var claimData = {
+      const claimData = {
         claim: {},
         claimExpenses: {}
       }
@@ -814,7 +814,7 @@ describe('routes/claim/view-claim', function () {
       stubUpdateVisitorBenefirExpiryDate.resolves()
       stubGetIndividualClaimDetails.resolves(claimData)
 
-      var benefitExpiryDate = {
+      const benefitExpiryDate = {
         expiryDateFields: [VALID_BENEFIT_EXPIRY_DATA['expiry-day-input'], VALID_BENEFIT_EXPIRY_DATA['expiry-month-input'], VALID_BENEFIT_EXPIRY_DATA['expiry-year-input']],
         expiryDate: dateFormatter.build(VALID_BENEFIT_EXPIRY_DATA['expiry-day-input'], VALID_BENEFIT_EXPIRY_DATA['expiry-month-input'], VALID_BENEFIT_EXPIRY_DATA['expiry-year-input'])
       }
@@ -846,7 +846,7 @@ describe('routes/claim/view-claim', function () {
         }
       })
 
-      var topUpResponse = {
+      const topUpResponse = {
         amount: VALID_DATA_ADD_TOP_UP['top-up-amount'],
         reason: VALID_DATA_ADD_TOP_UP['top-up-reason']
       }

@@ -8,15 +8,15 @@ const dateFormatter = require('../../../app/services/date-formatter')
 const path = require('path')
 const sinon = require('sinon')
 
-var getClaimListForAdvancedSearch
-var displayHelperStub
-var authorisation
-var isCaseworkerStub
-var exportSearchResultsStub
+let getClaimListForAdvancedSearch
+let displayHelperStub
+let authorisation
+let isCaseworkerStub
+let exportSearchResultsStub
 
-var draw = 1
-var start = 0
-var length = 10
+const draw = 1
+const start = 0
+const length = 10
 
 const EXPECTED_DATE_FROM = dateFormatter.build('12', '12', '2016').startOf('day').toDate()
 const EXPECTED_DATE_TO = dateFormatter.build('12', '12', '2016').endOf('day').toDate()
@@ -141,10 +141,10 @@ const RETURNED_CLAIM = {
   Name: 'John Smith'
 }
 
-var errorsReturnedToView = {}
+let errorsReturnedToView = {}
 
 describe('routes/index', function () {
-  var app
+  let app
 
   beforeEach(function () {
     isCaseworkerStub = sinon.stub()
@@ -154,7 +154,7 @@ describe('routes/index', function () {
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
     exportSearchResultsStub = sinon.stub().resolves('')
 
-    var route = proxyquire('../../../app/routes/advanced-search', {
+    const route = proxyquire('../../../app/routes/advanced-search', {
       '../services/authorisation': authorisation,
       '../services/data/get-claim-list-for-advanced-search': getClaimListForAdvancedSearch,
       '../views/helpers/display-helper': displayHelperStub,
@@ -165,7 +165,7 @@ describe('routes/index', function () {
 
     app.engine('html', function (filePath, options, callback) {
       errorsReturnedToView = options.errors
-      var rendered = `${filePath}: ${JSON.stringify(options)}`
+      const rendered = `${filePath}: ${JSON.stringify(options)}`
       return callback(null, rendered)
     })
     app.set('view engine', 'html')
@@ -206,7 +206,7 @@ describe('routes/index', function () {
     })
 
     it('should return validation errors for invalid data', function () {
-      var searchQueryString = `${queryString.stringify(INVALID_DATE_FIELDS)}&${queryString.stringify(INVALID_AMOUNTS)}`
+      const searchQueryString = `${queryString.stringify(INVALID_DATE_FIELDS)}&${queryString.stringify(INVALID_AMOUNTS)}`
 
       return supertest(app)
         .get(`/advanced-search?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)

@@ -2,18 +2,18 @@ const knexConfig = require('../../knexfile').migrations
 const knex = require('knex')(knexConfig)
 const config = require('../../config')
 
-var dateFormatter = require('../../app/services/date-formatter')
-var databaseHelper = require('../helpers/database-setup-for-tests')
-var moment = require('moment')
-var expect = require('chai').expect
+const dateFormatter = require('../../app/services/date-formatter')
+const databaseHelper = require('../helpers/database-setup-for-tests')
+const moment = require('moment')
+const expect = require('chai').expect
 
-var reference1 = '3333333'
-var reference2 = '4444444'
-var date
-var reference1ClaimId
-var reference2ClaimId
-var yesterday
-var tomorrow
+const reference1 = '3333333'
+const reference2 = '4444444'
+let date
+let reference1ClaimId
+let reference2ClaimId
+let yesterday
+let tomorrow
 
 describe('Advanced search flow', () => {
   before(function () {
@@ -24,7 +24,7 @@ describe('Advanced search flow', () => {
       .then(function (ids) {
         reference1ClaimId = ids.claimId
 
-        var reference1Update = knex('IntSchema.Claim')
+        const reference1Update = knex('IntSchema.Claim')
           .update({
             AssistedDigitalCaseworker: 'test@test.com',
             DateOfJourney: date.toDate(),
@@ -33,7 +33,7 @@ describe('Advanced search flow', () => {
           })
           .where('Reference', reference1)
 
-        var reference2Insert = databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
+        const reference2Insert = databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
           .then(function (ids) {
             reference2ClaimId = ids.claimId
           })
@@ -50,9 +50,9 @@ describe('Advanced search flow', () => {
       .then(async () => {
         if (config.AUTHENTICATION_ENABLED === 'true') {
           await browser.url(config.TOKEN_HOST)
-          var email = await $('#user_email')
-          var password = await $('#user_password')
-          var commit = await $('[name="commit"]')
+          const email = await $('#user_email')
+          const password = await $('#user_password')
+          const commit = await $('[name="commit"]')
           await email.setValue(config.TEST_SSO_EMAIL)
           await password.setValue(config.TEST_SSO_PASSWORD)
           await commit.click()
@@ -62,26 +62,26 @@ describe('Advanced search flow', () => {
 
   it('should display the advanced search page and return existing claims', async () => {
     await browser.url('/')
-    var submitButton = await $('#advanced-search')
+    let submitButton = await $('#advanced-search')
     await submitButton.click()
 
     submitButton = await $('#advanced-search-submit')
-    var reference = await $('#reference')
-    var name = await $('#name')
-    var niNumber = await $('#ninumber')
-    var prisonerNumber = await $('#prisonerNumber')
-    var prison = await $('#prison')
+    let reference = await $('#reference')
+    const name = await $('#name')
+    const niNumber = await $('#ninumber')
+    const prisonerNumber = await $('#prisonerNumber')
+    const prison = await $('#prison')
     await reference.setValue('333333')
     await name.setValue('John Smith')
     await niNumber.setValue('QQ123456C')
     await prisonerNumber.setValue('A123456')
     await prison.setValue('Test')
 
-    var assistedDigital = await $('[for="assistedDigital"]')
-    var claimStatusApproved = await $('[for="claimStatusApproved"]')
-    var modeOfApprovalManual = await $('[for="modeOfApprovalManual"]')
-    var typeOfClaimPast = await $('[for="typeOfClaimPast"]')
-    var visitRulesEnglandWales = await $('[for="visitRulesEnglandWales"]')
+    const assistedDigital = await $('[for="assistedDigital"]')
+    const claimStatusApproved = await $('[for="claimStatusApproved"]')
+    const modeOfApprovalManual = await $('[for="modeOfApprovalManual"]')
+    const typeOfClaimPast = await $('[for="typeOfClaimPast"]')
+    const visitRulesEnglandWales = await $('[for="visitRulesEnglandWales"]')
 
     await assistedDigital.click()
     await claimStatusApproved.click()
@@ -89,12 +89,12 @@ describe('Advanced search flow', () => {
     await typeOfClaimPast.click()
     await visitRulesEnglandWales.click()
 
-    var fromDayInput = await $('#visitDateFromDay')
-    var fromMonthInput = await $('#visitDateFromMonth')
-    var fromYearInput = await $('#visitDateFromYear')
-    var toDayInput = await $('#visitDateToDay')
-    var toMonthInput = await $('#visitDateToMonth')
-    var toYearInput = await $('#visitDateToYear')
+    let fromDayInput = await $('#visitDateFromDay')
+    let fromMonthInput = await $('#visitDateFromMonth')
+    let fromYearInput = await $('#visitDateFromYear')
+    let toDayInput = await $('#visitDateToDay')
+    let toMonthInput = await $('#visitDateToMonth')
+    let toYearInput = await $('#visitDateToYear')
     await fromDayInput.setValue(yesterday.date())
     await fromMonthInput.setValue(yesterday.month() + 1)
     await fromYearInput.setValue(yesterday.year())
@@ -128,20 +128,20 @@ describe('Advanced search flow', () => {
     await toMonthInput.setValue(tomorrow.month() + 1)
     await toYearInput.setValue(tomorrow.year())
 
-    var approvedClaimAmountFromInput = await $('#approvedClaimAmountFromInput')
-    var approvedClaimAmountToInput = await $('#approvedClaimAmountToInput')
+    const approvedClaimAmountFromInput = await $('#approvedClaimAmountFromInput')
+    const approvedClaimAmountToInput = await $('#approvedClaimAmountToInput')
 
     await approvedClaimAmountFromInput.setValue(11)
     await approvedClaimAmountToInput.setValue(13)
 
     await submitButton.click()
 
-    var claimReturned = await $('#claim' + reference1ClaimId)
+    let claimReturned = await $('#claim' + reference1ClaimId)
 
     expect(claimReturned).to.not.equal(null)
     expect(claimReturned).to.not.equal(undefined)
 
-    var clearSearch = await $('#clear-search')
+    const clearSearch = await $('#clear-search')
     await clearSearch.click()
 
     await browser.pause(3000)
@@ -172,8 +172,8 @@ describe('Advanced search flow', () => {
   })
 
   after(function () {
-    var deleteReference1 = databaseHelper.deleteAll(reference1)
-    var deleteReference2 = databaseHelper.deleteAll(reference2)
+    const deleteReference1 = databaseHelper.deleteAll(reference1)
+    const deleteReference2 = databaseHelper.deleteAll(reference2)
 
     return Promise.all([deleteReference1, deleteReference2])
   })

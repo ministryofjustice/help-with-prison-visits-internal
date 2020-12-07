@@ -1,9 +1,9 @@
 function getUrlParameter (sParam) {
-  var sPageURL = decodeURIComponent(window.location.search.substring(1))
-  var sURLVariables = sPageURL.split('&')
-  var sParameterName
+  const sPageURL = decodeURIComponent(window.location.search.substring(1))
+  const sURLVariables = sPageURL.split('&')
+  let sParameterName
 
-  for (var i = 0; i < sURLVariables.length; i++) {
+  for (let i = 0; i < sURLVariables.length; i++) {
     sParameterName = sURLVariables[i].split('=')
 
     if (sParameterName[0] === sParam) {
@@ -13,13 +13,13 @@ function getUrlParameter (sParam) {
 }
 
 function cleanColumnOutput (data, type, row) {
-  var unsafeOutputPattern = new RegExp(/>|<|&|"|\/|'/g)
+  const unsafeOutputPattern = />|<|&|"|\/|'/g
   return data.replace(unsafeOutputPattern, '')
 }
 
 $(document).ready(function () {
-  var status = getUrlParameter('status') || 'NEW'
-  var dataReference = '/claims/' + status
+  const status = getUrlParameter('status') || 'NEW'
+  const dataReference = '/claims/' + status
 
   $('#claims').DataTable({
     processing: true,
@@ -69,7 +69,7 @@ $(document).ready(function () {
     ],
 
     drawCallback: function () {
-      var total = $('#claims_info').text().split(' ')[5]
+      const total = $('#claims_info').text().split(' ')[5]
       $('.badge').text(total)
     },
 

@@ -9,7 +9,7 @@ describe('services/domain/file-upload', function () {
   const UPLOAD_ERROR = new UploadError('File type error')
 
   it('should construct a domain object given valid input', function () {
-    var fileUpload = new FileUpload(
+    const fileUpload = new FileUpload(
       VALID_FILE,
       undefined,
       VALID_ID,

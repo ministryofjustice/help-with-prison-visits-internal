@@ -10,7 +10,7 @@ class ClaimDeduction {
   }
 
   IsValid () {
-    var errors = ErrorHandler()
+    const errors = ErrorHandler()
 
     FieldValidator(this.deductionType, 'deductionType', errors)
       .isRequired()
@@ -21,7 +21,7 @@ class ClaimDeduction {
       .isGreaterThanZero()
       .isMaxCostOrLess()
 
-    var validationErrors = errors.get()
+    const validationErrors = errors.get()
 
     if (validationErrors) {
       throw new ValidationError(validationErrors)

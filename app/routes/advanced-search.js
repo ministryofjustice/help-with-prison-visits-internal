@@ -5,8 +5,8 @@ const displayHelper = require('../views/helpers/display-helper')
 const dateFormatter = require('../services/date-formatter')
 const validationFieldNames = require('../services/validators/validation-field-names')
 const MIN_YEAR = 1900
-const VALID_AMOUNT_EXPRESSION = new RegExp(/^(\d+\.?\d{0,9}|\d{1,9})$/)
-var validationErrors
+const VALID_AMOUNT_EXPRESSION = /^(\d+\.?\d{0,9}|\d{1,9})$/
+let validationErrors
 
 module.exports = function (router) {
   router.get('/advanced-search-input', function (req, res) {
@@ -20,7 +20,7 @@ module.exports = function (router) {
     validationErrors = {}
     extractSearchCriteria(req.query)
 
-    for (var field in validationErrors) {
+    for (const field in validationErrors) {
       if (Object.prototype.hasOwnProperty.call(validationErrors, field)) {
         if (validationErrors[field].length > 0) {
           return res.status(400).render('advanced-search', { query: req.query, errors: validationErrors })
@@ -28,8 +28,8 @@ module.exports = function (router) {
       }
     }
 
-    var queryIndex = req.url.indexOf('?')
-    var rawQueryString = queryIndex > -1 ? req.url.substr(queryIndex + 1) : ''
+    const queryIndex = req.url.indexOf('?')
+    const rawQueryString = queryIndex > -1 ? req.url.substr(queryIndex + 1) : ''
 
     return res.render('advanced-search', {
       query: req.query,
@@ -41,14 +41,14 @@ module.exports = function (router) {
     res.connection.setTimeout(500000)
     authorisation.isCaseworker(req)
 
-    var searchCriteria = extractSearchCriteria(req.query)
+    const searchCriteria = extractSearchCriteria(req.query)
 
-    var timestamp = dateFormatter.now().toDate().toISOString()
+    const timestamp = dateFormatter.now().toDate().toISOString()
       .replace('Z', '')
       .replace('T', '_')
       .replace('.', '-')
 
-    var filename = `claims_export_${timestamp}`
+    const filename = `claims_export_${timestamp}`
 
     res.set('Content-Type', 'text/csv')
     res.set('Content-Disposition', `attachment; filename="${filename}.csv"`)
@@ -62,12 +62,13 @@ module.exports = function (router) {
 
   router.post('/advanced-search-results', function (req, res, next) {
     authorisation.isCaseworker(req)
-    var searchCriteria = extractSearchCriteria(req.body)
+    const searchCriteria = extractSearchCriteria(req.body)
     getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body.start), parseInt(req.body.length))
       .then(function (data) {
-        var claims = data.claims
+        const claims = data.claims
         claims.map(function (claim) {
           claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
+          return claim
         })
 
         if (claims.length === 0) {
@@ -93,7 +94,7 @@ module.exports = function (router) {
 }
 
 function extractSearchCriteria (query) {
-  var searchCriteria = {}
+  const searchCriteria = {}
 
   if (query.reference) {
     searchCriteria.reference = query.reference
@@ -114,7 +115,7 @@ function extractSearchCriteria (query) {
     searchCriteria.assistedDigital = true
   }
   if (query.claimStatus) {
-    var claimStatus = null
+    let claimStatus = null
     switch (query.claimStatus) {
       case 'all':
         claimStatus = 'all'
@@ -152,7 +153,7 @@ function extractSearchCriteria (query) {
   }
 
   if (query.overpaymentStatus) {
-    var overpaymentStatus = null
+    let overpaymentStatus = null
     switch (query.overpaymentStatus) {
       case 'yes':
         overpaymentStatus = 'true'
@@ -164,7 +165,7 @@ function extractSearchCriteria (query) {
     searchCriteria.overpaymentStatus = overpaymentStatus
   }
 
-  var visitDateFrom = processDate(
+  const visitDateFrom = processDate(
     'visitDateFrom',
     query.visitDateFromDay,
     query.visitDateFromMonth,
@@ -173,7 +174,7 @@ function extractSearchCriteria (query) {
   if (visitDateFrom) {
     searchCriteria.visitDateFrom = visitDateFrom.startOf('day').toDate()
   }
-  var visitDateTo = processDate(
+  const visitDateTo = processDate(
     'visitDateTo',
     query.visitDateToDay,
     query.visitDateToMonth,
@@ -182,7 +183,7 @@ function extractSearchCriteria (query) {
   if (visitDateTo) {
     searchCriteria.visitDateTo = visitDateTo.endOf('day').toDate()
   }
-  var dateSubmittedFrom = processDate(
+  const dateSubmittedFrom = processDate(
     'dateSubmittedFrom',
     query.dateSubmittedFromDay,
     query.dateSubmittedFromMonth,
@@ -191,7 +192,7 @@ function extractSearchCriteria (query) {
   if (dateSubmittedFrom) {
     searchCriteria.dateSubmittedFrom = dateSubmittedFrom.startOf('day').toDate()
   }
-  var dateSubmittedTo = processDate(
+  const dateSubmittedTo = processDate(
     'dateSubmittedTo',
     query.dateSubmittedToDay,
     query.dateSubmittedToMonth,
@@ -200,7 +201,7 @@ function extractSearchCriteria (query) {
   if (dateSubmittedTo) {
     searchCriteria.dateSubmittedTo = dateSubmittedTo.endOf('day').toDate()
   }
-  var dateApprovedFrom = processDate(
+  const dateApprovedFrom = processDate(
     'dateApprovedFrom',
     query.dateApprovedFromDay,
     query.dateApprovedFromMonth,
@@ -209,7 +210,7 @@ function extractSearchCriteria (query) {
   if (dateApprovedFrom) {
     searchCriteria.dateApprovedFrom = dateApprovedFrom.startOf('day').toDate()
   }
-  var dateApprovedTo = processDate(
+  const dateApprovedTo = processDate(
     'dateApprovedTo',
     query.dateApprovedToDay,
     query.dateApprovedToMonth,
@@ -218,7 +219,7 @@ function extractSearchCriteria (query) {
   if (dateApprovedTo) {
     searchCriteria.dateApprovedTo = dateApprovedTo.endOf('day').toDate()
   }
-  var dateRejectedFrom = processDate(
+  const dateRejectedFrom = processDate(
     'dateRejectedFrom',
     query.dateRejectedFromDay,
     query.dateRejectedFromMonth,
@@ -227,7 +228,7 @@ function extractSearchCriteria (query) {
   if (dateRejectedFrom) {
     searchCriteria.dateRejectedFrom = dateRejectedFrom.startOf('day').toDate()
   }
-  var dateRejectedTo = processDate(
+  const dateRejectedTo = processDate(
     'dateRejectedTo',
     query.dateRejectedToDay,
     query.dateRejectedToMonth,
@@ -256,11 +257,11 @@ function extractSearchCriteria (query) {
 
 function processDate (fieldName, day, month, year) {
   if (day || month || year) {
-    var date = dateFormatter.build(day, month, year)
+    const date = dateFormatter.build(day, month, year)
     if (year >= MIN_YEAR && date.isValid()) {
       return date
     } else {
-      var validationFieldName = validationFieldNames[fieldName] || 'Date'
+      const validationFieldName = validationFieldNames[fieldName] || 'Date'
       validationErrors[fieldName] = [validationFieldName + ' is invalid']
       return false
     }
@@ -273,7 +274,7 @@ function processAmount (fieldName, amount) {
   if (amount.match(VALID_AMOUNT_EXPRESSION)) {
     return true
   } else {
-    var validationFieldName = validationFieldNames[fieldName] || 'Amount'
+    const validationFieldName = validationFieldNames[fieldName] || 'Amount'
     validationErrors[fieldName] = [validationFieldName + ' is invalid']
     return false
   }

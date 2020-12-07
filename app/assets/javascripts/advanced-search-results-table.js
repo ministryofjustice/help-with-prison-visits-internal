@@ -1,17 +1,17 @@
 function cleanColumnOutput (data, type, row) {
-  var unsafeOutputPattern = new RegExp(/>|<|&|"|\/|'/g)
+  const unsafeOutputPattern = />|<|&|"|\/|'/g
   return data.replace(unsafeOutputPattern, '')
 }
 
 $(document).ready(function () {
-  var searchQuery = decodeURIComponent(window.location.search.substring(1))
+  const searchQuery = decodeURIComponent(window.location.search.substring(1))
 
-  var search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}')
+  const search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}')
 
   if (searchQuery) {
     $('#search-results-header').show()
     $('#advanced-search-results').show()
-    var dataReference = '/advanced-search-results'
+    const dataReference = '/advanced-search-results'
 
     $('#advanced-search-results').DataTable({
       processing: true,
@@ -65,7 +65,7 @@ $(document).ready(function () {
       ],
 
       drawCallback: function () {
-        var total = $('#advanced-search-results_info').text().split(' ')[6]
+        const total = $('#advanced-search-results_info').text().split(' ')[6]
         $('.badge').text(total)
       },
 

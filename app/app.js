@@ -15,7 +15,7 @@ const csurf = require('csurf')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
 const config = require('../config')
 
-var app = express()
+const app = express()
 
 authentication(app)
 
@@ -41,10 +41,10 @@ app.use(helmet.contentSecurityPolicy({
   }
 }))
 
-var packageJson = require('../package.json')
-var developmentMode = app.get('env') === 'development'
-var releaseVersion = packageJson.version
-var serviceName = 'Help with Prison Visits'
+const packageJson = require('../package.json')
+const developmentMode = app.get('env') === 'development'
+const releaseVersion = packageJson.version
+const serviceName = 'Help with Prison Visits'
 
 app.set('view engine', 'html')
 app.set('views', path.join(__dirname, 'views'))
@@ -93,10 +93,10 @@ app.use(function (req, res, next) {
 app.use(cookieParser(config.INT_APPLICATION_SECRET, { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' }))
 
 // Check for valid CSRF tokens on state-changing methods.
-var csrfProtection = csurf({ cookie: { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' } })
+const csrfProtection = csurf({ cookie: { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' } })
 
 app.use(function (req, res, next) {
-  var exclude = false
+  let exclude = false
   csrfExcludeRoutes.forEach(function (route) {
     if (req.originalUrl.includes(route) && req.method === 'POST') {
       exclude = true
@@ -118,13 +118,13 @@ app.use(function (req, res, next) {
 })
 
 // Build the router to route all HTTP requests and pass to the routes file for route configuration.
-var router = express.Router()
+const router = express.Router()
 routes(router)
 app.use('/', router)
 
 // catch 404 and forward to error handler.
 app.use(function (req, res, next) {
-  var err = new Error('Not Found')
+  const err = new Error('Not Found')
   err.status = 404
   res.status(404)
   next(err)

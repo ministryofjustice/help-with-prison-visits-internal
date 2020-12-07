@@ -2,7 +2,7 @@ const ClaimDeduction = require('../../../../app/services/domain/claim-deduction'
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const expect = require('chai').expect
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
-var claimDeduction
+let claimDeduction
 
 describe('services/domain/claim-deduction', function () {
   const VALID_DEDUCTION_TYPE = deductionTypeEnum.HC3_DEDUCTION

@@ -6,9 +6,9 @@ describe('Smoke test', () => {
     // IF SSO ENABLED LOGIN TO SSO
     if (config.AUTHENTICATION_ENABLED === 'true') {
       await browser.url(config.TOKEN_HOST)
-      var email = await $('#user_email')
-      var password = await $('#user_password')
-      var commit = await $('[name="commit"]')
+      const email = await $('#user_email')
+      const password = await $('#user_password')
+      const commit = await $('[name="commit"]')
       await email.setValue(config.TEST_SSO_EMAIL)
       await password.setValue(config.TEST_SSO_PASSWORD)
       await commit.click()
@@ -20,7 +20,7 @@ describe('Smoke test', () => {
 
     // Dashboard
     await browser.url('/dashboard')
-    var title = await browser.getTitle()
+    const title = await browser.getTitle()
     expect(title).to.be.equal('Help with Prison Visits')
   })
 })

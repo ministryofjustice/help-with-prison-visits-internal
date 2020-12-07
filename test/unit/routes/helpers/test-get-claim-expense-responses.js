@@ -4,7 +4,7 @@ const getClaimExpenseResponses = require('../../../../app/routes/helpers/get-cla
 
 describe('routes/helpers/get-claim-expense-responses', function () {
   it('should return an array of ClaimExpenseResponse', function (done) {
-    var data = {
+    const data = {
       'claim-expense-1-status': 'APPROVED',
       'claim-expense-1-approvedcost': '10',
       'claim-expense-1-cost': '10',
@@ -13,7 +13,7 @@ describe('routes/helpers/get-claim-expense-responses', function () {
       'claim-expense-2-cost': ''
     }
 
-    var claimExpenseResponses = getClaimExpenseResponses(data)
+    const claimExpenseResponses = getClaimExpenseResponses(data)
 
     expect(claimExpenseResponses.length).to.equal(2)
 

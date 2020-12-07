@@ -1,8 +1,8 @@
 module.exports = function (claims) {
-  var highestExpenseCount = 0
-  var numberOfColumsBeforeExpenses = 0
-  var columnHeads = Object.keys(claims[0])
-  var found = false
+  let highestExpenseCount = 0
+  let numberOfColumsBeforeExpenses = 0
+  const columnHeads = Object.keys(claims[0])
+  let found = false
 
   while (!found && (numberOfColumsBeforeExpenses < columnHeads.length)) {
     if (columnHeads[numberOfColumsBeforeExpenses] === 'Expense Type 1') {

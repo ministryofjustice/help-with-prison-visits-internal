@@ -1,7 +1,7 @@
 const ClaimDecision = require('../../../../app/services/domain/claim-decision')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const expect = require('chai').expect
-var claimDecision
+let claimDecision
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 describe('services/domain/claim-decision', function () {

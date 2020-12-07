@@ -14,7 +14,7 @@ class OverpaymentResponse {
   }
 
   IsValid () {
-    var errors = ErrorHandler()
+    const errors = ErrorHandler()
 
     if (this.action === overpaymentActionEnum.UPDATE || this.action === overpaymentActionEnum.RESOLVE) {
       FieldValidator(this.remaining, 'overpayment-remaining', errors)
@@ -32,7 +32,7 @@ class OverpaymentResponse {
     FieldValidator(this.reason, 'reason', errors)
       .isLessThanLength(2000)
 
-    var validationErrors = errors.get()
+    const validationErrors = errors.get()
 
     if (validationErrors) {
       throw new ValidationError(validationErrors)
@@ -41,7 +41,7 @@ class OverpaymentResponse {
 }
 
 function getOverpaymentStatus (amount, remaining, claimCurrentlyOverpaid) {
-  var result
+  let result
 
   if (claimCurrentlyOverpaid) {
     if (remaining === '0') {

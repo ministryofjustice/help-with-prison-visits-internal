@@ -1,15 +1,15 @@
 const config = require('../../config')
-var moment = require('moment')
-var databaseHelper = require('../helpers/database-setup-for-tests')
-var expect = require('chai').expect
+const moment = require('moment')
+const databaseHelper = require('../helpers/database-setup-for-tests')
+const expect = require('chai').expect
 const TopUpStatusEnum = require('../../app/constants/top-up-status-enum')
 
 // Variables for creating and deleting a record
-var reference = '1111111'
-var date
-var claimId
-var expectedTopUpAmount = '99.02'
-var expectedTopUpReason = 'This is a test'
+const reference = '1111111'
+let date
+let claimId
+const expectedTopUpAmount = '99.02'
+const expectedTopUpReason = 'This is a test'
 
 describe('Adding a new top up flow', () => {
   before(function () {
@@ -21,9 +21,9 @@ describe('Adding a new top up flow', () => {
       // IF SSO ENABLED LOGIN TO SSO
         if (config.AUTHENTICATION_ENABLED === 'true') {
           await browser.url(config.TOKEN_HOST)
-          var email = await $('#user_email')
-          var password = await $('#user_password')
-          var commit = await $('[name="commit"]')
+          const email = await $('#user_email')
+          const password = await $('#user_password')
+          const commit = await $('[name="commit"]')
           await email.setValue(config.TEST_SSO_EMAIL)
           await password.setValue(config.TEST_SSO_PASSWORD)
           await commit.click()
@@ -37,22 +37,23 @@ describe('Adding a new top up flow', () => {
     await browser.url('/claim/' + claimId)
 
     // View-claim
-    var assignSelf = await $('#assign-self')
+    const assignSelf = await $('#assign-self')
     await assignSelf.click()
 
-    var topUpClaimLabel = await $('#top-up-claim-label')
+    const topUpClaimLabel = await $('#top-up-claim-label')
     await topUpClaimLabel.click()
 
-    var topUpAmount = await $('#top-up-amount')
+    const topUpAmount = await $('#top-up-amount')
     await topUpAmount.setValue(expectedTopUpAmount)
 
-    var topUpReason = await $('#top-up-reason')
+    const topUpReason = await $('#top-up-reason')
     await topUpReason.setValue(expectedTopUpReason)
 
-    var submitButton = await $('#add-top-up')
+    const submitButton = await $('#add-top-up')
     await submitButton.click()
 
-    var topUp = await databaseHelper.getLastTopUpAdded(claimId)
+    await browser.pause(5000)
+    const topUp = await databaseHelper.getLastTopUpAdded(claimId)
     expect(topUp.TopUpAmount, 'TopUp Amount be equal to ' + expectedTopUpAmount).to.equal(expectedTopUpAmount)
     expect(topUp.Reason, 'TopUp Reason be equal to ' + expectedTopUpReason).to.equal(expectedTopUpReason)
     expect(topUp.PaymentStatus, 'TopUp PaymentStatus should be equal to ' + TopUpStatusEnum.PENDING).to.equal(TopUpStatusEnum.PENDING)

@@ -1,7 +1,7 @@
 const TopUpResponse = require('../../../../app/services/domain/topup-response')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const expect = require('chai').expect
-var topUp
+let topUp
 
 describe('services/domain/topup-response', function () {
   const VALID_AMOUNT = '140.85'

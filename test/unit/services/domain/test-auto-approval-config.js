@@ -1,7 +1,7 @@
 const AutoApprovalConfig = require('../../../../app/services/domain/auto-approval-config')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const expect = require('chai').expect
-var autoApprovalConfig
+let autoApprovalConfig
 
 describe('services/domain/auto-approve-config', function () {
   const VALID_CASEWORKER = 'test@test.com'

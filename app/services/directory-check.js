@@ -1,9 +1,9 @@
 const config = require('../../config')
-var fs = require('fs')
-var mkdirp = require('mkdirp')
+const fs = require('fs')
+const mkdirp = require('mkdirp')
 
 module.exports = function (referenceId, claimId, claimExpenseId, documentType) {
-  var path
+  let path
   if (!claimId) {
     path = `${config.FILE_UPLOAD_LOCATION}/${referenceId}/${documentType}`
   } else if (!claimExpenseId) {

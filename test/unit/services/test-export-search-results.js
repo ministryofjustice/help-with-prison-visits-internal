@@ -2,13 +2,13 @@ const expect = require('chai').expect
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 
-var exportSearchResults
-var getClaimListForAdvancedSearchStub
-var transformClaimDataForExportStub
+let exportSearchResults
+let getClaimListForAdvancedSearchStub
+let transformClaimDataForExportStub
 
 describe('services/export-search-results', function () {
   before(function () {
-    var getClaimListForAdvancedSearchResult = { claims: [], total: 0 }
+    const getClaimListForAdvancedSearchResult = { claims: [], total: 0 }
 
     getClaimListForAdvancedSearchStub = sinon.stub().resolves(getClaimListForAdvancedSearchResult)
     transformClaimDataForExportStub = sinon.stub().resolves([])
@@ -20,7 +20,7 @@ describe('services/export-search-results', function () {
   })
 
   it('should call all relevant functions', function () {
-    var searchCriteria = {}
+    const searchCriteria = {}
 
     return exportSearchResults(searchCriteria)
       .then(function () {

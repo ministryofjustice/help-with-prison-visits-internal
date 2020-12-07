@@ -3,11 +3,11 @@ const sinon = require('sinon')
 const proxyquire = require('proxyquire')
 const getCSVTestClaims = require('../../helpers/csv-tests/get-test-csv-claims')
 const getCSVTestHeaders = require('../../helpers/csv-tests/get-test-csv-headers')
-var claimJSONInput
-var expectedCSVHeaders
+let claimJSONInput
+let expectedCSVHeaders
 
-var getCSVColumnHeaders
-var getMaxNumberOfExpensesStub
+let getCSVColumnHeaders
+let getMaxNumberOfExpensesStub
 
 describe('services/get-csv-column-headers', function () {
   beforeEach(function () {
@@ -20,7 +20,7 @@ describe('services/get-csv-column-headers', function () {
   })
 
   it('should return a CSV header containing 14 expenses', function () {
-    var returnedCSVHeaders = getCSVColumnHeaders(claimJSONInput)
+    const returnedCSVHeaders = getCSVColumnHeaders(claimJSONInput)
     expect(returnedCSVHeaders).to.eql(expectedCSVHeaders)
   })
 })

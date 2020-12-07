@@ -8,7 +8,7 @@ const log = require('./services/log')
 module.exports = function (app) {
   if (config.AUTHENTICATION_ENABLED === 'true') {
     // Using local session storage
-    var sessionOptions = {
+    const sessionOptions = {
       secret: config.SESSION_SECRET,
       cookie: {}
     }
@@ -34,21 +34,21 @@ module.exports = function (app) {
     },
     function (accessToken, refreshToken, profile, cb) {
       // Call API to get details on user
-      var options = {
+      const options = {
         uri: config.TOKEN_HOST + config.USER_DETAILS_PATH,
         qs: { access_token: accessToken },
         json: true
       }
       request(options, function (error, response, userDetails) {
         if (!error && response.statusCode === 200) {
-          var roles = []
+          let roles = []
 
           userDetails.permissions.forEach(function (permission) {
             roles = roles.concat(permission.roles)
           })
 
           if (roles) {
-            var sessionUser = {
+            const sessionUser = {
               email: userDetails.email,
               first_name: userDetails.first_name,
               last_name: userDetails.last_name,
@@ -57,7 +57,7 @@ module.exports = function (app) {
             cb(null, sessionUser)
           } else {
             log.error('no roles found for user')
-            var notAuthorisedError = new Error('You are not authorised for this service')
+            const notAuthorisedError = new Error('You are not authorised for this service')
             notAuthorisedError.status = 403
             cb(notAuthorisedError, null)
           }
