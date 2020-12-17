@@ -7,13 +7,13 @@ const checkUserAssignment = require('./check-user-assignment')
 module.exports = function (lastUpdatedData, previousLastUpdated, needAssignmentCheck, user) {
   if (needAssignmentCheck && !checkUserAssignment(user, lastUpdatedData.AssignedTo, lastUpdatedData.AssignmentExpiry)) {
     if (lastUpdatedData.AssignedTo && lastUpdatedData.AssignmentExpiry > dateFormatter.now().toDate()) {
-      throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUserAssignmentConflict(lastUpdatedData.AssignedTo)]})
+      throw new ValidationError({ UpdateConflict: [ValidationErrorMessages.getUserAssignmentConflict(lastUpdatedData.AssignedTo)] })
     } else {
-      throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUserNotAssigned()]})
+      throw new ValidationError({ UpdateConflict: [ValidationErrorMessages.getUserNotAssigned()] })
     }
   }
   if (!(moment(lastUpdatedData.LastUpdated).toString() === previousLastUpdated)) {
-    throw new ValidationError({UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)]})
+    throw new ValidationError({ UpdateConflict: [ValidationErrorMessages.getUpdateConflict(lastUpdatedData.Status)] })
   }
 
   return Promise.resolve('User and last updated checked')

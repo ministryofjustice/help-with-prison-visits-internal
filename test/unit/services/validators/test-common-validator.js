@@ -9,37 +9,37 @@ describe('services/validators/common-validator', function () {
 
   describe('isNullOrUndefined', function () {
     it('should return true if passed null', function (done) {
-      var result = validator.isNullOrUndefined(null)
+      const result = validator.isNullOrUndefined(null)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return true if passed undefined', function (done) {
-      var result = validator.isNullOrUndefined(undefined)
+      const result = validator.isNullOrUndefined(undefined)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return true if passed an empty string', function (done) {
-      var result = validator.isNullOrUndefined('')
+      const result = validator.isNullOrUndefined('')
       expect(result).to.equal(true)
       done()
     })
 
     it('should return false if passed an object', function (done) {
-      var result = validator.isNullOrUndefined({})
+      const result = validator.isNullOrUndefined({})
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed an array', function (done) {
-      var result = validator.isNullOrUndefined([])
+      const result = validator.isNullOrUndefined([])
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed a non empty string', function (done) {
-      var result = validator.isNullOrUndefined('any string')
+      const result = validator.isNullOrUndefined('any string')
       expect(result).to.equal(false)
       done()
     })
@@ -68,25 +68,25 @@ describe('services/validators/common-validator', function () {
     })
 
     it('should return false if passed an alpha string', function (done) {
-      var result = validator.isNumeric(ALPHA_STRING)
+      const result = validator.isNumeric(ALPHA_STRING)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed an alphanumeric string', function (done) {
-      var result = validator.isNumeric(ALPHANUMERIC_STRING)
+      const result = validator.isNumeric(ALPHANUMERIC_STRING)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return true if passed a numeric string', function (done) {
-      var result = validator.isNumeric(NUMERIC_STRING)
+      const result = validator.isNumeric(NUMERIC_STRING)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return true if passed a decimal string', function (done) {
-      var result = validator.isNumeric(DECIMAL_STRING)
+      const result = validator.isNumeric(DECIMAL_STRING)
       expect(result).to.equal(true)
       done()
     })
@@ -119,19 +119,19 @@ describe('services/validators/common-validator', function () {
     })
 
     it('should return true if passed a numeric string', function (done) {
-      var result = validator.isCurrency(VALID_INTEGER)
+      const result = validator.isCurrency(VALID_INTEGER)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return true if passed a numeric string to 2 decimal places', function (done) {
-      var result = validator.isCurrency(VALID_DECIMAL)
+      const result = validator.isCurrency(VALID_DECIMAL)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return false if passed a non-numeric string', function (done) {
-      var result = validator.isCurrency(INVALID_STRING)
+      const result = validator.isCurrency(INVALID_STRING)
       expect(result).to.equal(false)
       done()
     })
@@ -144,43 +144,43 @@ describe('services/validators/common-validator', function () {
     const INVALID_STRING = 'some invalid string'
 
     it('should return false if passed null', function (done) {
-      var result = validator.isGreaterThanZero(null)
+      const result = validator.isGreaterThanZero(null)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed undefined', function (done) {
-      var result = validator.isGreaterThanZero(undefined)
+      const result = validator.isGreaterThanZero(undefined)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed an object', function (done) {
-      var result = validator.isGreaterThanZero({})
+      const result = validator.isGreaterThanZero({})
       expect(result).to.equal(false)
       done()
     })
 
     it('should return true if passed a numeric string that is greater than zero', function (done) {
-      var result = validator.isGreaterThanZero(VALID_NUMERIC)
+      const result = validator.isGreaterThanZero(VALID_NUMERIC)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return true if passed a float that is greater than zero', function (done) {
-      var result = validator.isGreaterThanZero(VALID_FLOAT)
+      const result = validator.isGreaterThanZero(VALID_FLOAT)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return false if passed a negative numeric string', function (done) {
-      var result = validator.isGreaterThanZero(INVALID_NUMERIC)
+      const result = validator.isGreaterThanZero(INVALID_NUMERIC)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed a non-numeric string', function (done) {
-      var result = validator.isGreaterThanZero(INVALID_STRING)
+      const result = validator.isGreaterThanZero(INVALID_STRING)
       expect(result).to.equal(false)
       done()
     })
@@ -193,43 +193,43 @@ describe('services/validators/common-validator', function () {
     const INVALID_STRING = 'some invalid string'
 
     it('should return false if passed null', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(null)
+      const result = validator.isGreaterThanMinimumClaim(null)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed undefined', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(undefined)
+      const result = validator.isGreaterThanMinimumClaim(undefined)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed an object', function (done) {
-      var result = validator.isGreaterThanMinimumClaim({})
+      const result = validator.isGreaterThanMinimumClaim({})
       expect(result).to.equal(false)
       done()
     })
 
     it('should return true if passed a numeric string that is greater than one', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(VALID_NUMERIC)
+      const result = validator.isGreaterThanMinimumClaim(VALID_NUMERIC)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return true if passed a float that is greater than one', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(VALID_FLOAT)
+      const result = validator.isGreaterThanMinimumClaim(VALID_FLOAT)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return false if passed a negative numeric string', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(INVALID_NUMERIC)
+      const result = validator.isGreaterThanMinimumClaim(INVALID_NUMERIC)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed a non-numeric string', function (done) {
-      var result = validator.isGreaterThanMinimumClaim(INVALID_STRING)
+      const result = validator.isGreaterThanMinimumClaim(INVALID_STRING)
       expect(result).to.equal(false)
       done()
     })
@@ -242,43 +242,43 @@ describe('services/validators/common-validator', function () {
     const INVALID_STRING = 'some invalid string'
 
     it('should return false if passed null', function (done) {
-      var result = validator.isLessThanMaximumDifferentApprovedAmount(null)
+      const result = validator.isLessThanMaximumDifferentApprovedAmount(null)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed undefined', function (done) {
-      var result = validator.isLessThanMaximumDifferentApprovedAmount(undefined)
+      const result = validator.isLessThanMaximumDifferentApprovedAmount(undefined)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed an object', function (done) {
-      var result = validator.isLessThanMaximumDifferentApprovedAmount({})
+      const result = validator.isLessThanMaximumDifferentApprovedAmount({})
       expect(result).to.equal(false)
       done()
     })
 
     it('should return true if passed a numeric string that is greater than zero', function (done) {
-      var result = validator.isLessThanMaximumDifferentApprovedAmount(VALID_NUMERIC)
+      const result = validator.isLessThanMaximumDifferentApprovedAmount(VALID_NUMERIC)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return true if passed a float that is greater than zero', function (done) {
-      var result = validator.isLessThanMaximumDifferentApprovedAmount(VALID_FLOAT)
+      const result = validator.isLessThanMaximumDifferentApprovedAmount(VALID_FLOAT)
       expect(result).to.equal(true)
       done()
     })
 
     it('should return false if passed a negative numeric string', function (done) {
-      var result = validator.isLessThanMaximumDifferentApprovedAmount(INVALID_NUMERIC)
+      const result = validator.isLessThanMaximumDifferentApprovedAmount(INVALID_NUMERIC)
       expect(result).to.equal(false)
       done()
     })
 
     it('should return false if passed a non-numeric string', function (done) {
-      var result = validator.isLessThanMaximumDifferentApprovedAmount(INVALID_STRING)
+      const result = validator.isLessThanMaximumDifferentApprovedAmount(INVALID_STRING)
       expect(result).to.equal(false)
       done()
     })
@@ -307,12 +307,12 @@ describe('services/validators/common-validator', function () {
     })
 
     it('should return true if passed a string that has a valid format', function () {
-      var result = validator.isEmail(VALID_STRING)
+      const result = validator.isEmail(VALID_STRING)
       expect(result).to.equal(true)
     })
 
     it('should return false if passed a string that has an invalid format', function () {
-      var result = validator.isEmail(INVALID_STRING)
+      const result = validator.isEmail(INVALID_STRING)
       expect(result).to.equal(false)
     })
   })
@@ -341,12 +341,12 @@ describe('services/validators/common-validator', function () {
     })
 
     it('should return true if passed a string that has a valid length', function () {
-      var result = validator.isLessThanLength(VALID_STRING, LENGTH)
+      const result = validator.isLessThanLength(VALID_STRING, LENGTH)
       expect(result).to.equal(true)
     })
 
     it('should return false if passed a string that has an invalid length', function () {
-      var result = validator.isLessThanLength(INVALID_STRING, LENGTH)
+      const result = validator.isLessThanLength(INVALID_STRING, LENGTH)
       expect(result).to.equal(false)
     })
   })

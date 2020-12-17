@@ -9,8 +9,8 @@ $(function () {
   }
 
   $('.claim-expense-status').change(function () {
-    var id = $(this).attr('data-id')
-    var value = $(this).val()
+    const id = $(this).attr('data-id')
+    const value = $(this).val()
     if (value === 'APPROVED-DIFF-AMOUNT') {
       $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-hidden').addClass('visibility-visible')
       $(this).next('input').on('input').addClass('approved-amount')
@@ -35,7 +35,7 @@ $(function () {
   })
 
   $('.claim-expense-status').each(function () {
-    var value = this[this.selectedIndex].value
+    const value = this[this.selectedIndex].value
     if (value === 'APPROVED') {
       $(this).parent().parent().find('td.cost').addClass('approved-amount')
       $(this).next('input').removeClass('approved-amount')
@@ -76,8 +76,8 @@ $(function () {
 })
 
 function totalApproved () {
-  var approvedCost = 0
-  var manuallyProcessed = 0
+  let approvedCost = 0
+  let manuallyProcessed = 0
 
   if ($('#unassign').length) {
     $('input.approved-amount').each(function () {

@@ -3,25 +3,24 @@ const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
-var isSscl
-var getDirectPaymentFiles
+let isSscl
+let getDirectPaymentFiles
 
 const FILES = {
-  accessPayFiles: [{FilePath: 'accessPayFile1'}, {PaymentFileId: 1, Filepath: './test/resources/testfile.txt'}],
-  adiJournalFiles: [{FilePath: 'adiJournalFile1'}, {PaymentFileId: 2, Filepath: './test/resources/testfile.txt'}]
+  accessPayFiles: [{ FilePath: 'accessPayFile1' }, { PaymentFileId: 1, Filepath: './test/resources/testfile.txt' }],
+  adiJournalFiles: [{ FilePath: 'adiJournalFile1' }, { PaymentFileId: 2, Filepath: './test/resources/testfile.txt' }]
 }
 
 describe('routes/download-payment-files', function () {
-  var app
+  let app
 
   beforeEach(function () {
     isSscl = sinon.stub()
     getDirectPaymentFiles = sinon.stub()
 
-    var route = proxyquire('../../../app/routes/download-payment-files', {
-      '../services/authorisation': { 'isSscl': isSscl },
+    const route = proxyquire('../../../app/routes/download-payment-files', {
+      '../services/authorisation': { isSscl: isSscl },
       '../services/data/get-direct-payment-files': getDirectPaymentFiles
     })
 
@@ -35,8 +34,8 @@ describe('routes/download-payment-files', function () {
         .get('/download-payment-files')
         .expect(200)
         .expect(function () {
-          expect(isSscl.calledOnce).to.be.true
-          expect(getDirectPaymentFiles.calledOnce).to.be.true
+          expect(isSscl.calledOnce).to.be.true //eslint-disable-line
+          expect(getDirectPaymentFiles.calledOnce).to.be.true //eslint-disable-line
         })
     })
 
@@ -77,8 +76,8 @@ describe('routes/download-payment-files', function () {
         .get('/download-payment-files/download?id=2')
         .expect(200)
         .expect(function (response) {
-          expect(isSscl.calledOnce).to.be.true
-          expect(getDirectPaymentFiles.calledOnce).to.be.true
+          expect(isSscl.calledOnce).to.be.true //eslint-disable-line
+          expect(getDirectPaymentFiles.calledOnce).to.be.true //eslint-disable-line
           expect(response.header['content-length']).to.equal('4')
         })
     })

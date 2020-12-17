@@ -6,17 +6,17 @@ class ErrorHandler {
   }
 
   add (fieldName, message, options) {
-    if (!this.errors.hasOwnProperty(fieldName)) {
+    if (!(Object.prototype.hasOwnProperty.call(this.errors, fieldName))) {
       this.errors[fieldName] = []
     }
     this.errors[fieldName].push(message(FIELD_NAMES[fieldName], options))
   }
 
   get () {
-    var errors = this.errors
-    for (var field in errors) {
-      if (errors.hasOwnProperty(field)) {
-        if (errors[ field ].length > 0) {
+    const errors = this.errors
+    for (const field in errors) {
+      if (Object.prototype.hasOwnProperty.call(errors, field)) {
+        if (errors[field].length > 0) {
           return errors
         }
       }

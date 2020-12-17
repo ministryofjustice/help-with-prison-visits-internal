@@ -1,5 +1,5 @@
 module.exports = function (status) {
-  var displayStatus = ''
+  let displayStatus = ''
   switch (status) {
     case 'APPROVED':
     case 'REJECTED':

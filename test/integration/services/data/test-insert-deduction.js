@@ -38,7 +38,7 @@ describe('services/data/insert-deduction', function () {
                   expect(updatedClaimDeduction.ClaimId).to.equal(claim.ClaimId)
                   expect(updatedClaimDeduction.Amount).to.equal(claimDeductionAmount)
                   expect(updatedClaimDeduction.DeductionType).to.equal(claimDeductionType)
-                  expect(updatedClaimDeduction.IsEnabled).to.be.true
+                  expect(updatedClaimDeduction.IsEnabled).to.be.true //eslint-disable-line
                 })
             })
         })

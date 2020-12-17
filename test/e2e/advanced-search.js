@@ -2,17 +2,18 @@ const knexConfig = require('../../knexfile').migrations
 const knex = require('knex')(knexConfig)
 const config = require('../../config')
 
-var dateFormatter = require('../../app/services/date-formatter')
-var databaseHelper = require('../helpers/database-setup-for-tests')
-var moment = require('moment')
+const dateFormatter = require('../../app/services/date-formatter')
+const databaseHelper = require('../helpers/database-setup-for-tests')
+const moment = require('moment')
+const expect = require('chai').expect
 
-var reference1 = '3333333'
-var reference2 = '4444444'
-var date
-var reference1ClaimId
-var reference2ClaimId
-var yesterday
-var tomorrow
+const reference1 = '3333333'
+const reference2 = '4444444'
+let date
+let reference1ClaimId
+let reference2ClaimId
+let yesterday
+let tomorrow
 
 describe('Advanced search flow', () => {
   before(function () {
@@ -23,16 +24,16 @@ describe('Advanced search flow', () => {
       .then(function (ids) {
         reference1ClaimId = ids.claimId
 
-        var reference1Update = knex('IntSchema.Claim')
+        const reference1Update = knex('IntSchema.Claim')
           .update({
-            'AssistedDigitalCaseworker': 'test@test.com',
-            'DateOfJourney': date.toDate(),
-            'DateReviewed': date.toDate(),
-            'PaymentAmount': '12'
+            AssistedDigitalCaseworker: 'test@test.com',
+            DateOfJourney: date.toDate(),
+            DateReviewed: date.toDate(),
+            PaymentAmount: '12'
           })
           .where('Reference', reference1)
 
-        var reference2Insert = databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
+        const reference2Insert = databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
           .then(function (ids) {
             reference2ClaimId = ids.claimId
           })
@@ -41,92 +42,138 @@ describe('Advanced search flow', () => {
           .then(function () {
             return knex('IntSchema.Claim')
               .update({
-                'DateReviewed': date.toDate()
+                DateReviewed: date.toDate()
               })
               .where('Reference', reference2)
           })
       })
-    .then(function () {
-      if (config.AUTHENTICATION_ENABLED === 'true') {
-        return browser.url(config.TOKEN_HOST)
-          .waitForExist('#user_email')
-          .setValue('#user_email', config.TEST_SSO_EMAIL)
-          .setValue('#user_password', config.TEST_SSO_PASSWORD)
-          .click('[name="commit"]')
-          .waitForExist('[href="/users/sign_out"]')
-      }
-    })
+      .then(async () => {
+        if (config.AUTHENTICATION_ENABLED === 'true') {
+          await browser.url(config.TOKEN_HOST)
+          const email = await $('#user_email')
+          const password = await $('#user_password')
+          const commit = await $('[name="commit"]')
+          await email.setValue(config.TEST_SSO_EMAIL)
+          await password.setValue(config.TEST_SSO_PASSWORD)
+          await commit.click()
+        }
+      })
   })
 
-  it('should display the advanced search page and return existing claims', () => {
-    return browser.url('/')
-      .click('#advanced-search')
-      .waitForExist('#advanced-search-submit')
+  it('should display the advanced search page and return existing claims', async () => {
+    await browser.url('/')
+    let submitButton = await $('#advanced-search')
+    await submitButton.click()
 
-      .setValue('#reference', '333333')
-      .setValue('#name', 'John Smith')
-      .setValue('#ninumber', 'QQ123456C')
-      .setValue('#prisonerNumber', 'A123456')
-      .setValue('#prison', 'Test')
+    submitButton = await $('#advanced-search-submit')
+    let reference = await $('#reference')
+    const name = await $('#name')
+    const niNumber = await $('#ninumber')
+    const prisonerNumber = await $('#prisonerNumber')
+    const prison = await $('#prison')
+    await reference.setValue('333333')
+    await name.setValue('John Smith')
+    await niNumber.setValue('QQ123456C')
+    await prisonerNumber.setValue('A123456')
+    await prison.setValue('Test')
 
-      .click('[for="assistedDigital"]')
-      .click('[for="claimStatusApproved"]')
-      .click('[for="modeOfApprovalManual"]')
-      .click('[for="typeOfClaimPast"]')
-      .click('[for="visitRulesEnglandWales"]')
+    const assistedDigital = await $('[for="assistedDigital"]')
+    const claimStatusApproved = await $('[for="claimStatusApproved"]')
+    const modeOfApprovalManual = await $('[for="modeOfApprovalManual"]')
+    const typeOfClaimPast = await $('[for="typeOfClaimPast"]')
+    const visitRulesEnglandWales = await $('[for="visitRulesEnglandWales"]')
 
-      .setValue('#visitDateFromDay', yesterday.date())
-      .setValue('#visitDateFromMonth', yesterday.month() + 1)
-      .setValue('#visitDateFromYear', yesterday.year())
-      .setValue('#visitDateToDay', tomorrow.date())
-      .setValue('#visitDateToMonth', tomorrow.month() + 1)
-      .setValue('#visitDateToYear', tomorrow.year())
+    await assistedDigital.click()
+    await claimStatusApproved.click()
+    await modeOfApprovalManual.click()
+    await typeOfClaimPast.click()
+    await visitRulesEnglandWales.click()
 
-      .setValue('#dateSubmittedFromDay', yesterday.date())
-      .setValue('#dateSubmittedFromMonth', yesterday.month() + 1)
-      .setValue('#dateSubmittedFromYear', yesterday.year())
-      .setValue('#dateSubmittedToDay', tomorrow.date())
-      .setValue('#dateSubmittedToMonth', tomorrow.month() + 1)
-      .setValue('#dateSubmittedToYear', tomorrow.year())
+    let fromDayInput = await $('#visitDateFromDay')
+    let fromMonthInput = await $('#visitDateFromMonth')
+    let fromYearInput = await $('#visitDateFromYear')
+    let toDayInput = await $('#visitDateToDay')
+    let toMonthInput = await $('#visitDateToMonth')
+    let toYearInput = await $('#visitDateToYear')
+    await fromDayInput.setValue(yesterday.date())
+    await fromMonthInput.setValue(yesterday.month() + 1)
+    await fromYearInput.setValue(yesterday.year())
+    await toDayInput.setValue(tomorrow.date())
+    await toMonthInput.setValue(tomorrow.month() + 1)
+    await toYearInput.setValue(tomorrow.year())
 
-      .setValue('#dateApprovedFromDay', yesterday.date())
-      .setValue('#dateApprovedFromMonth', yesterday.month() + 1)
-      .setValue('#dateApprovedFromYear', yesterday.year())
-      .setValue('#dateApprovedToDay', tomorrow.date())
-      .setValue('#dateApprovedToMonth', tomorrow.month() + 1)
-      .setValue('#dateApprovedToYear', tomorrow.year())
+    fromDayInput = await $('#dateSubmittedFromDay')
+    fromMonthInput = await $('#dateSubmittedFromMonth')
+    fromYearInput = await $('#dateSubmittedFromYear')
+    toDayInput = await $('#dateSubmittedToDay')
+    toMonthInput = await $('#dateSubmittedToMonth')
+    toYearInput = await $('#dateSubmittedToYear')
+    await fromDayInput.setValue(yesterday.date())
+    await fromMonthInput.setValue(yesterday.month() + 1)
+    await fromYearInput.setValue(yesterday.year())
+    await toDayInput.setValue(tomorrow.date())
+    await toMonthInput.setValue(tomorrow.month() + 1)
+    await toYearInput.setValue(tomorrow.year())
 
-      .setValue('#approvedClaimAmountFromInput', 11)
-      .setValue('#approvedClaimAmountToInput', 13)
+    fromDayInput = await $('#dateApprovedFromDay')
+    fromMonthInput = await $('#dateApprovedFromMonth')
+    fromYearInput = await $('#dateApprovedFromYear')
+    toDayInput = await $('#dateApprovedToDay')
+    toMonthInput = await $('#dateApprovedToMonth')
+    toYearInput = await $('#dateApprovedToYear')
+    await fromDayInput.setValue(yesterday.date())
+    await fromMonthInput.setValue(yesterday.month() + 1)
+    await fromYearInput.setValue(yesterday.year())
+    await toDayInput.setValue(tomorrow.date())
+    await toMonthInput.setValue(tomorrow.month() + 1)
+    await toYearInput.setValue(tomorrow.year())
 
-      .click('#advanced-search-submit')
+    const approvedClaimAmountFromInput = await $('#approvedClaimAmountFromInput')
+    const approvedClaimAmountToInput = await $('#approvedClaimAmountToInput')
 
-      .waitForExist('#claim' + reference1ClaimId)
+    await approvedClaimAmountFromInput.setValue(11)
+    await approvedClaimAmountToInput.setValue(13)
 
-      .click('#clear-search')
+    await submitButton.click()
 
-      .waitUntil(function () {
-        return browser.getText('#reference')
-          .then(function (text) {
-            return text === ''
-          })
-      })
+    let claimReturned = await $('#claim' + reference1ClaimId)
 
-      .setValue('#dateRejectedFromDay', yesterday.date())
-      .setValue('#dateRejectedFromMonth', yesterday.month() + 1)
-      .setValue('#dateRejectedFromYear', yesterday.year())
-      .setValue('#dateRejectedToDay', tomorrow.date())
-      .setValue('#dateRejectedToMonth', tomorrow.month() + 1)
-      .setValue('#dateRejectedToYear', tomorrow.year())
+    expect(claimReturned).to.not.equal(null)
+    expect(claimReturned).to.not.equal(undefined)
 
-      .click('#advanced-search-submit')
+    const clearSearch = await $('#clear-search')
+    await clearSearch.click()
 
-      .waitForExist('#claim' + reference2ClaimId)
+    await browser.pause(3000)
+    reference = await $('#reference')
+    reference = await reference.getText()
+
+    expect(reference).to.be.equal('')
+
+    fromDayInput = await $('#dateRejectedFromDay')
+    fromMonthInput = await $('#dateRejectedFromMonth')
+    fromYearInput = await $('#dateRejectedFromYear')
+    toDayInput = await $('#dateRejectedToDay')
+    toMonthInput = await $('#dateRejectedToMonth')
+    toYearInput = await $('#dateRejectedToYear')
+    await fromDayInput.setValue(yesterday.date())
+    await fromMonthInput.setValue(yesterday.month() + 1)
+    await fromYearInput.setValue(yesterday.year())
+    await toDayInput.setValue(tomorrow.date())
+    await toMonthInput.setValue(tomorrow.month() + 1)
+    await toYearInput.setValue(tomorrow.year())
+
+    await submitButton.click()
+
+    claimReturned = await $('#claim' + reference2ClaimId)
+
+    expect(claimReturned).to.not.equal(null)
+    expect(claimReturned).to.not.equal(undefined)
   })
 
   after(function () {
-    var deleteReference1 = databaseHelper.deleteAll(reference1)
-    var deleteReference2 = databaseHelper.deleteAll(reference2)
+    const deleteReference1 = databaseHelper.deleteAll(reference1)
+    const deleteReference2 = databaseHelper.deleteAll(reference2)
 
     return Promise.all([deleteReference1, deleteReference2])
   })

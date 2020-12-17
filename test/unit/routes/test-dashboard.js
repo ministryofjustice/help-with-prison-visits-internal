@@ -4,21 +4,20 @@ const proxyquire = require('proxyquire')
 const express = require('express')
 const mockViewEngine = require('./mock-view-engine')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
-var isCaseworkerStub
-var getDashboardDataStub
-var authorisation
+let isCaseworkerStub
+let getDashboardDataStub
+let authorisation
 
 describe('routes/index', function () {
-  var app
+  let app
 
   beforeEach(function () {
     getDashboardDataStub = sinon.stub().resolves({})
     isCaseworkerStub = sinon.stub()
     authorisation = { isCaseworker: isCaseworkerStub }
 
-    var route = proxyquire('../../../app/routes/dashboard', {
+    const route = proxyquire('../../../app/routes/dashboard', {
       '../../app/services/data/dashboard/get-dashboard-data': getDashboardDataStub,
       '../services/authorisation': authorisation
     })
@@ -34,8 +33,8 @@ describe('routes/index', function () {
         .get('/dashboard')
         .expect(200)
         .expect(function () {
-          expect(isCaseworkerStub.calledOnce).to.be.true
-          expect(getDashboardDataStub.calledOnce).to.be.true
+          expect(isCaseworkerStub.calledOnce).to.be.true //eslint-disable-line
+          expect(getDashboardDataStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
   })

@@ -8,7 +8,7 @@ module.exports = function () {
     .select('ClaimRejectionReasonId', 'RejectionReason', 'IsEnabled')
     .then(function (results) {
       results.forEach(function (result) {
-        rejectionReasons.push(new RejectionReason(result['ClaimRejectionReasonId'], result['RejectionReason'], result['IsEnabled']))
+        rejectionReasons.push(new RejectionReason(result.ClaimRejectionReasonId, result.RejectionReason, result.IsEnabled))
       })
       return rejectionReasons
     })

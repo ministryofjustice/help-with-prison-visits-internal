@@ -1,11 +1,11 @@
 function cleanColumnOutput (data, type, row) {
-  var unsafeOutputPattern = new RegExp(/>|<|&|"|\/|'/g)
+  const unsafeOutputPattern = />|<|&|"|\/|'/g
   return data.replace(unsafeOutputPattern, '')
 }
 
 $(document).ready(function () {
-  var searchQuery = decodeURIComponent(window.location.search)
-  var dataReference = '/search-results' + searchQuery
+  const searchQuery = decodeURIComponent(window.location.search)
+  const dataReference = '/search-results' + searchQuery
 
   $('#search-results').DataTable({
     processing: true,
@@ -23,19 +23,21 @@ $(document).ready(function () {
     },
 
     columns: [
-      {'data': 'Reference', 'render': cleanColumnOutput},
-      {'data': 'Name', 'render': cleanColumnOutput},
-      {'data': 'DateSubmittedFormatted'},
-      {'data': 'DateOfJourneyFormatted'},
-      {'data': 'DisplayStatus'},
-      {'data': 'ClaimType',
-        'createdCell': function (td, cellData, rowData, row, col) {
+      { data: 'Reference', render: cleanColumnOutput },
+      { data: 'Name', render: cleanColumnOutput },
+      { data: 'DateSubmittedFormatted' },
+      { data: 'DateOfJourneyFormatted' },
+      { data: 'DisplayStatus' },
+      {
+        data: 'ClaimType',
+        createdCell: function (td, cellData, rowData, row, col) {
           $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
         }
       },
-      {'data': 'AssignedTo'},
-      {'data': 'ClaimId',
-        'createdCell': function (td, cellData, rowData, row, col) {
+      { data: 'AssignedTo' },
+      {
+        data: 'ClaimId',
+        createdCell: function (td, cellData, rowData, row, col) {
           $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
         }
       }
@@ -43,15 +45,15 @@ $(document).ready(function () {
 
     columnDefs: [
       {
-        'targets': [0, 1, 2, 3, 4, 5, 6, 7],
-        'visible': true,
-        'searchable': false,
-        'orderable': false
+        targets: [0, 1, 2, 3, 4, 5, 6, 7],
+        visible: true,
+        searchable: false,
+        orderable: false
       }
     ],
 
     drawCallback: function () {
-      var total = $('#search-results_info').text().split(' ')[6]
+      const total = $('#search-results_info').text().split(' ')[6]
       $('.badge').text(total)
     },
 

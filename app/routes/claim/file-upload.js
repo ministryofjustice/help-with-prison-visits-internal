@@ -8,7 +8,7 @@ const FileUpload = require('../../services/domain/file-upload')
 const ClaimDocumentUpdate = require('../../services/data/update-file-upload-details-for-claim')
 const csrfProtection = require('csurf')({ cookie: true })
 const generateCSRFToken = require('../../services/generate-csrf-token')
-var csrfToken
+let csrfToken
 
 module.exports = function (router) {
   router.get('/claim/file-upload/:referenceId/:claimId/:documentType', function (req, res) {
@@ -16,8 +16,8 @@ module.exports = function (router) {
 
     csrfToken = generateCSRFToken(req)
 
-    if (DocumentTypeEnum.hasOwnProperty(req.params.documentType)) {
-      var claimId
+    if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params.documentType)) {
+      let claimId
       if (req.query.document === 'VISIT_CONFIRMATION' || req.query.document === 'RECEIPT') {
         claimId = req.params.claimId
       } else {
@@ -48,13 +48,13 @@ module.exports = function (router) {
         }
         if (error) {
           if (error.message === 'File too large') {
-            throw new ValidationError({upload: [ERROR_MESSAGES.getUploadTooLarge]})
+            throw new ValidationError({ upload: [ERROR_MESSAGES.getUploadTooLarge] })
           } else {
             throw error
           }
         } else {
-          if (DocumentTypeEnum.hasOwnProperty(req.params.documentType)) {
-            var fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
+          if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params.documentType)) {
+            const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
             ClaimDocumentUpdate(req.params.referenceId, fileUpload).then(function () {
               res.redirect(`/claim/${req.params.claimId}`)
             }).catch(function (error) {

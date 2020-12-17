@@ -1,19 +1,19 @@
-var config = require('../../knexfile').migrations
-var knex = require('knex')(config)
+const config = require('../../knexfile').migrations
+const knex = require('knex')(config)
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-module.exports.insertTestData = function (reference, date, status, visitDate, increment) {
-  var idIncrement = increment || 0
+module.exports.insertTestData = function (reference, date, status, visitDate, increment, paymentStatus = null) {
+  const idIncrement = increment || 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
-  var uniqueId = Math.floor(Date.now() / 100) - 14000000000 + idIncrement
+  const uniqueId = Math.floor(Date.now() / 100) - 14000000000 + idIncrement
 
-  return this.insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3)
+  return this.insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus)
 }
 
-module.exports.insertTestDataForIds = function (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4) {
-  var data = this.getTestData(reference, status)
+module.exports.insertTestDataForIds = function (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus) {
+  const data = this.getTestData(reference, status)
 
-  var ids = {}
+  const ids = {}
   return knex('IntSchema.Eligibility')
     .insert({
       EligibilityId: uniqueId,
@@ -86,7 +86,8 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           Status: status,
           PaymentMethod: data.Claim.PaymentMethod,
           AssignedTo: data.Claim.AssignedTo,
-          AssignmentExpiry: new Date(date.getTime() + 300000) // current time + 5 minutes
+          AssignmentExpiry: new Date(date.getTime() + 300000), // current time + 5 minutes
+          PaymentStatus: paymentStatus
         })
     })
     .then(function (result) {
@@ -181,11 +182,11 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           ClaimId: ids.claimId,
           EligibilityId: ids.eligibilityId,
           Reference: reference,
-          DocumentType: data.ClaimDocument['benefit'].DocumentType,
-          DocumentStatus: data.ClaimDocument['benefit'].DocumentStatus,
+          DocumentType: data.ClaimDocument.benefit.DocumentType,
+          DocumentStatus: data.ClaimDocument.benefit.DocumentStatus,
           Filepath: '/example/path/2',
           DateSubmitted: date,
-          IsEnabled: data.ClaimDocument['benefit'].IsEnabled
+          IsEnabled: data.ClaimDocument.benefit.IsEnabled
         })
     })
     .then(function (result) {
@@ -198,11 +199,11 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           ClaimId: ids.claimId,
           EligibilityId: ids.eligibilityId,
           Reference: reference,
-          DocumentType: data.ClaimDocument['expense'].DocumentType,
-          DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+          DocumentType: data.ClaimDocument.expense.DocumentType,
+          DocumentStatus: data.ClaimDocument.expense.DocumentStatus,
           Filepath: '/example/path/3',
           DateSubmitted: date,
-          IsEnabled: data.ClaimDocument['expense'].IsEnabled
+          IsEnabled: data.ClaimDocument.expense.IsEnabled
         })
     })
     .then(function (result) {
@@ -215,11 +216,11 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
           ClaimId: ids.claimId,
           EligibilityId: ids.eligibilityId,
           Reference: reference,
-          DocumentType: data.ClaimDocument['expense'].DocumentType,
-          DocumentStatus: data.ClaimDocument['expense'].DocumentStatus,
+          DocumentType: data.ClaimDocument.expense.DocumentType,
+          DocumentStatus: data.ClaimDocument.expense.DocumentStatus,
           Filepath: '/example/path/4',
           DateSubmitted: date,
-          IsEnabled: data.ClaimDocument['expense'].IsEnabled
+          IsEnabled: data.ClaimDocument.expense.IsEnabled
         })
     })
     .then(function (result) {
@@ -256,11 +257,11 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimEventId2 = result[0]
-      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction['hc3'].DeductionType, data.ClaimDeduction['hc3'].Amount)
+      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction.hc3.DeductionType, data.ClaimDeduction.hc3.Amount)
     })
     .then(function (result) {
       ids.claimDeductionId1 = result[0]
-      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction['overpayment'].DeductionType, data.ClaimDeduction['overpayment'].Amount)
+      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction.overpayment.DeductionType, data.ClaimDeduction.overpayment.Amount)
     })
     .then(function (result) {
       ids.claimDeductionId2 = result[0]
@@ -276,6 +277,21 @@ function deleteByReference (schemaTable, reference) {
   return knex(schemaTable).where('Reference', reference).del()
 }
 
+function deleteByClaimIds (schemaTable, claimIds) {
+  return knex(schemaTable).whereIn('ClaimId', claimIds).del()
+}
+
+function getClaimIdsForReference (schemaTable, reference) {
+  return knex(schemaTable).where('Reference', reference).select('ClaimId')
+    .then(function (results) {
+      const claimIdArray = []
+      results.forEach(function (result) {
+        claimIdArray.push(result.ClaimId)
+      })
+      return claimIdArray
+    })
+}
+
 module.exports.deleteAll = function (reference) {
   return deleteByReference('IntSchema.Task', reference)
     .then(function () { return deleteByReference('IntSchema.ClaimEvent', reference) })
@@ -285,6 +301,8 @@ module.exports.deleteAll = function (reference) {
     .then(function () { return deleteByReference('IntSchema.ClaimChild', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimDeduction', reference) })
     .then(function () { return deleteByReference('IntSchema.ClaimEscort', reference) })
+    .then(function () { return getClaimIdsForReference('IntSchema.Claim', reference) })
+    .then(function (claimIds) { return deleteByClaimIds('IntSchema.TopUp', claimIds) })
     .then(function () { return deleteByReference('IntSchema.Claim', reference) })
     .then(function () { return deleteByReference('IntSchema.Visitor', reference) })
     .then(function () { return deleteByReference('IntSchema.Prisoner', reference) })
@@ -293,7 +311,8 @@ module.exports.deleteAll = function (reference) {
 
 module.exports.getTestData = function (reference, status) {
   return {
-    Prisoner: { FirstName: 'TestFirst',
+    Prisoner: {
+      FirstName: 'TestFirst',
       LastName: 'TestLast',
       PrisonNumber: 'A123456',
       NameOfPrison: 'Test'
@@ -352,12 +371,12 @@ module.exports.getTestData = function (reference, status) {
         IsEnabled: 'true',
         Caseworker: 'test@test.com'
       },
-      'benefit': {
+      benefit: {
         DocumentType: 'BENEFIT',
         DocumentStatus: 'uploaded',
         IsEnabled: 'true'
       },
-      'expense': {
+      expense: {
         DocumentType: 'RECEIPT',
         DocumentStatus: 'uploaded',
         IsEnabled: 'true'
@@ -378,12 +397,12 @@ module.exports.getTestData = function (reference, status) {
       }
     ],
     ClaimDeduction: {
-      'overpayment': {
+      overpayment: {
         Amount: 5,
         DeductionType: 'overpayment',
         IsEnabled: true
       },
-      'hc3': {
+      hc3: {
         Amount: 10,
         DeductionType: 'hc3',
         IsEnabled: true
@@ -441,6 +460,22 @@ function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
       LastName: escortData.LastName,
       DateOfBirth: escortData.DateOfBirth,
       IsEnabled: true
+    })
+}
+
+module.exports.getBenefitExpiryDate = function (reference) {
+  return knex('IntSchema.Visitor')
+    .first('BenefitExpiryDate')
+    .where('Reference', reference)
+}
+
+module.exports.getLastTopUpAdded = function getLastTopUpAdded (claimId) {
+  return knex('IntSchema.TopUp')
+    .first()
+    .where('ClaimId', claimId)
+    .then(function (result) {
+      result.TopUpAmount = Number(result.TopUpAmount).toFixed(2)
+      return result
     })
 }
 

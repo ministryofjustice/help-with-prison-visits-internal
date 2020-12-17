@@ -20,6 +20,17 @@
   </div>
 {% endif %}
 
+{% if bankDuplicates.length > 0 %}
+  <div class="banner">
+    <p class="heading-small">Another Claimant has used these bank details</p>
+    <ul class="list">
+    {% for bank in bankDuplicates %}
+      <li><a href='/claim/{{ bank.ClaimId }}'>{{ bank.Reference }}</a></li>
+    {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+
 {% if overpaidClaims.length > 0 %}
   <div class="banner">
     <p class="heading-small">This claim is for a claimant that has been overpaid</p>

@@ -5,27 +5,30 @@ const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const dateFormatter = require('../date-formatter')
 
-var noteId
+let noteId
 
 class ClaimDecision {
   constructor (caseworker,
-               assistedDigitalCaseworker,
-               decision,
-               additionalInfoApprove,
-               additionalInfoRequest,
-               additionalInfoReject,
-               nomisCheck,
-               dwpCheck,
-               visitConfirmationCheck,
-               claimExpenseResponses,
-               claimDeductionResponses,
-               isAdvanceClaim,
-               rejectionReasonId,
-               additionalInfoRejectManual,
-               releaseDateIsSet,
-               releaseDay,
-               releaseMonth,
-               releaseYear) {
+    assistedDigitalCaseworker,
+    decision,
+    additionalInfoApprove,
+    additionalInfoRequest,
+    additionalInfoReject,
+    nomisCheck,
+    dwpCheck,
+    visitConfirmationCheck,
+    claimExpenseResponses,
+    claimDeductionResponses,
+    isAdvanceClaim,
+    rejectionReasonId,
+    additionalInfoRejectManual,
+    expiryDay,
+    expiryMonth,
+    expiryYear,
+    releaseDateIsSet,
+    releaseDay,
+    releaseMonth,
+    releaseYear) {
     this.caseworker = caseworker
     this.assistedDigitalCaseworker = assistedDigitalCaseworker
     this.rejectionReasonId = null
@@ -59,6 +62,12 @@ class ClaimDecision {
     })
     this.claimDeductionResponses = claimDeductionResponses
     this.isAdvanceClaim = isAdvanceClaim
+    this.expiryDateFields = [
+      expiryDay,
+      expiryMonth,
+      expiryYear
+    ]
+    this.expiryDate = dateFormatter.build(expiryDay, expiryMonth, expiryYear)
     if (releaseDateIsSet) {
       this.releaseDateIsSet = true
     } else {
@@ -74,10 +83,10 @@ class ClaimDecision {
   }
 
   IsValid () {
-    var errors = ErrorHandler()
+    const errors = ErrorHandler()
 
     if (this.caseworker === this.assistedDigitalCaseworker) {
-      throw new ValidationError({'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim]})
+      throw new ValidationError({ 'assisted-digital-caseworker': [ERROR_MESSAGES.getAssistedDigitalCaseworkerSameClaim] })
     }
 
     FieldValidator(this.decision, 'decision', errors)
@@ -106,8 +115,8 @@ class ClaimDecision {
       }
     })
 
-    var totalExpenseCost = 0.00
-    var allExpensesRejected = true
+    let totalExpenseCost = 0.00
+    let allExpensesRejected = true
     this.claimExpenseResponses.forEach(function (expense) {
       if (expense.status !== claimDecisionEnum.REJECTED) {
         allExpensesRejected = false
@@ -122,12 +131,12 @@ class ClaimDecision {
       errors.add('claim-expenses', ERROR_MESSAGES.getNonRejectedClaimExpenseResponse)
     }
 
-    var totalDeductionCost = 0.00
+    let totalDeductionCost = 0.00
     this.claimDeductionResponses.forEach(function (deduction) {
       totalDeductionCost += parseFloat(deduction.Amount)
     })
 
-    var total = 0.00
+    let total = 0.00
     total = totalExpenseCost - totalDeductionCost
 
     if (this.decision === claimDecisionEnum.APPROVED) {
@@ -146,15 +155,18 @@ class ClaimDecision {
         .isRequired(ERROR_MESSAGES.getVisitConfirmationRequired)
     }
 
+    FieldValidator(this.expiryDateFields, 'benefit-expiry', errors)
+      .isDateRequired(ERROR_MESSAGES.getExpiryDateIsRequired)
+      .isValidDate(this.expiryDate)
+
     if (this.releaseDateIsSet) {
-      console.log(this.releaseDateFields)
       FieldValidator(this.releaseDateFields, 'release-date-section', errors)
         .isDateRequired(ERROR_MESSAGES.getReleaseDateIsRequired)
         .isValidDate(this.releaseDate)
         .isFutureDate(this.releaseDate)
     }
 
-    var validationErrors = errors.get()
+    const validationErrors = errors.get()
 
     if (validationErrors) {
       throw new ValidationError(validationErrors)

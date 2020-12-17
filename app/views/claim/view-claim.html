@@ -76,10 +76,21 @@
 
     {% include "partials/view-claim/visitor.html" %}
 
-    
-    {% if ClaimEligibleChild.FirstName %}
+    {% if Claim.AccountNumber %}
       <br>
-      <h1 class="table-heading">Eligible Child</h1>
+      <h1 class="table-heading">Bank Account Details</h1>
+      </br>
+    {% endif %}
+    {% include "partials/view-claim/bank-account-details.html" %}
+
+    <br>
+    <h1 class="table-heading">Benefit Owner</h1>
+    </br>
+    {% include "partials/view-claim/benefit-owner.html" %}
+
+    {% if ClaimEligibleChild.length > 0 %}
+      <br>
+      <h1 class="table-heading">Eligible Children</h1>
       </br>
     {% endif %}
 
@@ -107,6 +118,12 @@
     <br>
 
     {% include "partials/view-claim/add-deduction.html" %}
+    
+    {% if TopUps.length > 0 %}
+      <h1 class="table-heading" name="top-ups-table" id="top-ups-table">Top Ups</h1>
+
+      {% include "partials/view-claim/top-ups.html" %}
+    {% endif %}
 
     <br>
 
@@ -136,6 +153,12 @@
     {% include "partials/csrf-hidden-input.html" %}
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
     {% include "partials/view-claim/manage-overpayments.html" %}
+  </form>
+
+  <form action="/claim/{{ Claim['ClaimId'] }}/add-top-up" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    {% include "partials/view-claim/add-top-up.html" %}
   </form>
 
   <form action="/claim/{{ Claim['ClaimId'] }}/close-advance-claim" method="post" class="form">

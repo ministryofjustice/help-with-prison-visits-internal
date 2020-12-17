@@ -8,12 +8,12 @@ module.exports = function (router) {
 
     getDirectPaymentFiles()
       .then(function (directPaymentFiles) {
-        var topAccessPayFile
-        var previousAccessPayFiles
-        var topAdiJournalFile
-        var previousAdiJournalFiles
-        var topApvuAccessPayFile
-        var previousApvuAccessPayFiles
+        let topAccessPayFile
+        let previousAccessPayFiles
+        let topAdiJournalFile
+        let previousAdiJournalFiles
+        let topApvuAccessPayFile
+        let previousApvuAccessPayFiles
 
         if (directPaymentFiles) {
           if (directPaymentFiles.accessPayFiles && directPaymentFiles.accessPayFiles.length > 0) {
@@ -49,11 +49,11 @@ module.exports = function (router) {
   router.get('/download-payment-files/download', function (req, res, next) {
     authorisation.isSscl(req)
 
-    var id = parseInt(req.query.id)
+    const id = parseInt(req.query.id)
     if (id) {
       getDirectPaymentFiles()
         .then(function (directPaymentFiles) {
-          var matchingFile = directPaymentFiles.accessPayFiles.find(function (file) { return file.PaymentFileId === id })
+          let matchingFile = directPaymentFiles.accessPayFiles.find(function (file) { return file.PaymentFileId === id })
           if (!matchingFile && directPaymentFiles.adiJournalFiles) {
             matchingFile = directPaymentFiles.adiJournalFiles.find(function (file) { return file.PaymentFileId === id })
           }

@@ -11,7 +11,7 @@ module.exports = function (router) {
 
     getAutoApprovalConfig()
       .then(function (autoApprovalConfig) {
-        var rulesDisabled = autoApprovalConfig.RulesDisabled ? autoApprovalConfig.RulesDisabled : ''
+        const rulesDisabled = autoApprovalConfig.RulesDisabled ? autoApprovalConfig.RulesDisabled : ''
         res.render('config', {
           autoApprovalConfig: autoApprovalConfig,
           autoApprovalRulesEnum: autoApprovalRulesEnum,
@@ -26,9 +26,9 @@ module.exports = function (router) {
   router.post('/config', function (req, res, next) {
     authorisation.isAdmin(req)
 
-    var rulesDisabled = generateRulesDisabled(req.body.rulesEnabled || [])
+    const rulesDisabled = generateRulesDisabled(req.body.rulesEnabled || [])
     try {
-      var autoApprovalConfig = new AutoApprovalConfig(
+      const autoApprovalConfig = new AutoApprovalConfig(
         req.user.email,
         req.body.AutoApprovalEnabled,
         req.body.CostVariancePercentage,
@@ -62,13 +62,13 @@ module.exports = function (router) {
   })
 }
 
-var generateRulesDisabled = function (rulesEnabled) {
-  var rules = []
+const generateRulesDisabled = function (rulesEnabled) {
+  const rules = []
 
-  for (var rule in autoApprovalRulesEnum) {
+  for (const rule in autoApprovalRulesEnum) {
     rules.push(autoApprovalRulesEnum[rule].value)
   }
-  var rulesDisabled = []
+  const rulesDisabled = []
 
   rules.forEach(function (rule) {
     if (rulesEnabled.indexOf(rule) === -1) {

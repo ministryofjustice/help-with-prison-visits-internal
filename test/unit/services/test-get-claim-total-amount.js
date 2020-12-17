@@ -38,19 +38,19 @@ const claimDeductions = [
 
 describe('services/get-claim-total-amount', function () {
   it('should calculate the total value from claim expenses and deductions', function () {
-    var total = getClaimTotalAmount(claimExpenses, claimDeductions)
+    const total = getClaimTotalAmount(claimExpenses, claimDeductions)
 
     expect(total).to.equal('20.00')
   })
 
   it('should calculate the correct total value from claim expenses only', function () {
-    var total = getClaimTotalAmount(claimExpenses, [])
+    const total = getClaimTotalAmount(claimExpenses, [])
 
     expect(total).to.equal('30.00')
   })
 
   it('should calculate the correct total value when approved cost is different from initial cost', function () {
-    var total = getClaimTotalAmount(claimExpensesApprovedCost, [])
+    const total = getClaimTotalAmount(claimExpensesApprovedCost, [])
 
     expect(total).to.equal('23.99')
   })

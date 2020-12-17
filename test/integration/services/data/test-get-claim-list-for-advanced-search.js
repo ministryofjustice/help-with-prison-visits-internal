@@ -30,23 +30,23 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
           .then(function () {
             var reference1ClaimUpdate = knex('Claim')
               .update({
-                'AssistedDigitalCaseworker': 'test@test.com',
-                'DateOfJourney': date.toDate(),
-                'DateReviewed': date.toDate(),
-                'PaymentAmount': '12',
-                'PaymentDate': date.add(5, 'days').toDate()
+                AssistedDigitalCaseworker: 'test@test.com',
+                DateOfJourney: date.toDate(),
+                DateReviewed: date.toDate(),
+                PaymentAmount: '12',
+                PaymentDate: date.add(5, 'days').toDate()
               })
               .where('Reference', reference1)
             var reference2ClaimUpdate = knex('Claim')
               .update({
-                'DateReviewed': date.toDate()
+                DateReviewed: date.toDate()
               })
               .where('Reference', reference2)
             var visitorUpdate = knex('Visitor')
               .update({
-                'FirstName': 'Ref2FirstName',
-                'LastName': 'Ref2LastName',
-                'NationalInsuranceNumber': 'Ref2NINum'
+                FirstName: 'Ref2FirstName',
+                LastName: 'Ref2LastName',
+                NationalInsuranceNumber: 'Ref2NINum'
               })
               .where('Reference', reference2)
             var prisonerUpdate = knex('Prisoner')
@@ -107,7 +107,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
         })
-        expect(claimsWithCurrentReference2.length, `Claims length should equal 1`).to.equal(0)
+        expect(claimsWithCurrentReference2.length, 'Claims length should equal 1').to.equal(0)
       })
   })
 
@@ -150,7 +150,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
         })
-        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+        expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
@@ -178,7 +178,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
         })
-        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+        expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
@@ -206,7 +206,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
         })
-        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+        expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
@@ -234,7 +234,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
         })
-        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+        expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
@@ -260,7 +260,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
         })
-        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+        expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
@@ -302,7 +302,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
         })
-        expect(claimsWithReference2.length, `Claims with reference2 length should equal 0`).to.equal(0)
+        expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
@@ -330,7 +330,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -358,7 +358,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -386,7 +386,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -416,7 +416,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -446,7 +446,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -476,7 +476,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -506,7 +506,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -536,7 +536,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -566,7 +566,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -581,7 +581,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
         })
-        expect(claimsWithReference2.length, `Claims with reference2 length should equal 1`).to.equal(1)
+        expect(claimsWithReference2.length, 'Claims with reference2 length should equal 1').to.equal(1)
       })
   })
 
@@ -596,7 +596,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -611,7 +611,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference2 = result.claims.filter(function (claim) {
           return claim.Reference === reference2
         })
-        expect(claimsWithReference2.length, `Claims with reference2 length should equal 1`).to.equal(1)
+        expect(claimsWithReference2.length, 'Claims with reference2 length should equal 1').to.equal(1)
       })
   })
 
@@ -626,7 +626,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithCurrentReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithCurrentReference.length, `Claims with current reference length should equal 0`).to.equal(0)
+        expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
@@ -656,7 +656,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference1 = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithReference1.length, `Claims with reference1 length should equal 0`).to.equal(0)
+        expect(claimsWithReference1.length, 'Claims with reference1 length should equal 0').to.equal(0)
       })
   })
 
@@ -686,7 +686,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         var claimsWithReference1 = result.claims.filter(function (claim) {
           return claim.Reference === reference1
         })
-        expect(claimsWithReference1.length, `Claims with reference1 length should equal 0`).to.equal(0)
+        expect(claimsWithReference1.length, 'Claims with reference1 length should equal 0').to.equal(0)
       })
   })
 
@@ -729,23 +729,23 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       .then(function (result) {
         var claim = result.claims[0]
 
-        expect(claim.hasOwnProperty('FirstName')).to.be.true
-        expect(claim.hasOwnProperty('LastName')).to.be.true
-        expect(claim.hasOwnProperty('Benefit')).to.be.true
-        expect(claim.hasOwnProperty('Relationship')).to.be.true
-        expect(claim.hasOwnProperty('DateSubmitted')).to.be.true
-        expect(claim.hasOwnProperty('DateOfJourney')).to.be.true
-        expect(claim.hasOwnProperty('DateReviewed')).to.be.true
-        expect(claim.hasOwnProperty('ClaimType')).to.be.true
-        expect(claim.hasOwnProperty('AssistedDigitalCaseworker')).to.be.true
-        expect(claim.hasOwnProperty('Caseworker')).to.be.true
-        expect(claim.hasOwnProperty('IsAdvanceClaim')).to.be.true
-        expect(claim.hasOwnProperty('Status')).to.be.true
-        expect(claim.hasOwnProperty('PaymentAmount')).to.be.true
-        expect(claim.hasOwnProperty('ClaimId')).to.be.true
-        expect(claim.hasOwnProperty('IsTrusted')).to.be.true
-        expect(claim.hasOwnProperty('NameOfPrison')).to.be.true
-        expect(claim.hasOwnProperty('PaymentMethod')).to.be.true
+        expect(claim.hasOwnProperty('FirstName')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('LastName')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('Benefit')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('Relationship')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('DateSubmitted')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('DateOfJourney')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('DateReviewed')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('ClaimType')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('AssistedDigitalCaseworker')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('Caseworker')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('IsAdvanceClaim')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('Status')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('PaymentAmount')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('ClaimId')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('IsTrusted')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('NameOfPrison')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('PaymentMethod')).to.be.true //eslint-disable-line
       })
   })
 
@@ -758,13 +758,13 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       .then(function (result) {
         var claim = result.claims[0]
 
-        expect(claim.hasOwnProperty('Reference')).to.be.true
-        expect(claim.hasOwnProperty('FirstName')).to.be.true
-        expect(claim.hasOwnProperty('LastName')).to.be.true
-        expect(claim.hasOwnProperty('DateSubmitted')).to.be.true
-        expect(claim.hasOwnProperty('DateOfJourney')).to.be.true
-        expect(claim.hasOwnProperty('ClaimType')).to.be.true
-        expect(claim.hasOwnProperty('ClaimId')).to.be.true
+        expect(claim.hasOwnProperty('Reference')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('FirstName')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('LastName')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('DateSubmitted')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('DateOfJourney')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('ClaimType')).to.be.true //eslint-disable-line
+        expect(claim.hasOwnProperty('ClaimId')).to.be.true //eslint-disable-line
       })
   })
 

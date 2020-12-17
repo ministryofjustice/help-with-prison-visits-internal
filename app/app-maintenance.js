@@ -3,8 +3,8 @@ const nunjucks = require('express-nunjucks')
 const path = require('path')
 const favicon = require('serve-favicon')
 
-var app = express()
-var serviceName = 'Assisted Prison Visit Service'
+const app = express()
+const serviceName = 'Help with Prison Visits'
 
 app.set('view engine', 'html')
 app.set('views', path.join(__dirname, 'views'))

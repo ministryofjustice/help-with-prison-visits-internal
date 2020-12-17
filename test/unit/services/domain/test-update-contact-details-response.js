@@ -1,7 +1,7 @@
 const UpdateContactDetailsResponse = require('../../../../app/services/domain/update-contact-details-response')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const expect = require('chai').expect
-var updateContactDetailsResponse
+let updateContactDetailsResponse
 
 describe('services/domain/update-contact-details-response', function () {
   const VALID_EMAIL_ADDRESS = 'no.one@none.com'
@@ -21,7 +21,7 @@ describe('services/domain/update-contact-details-response', function () {
       expect.fail()
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['EmailAddress']).to.contain('Email address must have valid format')
+      expect(e.validationErrors.EmailAddress).to.contain('Email address must have valid format')
     }
   })
 
@@ -31,7 +31,7 @@ describe('services/domain/update-contact-details-response', function () {
       expect.fail()
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['EmailAddress']).to.contain('Email address is required')
+      expect(e.validationErrors.EmailAddress).to.contain('Email address is required')
     }
   })
 
@@ -41,7 +41,7 @@ describe('services/domain/update-contact-details-response', function () {
       expect.fail()
     } catch (e) {
       expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['PhoneNumber']).to.contain('Phone number must be 20 characters or shorter')
+      expect(e.validationErrors.PhoneNumber).to.contain('Phone number must be 20 characters or shorter')
     }
   })
 })

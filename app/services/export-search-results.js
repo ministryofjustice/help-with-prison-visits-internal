@@ -10,13 +10,13 @@ module.exports = function (searchCriteria) {
       return transformData(data.claims)
     })
     .then(function (transformedData) {
-      var columnHeaders
+      let columnHeaders
       if (Object.keys(transformedData).length > 0) {
         columnHeaders = getCSVColumnHeaders(transformedData)
       } else {
         columnHeaders = []
       }
-      return generateCsvString(transformedData, {columns: columnHeaders, header: true})
+      return generateCsvString(transformedData, { columns: columnHeaders, header: true })
     })
     .then(function (csvString) {
       return csvString

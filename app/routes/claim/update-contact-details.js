@@ -10,8 +10,8 @@ module.exports = function (router) {
 
     return getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
-        data.claim['PreviousEmailAddress'] = data.claim['EmailAddress']
-        data.claim['PreviousPhoneNumber'] = data.claim['PhoneNumber']
+        data.claim.PreviousEmailAddress = data.claim.EmailAddress
+        data.claim.PreviousPhoneNumber = data.claim.PhoneNumber
 
         return res.render('claim/update-contact-details', {
           claimId: req.params.claimId,
@@ -27,18 +27,18 @@ module.exports = function (router) {
     authorisation.isCaseworker(req)
 
     try {
-      var updateContactDetailsResponse = new UpdateContactDetailsResponse(req.body['EmailAddress'], req.body['PhoneNumber'])
+      const updateContactDetailsResponse = new UpdateContactDetailsResponse(req.body.EmailAddress, req.body.PhoneNumber)
 
       return updateVisitorContactDetails(
-          req.body['Reference'],
-          req.body['EligibilityId'],
-          req.params.claimId,
-          updateContactDetailsResponse.emailAddress,
-          updateContactDetailsResponse.phoneNumber,
-          req.body['PreviousEmailAddress'],
-          req.body['PreviousPhoneNumber'],
-          req.user.email
-        )
+        req.body.Reference,
+        req.body.EligibilityId,
+        req.params.claimId,
+        updateContactDetailsResponse.emailAddress,
+        updateContactDetailsResponse.phoneNumber,
+        req.body.PreviousEmailAddress,
+        req.body.PreviousPhoneNumber,
+        req.user.email
+      )
         .then(function () {
           return res.redirect(`/claim/${req.params.claimId}`)
         })
@@ -49,10 +49,10 @@ module.exports = function (router) {
       if (error instanceof ValidationError) {
         return getIndividualClaimDetails(req.params.claimId)
           .then(function (data) {
-            data.claim['PreviousEmailAddress'] = data.claim['EmailAddress']
-            data.claim['PreviousPhoneNumber'] = data.claim['PhoneNumber']
-            data.claim['EmailAddress'] = req.body['EmailAddress']
-            data.claim['PhoneNumber'] = req.body['PhoneNumber']
+            data.claim.PreviousEmailAddress = data.claim.EmailAddress
+            data.claim.PreviousPhoneNumber = data.claim.PhoneNumber
+            data.claim.EmailAddress = req.body.EmailAddress
+            data.claim.PhoneNumber = req.body.PhoneNumber
 
             return res.status(400).render('claim/update-contact-details', {
               errors: error.validationErrors,

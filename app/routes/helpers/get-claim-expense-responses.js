@@ -1,18 +1,18 @@
 const ClaimExpenseResponse = require('../../services/domain/claim-expense-response')
 
 module.exports = function (body) {
-  var claimExpenses = []
-  var formKeys = Object.keys(body)
+  const claimExpenses = []
+  const formKeys = Object.keys(body)
 
   formKeys.forEach(function (formKey) {
     if (formKey.match(/claim-expense-[0-9]*-status/)) {
-      var approvedCostKey = formKey.replace('-status', '-approvedcost')
-      var costKey = formKey.replace('-status', '-cost')
+      const approvedCostKey = formKey.replace('-status', '-approvedcost')
+      const costKey = formKey.replace('-status', '-cost')
 
-      var claimExpenseId = formKey.replace('claim-expense-', '').replace('-status', '')
-      var status = body[formKey]
-      var approvedCost = body[approvedCostKey]
-      var cost = body[costKey]
+      const claimExpenseId = formKey.replace('claim-expense-', '').replace('-status', '')
+      const status = body[formKey]
+      const approvedCost = body[approvedCostKey]
+      const cost = body[costKey]
 
       claimExpenses.push(new ClaimExpenseResponse(claimExpenseId, approvedCost, cost, status))
     }

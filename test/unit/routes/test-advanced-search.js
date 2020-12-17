@@ -7,17 +7,16 @@ const bodyParser = require('body-parser')
 const dateFormatter = require('../../../app/services/date-formatter')
 const path = require('path')
 const sinon = require('sinon')
-require('sinon-bluebird')
 
-var getClaimListForAdvancedSearch
-var displayHelperStub
-var authorisation
-var isCaseworkerStub
-var exportSearchResultsStub
+let getClaimListForAdvancedSearch
+let displayHelperStub
+let authorisation
+let isCaseworkerStub
+let exportSearchResultsStub
 
-var draw = 1
-var start = 0
-var length = 10
+const draw = 1
+const start = 0
+const length = 10
 
 const EXPECTED_DATE_FROM = dateFormatter.build('12', '12', '2016').startOf('day').toDate()
 const EXPECTED_DATE_TO = dateFormatter.build('12', '12', '2016').endOf('day').toDate()
@@ -119,16 +118,16 @@ const INVALID_AMOUNTS = {
 }
 
 const EXPECTED_VALIDATION_ERRORS = {
-  visitDateFrom: [ 'Visit date (from) is invalid' ],
-  visitDateTo: [ 'Visit date (to) is invalid' ],
-  dateSubmittedFrom: [ 'Date submitted (from) is invalid' ],
-  dateSubmittedTo: [ 'Date submitted (to) is invalid' ],
-  dateApprovedFrom: [ 'Date approved (from) is invalid' ],
-  dateApprovedTo: [ 'Date approved (to) is invalid' ],
-  dateRejectedFrom: [ 'Date rejected (from) is invalid' ],
-  dateRejectedTo: [ 'Date rejected (to) is invalid' ],
-  approvedClaimAmountFrom: [ 'Approved claim amount (from) is invalid' ],
-  approvedClaimAmountTo: [ 'Approved claim amount (to) is invalid' ]
+  visitDateFrom: ['Visit date (from) is invalid'],
+  visitDateTo: ['Visit date (to) is invalid'],
+  dateSubmittedFrom: ['Date submitted (from) is invalid'],
+  dateSubmittedTo: ['Date submitted (to) is invalid'],
+  dateApprovedFrom: ['Date approved (from) is invalid'],
+  dateApprovedTo: ['Date approved (to) is invalid'],
+  dateRejectedFrom: ['Date rejected (from) is invalid'],
+  dateRejectedTo: ['Date rejected (to) is invalid'],
+  approvedClaimAmountFrom: ['Approved claim amount (from) is invalid'],
+  approvedClaimAmountTo: ['Approved claim amount (to) is invalid']
 }
 
 const RETURNED_CLAIM = {
@@ -142,20 +141,20 @@ const RETURNED_CLAIM = {
   Name: 'John Smith'
 }
 
-var errorsReturnedToView = {}
+let errorsReturnedToView = {}
 
 describe('routes/index', function () {
-  var app
+  let app
 
   beforeEach(function () {
     isCaseworkerStub = sinon.stub()
     authorisation = { isCaseworker: isCaseworkerStub }
     getClaimListForAdvancedSearch = sinon.stub()
-    displayHelperStub = sinon.stub({ 'getClaimTypeDisplayName': function () {} })
+    displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
     exportSearchResultsStub = sinon.stub().resolves('')
 
-    var route = proxyquire('../../../app/routes/advanced-search', {
+    const route = proxyquire('../../../app/routes/advanced-search', {
       '../services/authorisation': authorisation,
       '../services/data/get-claim-list-for-advanced-search': getClaimListForAdvancedSearch,
       '../views/helpers/display-helper': displayHelperStub,
@@ -166,11 +165,11 @@ describe('routes/index', function () {
 
     app.engine('html', function (filePath, options, callback) {
       errorsReturnedToView = options.errors
-      var rendered = `${filePath}: ${JSON.stringify(options)}`
+      const rendered = `${filePath}: ${JSON.stringify(options)}`
       return callback(null, rendered)
     })
     app.set('view engine', 'html')
-    app.set('views', [ path.join(__dirname, '../../../app/views'), path.join(__dirname, '../../../lib/') ])
+    app.set('views', [path.join(__dirname, '../../../app/views'), path.join(__dirname, '../../../lib/')])
     app.use(bodyParser.json())
 
     route(app)
@@ -182,7 +181,7 @@ describe('routes/index', function () {
         .get('/advanced-search-input')
         .expect(200)
         .expect(function () {
-          expect(isCaseworkerStub.calledOnce).to.be.true
+          expect(isCaseworkerStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
   })
@@ -193,7 +192,7 @@ describe('routes/index', function () {
         .get('/advanced-search')
         .expect(200)
         .expect(function () {
-          expect(isCaseworkerStub.calledOnce).to.be.true
+          expect(isCaseworkerStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
 
@@ -202,12 +201,12 @@ describe('routes/index', function () {
         .get('/advanced-search?Reference=V123456')
         .expect(200)
         .expect(function () {
-          expect(isCaseworkerStub.calledOnce).to.be.true
+          expect(isCaseworkerStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
 
     it('should return validation errors for invalid data', function () {
-      var searchQueryString = `${queryString.stringify(INVALID_DATE_FIELDS)}&${queryString.stringify(INVALID_AMOUNTS)}`
+      const searchQueryString = `${queryString.stringify(INVALID_DATE_FIELDS)}&${queryString.stringify(INVALID_AMOUNTS)}`
 
       return supertest(app)
         .get(`/advanced-search?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)
@@ -219,27 +218,27 @@ describe('routes/index', function () {
 
   describe('POST /advanced-search-results', function () {
     it('should respond with a 200 and call data method', function () {
-      getClaimListForAdvancedSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
+      getClaimListForAdvancedSearch.resolves({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
       return supertest(app)
-        .post(`/advanced-search-results`)
-        .send({start: start, length: length})
+        .post('/advanced-search-results')
+        .send({ start: start, length: length })
         .expect(200)
         .expect(function (response) {
-          expect(isCaseworkerStub.calledOnce).to.be.true
-          expect(getClaimListForAdvancedSearch.calledWith({}, start, length), 'expected data method to be called with empty search criteria').to.be.true
+          expect(isCaseworkerStub.calledOnce).to.be.true //eslint-disable-line
+          expect(getClaimListForAdvancedSearch.calledWith({}, start, length), 'expected data method to be called with empty search criteria').to.be.true //eslint-disable-line
           expect(response.body.recordsTotal).to.equal(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
         })
     })
 
     it('should extract search criteria correctly', function () {
-      getClaimListForAdvancedSearch.resolves({claims: [RETURNED_CLAIM], total: {Count: 1}})
+      getClaimListForAdvancedSearch.resolves({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
 
       return supertest(app)
-        .post(`/advanced-search-results`)
+        .post('/advanced-search-results')
         .send(INPUT_SEARCH_CRITERIA)
         .expect(function (response) {
-          expect(getClaimListForAdvancedSearch.calledWith(sinon.match(PROCESSED_SEARCH_CRITERIA), start, length), 'expected data method to be called with processed search criteria').to.be.true
+          expect(getClaimListForAdvancedSearch.calledWith(sinon.match(PROCESSED_SEARCH_CRITERIA), start, length), 'expected data method to be called with processed search criteria').to.be.true //eslint-disable-line
         })
     })
 
@@ -265,8 +264,8 @@ describe('routes/index', function () {
         .get('/advanced-search-results/export?')
         .expect(200)
         .expect(function () {
-          expect(isCaseworkerStub.calledOnce).to.be.true
-          expect(exportSearchResultsStub.calledOnce).to.be.true
+          expect(isCaseworkerStub.calledOnce).to.be.true //eslint-disable-line
+          expect(exportSearchResultsStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
   })

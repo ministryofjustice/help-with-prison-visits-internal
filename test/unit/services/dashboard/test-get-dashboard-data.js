@@ -1,16 +1,15 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
-require('sinon-bluebird')
 const proxyquire = require('proxyquire')
 
-var getAutoApprovedClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
-var getInProgressClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
-var getManuallyApprovedClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
-var getPaidClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
-var getPendingClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
-var getRejectedClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
+const getAutoApprovedClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
+const getInProgressClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
+const getManuallyApprovedClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
+const getPaidClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
+const getPendingClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
+const getRejectedClaimCountStub = sinon.stub().resolves([{ Count: 0 }])
 
-var getDashboardData = proxyquire('../../../../app/services/data/dashboard/get-dashboard-data', {
+const getDashboardData = proxyquire('../../../../app/services/data/dashboard/get-dashboard-data', {
   '../../../services/data/dashboard/get-auto-approved-claim-count': getAutoApprovedClaimCountStub,
   '../../../services/data/dashboard/get-in-progress-claim-count': getInProgressClaimCountStub,
   '../../../services/data/dashboard/get-manually-approved-claim-count': getManuallyApprovedClaimCountStub,
@@ -21,35 +20,35 @@ var getDashboardData = proxyquire('../../../../app/services/data/dashboard/get-d
 
 describe('services/data/dashboard/get-dashboard-data', function () {
   it('should call all of the relevant functions', function () {
-    var testFilter = 'test filter'
+    const testFilter = 'test filter'
     return getDashboardData(testFilter)
       .then(function (result) {
-        expect(getAutoApprovedClaimCountStub.calledWith(testFilter)).to.be.true
-        expect(getInProgressClaimCountStub.calledWith(testFilter)).to.be.true
-        expect(getManuallyApprovedClaimCountStub.calledWith(testFilter)).to.be.true
-        expect(getPaidClaimCountStub.calledWith(testFilter)).to.be.true
-        expect(getPendingClaimCountStub.calledWith(testFilter)).to.be.true
-        expect(getRejectedClaimCountStub.calledWith(testFilter)).to.be.true
+        expect(getAutoApprovedClaimCountStub.calledWith(testFilter)).to.be.true //eslint-disable-line
+        expect(getInProgressClaimCountStub.calledWith(testFilter)).to.be.true //eslint-disable-line
+        expect(getManuallyApprovedClaimCountStub.calledWith(testFilter)).to.be.true //eslint-disable-line
+        expect(getPaidClaimCountStub.calledWith(testFilter)).to.be.true //eslint-disable-line
+        expect(getPendingClaimCountStub.calledWith(testFilter)).to.be.true //eslint-disable-line
+        expect(getRejectedClaimCountStub.calledWith(testFilter)).to.be.true //eslint-disable-line
 
-        expect(getAutoApprovedClaimCountStub.calledOnce).to.be.true
-        expect(getInProgressClaimCountStub.calledOnce).to.be.true
-        expect(getManuallyApprovedClaimCountStub.calledOnce).to.be.true
-        expect(getPaidClaimCountStub.calledOnce).to.be.true
-        expect(getPendingClaimCountStub.calledOnce).to.be.true
-        expect(getRejectedClaimCountStub.calledOnce).to.be.true
+        expect(getAutoApprovedClaimCountStub.calledOnce).to.be.true //eslint-disable-line
+        expect(getInProgressClaimCountStub.calledOnce).to.be.true //eslint-disable-line
+        expect(getManuallyApprovedClaimCountStub.calledOnce).to.be.true //eslint-disable-line
+        expect(getPaidClaimCountStub.calledOnce).to.be.true //eslint-disable-line
+        expect(getPendingClaimCountStub.calledOnce).to.be.true //eslint-disable-line
+        expect(getRejectedClaimCountStub.calledOnce).to.be.true //eslint-disable-line
       })
   })
 
   it('should return a valid object', function () {
-    var testFilter = 'test filter'
+    const testFilter = 'test filter'
     return getDashboardData(testFilter)
       .then(function (dashboardData) {
-        expect(dashboardData.autoApproved).to.exist
-        expect(dashboardData.inProgress).to.exist
-        expect(dashboardData.manuallyApproved).to.exist
-        expect(dashboardData.paid).to.exist
-        expect(dashboardData.pending).to.exist
-        expect(dashboardData.rejected).to.exist
+        expect(dashboardData.autoApproved).to.exist //eslint-disable-line
+        expect(dashboardData.inProgress).to.exist //eslint-disable-line
+        expect(dashboardData.manuallyApproved).to.exist //eslint-disable-line
+        expect(dashboardData.paid).to.exist //eslint-disable-line
+        expect(dashboardData.pending).to.exist //eslint-disable-line
+        expect(dashboardData.rejected).to.exist //eslint-disable-line
       })
   })
 })

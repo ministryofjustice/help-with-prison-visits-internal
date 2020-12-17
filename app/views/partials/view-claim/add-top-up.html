@@ -1,0 +1,22 @@
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
+<!-- Top Up -->
+  <div class="panel js-hidden" id="top-up-input">
+
+    <div class="form-group" id='top-up-amount-group' >
+      <label class="form-label-bold {% if errors['top-up-amount'][0] %} error {% endif %}" for="top-up-amount">Amount</label>
+      {% if errors['top-up-amount'][0] %}
+        <span class="error-message" id="error-message-top-up-amount">{{ errors['top-up-amount'][0] }}</span>
+      {% endif %}
+      <input type='number' step="0.01" name='top-up-amount' id='top-up-amount' class='form-control' value="{{ topUpAmount }}">
+    </div>
+    <div class="form-group" id='top-up-reason-group'>
+      <label class="form-label-bold {% if errors['top-up-reason'][0] %} error {% endif %}" for="top-up-reason">Reason</label>
+      {% if errors['top-up-reason'][0] %}
+        <span class="error-message" id="error-message-top-up-reason">{{ errors['top-up-reason'][0] }}</span>
+      {% endif %}
+      <textarea name='top-up-reason' id='top-up-reason' maxlength='250'>{{ topUpReason }}</textarea>
+    </div>
+    <input type="submit" class="button" name="add-top-up" id="add-top-up" value="Add Top Up">
+  </div>
+<!-- End of Top Up -->
+{% endif %}

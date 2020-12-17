@@ -2,7 +2,7 @@ const OverpaymentResponse = require('../../../../app/services/domain/overpayment
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const overpaymentActionEnum = require('../../../../app/constants/overpayment-action-enum')
 const expect = require('chai').expect
-var overpaymentResponse
+let overpaymentResponse
 
 describe('services/domain/overpayment-response', function () {
   const IS_OVERPAID = true
@@ -13,7 +13,7 @@ describe('services/domain/overpayment-response', function () {
 
   it('should construct a domain object given valid input', function () {
     overpaymentResponse = new OverpaymentResponse(OVERPAYMENT_AMOUNT, OVERPAYMENT_REMAINING, REASON, IS_OVERPAID)
-    expect(overpaymentResponse.action).to.not.be.null
+    expect(overpaymentResponse.action).to.not.be.null //eslint-disable-line
     expect(overpaymentResponse.amount).to.equal(OVERPAYMENT_AMOUNT)
     expect(overpaymentResponse.remaining).to.equal(OVERPAYMENT_REMAINING)
     expect(overpaymentResponse.reason).to.equal(REASON)
@@ -88,7 +88,7 @@ describe('services/domain/overpayment-response', function () {
   })
 
   it('should have an action of \'update\'', function () {
-    var claimCurrentlyOverpaid = true
+    const claimCurrentlyOverpaid = true
 
     overpaymentResponse = new OverpaymentResponse('', '5', REASON, claimCurrentlyOverpaid)
 
@@ -96,7 +96,7 @@ describe('services/domain/overpayment-response', function () {
   })
 
   it('should have an action of \'resolve\'', function () {
-    var claimCurrentlyOverpaid = true
+    const claimCurrentlyOverpaid = true
 
     overpaymentResponse = new OverpaymentResponse('', '0', REASON, claimCurrentlyOverpaid)
 
@@ -104,7 +104,7 @@ describe('services/domain/overpayment-response', function () {
   })
 
   it('should have an action of \'overpaid\'', function () {
-    var claimCurrentlyOverpaid = false
+    const claimCurrentlyOverpaid = false
 
     overpaymentResponse = new OverpaymentResponse('10', '10', REASON, claimCurrentlyOverpaid)
 

@@ -21,11 +21,11 @@ class FileUpload {
   }
 
   IsValid () {
-    var errors = ErrorHandler()
+    const errors = ErrorHandler()
 
     if (this.error) {
       if (this.error instanceof UploadError) {
-        throw new ValidationError({upload: [ERROR_MESSAGES.getUploadIncorrectType]})
+        throw new ValidationError({ upload: [ERROR_MESSAGES.getUploadIncorrectType] })
       } else {
         throw this.error
       }
@@ -34,7 +34,7 @@ class FileUpload {
     FieldValidator(this.file, 'upload', errors)
       .isRequired()
 
-    var validationErrors = errors.get()
+    const validationErrors = errors.get()
 
     if (validationErrors) {
       throw new ValidationError(validationErrors)

@@ -5,13 +5,13 @@ const displayHelper = require('../views/helpers/display-helper')
 module.exports = function (router) {
   router.get('/search', function (req, res) {
     authorisation.isCaseworker(req)
-    var query = req.query.q
+    const query = req.query.q
     return res.render('search', { query: query })
   })
 
   router.get('/search-results', function (req, res) {
     authorisation.isCaseworker(req)
-    var searchQuery = req.query.q || ''
+    const searchQuery = req.query.q || ''
 
     if (!searchQuery) {
       return res.json({
@@ -23,10 +23,11 @@ module.exports = function (router) {
     } else {
       getClaimListForSearch(searchQuery, parseInt(req.query.start), parseInt(req.query.length))
         .then(function (data) {
-          var claims = data.claims
+          const claims = data.claims
 
           claims.map(function (claim) {
             claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
+            return claim
           })
           return res.json({
             draw: req.query.draw,
@@ -35,9 +36,9 @@ module.exports = function (router) {
             claims: claims
           })
         })
-      .catch(function (error) {
-        res.status(500).send(error)
-      })
+        .catch(function (error) {
+          res.status(500).send(error)
+        })
     }
   })
 }

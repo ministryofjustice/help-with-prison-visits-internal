@@ -1,9 +1,9 @@
 function getUrlParameter (sParam) {
-  var sPageURL = decodeURIComponent(window.location.search.substring(1))
-  var sURLVariables = sPageURL.split('&')
-  var sParameterName
+  const sPageURL = decodeURIComponent(window.location.search.substring(1))
+  const sURLVariables = sPageURL.split('&')
+  let sParameterName
 
-  for (var i = 0; i < sURLVariables.length; i++) {
+  for (let i = 0; i < sURLVariables.length; i++) {
     sParameterName = sURLVariables[i].split('=')
 
     if (sParameterName[0] === sParam) {
@@ -13,19 +13,20 @@ function getUrlParameter (sParam) {
 }
 
 function cleanColumnOutput (data, type, row) {
-  var unsafeOutputPattern = new RegExp(/>|<|&|"|\/|'/g)
+  const unsafeOutputPattern = />|<|&|"|\/|'/g
   return data.replace(unsafeOutputPattern, '')
 }
 
 $(document).ready(function () {
-  var status = getUrlParameter('status') || 'NEW'
-  var dataReference = '/claims/' + status
+  const status = getUrlParameter('status') || 'NEW'
+  const dataReference = '/claims/' + status
 
   $('#claims').DataTable({
     processing: true,
     serverSide: true,
     searching: false,
     lengthChange: false,
+    sorting: true,
     order: [],
     ajax: {
       url: dataReference,
@@ -37,18 +38,23 @@ $(document).ready(function () {
     },
 
     columns: [
-      {'data': 'Reference', 'render': cleanColumnOutput},
-      {'data': 'Name', 'render': cleanColumnOutput},
-      {'data': 'DateSubmittedFormatted'},
-      {'data': 'DateOfJourneyFormatted'},
-      {'data': 'DisplayStatus'},
-      {'data': 'ClaimType',
-        'createdCell': function (td, cellData, rowData, row, col) {
+      { data: 'Reference', render: cleanColumnOutput, orderable: false },
+      { data: 'Name', render: cleanColumnOutput, orderable: false },
+      { data: 'DateSubmittedFormatted', orderable: true },
+      { data: 'DateOfJourneyFormatted', orderable: true },
+      { data: 'UpdatedDateFormatted', orderable: true },
+      { data: 'DisplayStatus', orderable: false },
+      {
+        data: 'ClaimType',
+        orderable: false,
+        createdCell: function (td, cellData, rowData, row, col) {
           $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
         }
       },
-      {'data': 'ClaimId',
-        'createdCell': function (td, cellData, rowData, row, col) {
+      {
+        data: 'ClaimId',
+        orderable: false,
+        createdCell: function (td, cellData, rowData, row, col) {
           $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
         }
       }
@@ -56,15 +62,14 @@ $(document).ready(function () {
 
     columnDefs: [
       {
-        'targets': [0, 1, 2, 3, 4, 5, 6],
-        'visible': true,
-        'searchable': false,
-        'orderable': false
+        targets: [0, 1, 2, 3, 4, 5, 6, 7],
+        visible: true,
+        searchable: false
       }
     ],
 
     drawCallback: function () {
-      var total = $('#claims_info').text().split(' ')[5]
+      const total = $('#claims_info').text().split(' ')[5]
       $('.badge').text(total)
     },
 

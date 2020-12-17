@@ -1,17 +1,17 @@
 function cleanColumnOutput (data, type, row) {
-  var unsafeOutputPattern = new RegExp(/>|<|&|"|\/|'/g)
+  const unsafeOutputPattern = />|<|&|"|\/|'/g
   return data.replace(unsafeOutputPattern, '')
 }
 
 $(document).ready(function () {
-  var searchQuery = decodeURIComponent(window.location.search.substring(1))
+  const searchQuery = decodeURIComponent(window.location.search.substring(1))
 
-  var search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}')
+  const search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}')
 
   if (searchQuery) {
     $('#search-results-header').show()
     $('#advanced-search-results').show()
-    var dataReference = '/advanced-search-results'
+    const dataReference = '/advanced-search-results'
 
     $('#advanced-search-results').DataTable({
       processing: true,
@@ -31,20 +31,22 @@ $(document).ready(function () {
       },
 
       columns: [
-        {'data': 'Reference', 'render': cleanColumnOutput},
-        {'data': 'Name', 'render': cleanColumnOutput},
-        {'data': 'DateSubmittedFormatted'},
-        {'data': 'DateOfJourneyFormatted'},
-        {'data': 'DisplayStatus'},
-        {'data': 'ClaimType',
-          'createdCell': function (td, cellData, rowData, row, col) {
+        { data: 'Reference', render: cleanColumnOutput },
+        { data: 'Name', render: cleanColumnOutput },
+        { data: 'DateSubmittedFormatted' },
+        { data: 'DateOfJourneyFormatted' },
+        { data: 'DisplayStatus' },
+        {
+          data: 'ClaimType',
+          createdCell: function (td, cellData, rowData, row, col) {
             $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
           }
         },
-        {'data': 'DaysUntilPayment'},
-        {'data': 'AssignedTo'},
-        {'data': 'ClaimId',
-          'createdCell': function (td, cellData, rowData, row, col) {
+        { data: 'DaysUntilPayment' },
+        { data: 'AssignedTo' },
+        {
+          data: 'ClaimId',
+          createdCell: function (td, cellData, rowData, row, col) {
             $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
           }
         }
@@ -52,18 +54,18 @@ $(document).ready(function () {
 
       columnDefs: [
         {
-          'targets': [0, 1, 2, 3, 4, 5, 6, 7, 8],
-          'visible': true,
-          'searchable': false,
-          'orderable': false,
-          'createdCell': function (td, cellData, rowData, row, col) {
+          targets: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+          visible: true,
+          searchable: false,
+          orderable: false,
+          createdCell: function (td, cellData, rowData, row, col) {
             $(td).css('padding', '10px')
           }
         }
       ],
 
       drawCallback: function () {
-        var total = $('#advanced-search-results_info').text().split(' ')[6]
+        const total = $('#advanced-search-results_info').text().split(' ')[6]
         $('.badge').text(total)
       },
 

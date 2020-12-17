@@ -3,7 +3,6 @@ const supertest = require('supertest')
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const ValidationError = require('../../../../app/services/errors/validation-error')
-require('sinon-bluebird')
 
 describe('routes/claim/file-upload', function () {
   const REFERENCE = 'V123456'
@@ -13,13 +12,13 @@ describe('routes/claim/file-upload', function () {
   const BASEROUTE = `/claim/file-upload/${REFERENCE}/${CLAIMID}/`
   const VALIDROUTE = `${BASEROUTE}VISIT_CONFIRMATION?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`
 
-  var authorisation
-  var directoryCheckStub
-  var uploadStub
-  var fileUploadStub
-  var claimDocumentUpdateStub
-  var generateCSRFTokenStub
-  var app
+  let authorisation
+  let directoryCheckStub
+  let uploadStub
+  let fileUploadStub
+  let claimDocumentUpdateStub
+  let generateCSRFTokenStub
+  let app
 
   beforeEach(function () {
     authorisation = { isCaseworker: sinon.stub() }
@@ -29,14 +28,14 @@ describe('routes/claim/file-upload', function () {
     claimDocumentUpdateStub = sinon.stub()
     generateCSRFTokenStub = sinon.stub()
 
-    var route = proxyquire('../../../../app/routes/claim/file-upload', {
+    const route = proxyquire('../../../../app/routes/claim/file-upload', {
       '../../services/authorisation': authorisation,
       '../../services/directory-check': directoryCheckStub,
       '../../services/upload': uploadStub,
       '../../services/domain/file-upload': fileUploadStub,
       '../../services/data/update-file-upload-details-for-claim': claimDocumentUpdateStub,
       '../../services/generate-csrf-token': generateCSRFTokenStub,
-      'csurf': function () { return function () { } }
+      csurf: function () { return function () { } }
     })
     app = routeHelper.buildApp(route)
     route(app)
