@@ -76,6 +76,13 @@
 
     {% include "partials/view-claim/visitor.html" %}
 
+    {% if Claim.AccountNumber %}
+      <br>
+      <h1 class="table-heading">Bank Account Details</h1>
+      </br>
+    {% endif %}
+    {% include "partials/view-claim/bank-account-details.html" %}
+
     <br>
     <h1 class="table-heading">Benefit Owner</h1>
     </br>
