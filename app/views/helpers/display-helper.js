@@ -85,3 +85,8 @@ module.exports.toDecimal = function (value) {
     return `${Number(value).toFixed(2)}`
   }
 }
+
+module.exports.maskString = function (unmaskedValue, visibleCharacterCount) {
+  const result = `${'*'.repeat(unmaskedValue.length - visibleCharacterCount)}${unmaskedValue.substring(visibleCharacterCount, unmaskedValue.length)}`
+  return result
+}

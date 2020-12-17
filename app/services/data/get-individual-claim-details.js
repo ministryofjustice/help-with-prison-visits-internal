@@ -1,6 +1,7 @@
 const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 const duplicateClaimCheck = require('./duplicate-claim-check')
+const duplicateBankDetailsCheck = require('./duplicate-bank-details-check')
 const getClaimsForPrisonNumberAndVisitDate = require('./get-claims-for-prison-number-and-visit-date')
 const getClaimTotalAmount = require('../get-claim-total-amount')
 const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference')
@@ -43,7 +44,8 @@ module.exports = function (claimId) {
         getOverpaidClaimsByReference(reference, claimId),
         getClaimsForPrisonNumberAndVisitDate(claimId, claim.PrisonNumber, claim.DateOfJourney),
         getTopUp(claimId),
-        getLatestUnpaidTopUp(claimId)
+        getLatestUnpaidTopUp(claimId),
+        duplicateBankDetailsCheck(reference, claimData.AccountNumber)
       ])
     })
     .then(function (results) {
@@ -59,6 +61,7 @@ module.exports = function (claimId) {
       claimantDuplicates = results[9]
       topUps = results[10]
       latestUnpaidTopUp = results[11]
+      bankDuplicates = results[12]
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
       claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
 
@@ -74,7 +77,8 @@ module.exports = function (claimId) {
         overpaidClaims: overpaidClaimData,
         TopUps: topUps,
         claimantDuplicates: claimantDuplicates,
-        latestUnpaidTopUp: latestUnpaidTopUp
+        latestUnpaidTopUp: latestUnpaidTopUp,
+        bankDuplicates: bankDuplicates
       }
 
       return claimDetails
@@ -87,6 +91,7 @@ function getClaimantDetails (claimId) {
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
     .join('Prisoner', 'Eligibility.EligibilityId', '=', 'Prisoner.EligibilityId')
     .leftJoin('Benefit', 'Eligibility.EligibilityId', '=', 'Benefit.EligibilityId')
+    .leftJoin('ClaimBankDetail', 'Claim.ClaimId', '=', 'ClaimBankDetail.ClaimId')
     .where('Claim.ClaimId', claimId)
     .first(
       'Eligibility.Reference',
@@ -141,7 +146,9 @@ function getClaimantDetails (claimId) {
       'Benefit.FirstName AS BenefitOwnerFirstName',
       'Benefit.LastName AS BenefitOwnerLastName',
       'Benefit.DateOfBirth AS BenefitOwnerDateOfBirth',
-      'Benefit.NationalInsuranceNumber AS BenefitOwnerNationalInsuranceNumber')
+      'Benefit.NationalInsuranceNumber AS BenefitOwnerNationalInsuranceNumber',
+      'ClaimBankDetail.AccountNumber',
+      'ClaimBankDetail.NameOnAccount')
     .then(function (data) {
       if (data.AssignedTo && data.AssignmentExpiry < dateFormatter.now().toDate()) {
         data.AssignedTo = null

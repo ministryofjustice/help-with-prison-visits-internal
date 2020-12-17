@@ -1,0 +1,13 @@
+{% if Claim['AccountNumber'] %}
+  <table class="col-2 no-pad-right">
+    <tr>
+      <td>Name on Account</td>
+      <td id="benefit-owner-name">{{ Claim['NameOnAccount'] }}</td>
+    </tr>
+
+    <tr>
+      <td>Account Number</td>
+      <td>{{ displayHelper.maskString(Claim['AccountNumber'],4) }}</td>
+    </tr>
+  </table>
+{% endif %}
