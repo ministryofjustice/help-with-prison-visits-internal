@@ -1,3 +1,8 @@
+const appInsights = require('applicationinsights')
+const config = require('../config')
+appInsights.setup(config.APP_INSIGHTS_INSTRUMENTATION_KEY)
+  .setSendLiveMetrics(true)
+appInsights.start()
 const express = require('express')
 const nunjucks = require('express-nunjucks')
 const path = require('path')
@@ -13,7 +18,6 @@ const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
-const config = require('../config')
 
 const app = express()
 
@@ -78,6 +82,7 @@ app.use(function (req, res, next) {
 
 // Log each HTML request and it's response.
 app.use(function (req, res, next) {
+  appInsights.defaultClient.trackNodeHttpRequest({ request: req, response: res })
   // Log response started.
   log.info({ request: req }, 'Route Started.')
 
