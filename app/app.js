@@ -1,7 +1,7 @@
 const appInsights = require('applicationinsights')
 const config = require('../config')
 appInsights.setup(config.APP_INSIGHTS_INSTRUMENTATION_KEY)
-.setSendLiveMetrics(true)
+  .setSendLiveMetrics(true)
 appInsights.start()
 const express = require('express')
 const nunjucks = require('express-nunjucks')
@@ -82,7 +82,7 @@ app.use(function (req, res, next) {
 
 // Log each HTML request and it's response.
 app.use(function (req, res, next) {
-  appInsights.defaultClient.trackNodeHttpRequest({request: req, response: res})
+  appInsights.defaultClient.trackNodeHttpRequest({ request: req, response: res })
   // Log response started.
   log.info({ request: req }, 'Route Started.')
 
