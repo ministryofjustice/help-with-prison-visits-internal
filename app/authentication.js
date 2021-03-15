@@ -46,10 +46,10 @@ module.exports = function (app) {
       request(options, function (error, response, userDetails) {
         if (!error && response.statusCode === 200) {
           let roles = []
-          options.uri = config.TOKEN_HOST +  config.USER_PATH_PREFIX + `/${userDetails.username}` + config.USER_EMAIL_PATH
+          options.uri = config.TOKEN_HOST + config.USER_PATH_PREFIX + `/${userDetails.username}` + config.USER_EMAIL_PATH
           request(options, function (error, response, userEmail) {
             if (!error && response.statusCode === 200) {
-              options.uri = config.TOKEN_HOST +  config.USER_PATH_PREFIX + config.USER_ROLES_PATH
+              options.uri = config.TOKEN_HOST + config.USER_PATH_PREFIX + config.USER_ROLES_PATH
               request(options, function (error, response, userRoles) {
                 if (!error && response.statusCode === 200) {
                   userRoles.forEach(function (role) {
