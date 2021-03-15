@@ -30,37 +30,55 @@ module.exports = function (app) {
       tokenURL: config.TOKEN_HOST + config.TOKEN_PATH,
       clientID: config.CLIENT_ID,
       clientSecret: config.CLIENT_SECRET,
-      callbackURL: config.REDIRECT_URI
+      callbackURL: config.REDIRECT_URI,
+      state: true,
+      customHeaders: {
+        Authorization: `Basic ${Buffer.from(`${config.CLIENT_ID}:${config.CLIENT_SECRET}`).toString('base64')}`
+      }
     },
-    function (accessToken, refreshToken, profile, cb) {
+    function (accessToken, refreshToken, params, profile, cb) {
       // Call API to get details on user
       const options = {
-        uri: config.TOKEN_HOST + config.USER_DETAILS_PATH,
+        uri: config.TOKEN_HOST + config.USER_PATH_PREFIX + config.USER_DETAILS_PATH,
         qs: { access_token: accessToken },
         json: true
       }
       request(options, function (error, response, userDetails) {
         if (!error && response.statusCode === 200) {
           let roles = []
+          options.uri = config.TOKEN_HOST +  config.USER_PATH_PREFIX + `/${userDetails.username}` + config.USER_EMAIL_PATH
+          request(options, function (error, response, userEmail) {
+            if (!error && response.statusCode === 200) {
+              options.uri = config.TOKEN_HOST +  config.USER_PATH_PREFIX + config.USER_ROLES_PATH
+              request(options, function (error, response, userRoles) {
+                if (!error && response.statusCode === 200) {
+                  userRoles.forEach(function (role) {
+                    roles = roles.concat(role.roleCode)
+                  })
 
-          userDetails.permissions.forEach(function (permission) {
-            roles = roles.concat(permission.roles)
-          })
-
-          if (roles) {
-            const sessionUser = {
-              email: userDetails.email,
-              first_name: userDetails.first_name,
-              last_name: userDetails.last_name,
-              roles: roles
+                  if (roles) {
+                    const sessionUser = {
+                      email: userEmail.email,
+                      name: userDetails.name,
+                      roles: roles
+                    }
+                    cb(null, sessionUser)
+                  } else {
+                    log.error('no roles found for user')
+                    const notAuthorisedError = new Error('You are not authorised for this service')
+                    notAuthorisedError.status = 403
+                    cb(notAuthorisedError, null)
+                  }
+                } else {
+                  log.error({ error: error }, 'error returned when requesting user roles from SSO')
+                  cb(error, null)
+                }
+              })
+            } else {
+              log.error({ error: error }, 'error returned when requesting user email from SSO')
+              cb(error, null)
             }
-            cb(null, sessionUser)
-          } else {
-            log.error('no roles found for user')
-            const notAuthorisedError = new Error('You are not authorised for this service')
-            notAuthorisedError.status = 403
-            cb(notAuthorisedError, null)
-          }
+          })
         } else {
           log.error({ error: error }, 'error returned when requesting user details from SSO')
           cb(error, null)

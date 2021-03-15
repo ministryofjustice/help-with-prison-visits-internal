@@ -29,7 +29,7 @@ function isSscl (req) {
 function isCaseworker (req) {
   isAuthenticated(req)
 
-  if (!req.user.roles.includes('caseworker')) {
+  if (!req.user.roles.includes('caseworker') && !req.user.roles.includes('HWPV_CASEWORKER')) {
     const error = new Error('unauthorised')
     error.status = 403
     throw error
