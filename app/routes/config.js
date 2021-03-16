@@ -4,10 +4,11 @@ const updateAutoApprovalConfig = require('../services/data/update-auto-approval-
 const autoApprovalRulesEnum = require('../constants/auto-approval-rules-enum')
 const AutoApprovalConfig = require('../services/domain/auto-approval-config')
 const ValidationError = require('../services/errors/validation-error')
+const applicationRoles = require('../constants/application-roles-enum')
 
 module.exports = function (router) {
   router.get('/config', function (req, res, next) {
-    authorisation.isAdmin(req)
+    authorisation.hasRoles(req, [applicationRoles.BAND_9])
 
     getAutoApprovalConfig()
       .then(function (autoApprovalConfig) {
@@ -24,7 +25,7 @@ module.exports = function (router) {
   })
 
   router.post('/config', function (req, res, next) {
-    authorisation.isAdmin(req)
+    authorisation.hasRoles(req, [applicationRoles.BAND_9])
 
     const rulesDisabled = generateRulesDisabled(req.body.rulesEnabled || [])
     try {
