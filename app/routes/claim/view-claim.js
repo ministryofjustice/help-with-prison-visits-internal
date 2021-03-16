@@ -39,6 +39,7 @@ const getRejectionReasons = require('../../services/data/get-rejection-reasons')
 const getRejectionReasonId = require('../../services/data/get-rejection-reason-id')
 const updateVisitorBenefitExpiryDate = require('../../services/data/update-visitor-benefit-expiry-date')
 const applicationRoles = require('../../constants/application-roles-enum')
+const log = require('../../services/log')
 
 let claimExpenses
 let claimDeductions
@@ -46,7 +47,6 @@ let claimDeductions
 module.exports = function (router) {
   // GET
   router.get('/claim/:claimId', function (req, res) {
-    // APVS0246
     const allowedRoles = [
       applicationRoles.CLAIM_ENTRY_BAND_2,
       applicationRoles.CLAIM_PAYMENT_BAND_3,
@@ -85,7 +85,18 @@ module.exports = function (router) {
   // POST
   router.post('/claim/:claimId', function (req, res, next) {
     const needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, '/', function () {
+    let allowedRoles = []
+
+    if (req.body.decision === claimDecisionEnum.APPROVED || req.body.decision === claimDecisionEnum.REJECTED) {
+      allowedRoles.push(applicationRoles.CLAIM_PAYMENT_BAND_3)
+    } else if (req.body.decision === claimDecisionEnum.REQUEST_INFORMATION) {
+      allowedRoles = [
+        applicationRoles.CLAIM_PAYMENT_BAND_3,
+        applicationRoles.CASEWORK_MANAGER_BAND_5,
+        applicationRoles.BAND_9
+      ]
+    }
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, '/', function () {
       claimExpenses = getClaimExpenseResponses(req.body)
       return submitClaimDecision(req, res, claimExpenses)
     })
