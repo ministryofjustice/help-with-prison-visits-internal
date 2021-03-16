@@ -47,7 +47,7 @@ module.exports = function (router) {
   // GET
   router.get('/claim/:claimId', function (req, res) {
     // APVS0246
-    let allowedRoles = [
+    const allowedRoles = [
       applicationRoles.CLAIM_ENTRY_BAND_2,
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5,
@@ -131,7 +131,8 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/update-overpayment-status', function (req, res, next) {
     const needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           const claim = data.claim
@@ -238,7 +239,12 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/assign-self', function (req, res, next) {
     const needAssignmentCheck = false
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.BAND_9
+    ]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return updateAssignmentOfClaims(req.params.claimId, req.user.email)
         .then(function () {
           return false
@@ -266,8 +272,8 @@ function getClaimDeductionId (requestBody) {
   return deductionId
 }
 // APVS0246 Going to need to pass in the required roles
-function validatePostRequest (req, res, next, needAssignmentCheck, redirectUrl, postFunction) {
-  authorisation.isCaseworker(req)
+function validatePostRequest (req, res, next, allowedRoles, needAssignmentCheck, redirectUrl, postFunction) {
+  authorisation.hasRoles(req, allowedRoles)
   let updateConflict = true
 
   return Promise.try(function () {
