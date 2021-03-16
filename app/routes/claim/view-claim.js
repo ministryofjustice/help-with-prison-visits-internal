@@ -162,7 +162,12 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/request-new-payment-details', function (req, res, next) {
     const needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.BAND_9
+    ]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           if (data.TopUps.allTopUpsPaid) {
@@ -211,7 +216,12 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/payout-barcode-expired', function (req, res, next) {
     const needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.BAND_9
+    ]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return payoutBarcodeExpiredClaim(req.params.claimId, req.body['payout-barcode-expired-additional-information'])
     })
   })
