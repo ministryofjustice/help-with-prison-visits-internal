@@ -38,6 +38,7 @@ const Promise = require('bluebird')
 const getRejectionReasons = require('../../services/data/get-rejection-reasons')
 const getRejectionReasonId = require('../../services/data/get-rejection-reason-id')
 const updateVisitorBenefitExpiryDate = require('../../services/data/update-visitor-benefit-expiry-date')
+const applicationRoles = require('../../constants/application-roles-enum')
 
 let claimExpenses
 let claimDeductions
@@ -45,7 +46,15 @@ let claimDeductions
 module.exports = function (router) {
   // GET
   router.get('/claim/:claimId', function (req, res) {
-    authorisation.isCaseworker(req)
+    // APVS0246
+    let allowedRoles = [
+      applicationRoles.CLAIM_ENTRY_BAND_2,
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.BAND_9,
+      applicationRoles.APPLICATION_DEVELOPER
+    ]
+    authorisation.hasRoles(req, allowedRoles)
     return renderViewClaimPage(req.params.claimId, req, res)
   })
 
@@ -256,7 +265,7 @@ function getClaimDeductionId (requestBody) {
 
   return deductionId
 }
-
+// APVS0246 Going to need to pass in the required roles
 function validatePostRequest (req, res, next, needAssignmentCheck, redirectUrl, postFunction) {
   authorisation.isCaseworker(req)
   let updateConflict = true
