@@ -4,19 +4,27 @@ const exportSearchResults = require('../services/export-search-results')
 const displayHelper = require('../views/helpers/display-helper')
 const dateFormatter = require('../services/date-formatter')
 const validationFieldNames = require('../services/validators/validation-field-names')
+const applicationRoles = require('../constants/application-roles-enum')
+
 const MIN_YEAR = 1900
 const VALID_AMOUNT_EXPRESSION = /^(\d+\.?\d{0,9}|\d{1,9})$/
 let validationErrors
-
+const allowedRoles = [
+  applicationRoles.CLAIM_ENTRY_BAND_2,
+  applicationRoles.CLAIM_PAYMENT_BAND_3,
+  applicationRoles.CASEWORK_MANAGER_BAND_5,
+  applicationRoles.BAND_9,
+  applicationRoles.APPLICATION_DEVELOPER
+]
 module.exports = function (router) {
   router.get('/advanced-search-input', function (req, res) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     return res.render('advanced-search')
   })
 
   router.get('/advanced-search', function (req, res) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
     validationErrors = {}
     extractSearchCriteria(req.query)
 
@@ -39,7 +47,7 @@ module.exports = function (router) {
 
   router.get('/advanced-search-results/export', function (req, res) {
     res.connection.setTimeout(500000)
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     const searchCriteria = extractSearchCriteria(req.query)
 
@@ -61,7 +69,7 @@ module.exports = function (router) {
   })
 
   router.post('/advanced-search-results', function (req, res, next) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
     const searchCriteria = extractSearchCriteria(req.body)
     getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body.start), parseInt(req.body.length))
       .then(function (data) {
