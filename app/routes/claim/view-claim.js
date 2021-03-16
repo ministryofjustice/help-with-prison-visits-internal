@@ -183,7 +183,8 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/add-top-up', function (req, res, next) {
     const needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           if (data.claim.PaymentStatus === 'PROCESSED' && data.TopUps.allTopUpsPaid) {
@@ -204,7 +205,8 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/cancel-top-up', function (req, res, next) {
     const needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
           const claim = data.claim
