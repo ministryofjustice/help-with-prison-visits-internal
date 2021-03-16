@@ -58,6 +58,7 @@ module.exports = function (router) {
     return renderViewClaimPage(req.params.claimId, req, res)
   })
 
+  // APVS0246 Need Clarification on who can do this
   router.get('/claim/:claimId/download', function (req, res, next) {
     authorisation.isCaseworker(req)
 
@@ -120,6 +121,7 @@ module.exports = function (router) {
     })
   })
 
+  // APVS0246 Need Clarification on who can do this
   router.post('/claim/:claimId/update-benefit-expiry-date', function (req, res, next) {
     const needAssignmentCheck = true
     return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
@@ -254,6 +256,7 @@ module.exports = function (router) {
     })
   })
 
+  // APVS0246 Need Clarification on who can do this
   router.post('/claim/:claimId/insert-note', function (req, res, next) {
     const needAssignmentCheck = false
 
@@ -283,7 +286,12 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/unassign', function (req, res, next) {
     const needAssignmentCheck = false
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.BAND_9
+    ]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return updateAssignmentOfClaims(req.params.claimId, null)
     })
   })
