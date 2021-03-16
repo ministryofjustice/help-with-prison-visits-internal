@@ -8,11 +8,14 @@ const FileUpload = require('../../services/domain/file-upload')
 const ClaimDocumentUpdate = require('../../services/data/update-file-upload-details-for-claim')
 const csrfProtection = require('csurf')({ cookie: true })
 const generateCSRFToken = require('../../services/generate-csrf-token')
+const applicationRoles = require('../../constants/application-roles-enum')
+
 let csrfToken
+const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
 
 module.exports = function (router) {
   router.get('/claim/file-upload/:referenceId/:claimId/:documentType', function (req, res) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     csrfToken = generateCSRFToken(req)
 
@@ -36,7 +39,7 @@ module.exports = function (router) {
   })
 
   router.post('/claim/file-upload/:referenceId/:claimId/:documentType', function (req, res, next) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     Upload(req, res, function (error) {
       try {
