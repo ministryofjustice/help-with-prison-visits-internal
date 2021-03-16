@@ -1,10 +1,12 @@
 const authorisation = require('../services/authorisation')
 const getDirectPaymentFiles = require('../services/data/get-direct-payment-files')
 const dateHelper = require('../views/helpers/date-helper')
+const applicationRoles = require('../constants/application-roles-enum')
 
 module.exports = function (router) {
   router.get('/download-payment-files', function (req, res, next) {
-    authorisation.isSscl(req)
+
+    authorisation.hasRoles(req, [applicationRoles.HWPV_SSCL])
 
     getDirectPaymentFiles()
       .then(function (directPaymentFiles) {
