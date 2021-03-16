@@ -92,7 +92,8 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/add-deduction', function (req, res, next) {
     const needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       const deductionType = req.body.deductionType
       // var amount = Number(req.body.deductionAmount).toFixed(2)
       const amount = req.body.deductionAmount
@@ -108,7 +109,8 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/remove-deduction', function (req, res, next) {
     const needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       const removeDeductionId = getClaimDeductionId(req.body)
 
       return disableDeduction(removeDeductionId)
