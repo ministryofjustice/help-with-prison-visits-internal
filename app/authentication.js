@@ -4,6 +4,7 @@ const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
 const request = require('request')
 const log = require('./services/log')
+const applicationRoles = require('./constants/application-roles-enum')
 
 module.exports = function (app) {
   if (config.AUTHENTICATION_ENABLED === 'true') {
@@ -97,7 +98,16 @@ module.exports = function (app) {
         email: 'test@test.com',
         first_name: 'Andrew',
         last_name: 'Adams',
-        roles: ['caseworker', 'admin', 'sscl']
+        // APVS0246
+        roles: [
+          applicationRoles.CLAIM_ENTRY_BAND_2,
+          applicationRoles.CLAIM_PAYMENT_BAND_3,
+          applicationRoles.CASEWORK_MANAGER_BAND_5,
+          applicationRoles.BAND_9,
+          applicationRoles.APPLICATION_DEVELOPER,
+          applicationRoles.HWPV_SSCL
+        ]
+        // old roles: ['caseworker', 'admin', 'sscl']
       }
       next()
     })
