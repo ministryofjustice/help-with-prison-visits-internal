@@ -8,7 +8,7 @@ const sinon = require('sinon')
 let getClaimsListAndCount
 let displayHelperStub
 let authorisation
-let isCaseworkerStub
+let hasRolesStub
 
 const RETURNED_CLAIM = {
   Reference: 'A123456',
@@ -25,8 +25,8 @@ describe('routes/index', function () {
   let app
 
   beforeEach(function () {
-    isCaseworkerStub = sinon.stub()
-    authorisation = { isCaseworker: isCaseworkerStub }
+    hasRolesStub = sinon.stub()
+    authorisation = { hasRoles: hasRolesStub }
     getClaimsListAndCount = sinon.stub()
     displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
@@ -46,7 +46,7 @@ describe('routes/index', function () {
         .get('/')
         .expect(200)
         .expect(function () {
-          expect(isCaseworkerStub.calledOnce).to.be.true //eslint-disable-line
+          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
   })
@@ -59,7 +59,7 @@ describe('routes/index', function () {
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(isCaseworkerStub.calledOnce).to.be.true //eslint-disable-line
+          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
           expect(getClaimsListAndCount.calledWith(['TEST'], false, 0, 10)).to.be.true //eslint-disable-line
           expect(response.body.recordsTotal).to.equal(0)
           expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')

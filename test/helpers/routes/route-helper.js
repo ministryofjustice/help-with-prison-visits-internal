@@ -3,6 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const expressSanitized = require('express-sanitized')
 const cookieParser = require('cookie-parser')
+const applicationRoles = require('../../../app/constants/application-roles-enum')
 
 const VIEWS_DIRECTORY = '../../../app/views'
 
@@ -17,7 +18,16 @@ module.exports.buildApp = function (route) {
       email: 'test@test.com',
       first_name: 'Andrew',
       last_name: 'Adams',
-      roles: ['caseworker', 'admin', 'sscl']
+      // APVS0246
+      roles: [
+        applicationRoles.CLAIM_ENTRY_BAND_2,
+        applicationRoles.CLAIM_PAYMENT_BAND_3,
+        applicationRoles.CASEWORK_MANAGER_BAND_5,
+        applicationRoles.BAND_9,
+        applicationRoles.APPLICATION_DEVELOPER,
+        applicationRoles.HWPV_SSCL
+      ]
+      // old roles: ['caseworker', 'admin', 'sscl']
     }
     next()
   })

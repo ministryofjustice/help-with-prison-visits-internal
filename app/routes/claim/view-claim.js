@@ -39,7 +39,6 @@ const getRejectionReasons = require('../../services/data/get-rejection-reasons')
 const getRejectionReasonId = require('../../services/data/get-rejection-reason-id')
 const updateVisitorBenefitExpiryDate = require('../../services/data/update-visitor-benefit-expiry-date')
 const applicationRoles = require('../../constants/application-roles-enum')
-const log = require('../../services/log')
 
 let claimExpenses
 let claimDeductions
@@ -60,7 +59,12 @@ module.exports = function (router) {
 
   // APVS0246 Need Clarification on who can do this
   router.get('/claim/:claimId/download', function (req, res, next) {
-    authorisation.isCaseworker(req)
+    const allowedRoles = [
+      applicationRoles.CLAIM_ENTRY_BAND_2,
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.CASEWORK_MANAGER_BAND_5
+    ]
+    authorisation.hasRoles(req, allowedRoles)
 
     return Promise.try(function () {
       const claimDocumentId = req.query['claim-document-id']
@@ -135,7 +139,12 @@ module.exports = function (router) {
   // APVS0246 Need Clarification on who can do this
   router.post('/claim/:claimId/update-benefit-expiry-date', function (req, res, next) {
     const needAssignmentCheck = true
-    return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    const allowedRoles = [
+      applicationRoles.CLAIM_ENTRY_BAND_2,
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.CASEWORK_MANAGER_BAND_5
+    ]
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       const benefitExpiryDate = new BenefitExpiryDate(req.body['expiry-day'], req.body['expiry-month'], req.body['expiry-year'])
       return updateVisitorBenefitExpiryDate(req.params.claimId, benefitExpiryDate)
         .then(function () {
@@ -270,11 +279,15 @@ module.exports = function (router) {
   // APVS0246 Need Clarification on who can do this
   router.post('/claim/:claimId/insert-note', function (req, res, next) {
     const needAssignmentCheck = false
-
+    const allowedRoles = [
+      applicationRoles.CLAIM_ENTRY_BAND_2,
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.CASEWORK_MANAGER_BAND_5
+    ]
     if (!req.body['note-information']) {
       return handleError('Note must not be blank.', req, res, false, next)
     } else {
-      return validatePostRequest(req, res, next, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+      return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
         return insertNote(req.params.claimId, req.body['note-information'], req.user.email)
       })
     }

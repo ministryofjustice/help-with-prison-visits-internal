@@ -24,38 +24,5 @@ function hasRoles (req, roles) {
   }
 }
 
-function isAdmin (req) {
-  isAuthenticated(req)
-
-  if (!req.user.roles.includes('admin')) {
-    const error = new Error('unauthorised')
-    error.status = 403
-    throw error
-  }
-}
-
-function isSscl (req) {
-  isAuthenticated(req)
-
-  if (!req.user.roles.includes('sscl')) {
-    const error = new Error('unauthorised')
-    error.status = 403
-    throw error
-  }
-}
-
-function isCaseworker (req) {
-  isAuthenticated(req)
-
-  if (!req.user.roles.includes('caseworker') && !req.user.roles.includes('HWPV_CASEWORKER')) {
-    const error = new Error('unauthorised')
-    error.status = 403
-    throw error
-  }
-}
-
 module.exports.isAuthenticated = isAuthenticated
-module.exports.isAdmin = isAdmin
-module.exports.isSscl = isSscl
-module.exports.isCaseworker = isCaseworker
 module.exports.hasRoles = hasRoles

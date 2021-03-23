@@ -6,7 +6,7 @@ const sinon = require('sinon')
 const ValidationError = require('../../../app/services/errors/validation-error')
 const autoApprovalRulesEnum = require('../../../app/constants/auto-approval-rules-enum')
 
-let isAdmin
+let hasRoles
 let getAutoApprovalConfigStub
 let updateAutoApprovalConfigStub
 let AutoApprovalConfigStub
@@ -15,13 +15,13 @@ describe('routes/config', function () {
   let app
 
   beforeEach(function () {
-    isAdmin = sinon.stub()
+    hasRoles = sinon.stub()
     getAutoApprovalConfigStub = sinon.stub().resolves({ RulesDisabled: 'Test' })
     updateAutoApprovalConfigStub = sinon.stub().resolves()
     AutoApprovalConfigStub = sinon.stub().returns({})
 
     const route = proxyquire('../../../app/routes/config', {
-      '../services/authorisation': { isAdmin: isAdmin },
+      '../services/authorisation': { hasRoles: hasRoles },
       '../services/data/get-auto-approval-config': getAutoApprovalConfigStub,
       '../services/data/update-auto-approval-config': updateAutoApprovalConfigStub,
       '../services/domain/auto-approval-config': AutoApprovalConfigStub
@@ -37,7 +37,7 @@ describe('routes/config', function () {
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(isAdmin.calledOnce).to.be.true //eslint-disable-line
+          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
@@ -48,7 +48,7 @@ describe('routes/config', function () {
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(isAdmin.calledOnce).to.be.true //eslint-disable-line
+          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
@@ -67,7 +67,7 @@ describe('routes/config', function () {
         .post('/config')
         .expect(302)
         .expect(function () {
-          expect(isAdmin.calledOnce).to.be.true //eslint-disable-line
+          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(updateAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
           expect(AutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
         })

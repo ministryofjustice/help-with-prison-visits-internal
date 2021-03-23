@@ -3,10 +3,16 @@ const getIndividualClaimDetails = require('../../services/data/get-individual-cl
 const UpdateContactDetailsResponse = require('../../services/domain/update-contact-details-response')
 const ValidationError = require('../../services/errors/validation-error')
 const updateVisitorContactDetails = require('../../services/data/update-visitor-contact-details')
+const applicationRoles = require('../../constants/application-roles-enum')
+const allowedRoles = [
+  applicationRoles.CLAIM_ENTRY_BAND_2,
+  applicationRoles.CLAIM_PAYMENT_BAND_3,
+  applicationRoles.CASEWORK_MANAGER_BAND_5
+]
 
 module.exports = function (router) {
   router.get('/claim/:claimId/update-contact-details', function (req, res, next) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     return getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
@@ -24,7 +30,7 @@ module.exports = function (router) {
   })
 
   router.post('/claim/:claimId/update-contact-details', function (req, res, next) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     try {
       const updateContactDetailsResponse = new UpdateContactDetailsResponse(req.body.EmailAddress, req.body.PhoneNumber)

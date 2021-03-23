@@ -49,7 +49,7 @@ module.exports = function (router) {
   })
 
   router.get('/download-payment-files/download', function (req, res, next) {
-    authorisation.isSscl(req)
+    authorisation.hasRoles(req, [applicationRoles.HWPV_SSCL])
 
     const id = parseInt(req.query.id)
     if (id) {
