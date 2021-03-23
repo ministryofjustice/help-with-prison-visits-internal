@@ -14,7 +14,6 @@ function hasRoles (req, roles) {
   roles.forEach(function (role) {
     if (req.user.roles.includes(role)) {
       hasDesiredRole = true
-      return
     }
   })
   if (!hasDesiredRole) {

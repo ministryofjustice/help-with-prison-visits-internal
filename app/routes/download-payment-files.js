@@ -5,7 +5,6 @@ const applicationRoles = require('../constants/application-roles-enum')
 
 module.exports = function (router) {
   router.get('/download-payment-files', function (req, res, next) {
-
     authorisation.hasRoles(req, [applicationRoles.HWPV_SSCL])
 
     getDirectPaymentFiles()
