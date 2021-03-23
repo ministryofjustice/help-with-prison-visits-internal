@@ -5,7 +5,7 @@ const knex = require('knex')(config)
 module.exports.insertTestData = function (reference, date, status, visitDate, increment, paymentStatus = null) {
   const idIncrement = increment || 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
-  const uniqueId = Math.floor(Date.now() / 100) - 14000000000 + idIncrement
+  const uniqueId = Math.floor(Date.now() / 100) - 15000000000 + idIncrement
 
   return this.insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus)
 }
