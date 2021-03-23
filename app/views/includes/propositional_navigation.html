@@ -5,8 +5,9 @@
       <ul id="proposition-links">
         {% if user %}
         <li>Signed in as {{ user.email }}</li>
-        <li>{% if user.roles.includes('admin') %} <a href="/config" id="config">Configuration</a>  {% endif %}</li>
-        <li>{% if user.roles.includes('sscl') %} <a href="/download-payment-files" id="sscl">SSCL</a>  {% endif %}</li>
+        {# APVS0246: TODO Remove hard coding of roles and replace with values from constant file #}
+        <li>{% if user.roles.includes('BAND_9') %} <a href="/config" id="config">Configuration</a>  {% endif %}</li>
+        <li>{% if user.roles.includes('HWPV_SSCL') %} <a href="/download-payment-files" id="sscl">SSCL</a>  {% endif %}</li>
         <li><a href="/logout" id="logout">Sign out</a></li>
         {% endif %}
       </ul>

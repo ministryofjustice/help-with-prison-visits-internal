@@ -1,3 +1,4 @@
+// APVS0246
 function isAuthenticated (req) {
   if (!req.user) {
     const error = new Error('unauthenticated')
@@ -6,30 +7,16 @@ function isAuthenticated (req) {
   }
 }
 
-function isAdmin (req) {
+function hasRoles (req, roles) {
   isAuthenticated(req)
 
-  if (!req.user.roles.includes('admin')) {
-    const error = new Error('unauthorised')
-    error.status = 403
-    throw error
-  }
-}
-
-function isSscl (req) {
-  isAuthenticated(req)
-
-  if (!req.user.roles.includes('sscl')) {
-    const error = new Error('unauthorised')
-    error.status = 403
-    throw error
-  }
-}
-
-function isCaseworker (req) {
-  isAuthenticated(req)
-
-  if (!req.user.roles.includes('caseworker')) {
+  let hasDesiredRole = false
+  roles.forEach(function (role) {
+    if (req.user.roles.includes(role)) {
+      hasDesiredRole = true
+    }
+  })
+  if (!hasDesiredRole) {
     const error = new Error('unauthorised')
     error.status = 403
     throw error
@@ -37,6 +24,4 @@ function isCaseworker (req) {
 }
 
 module.exports.isAuthenticated = isAuthenticated
-module.exports.isAdmin = isAdmin
-module.exports.isSscl = isSscl
-module.exports.isCaseworker = isCaseworker
+module.exports.hasRoles = hasRoles

@@ -4,7 +4,7 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
-let isSscl
+let hasRoles
 let getDirectPaymentFiles
 
 const FILES = {
@@ -16,11 +16,11 @@ describe('routes/download-payment-files', function () {
   let app
 
   beforeEach(function () {
-    isSscl = sinon.stub()
+    hasRoles = sinon.stub()
     getDirectPaymentFiles = sinon.stub()
 
     const route = proxyquire('../../../app/routes/download-payment-files', {
-      '../services/authorisation': { isSscl: isSscl },
+      '../services/authorisation': { hasRoles: hasRoles },
       '../services/data/get-direct-payment-files': getDirectPaymentFiles
     })
 
@@ -34,7 +34,7 @@ describe('routes/download-payment-files', function () {
         .get('/download-payment-files')
         .expect(200)
         .expect(function () {
-          expect(isSscl.calledOnce).to.be.true //eslint-disable-line
+          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(getDirectPaymentFiles.calledOnce).to.be.true //eslint-disable-line
         })
     })
@@ -76,7 +76,7 @@ describe('routes/download-payment-files', function () {
         .get('/download-payment-files/download?id=2')
         .expect(200)
         .expect(function (response) {
-          expect(isSscl.calledOnce).to.be.true //eslint-disable-line
+          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(getDirectPaymentFiles.calledOnce).to.be.true //eslint-disable-line
           expect(response.header['content-length']).to.equal('4')
         })

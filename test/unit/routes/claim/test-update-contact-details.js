@@ -16,7 +16,7 @@ describe('routes/claim/update-contact-details', function () {
   let app
 
   beforeEach(function () {
-    authorisation = { isCaseworker: sinon.stub() }
+    authorisation = { hasRoles: sinon.stub() }
     getIndividualClaimDetails = sinon.stub().resolves({ claim: {} })
     UpdateContactDetailsResponse = sinon.stub()
     updateVisitorContactDetails = sinon.stub().resolves()

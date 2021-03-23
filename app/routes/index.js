@@ -2,10 +2,18 @@ const authorisation = require('../services/authorisation')
 const getClaimsListAndCount = require('../services/data/get-claim-list-and-count')
 const claimStatusEnum = require('../constants/claim-status-enum')
 const displayHelper = require('../views/helpers/display-helper')
+const applicationRoles = require('../constants/application-roles-enum')
+const allowedRoles = [
+  applicationRoles.CLAIM_ENTRY_BAND_2,
+  applicationRoles.CLAIM_PAYMENT_BAND_3,
+  applicationRoles.CASEWORK_MANAGER_BAND_5,
+  applicationRoles.BAND_9,
+  applicationRoles.APPLICATION_DEVELOPER
+]
 
 module.exports = function (router) {
   router.get('/', function (req, res) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     res.render('index', {
       title: 'APVS index',
@@ -14,7 +22,7 @@ module.exports = function (router) {
   })
 
   router.get('/claims/:status', function (req, res) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     let sortType
     let sortOrder
@@ -84,7 +92,7 @@ module.exports = function (router) {
   })
 
   router.get('/claims/:status/:sortType', function (req, res) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     let sortType
     let sortOrder = 'desc'

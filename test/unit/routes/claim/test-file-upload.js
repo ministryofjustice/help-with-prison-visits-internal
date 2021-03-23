@@ -21,7 +21,7 @@ describe('routes/claim/file-upload', function () {
   let app
 
   beforeEach(function () {
-    authorisation = { isCaseworker: sinon.stub() }
+    authorisation = { hasRoles: sinon.stub() }
     directoryCheckStub = sinon.stub()
     uploadStub = sinon.stub()
     fileUploadStub = sinon.stub()
@@ -47,7 +47,7 @@ describe('routes/claim/file-upload', function () {
         .get(VALIDROUTE)
         .expect(function () {
           sinon.assert.calledOnce(generateCSRFTokenStub)
-          sinon.assert.calledOnce(authorisation.isCaseworker)
+          sinon.assert.calledOnce(authorisation.hasRoles)
         })
     })
 
@@ -62,7 +62,7 @@ describe('routes/claim/file-upload', function () {
         .get(VALIDROUTE)
         .expect(function () {
           sinon.assert.calledOnce(directoryCheckStub)
-          sinon.assert.calledOnce(authorisation.isCaseworker)
+          sinon.assert.calledOnce(authorisation.hasRoles)
         })
     })
 

@@ -2,10 +2,16 @@ const authorisation = require('../services/authorisation')
 const getDashboardData = require('../../app/services/data/dashboard/get-dashboard-data')
 const dashboardFilterEnum = require('../../app/constants/dashboard-filter-enum')
 const dateFormatter = require('../../app/services/date-formatter')
+const applicationRoles = require('../constants/application-roles-enum')
+const allowedRoles = [
+  applicationRoles.CLAIM_PAYMENT_BAND_3,
+  applicationRoles.CASEWORK_MANAGER_BAND_5,
+  applicationRoles.BAND_9
+]
 
 module.exports = function (router) {
   router.get('/dashboard', function (req, res) {
-    authorisation.isCaseworker(req)
+    authorisation.hasRoles(req, allowedRoles)
 
     const filter = req.query.filter || dashboardFilterEnum.TODAY
 
