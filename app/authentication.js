@@ -116,7 +116,7 @@ module.exports = function (app) {
   // Make user details available to the views
   app.use(function (req, res, next) {
     if (req.user) {
-      req.user.assistedDigitalUrl = `${config.EXTERNAL_SERVICE_URL}/assisted-digital?caseworker=${req.user.email}`
+      req.user.assistedDigitalUrl = '/submit-claim-on-behalf-of-claimant'
       res.locals.user = req.user
     }
     next()
