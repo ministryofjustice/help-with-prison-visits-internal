@@ -96,8 +96,7 @@ module.exports = function (router) {
     } else if (req.body.decision === claimDecisionEnum.REQUEST_INFORMATION) {
       allowedRoles = [
         applicationRoles.CLAIM_PAYMENT_BAND_3,
-        applicationRoles.CASEWORK_MANAGER_BAND_5,
-        applicationRoles.BAND_9
+        applicationRoles.CASEWORK_MANAGER_BAND_5
       ]
     }
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, '/', function () {
@@ -176,8 +175,7 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5,
-      applicationRoles.BAND_9
+      applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'], req.user.email)
@@ -188,8 +186,7 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5,
-      applicationRoles.BAND_9
+      applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
@@ -244,8 +241,7 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5,
-      applicationRoles.BAND_9
+      applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return payoutBarcodeExpiredClaim(req.params.claimId, req.body['payout-barcode-expired-additional-information'])
@@ -256,8 +252,7 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5,
-      applicationRoles.BAND_9
+      applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return disableReferenceNumber(req.params.claimId, req.body.referenceToBeDisabled, req.body['disable-reference-number-additional-information'], req.user.email)
@@ -268,8 +263,7 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5,
-      applicationRoles.BAND_9
+      applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return reEnableReferenceNumber(req.params.claimId, req.body.referenceToBeReEnabled, req.body['re-enable-reference-number-additional-information'], req.user.email)
