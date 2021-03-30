@@ -22,7 +22,10 @@ const routes = [
   require('./authentication'),
 
   // Health check routes
-  require('./health-check/status')
+  require('./health-check/status'),
+
+  // Submit claim on behalf of a claimant
+  require('./submit-claim-on-behalf-of-claimant')
 ]
 
 module.exports = function (router) {
