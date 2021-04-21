@@ -12,6 +12,7 @@
   "scripts": {
     "start": "gulp",
     "generate-assets": "gulp generate-assets",
+    "record-build-info": "node scripts/record-build-info",
     "start-maintenance": "node app/bin/www-maintenance",
     "test": "standard && mocha --recursive test/unit/ --exit",
     "test-coverage": "nyc npm run test-unit",
@@ -30,7 +31,6 @@
   },
   "standard": {
     "ignore": [
-      "cache_node_modules/*",
       "jquery*.js",
       "ga.js"
     ],
@@ -56,6 +56,7 @@
     "csurf": "^1.11.0",
     "csv": "^5.3.2",
     "debug": ">=4.3.1",
+    "dotenv": "^8.2.0",
     "express": "~4.17.1",
     "express-nunjucks": "^2.2.5",
     "express-sanitized": "^0.5.1",
