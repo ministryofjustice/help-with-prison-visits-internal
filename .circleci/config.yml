@@ -1,16 +1,157 @@
+defaults: &defaults
+  working_directory: ~/app
+  docker:
+    - image: mojdigitalstudio/circleci-build-container
+test_setup: &test_setup
+  docker:
+    - image: circleci/node:14-buster-browsers
+  working_directory: ~/app
+
 version: 2.1
 
 orbs:
   hmpps: ministryofjustice/hmpps@3.1
 
-executors:
-  integration-tests:
-    docker:
-      - image: cimg/node:14.15-browsers
-      - image: circleci/redis:buster
-    working_directory: ~/app
+# executors:
+#   integration-tests:
+#     docker:
+#       - image: cimg/node:14.15-browsers
+#       - image: circleci/redis:buster
+#     working_directory: ~/app
 
 jobs:
+  run_unit_tests:
+    <<: *test_setup
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run Unit Tests
+          command: npm run test
+
+  run_integration_tests:
+    <<: *test_setup
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run Integration Tests
+          command: |
+            APVS_DATABASE="$APVS_DATABASE" \
+            APVS_DATABASE_SERVER="$APVS_DATABASE_SERVER" \
+            APVS_INT_MIGRATION_USERNAME="$APVS_INT_MIGRATION_USERNAME" \
+            APVS_INT_MIGRATION_PASSWORD="$APVS_INT_MIGRATION_PASSWORD" \
+            APVS_INT_WEB_USERNAME="$APVS_INT_WEB_USERNAME" \
+            APVS_INT_WEB_PASSWORD="$APVS_INT_WEB_PASSWORD" \
+            npm run test-integration
+
+  run_smoke_tests:
+    <<: *test_setup
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run Smoke Tests
+          command: |
+            APVS_DATABASE="$APVS_DATABASE" \
+            APVS_DATABASE_SERVER="$APVS_DATABASE_SERVER" \
+            APVS_INT_MIGRATION_USERNAME="$APVS_INT_MIGRATION_USERNAME" \
+            APVS_INT_MIGRATION_PASSWORD="$APVS_INT_MIGRATION_PASSWORD" \
+            SAUCE_USERNAME="$SAUCE_USERNAME" \
+            SAUCE_ACCESS_KEY="$SAUCE_ACCESS_KEY" \
+            SAUCE_BASEURL="$SAUCE_BASEURL" \
+            APVS_MOJ_SSO_TEST_SSO_EMAIL="$APVS_MOJ_SSO_TEST_SSO_EMAIL" \
+            APVS_MOJ_SSO_TEST_SSO_PASSWORD="$APVS_MOJ_SSO_TEST_SSO_PASSWORD" \
+            APVS_MOJ_SSO_AUTHENTICATION_ENABLED=true \
+            APVS_MOJ_SSO_TOKEN_HOST="$APVS_MOJ_SSO_TOKEN_HOST" \
+            npm run test-e2e-chrome-jenkins-smoke
+
+  run_browser_tests:
+    <<: *test_setup
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run Chrome E2E Tests
+          command: |
+            APVS_DATABASE="$APVS_DATABASE" \
+            APVS_DATABASE_SERVER="$APVS_DATABASE_SERVER" \
+            APVS_INT_MIGRATION_USERNAME="$APVS_INT_MIGRATION_USERNAME" \
+            APVS_INT_MIGRATION_PASSWORD="$APVS_INT_MIGRATION_PASSWORD" \
+            SAUCE_USERNAME="$SAUCE_USERNAME" \
+            SAUCE_ACCESS_KEY="$SAUCE_ACCESS_KEY" \
+            SAUCE_BASEURL="$SAUCE_BASEURL" \
+            APVS_MOJ_SSO_TEST_SSO_EMAIL="$APVS_MOJ_SSO_TEST_SSO_EMAIL" \
+            APVS_MOJ_SSO_TEST_SSO_PASSWORD="$APVS_MOJ_SSO_TEST_SSO_PASSWORD" \
+            APVS_MOJ_SSO_AUTHENTICATION_ENABLED=true \
+            APVS_MOJ_SSO_TOKEN_HOST="$APVS_MOJ_SSO_TOKEN_HOST" \
+            npm run test-e2e-chrome-jenkins
+      - run:
+          name: Run Firefox E2E Tests
+          command: |
+            APVS_DATABASE="$APVS_DATABASE" \
+            APVS_DATABASE_SERVER="$APVS_DATABASE_SERVER" \
+            APVS_INT_MIGRATION_USERNAME="$APVS_INT_MIGRATION_USERNAME" \
+            APVS_INT_MIGRATION_PASSWORD="$APVS_INT_MIGRATION_PASSWORD" \
+            SAUCE_USERNAME="$SAUCE_USERNAME" \
+            SAUCE_ACCESS_KEY="$SAUCE_ACCESS_KEY" \
+            SAUCE_BASEURL="$SAUCE_BASEURL" \
+            APVS_MOJ_SSO_TEST_SSO_EMAIL="$APVS_MOJ_SSO_TEST_SSO_EMAIL" \
+            APVS_MOJ_SSO_TEST_SSO_PASSWORD="$APVS_MOJ_SSO_TEST_SSO_PASSWORD" \
+            APVS_MOJ_SSO_AUTHENTICATION_ENABLED=true \
+            APVS_MOJ_SSO_TOKEN_HOST="$APVS_MOJ_SSO_TOKEN_HOST" \
+            npm run test-e2e-firefox-jenkins
+
+workflows:
+  version: 2
+  build-test-deploy:
+    jobs:
+      - run_unit_tests
+
+      - run_integration_tests:
+          requires:
+            - run_unit_tests
+
+      - run_smoke_tests:
+          requires:
+            - run_integration_tests
+
+      - run_browser_tests:
+          requires:
+            - run_smoke_tests
+# jobs:
   # build:
   #   executor:
   #     name: hmpps/node
@@ -100,10 +241,10 @@ jobs:
   #     - store_artifacts:
   #         path: integration-tests/screenshots
 
-workflows:
-  version: 2
-  build-test-and-deploy:
-    jobs:
+# workflows:
+#   version: 2
+#   build-test-and-deploy:
+#     jobs:
       # - build:
       #   filters:
       #     tags:
@@ -116,8 +257,8 @@ workflows:
       #       - build
       # - hmpps/helm_lint:
       #     name: helm_lint
-      - hmpps/build_docker:
-          name: build_docker
+      # - hmpps/build_docker:
+      #     name: build_docker
           # filters:
           #   branches:
           #     only:
