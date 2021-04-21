@@ -1,12 +1,3 @@
-defaults: &defaults
-  working_directory: ~/app
-  docker:
-    - image: mojdigitalstudio/circleci-build-container
-test_setup: &test_setup
-  docker:
-    - image: circleci/node:14-buster-browsers
-  working_directory: ~/app
-
 version: 2.1
 
 orbs:
@@ -20,8 +11,10 @@ orbs:
 #     working_directory: ~/app
 
 jobs:
-  run_unit_tests:
-    <<: *test_setup
+  unit_test:
+    executor:
+      name: hmpps/node
+      tag: 14.15-browsers
     steps:
       - checkout
       - restore_cache:
@@ -36,68 +29,6 @@ jobs:
       - run:
           name: Run Unit Tests
           command: npm run test
-
-workflows:
-  version: 2
-  build-test-deploy:
-    jobs:
-      - run_unit_tests
-
-# jobs:
-  # build:
-  #   executor:
-  #     name: hmpps/node
-  #     tag: 14.15-browsers
-  #   steps:
-  #     - checkout
-  #     - run:
-  #         name: Update npm
-  #         command: 'sudo npm install -g npm@latest'
-  #     - restore_cache:
-  #         key: dependency-cache-{{ checksum "package-lock.json" }}
-  #     - run:
-  #         name: Install Dependencies
-  #         command: npm ci --no-audit
-  #     - save_cache:
-  #         key: dependency-cache-{{ checksum "package-lock.json" }}
-  #         paths:
-  #           - node_modules
-  #           - ~/.cache
-  #     - run:
-  #         command: |
-  #           npm run build
-  #           DATE=$(date '+%Y-%m-%d')
-  #           export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
-  #           export GIT_REF="$CIRCLE_SHA1"
-  #           npm run record-build-info
-  #     - run: # Run linter after build because the integration test code depend on compiled typescript...
-  #         name: Linter check
-  #         command: npm run lint
-  #     - persist_to_workspace:
-  #         root: .
-  #         paths:
-  #           - node_modules
-  #           - build-info.json
-  #           - build
-  #           - dist
-  #           - .cache/Cypress
-
-  # unit_test:
-  #   executor:
-  #     name: hmpps/node
-  #     tag: 14.15-browsers
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         key: dependency-cache-{{ checksum "package-lock.json" }}
-  #     - run:
-  #         name: unit tests
-  #         command: npm run test
-  #     - store_test_results:
-  #         path: test_results
-  #     - store_artifacts:
-  #         path: test-results/unit-test-reports.html
-
   # integration_test:
   #   executor: integration-tests
   #   steps:
@@ -133,28 +64,22 @@ workflows:
   #     - store_artifacts:
   #         path: integration-tests/screenshots
 
-# workflows:
-#   version: 2
-#   build-test-and-deploy:
-#     jobs:
-      # - build:
-      #   filters:
-      #     tags:
-      #       ignore: /.*/
-      # - unit_test:
-      #     requires:
-      #       - build
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - unit_test
       # - integration_test:
       #     requires:
-      #       - build
+      #       - unit_test
       # - hmpps/helm_lint:
       #     name: helm_lint
-      # - hmpps/build_docker:
-      #     name: build_docker
-          # filters:
-          #   branches:
-          #     only:
-          #       - main
+      - hmpps/build_docker:
+          name: build_docker
+          filters:
+            branches:
+              only:
+                - main
       # - hmpps/deploy_env:
       #     name: deploy_dev
       #     env: "dev"
@@ -166,7 +91,6 @@ workflows:
       #     requires:
       #       - helm_lint
       #       - unit_test
-      #       - integration_test
       #       - build_docker
 
   # security:
