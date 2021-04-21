@@ -33,6 +33,8 @@ RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezo
 RUN mkdir /app && chown appuser:appgroup /app
 RUN mkdir /app/logs && chown appuser:appgroup /app/logs
 RUN mkdir /app/uploads && chown appuser:appgroup /app/uploads
+RUN mkdir /app/migrations && chown appuser:appgroup /app/migrations
+RUN mkdir /app/seeds && chown appuser:appgroup /app/seeds
 USER 2000
 WORKDIR /app
 
