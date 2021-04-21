@@ -1,7 +1,7 @@
 FROM node:14-buster as builder
 
-ARG BUILD_NUMBER
-ARG GIT_REF
+ARG BUILD_NUMBER=dev
+ARG GIT_REF=dev
 
 RUN apt-get update && \
     apt-get upgrade -y
@@ -11,7 +11,10 @@ WORKDIR /app
 COPY . .
 
 RUN npm ci --no-audit && \
-    npm run generate-assets
+    npm run generate-assets && \
+    export BUILD_NUMBER=${BUILD_NUMBER} && \
+    export GIT_REF=${GIT_REF} && \
+    npm run record-build-info
 
 RUN npm prune --production
 
@@ -43,6 +46,7 @@ COPY --from=builder --chown=appuser:appgroup \
         /app/package-lock.json \
         /app/knexfile.js \
         /app/config.js \
+        /app/build-info.json \
         ./
 
 COPY --from=builder --chown=appuser:appgroup \
