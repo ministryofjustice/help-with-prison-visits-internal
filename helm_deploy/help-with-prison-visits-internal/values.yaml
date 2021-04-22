@@ -52,9 +52,13 @@ generic-service:
       APVS_MOJ_SSO_CLIENT_SECRET: "APVS_MOJ_SSO_CLIENT_SECRET"
       APVS_MOJ_SSO_SESSION_SECRET: "APVS_MOJ_SSO_SESSION_SECRET"
       APVS_INT_APPLICATION_SECRET: "APVS_INT_APPLICATION_SECRET"
-    rds-instance-output:
-      APVS_DATABASE: "database_name"
-      APVS_DATABASE_SERVER: 'rds_instance_address'
-      APVS_INT_WEB_USERNAME: 'database_username'
-      APVS_INT_WEB_PASSWORD: 'database_password'
-
+    #rds-instance-output:
+    #  APVS_DATABASE: "database_name"
+    #  APVS_DATABASE_SERVER: 'rds_instance_address'
+    #  APVS_INT_WEB_USERNAME: 'database_username'
+    #  APVS_INT_WEB_PASSWORD: 'database_password'
+    azure-sqlserver:
+      APVS_DATABASE: "APVS_DATABASE"
+      APVS_DATABASE_SERVER: "APVS_DATABASE_SERVER"
+      APVS_INT_WEB_USERNAME: "APVS_EXT_WEB_USERNAME"
+      APVS_INT_WEB_PASSWORD: "APVS_EXT_WEB_PASSWORD"
