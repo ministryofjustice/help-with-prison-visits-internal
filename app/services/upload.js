@@ -10,11 +10,7 @@ const allowedFileTypes = ['image/png', 'image/jpeg', 'application/pdf']
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    if (req.query.document !== 'VISIT_CONFIRMATION' && req.query.document !== 'RECEIPT') {
-      cb(null, `${config.FILE_UPLOAD_LOCATION}/${req.params.referenceId}-${req.query.eligibilityId}/${req.params.documentType}`)
-    } else {
-      cb(null, `${config.FILE_UPLOAD_LOCATION}/${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.params.documentType}`)
-    }
+    cb(null, config.FILE_TMP_DIR)
   },
   filename: function (req, file, cb) {
     crypto.randomBytes(16, function (err, raw) {

@@ -60,18 +60,18 @@ module.exports = function (router) {
 
           if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, documentType)) {
             const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
-            const claimId = req.params.claimId
-            const referenceId = req.params.referenceId
             const filename = req.file.filename
             let filenamePrefix
 
-            if (documentType !== 'VISIT_CONFIRMATION' && documentType !== 'RECEIPT') {
-              filenamePrefix = `${referenceId}${config.FILE_SEPARATOR}${config.FILE_SEPARATOR}${config.FILE_SEPARATOR}${documentType}`
+            if (req.query.document !== 'VISIT_CONFIRMATION' && req.query.document !== 'RECEIPT') {
+              filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.documentType}`
+            } else if (req.query.claimExpenseId) {
+              filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.query.claimExpenseId}/${req.params.documentType}`
             } else {
-              filenamePrefix = `${referenceId}${config.FILE_SEPARATOR}${claimId}${config.FILE_SEPARATOR}${config.FILE_SEPARATOR}${documentType}`
+              filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.params.documentType}`
             }
 
-            const targetFileName = `${filenamePrefix}${config.FILE_SEPARATOR}${filename}`
+            const targetFileName = `${filenamePrefix}/${filename}`
             const uploadParams = {
               Bucket: config.AWS_S3_BUCKET_NAME,
               Key: targetFileName,
