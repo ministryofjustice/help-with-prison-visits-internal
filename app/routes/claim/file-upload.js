@@ -57,12 +57,10 @@ module.exports = function (router) {
           }
         } else {
           const documentType = req.params.documentType
+          const originalUploadPath = req.file.path
 
           if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, documentType)) {
-            const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
-            const filename = req.file.filename
             let filenamePrefix
-
             if (req.query.document !== 'VISIT_CONFIRMATION' && req.query.document !== 'RECEIPT') {
               filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.documentType}`
             } else if (req.query.claimExpenseId) {
@@ -71,6 +69,10 @@ module.exports = function (router) {
               filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.params.documentType}`
             }
 
+            req.file.path = filenamePrefix
+
+            const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
+            const filename = req.file.filename
             const targetFileName = `${filenamePrefix}/${filename}`
             const uploadParams = {
               Bucket: config.AWS_S3_BUCKET_NAME,
@@ -78,7 +80,7 @@ module.exports = function (router) {
               Body: ''
             }
 
-            const fileStream = fs.createReadStream(req.file.path)
+            const fileStream = fs.createReadStream(originalUploadPath)
               .on('error', function (error) {
                 log.error('Error occurred writing file ' + targetFileName)
                 next(error)
