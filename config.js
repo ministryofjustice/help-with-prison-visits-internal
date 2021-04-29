@@ -33,9 +33,16 @@ module.exports = {
   // Payment
   PAYMENT_NUMBER_OF_PAYMENT_FILES: process.env.APVS_PAYMENT_NUMBER_OF_PAYMENT_FILES || '31',
 
-  // File upload
+  // File upload/download
+  FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/tmp',
   FILE_UPLOAD_LOCATION: process.env.FILE_UPLOAD_LOCATION || './uploads',
   FILE_UPLOAD_MAXSIZE: process.env.FILE_UPLOAD_MAXSIZE || '5242880', // 5MB in Bytes.
+  FILE_SEPARATOR: '_XXX_',
+
+  // S3
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
 
   // Assisted Digital external link
   EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'http://localhost:3000',

@@ -304,7 +304,7 @@ describe('routes/claim/view-claim', function () {
       Filepath: 'test/resources/testfile.txt'
     }
 
-    it('should respond respond with 200 if a valid file path is returned', function () {
+    it.skip('should respond with 200 if a valid file path is returned', function () {
       stubGetClaimDocumentFilePath.resolves(CLAIM_DOCUMENT)
       return supertest(app)
         .get('/claim/123/download?claim-document-id=55')

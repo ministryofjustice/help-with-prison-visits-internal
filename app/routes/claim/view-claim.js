@@ -39,6 +39,13 @@ const getRejectionReasons = require('../../services/data/get-rejection-reasons')
 const getRejectionReasonId = require('../../services/data/get-rejection-reason-id')
 const updateVisitorBenefitExpiryDate = require('../../services/data/update-visitor-benefit-expiry-date')
 const applicationRoles = require('../../constants/application-roles-enum')
+const config = require('../../../config')
+const AWS = require('aws-sdk')
+const fs = require('fs')
+const s3 = new AWS.S3({
+  accessKeyId: config.AWS_ACCESS_KEY_ID,
+  secretAccessKey: config.AWS_SECRET_ACCESS_KEY
+})
 
 let claimExpenses
 let claimDeductions
@@ -73,12 +80,27 @@ module.exports = function (router) {
       }
 
       return getClaimDocumentFilePath(claimDocumentId)
-        .then(function (document) {
-          if (document && document.Filepath) {
-            res.download(document.Filepath)
+        .then(function (result) {
+          const filename = result.Filepath
+          if (filename) {
+            const downloadParams = {
+              Bucket: config.AWS_S3_BUCKET_NAME,
+              Key: filename
+            }
+
+            s3.getObject(downloadParams).promise().then((data) => {
+              const tempFile = `${config.FILE_TMP_DIR}/${filename}`
+              fs.writeFileSync(tempFile, data.Body)
+              return res.download(tempFile, filename)
+            }).catch((err) => {
+              throw err
+            })
           } else {
             throw new Error('No path to file provided')
           }
+        })
+        .catch(function (error) {
+          next(error)
         })
     })
       .catch(function (err) {

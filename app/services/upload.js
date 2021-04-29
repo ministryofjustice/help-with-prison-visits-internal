@@ -12,8 +12,6 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (req.query.document !== 'VISIT_CONFIRMATION' && req.query.document !== 'RECEIPT') {
       cb(null, `${config.FILE_UPLOAD_LOCATION}/${req.params.referenceId}-${req.query.eligibilityId}/${req.params.documentType}`)
-    } else if (req.query.claimExpenseId) {
-      cb(null, `${config.FILE_UPLOAD_LOCATION}/${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.query.claimExpenseId}/${req.params.documentType}`)
     } else {
       cb(null, `${config.FILE_UPLOAD_LOCATION}/${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.params.documentType}`)
     }
