@@ -80,7 +80,8 @@ module.exports = function (router) {
             }
 
             s3.getObject(downloadParams).promise().then((data) => {
-              const tempFile = `${config.FILE_TMP_DIR}/${filename}`
+              const tempFilename = filename.split('/').join('')
+              const tempFile = `${config.FILE_TMP_DIR}/${tempFilename}`
               fs.writeFileSync(tempFile, data.Body)
               return res.download(tempFile, filename)
             }).catch((err) => {
