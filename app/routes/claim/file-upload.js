@@ -63,15 +63,15 @@ module.exports = function (router) {
             const claimId = req.params.claimId
             const referenceId = req.params.referenceId
             const filename = req.file.filename
-            let targetDir
+            let filenamePrefix
 
             if (documentType !== 'VISIT_CONFIRMATION' && documentType !== 'RECEIPT') {
-              targetDir = `${referenceId}${config.FILE_SEPARATOR}${config.FILE_SEPARATOR}${config.FILE_SEPARATOR}${documentType}`
+              filenamePrefix = `${referenceId}${config.FILE_SEPARATOR}${config.FILE_SEPARATOR}${config.FILE_SEPARATOR}${documentType}`
             } else {
-              targetDir = `${referenceId}${config.FILE_SEPARATOR}${claimId}${config.FILE_SEPARATOR}${config.FILE_SEPARATOR}${documentType}`
+              filenamePrefix = `${referenceId}${config.FILE_SEPARATOR}${claimId}${config.FILE_SEPARATOR}${config.FILE_SEPARATOR}${documentType}`
             }
 
-            const targetFileName = `${targetDir}${config.FILE_SEPARATOR}${filename}`
+            const targetFileName = `${filenamePrefix}${config.FILE_SEPARATOR}${filename}`
             const uploadParams = {
               Bucket: config.AWS_S3_BUCKET_NAME,
               Key: targetFileName,
