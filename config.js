@@ -35,7 +35,6 @@ module.exports = {
 
   // File upload/download
   FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/tmp',
-  FILE_UPLOAD_LOCATION: process.env.FILE_UPLOAD_LOCATION || './uploads',
   FILE_UPLOAD_MAXSIZE: process.env.FILE_UPLOAD_MAXSIZE || '5242880', // 5MB in Bytes.
 
   // S3
