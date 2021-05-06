@@ -8,14 +8,8 @@ const ClaimDocumentUpdate = require('../../services/data/update-file-upload-deta
 const csrfProtection = require('csurf')({ cookie: true })
 const generateCSRFToken = require('../../services/generate-csrf-token')
 const applicationRoles = require('../../constants/application-roles-enum')
-const log = require('../../services/log')
-const config = require('../config')
-const fs = require('fs')
-const AWS = require('aws-sdk')
-const s3 = new AWS.S3({
-  accessKeyId: config.AWS_ACCESS_KEY_ID,
-  secretAccessKey: config.AWS_SECRET_ACCESS_KEY
-})
+const { AWSHelper } = require('../../services/aws-helper')
+const aws = new AWSHelper()
 
 let csrfToken
 const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
@@ -74,32 +68,12 @@ module.exports = function (router) {
             const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
             const filename = req.file.filename
             const targetFileName = `${filenamePrefix}/${filename}`
-            const uploadParams = {
-              Bucket: config.AWS_S3_BUCKET_NAME,
-              Key: targetFileName,
-              Body: ''
+
+            try {
+              aws.upload(targetFileName, originalUploadPath)
+            } catch (error) {
+              next(error)
             }
-
-            const fileStream = fs.createReadStream(originalUploadPath)
-              .on('error', function (error) {
-                log.error('Error occurred writing file ' + targetFileName)
-                next(error)
-              })
-              .on('finish', function () {
-                log.info(`Move file to location ${targetFileName}`)
-              })
-
-            uploadParams.Body = fileStream
-
-            // call S3 to retrieve upload file to specified bucket
-            s3.upload(uploadParams, function (error, data) {
-              if (error) {
-                log.error('Error', error)
-                next(error)
-              } if (data) {
-                log.info('Upload Success', data.Location)
-              }
-            })
 
             ClaimDocumentUpdate(req.params.referenceId, fileUpload).then(function () {
               res.redirect(`/claim/${req.params.claimId}`)

@@ -2,13 +2,8 @@ const authorisation = require('../services/authorisation')
 const getDirectPaymentFiles = require('../services/data/get-direct-payment-files')
 const dateHelper = require('../views/helpers/date-helper')
 const applicationRoles = require('../constants/application-roles-enum')
-const config = require('../../config')
-const fs = require('fs')
-const AWS = require('aws-sdk')
-const s3 = new AWS.S3({
-  accessKeyId: config.AWS_ACCESS_KEY_ID,
-  secretAccessKey: config.AWS_SECRET_ACCESS_KEY
-})
+const { AWSHelper } = require('../services/aws-helper')
+const aws = new AWSHelper()
 
 module.exports = function (router) {
   router.get('/download-payment-files', function (req, res, next) {
@@ -74,19 +69,7 @@ module.exports = function (router) {
 
           const filename = matchingFile.Filepath
           if (filename) {
-            const downloadParams = {
-              Bucket: config.AWS_S3_BUCKET_NAME,
-              Key: filename
-            }
-
-            s3.getObject(downloadParams).promise().then((data) => {
-              const tempFilename = filename.split('/').join('')
-              const tempFile = `${config.FILE_TMP_DIR}/${tempFilename}`
-              fs.writeFileSync(tempFile, data.Body)
-              return res.download(tempFile, filename)
-            }).catch((err) => {
-              throw err
-            })
+            return res.download(aws.download(filename), filename)
           } else {
             throw new Error('No path to file provided')
           }
