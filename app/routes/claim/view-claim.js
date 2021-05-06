@@ -75,16 +75,12 @@ module.exports = function (router) {
       }
 
       return getClaimDocumentFilePath(claimDocumentId)
-        .then(function (result) {
-          const filename = result.Filepath
-          if (filename) {
-            return res.download(aws.download(filename), filename)
+        .then(function (document) {
+          if (document && document.Filepath) {
+            return res.download(aws.download(document.Filepath), document.Filepath)
           } else {
             throw new Error('No path to file provided')
           }
-        })
-        .catch(function (error) {
-          next(error)
         })
     })
       .catch(function (err) {

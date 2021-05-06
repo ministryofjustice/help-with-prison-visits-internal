@@ -67,12 +67,7 @@ module.exports = function (router) {
             throw new Error('Unable to find file')
           }
 
-          const filename = matchingFile.Filepath
-          if (filename) {
-            return res.download(aws.download(filename), filename)
-          } else {
-            throw new Error('No path to file provided')
-          }
+          return res.download(aws.download(matchingFile.Filepath), matchingFile.Filepath)
         })
         .catch(function (error) {
           next(error)
