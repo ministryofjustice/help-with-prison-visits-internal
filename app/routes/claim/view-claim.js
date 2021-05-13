@@ -77,7 +77,7 @@ module.exports = function (router) {
       return getClaimDocumentFilePath(claimDocumentId)
         .then(function (document) {
           if (document && document.Filepath) {
-            return res.download(aws.download(document.Filepath), document.Filepath)
+            return aws.download(document.Filepath, document.Filepath, res)
           } else {
             throw new Error('No path to file provided')
           }

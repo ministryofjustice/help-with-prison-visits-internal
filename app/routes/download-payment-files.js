@@ -67,7 +67,7 @@ module.exports = function (router) {
             throw new Error('Unable to find file')
           }
 
-          return res.download(aws.download(matchingFile.Filepath), matchingFile.Filepath)
+          return aws.download(matchingFile.Filepath, matchingFile.Filepath, res)
         })
         .catch(function (error) {
           next(error)

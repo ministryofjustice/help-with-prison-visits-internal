@@ -63,11 +63,12 @@ module.exports = function (router) {
               filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.params.documentType}`
             }
 
-            req.file.path = filenamePrefix
-
-            const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
             const filename = req.file.filename
             const targetFileName = `${filenamePrefix}/${filename}`
+            req.file.destination = ''
+            req.file.path = targetFileName
+
+            const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
 
             try {
               aws.upload(targetFileName, originalUploadPath)

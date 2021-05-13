@@ -53,19 +53,21 @@ class AWSHelper {
       })
   }
 
-  download (key) {
+  download (key, filename, res) {
     const downloadParams = {
       Bucket: this.bucketName,
       Key: key
     }
 
-    this.s3.getObject(downloadParams).promise().then((data) => {
-      const tempFile = `${config.FILE_TMP_DIR}/${key}`
-      fs.writeFileSync(tempFile, data.Body)
-      return tempFile
-    }).catch((err) => {
-      throw err
-    })
+    this.s3.getObject(downloadParams).promise()
+      .then((data) => {
+        const newFilename = filename.split('/').pop()
+        const tempFile = `${config.FILE_TMP_DIR}/${newFilename}`
+        fs.writeFileSync(tempFile, data.Body)
+        return res.download(tempFile, newFilename)
+      }).catch((err) => {
+        throw new Error(err)
+      })
   }
 }
 
