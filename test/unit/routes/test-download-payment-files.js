@@ -3,9 +3,11 @@ const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
+// const nock = require('nock')
 
 let hasRoles
 let getDirectPaymentFiles
+// let stubAWSDownload
 
 const FILES = {
   accessPayFiles: [{ FilePath: 'accessPayFile1' }, { PaymentFileId: 1, Filepath: './test/resources/testfile.txt' }],
@@ -14,14 +16,35 @@ const FILES = {
 
 describe('routes/download-payment-files', function () {
   let app
+  let AWS
 
   beforeEach(function () {
+    const mockResponse = () => {
+      const res = {}
+      res.status = sinon.stub().returns(res)
+      res.json = sinon.stub().returns(res)
+      res.download = sinon.stub().resolves()
+      return res
+    }
+
     hasRoles = sinon.stub()
     getDirectPaymentFiles = sinon.stub()
+    // stubAWSDownload = sinon.stub().returns(mockResponse)
+
+    const helper = function () {
+      return {
+        download: mockResponse
+      }
+    }
+
+    AWS = {
+      AWSHelper: helper
+    }
 
     const route = proxyquire('../../../app/routes/download-payment-files', {
       '../services/authorisation': { hasRoles: hasRoles },
-      '../services/data/get-direct-payment-files': getDirectPaymentFiles
+      '../services/data/get-direct-payment-files': getDirectPaymentFiles,
+      '../services/aws-helper': AWS
     })
 
     app = routeHelper.buildApp(route)
@@ -72,13 +95,21 @@ describe('routes/download-payment-files', function () {
   describe('GET /download-payment-files/download', function () {
     it.skip('should respond with 200 if valid id entered', function () {
       getDirectPaymentFiles.resolves(FILES)
-      return supertest(app)
+
+      const testApp = supertest(app)
+      // const testHost = testApp.get('').url
+
+      // nock(testHost)
+      //   .get('/download-payment-files/download?id=2')
+      //   .reply(200, {}, { 'content-length': 4 })
+
+      return testApp
         .get('/download-payment-files/download?id=2')
         .expect(200)
         .expect(function (response) {
+          expect(response.header['content-length']).to.equal('4')
           expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(getDirectPaymentFiles.calledOnce).to.be.true //eslint-disable-line
-          expect(response.header['content-length']).to.equal('4')
         })
     })
 

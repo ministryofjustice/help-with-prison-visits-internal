@@ -76,8 +76,9 @@ module.exports = function (router) {
 
       return getClaimDocumentFilePath(claimDocumentId)
         .then(function (document) {
+          console.log(req.get('host'))
           if (document && document.Filepath) {
-            return aws.download(document.Filepath, document.Filepath, res)
+            aws.download(document.Filepath, document.Filepath, res)
           } else {
             throw new Error('No path to file provided')
           }

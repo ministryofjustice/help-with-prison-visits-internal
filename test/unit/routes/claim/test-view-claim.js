@@ -4,6 +4,7 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
+const nock = require('nock')
 
 let authorisation
 let stubGetIndividualClaimDetails
@@ -32,6 +33,7 @@ let stubRejectionReasonId
 let stubRejectionReasons
 let stubUpdateVisitorBenefirExpiryDate
 let stubBenefitExpiryDate
+let stubAWSDownload
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 const VALID_CLAIMDEDUCTION_DATA = [{ Amount: '20.00' }]
@@ -94,6 +96,7 @@ const CLAIM_RETURN = { claim: {} }
 
 describe('routes/claim/view-claim', function () {
   let app
+  let AWS
 
   beforeEach(function () {
     authorisation = { hasRoles: sinon.stub() }
@@ -123,6 +126,17 @@ describe('routes/claim/view-claim', function () {
     stubInsertTopUp = sinon.stub().resolves()
     stubTopupResponse = sinon.stub()
     stubCancelTopUp = sinon.stub().resolves()
+    stubAWSDownload = sinon.stub()
+
+    const helper = function () {
+      return {
+        download: stubAWSDownload
+      }
+    }
+
+    AWS = {
+      AWSHelper: helper
+    }
 
     const route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
@@ -151,7 +165,8 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/get-rejection-reasons': stubRejectionReasons,
       '../../services/data/get-rejection-reason-id': stubRejectionReasonId,
       '../../services/data/update-visitor-benefit-expiry-date': stubUpdateVisitorBenefirExpiryDate,
-      '../../services/domain/benefit-expiry-date': stubBenefitExpiryDate
+      '../../services/domain/benefit-expiry-date': stubBenefitExpiryDate,
+      '../../services/aws-helper': AWS
     })
     app = routeHelper.buildApp(route)
     route(app)
@@ -304,9 +319,17 @@ describe('routes/claim/view-claim', function () {
       Filepath: 'test/resources/testfile.txt'
     }
 
-    it.skip('should respond with 200 if a valid file path is returned', function () {
+    it('should respond with 200 if a valid file path is returned', function () {
       stubGetClaimDocumentFilePath.resolves(CLAIM_DOCUMENT)
-      return supertest(app)
+
+      const testApp = supertest(app)
+      const testHost = testApp.get('').url
+
+      nock(testHost)
+        .get('/claim/123/download?claim-document-id=55')
+        .reply(200, {}, { 'content-length': 4 })
+
+      return testApp
         .get('/claim/123/download?claim-document-id=55')
         .expect(200)
         .expect('content-length', '4')

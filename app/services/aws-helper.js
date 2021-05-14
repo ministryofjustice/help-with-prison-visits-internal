@@ -64,7 +64,7 @@ class AWSHelper {
         const newFilename = filename.split('/').pop()
         const tempFile = `${config.FILE_TMP_DIR}/${newFilename}`
         fs.writeFileSync(tempFile, data.Body)
-        return res.download(tempFile, newFilename)
+        res.download(tempFile, newFilename)
       }).catch((err) => {
         throw new Error(err)
       })
