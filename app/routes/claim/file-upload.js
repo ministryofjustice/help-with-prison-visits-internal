@@ -35,7 +35,7 @@ module.exports = function (router) {
   router.post('/claim/file-upload/:referenceId/:claimId/:documentType', function (req, res, next) {
     authorisation.hasRoles(req, allowedRoles)
 
-    Upload(req, res, function (error) {
+    Upload(req, res, async function (error) {
       try {
         // If there was no file attached, we still need to check the CSRF token
         if (!req.file) {
@@ -71,7 +71,7 @@ module.exports = function (router) {
             const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
 
             try {
-              aws.upload(targetFileName, originalUploadPath)
+              await aws.upload(targetFileName, originalUploadPath)
             } catch (error) {
               next(error)
             }

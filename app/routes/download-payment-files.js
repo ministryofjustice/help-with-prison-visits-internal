@@ -55,7 +55,7 @@ module.exports = function (router) {
     const id = parseInt(req.query.id)
     if (id) {
       getDirectPaymentFiles()
-        .then(function (directPaymentFiles) {
+        .then(async function (directPaymentFiles) {
           let matchingFile = directPaymentFiles.accessPayFiles.find(function (file) { return file.PaymentFileId === id })
           if (!matchingFile && directPaymentFiles.adiJournalFiles) {
             matchingFile = directPaymentFiles.adiJournalFiles.find(function (file) { return file.PaymentFileId === id })
@@ -67,7 +67,9 @@ module.exports = function (router) {
             throw new Error('Unable to find file')
           }
 
-          aws.download(matchingFile.Filepath, matchingFile.Filepath, res)
+          const awsDownload = await aws.download(matchingFile.Filepath, matchingFile.Filepath)
+
+          res.download(awsDownload, matchingFile.Filepath)
         })
         .catch(function (error) {
           next(error)
