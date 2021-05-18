@@ -11,6 +11,7 @@
   },
   "scripts": {
     "start": "gulp",
+    "security_audit": "npx audit-ci --config audit-ci.json",
     "generate-assets": "gulp generate-assets",
     "record-build-info": "node scripts/record-build-info",
     "start-maintenance": "node app/bin/www-maintenance",
