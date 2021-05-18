@@ -1,3 +1,4 @@
+const R = require('ramda')
 const authorisation = require('../../services/authorisation')
 const DocumentTypeEnum = require('../../constants/document-type-enum')
 const Upload = require('../../services/upload')
@@ -43,6 +44,7 @@ module.exports = function (router) {
             if (error) { throw error }
           })
         }
+
         if (error) {
           if (error.message === 'File too large') {
             throw new ValidationError({ upload: [ERROR_MESSAGES.getUploadTooLarge] })
@@ -50,10 +52,9 @@ module.exports = function (router) {
             throw error
           }
         } else {
-          const documentType = req.params.documentType
-          const originalUploadPath = req.file.path
+          const originalUploadPath = R.pathOr('', ['file', 'path'], req)
 
-          if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, documentType)) {
+          if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params.documentType)) {
             let filenamePrefix
             if (req.query.document !== 'VISIT_CONFIRMATION' && req.query.document !== 'RECEIPT') {
               filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.documentType}`

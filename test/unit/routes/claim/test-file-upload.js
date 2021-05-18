@@ -69,8 +69,8 @@ describe('routes/claim/file-upload', function () {
     })
   })
 
-  describe(`POST ${BASEROUTE}`, function () {
-    it.skip('should create a file upload object, insert it to DB and give 302', function () {
+  describe.skip(`POST ${BASEROUTE}`, function () {
+    it('should create a file upload object, insert it to DB and give 302', function () {
       uploadStub.callsArg(2).returns({})
       claimDocumentUpdateStub.resolves()
       return supertest(app)
@@ -83,7 +83,7 @@ describe('routes/claim/file-upload', function () {
         .expect(302)
     })
 
-    it.skip('should catch a validation error', function () {
+    it('should catch a validation error', function () {
       uploadStub.callsArg(2).returns({})
       fileUploadStub.throws(new ValidationError())
       return supertest(app)

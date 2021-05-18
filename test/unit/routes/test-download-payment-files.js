@@ -3,11 +3,9 @@ const supertest = require('supertest')
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-// const nock = require('nock')
 
 let hasRoles
 let getDirectPaymentFiles
-// let stubAWSDownload
 
 const FILES = {
   accessPayFiles: [{ FilePath: 'accessPayFile1' }, { PaymentFileId: 1, Filepath: './test/resources/testfile.txt' }],
@@ -16,35 +14,26 @@ const FILES = {
 
 describe('routes/download-payment-files', function () {
   let app
-  let AWS
+  let awsStub
+  let awsHelperStub
 
   beforeEach(function () {
-    const mockResponse = () => {
-      const res = {}
-      res.status = sinon.stub().returns(res)
-      res.json = sinon.stub().returns(res)
-      res.download = sinon.stub().resolves()
-      return res
-    }
-
     hasRoles = sinon.stub()
     getDirectPaymentFiles = sinon.stub()
-    // stubAWSDownload = sinon.stub().returns(mockResponse)
-
-    const helper = function () {
+    awsStub = function () {
       return {
-        download: mockResponse
+        download: sinon.stub().resolves()
       }
     }
 
-    AWS = {
-      AWSHelper: helper
+    awsHelperStub = {
+      AWSHelper: awsStub
     }
 
     const route = proxyquire('../../../app/routes/download-payment-files', {
       '../services/authorisation': { hasRoles: hasRoles },
       '../services/data/get-direct-payment-files': getDirectPaymentFiles,
-      '../services/aws-helper': AWS
+      '../services/aws-helper': awsHelperStub
     })
 
     app = routeHelper.buildApp(route)
@@ -93,17 +82,28 @@ describe('routes/download-payment-files', function () {
   })
 
   describe('GET /download-payment-files/download', function () {
-    it.skip('should respond with 200 if valid id entered', function () {
+    it('should respond with 200 if valid id entered', function () {
       getDirectPaymentFiles.resolves(FILES)
 
-      const testApp = supertest(app)
-      // const testHost = testApp.get('').url
+      awsStub = function () {
+        return {
+          download: sinon.stub().resolves(FILES.adiJournalFiles[1].Filepath)
+        }
+      }
 
-      // nock(testHost)
-      //   .get('/download-payment-files/download?id=2')
-      //   .reply(200, {}, { 'content-length': 4 })
+      awsHelperStub = {
+        AWSHelper: awsStub
+      }
 
-      return testApp
+      const route = proxyquire('../../../app/routes/download-payment-files', {
+        '../services/authorisation': { hasRoles: hasRoles },
+        '../services/data/get-direct-payment-files': getDirectPaymentFiles,
+        '../services/aws-helper': awsHelperStub
+      })
+
+      app = routeHelper.buildApp(route)
+
+      return supertest(app)
         .get('/download-payment-files/download?id=2')
         .expect(200)
         .expect(function (response) {
