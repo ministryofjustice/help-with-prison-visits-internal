@@ -107,17 +107,17 @@ workflows:
           context: help-with-prison-visits-internal-preprod
           requires:
             - request-preprod-approval
-      # - request-prod-approval:
-      #     type: approval
-      #     requires:
-      #       - deploy_preprod
-      # - hmpps/deploy_env:
-      #     name: deploy_prod
-      #     env: "prod"
-      #     slack_notification: true
-      #     context: help-with-prison-visits-internal-prod
-      #     requires:
-      #       - request-prod-approval
+      - request-prod-approval:
+          type: approval
+          requires:
+            - deploy_preprod
+      - hmpps/deploy_env:
+          name: deploy_prod
+          env: "prod"
+          slack_notification: true
+          context: help-with-prison-visits-internal-prod
+          requires:
+            - request-prod-approval
 
   security:
     triggers:
