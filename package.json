@@ -1,16 +1,17 @@
 {
-  "name": "internal-web",
-  "version": "0.1.0",
+  "name": "help-with-prison-visits-internal",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ministryofjustice/apvs-internal-web.git"
+    "url": "https://github.com/ministryofjustice/help-with-prison-visits-internal.git"
   },
   "engines": {
     "node": "12.x.x"
   },
   "scripts": {
     "start": "gulp",
+    "security_audit": "npx audit-ci --config audit-ci.json",
     "generate-assets": "gulp generate-assets",
     "record-build-info": "node scripts/record-build-info",
     "start-maintenance": "node app/bin/www-maintenance",
