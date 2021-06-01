@@ -92,8 +92,13 @@ const INCOMPLETE_DATA = {
 }
 const CLAIM_RETURN = { claim: {} }
 
+const CLAIM_DOCUMENT = {
+  Filepath: 'test/resources/testfile.txt'
+}
+
 describe('routes/claim/view-claim', function () {
   let app
+  let awsStub
 
   beforeEach(function () {
     authorisation = { hasRoles: sinon.stub() }
@@ -124,6 +129,16 @@ describe('routes/claim/view-claim', function () {
     stubTopupResponse = sinon.stub()
     stubCancelTopUp = sinon.stub().resolves()
 
+    awsStub = function () {
+      return {
+        download: sinon.stub().resolves(CLAIM_DOCUMENT.Filepath)
+      }
+    }
+
+    const awsHelperStub = {
+      AWSHelper: awsStub
+    }
+
     const route = proxyquire('../../../../app/routes/claim/view-claim', {
       '../../services/authorisation': authorisation,
       '../../services/data/get-individual-claim-details': stubGetIndividualClaimDetails,
@@ -151,7 +166,8 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/get-rejection-reasons': stubRejectionReasons,
       '../../services/data/get-rejection-reason-id': stubRejectionReasonId,
       '../../services/data/update-visitor-benefit-expiry-date': stubUpdateVisitorBenefirExpiryDate,
-      '../../services/domain/benefit-expiry-date': stubBenefitExpiryDate
+      '../../services/domain/benefit-expiry-date': stubBenefitExpiryDate,
+      '../../services/aws-helper': awsHelperStub
     })
     app = routeHelper.buildApp(route)
     route(app)
@@ -300,11 +316,7 @@ describe('routes/claim/view-claim', function () {
   })
 
   describe('GET /claim/:claimId/download', function () {
-    const CLAIM_DOCUMENT = {
-      Filepath: 'test/resources/testfile.txt'
-    }
-
-    it('should respond respond with 200 if a valid file path is returned', function () {
+    it('should respond with 200 if a valid file path is returned', function () {
       stubGetClaimDocumentFilePath.resolves(CLAIM_DOCUMENT)
       return supertest(app)
         .get('/claim/123/download?claim-document-id=55')

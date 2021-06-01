@@ -14,14 +14,26 @@ const FILES = {
 
 describe('routes/download-payment-files', function () {
   let app
+  let awsStub
+  let awsHelperStub
 
   beforeEach(function () {
     hasRoles = sinon.stub()
     getDirectPaymentFiles = sinon.stub()
+    awsStub = function () {
+      return {
+        download: sinon.stub().resolves()
+      }
+    }
+
+    awsHelperStub = {
+      AWSHelper: awsStub
+    }
 
     const route = proxyquire('../../../app/routes/download-payment-files', {
       '../services/authorisation': { hasRoles: hasRoles },
-      '../services/data/get-direct-payment-files': getDirectPaymentFiles
+      '../services/data/get-direct-payment-files': getDirectPaymentFiles,
+      '../services/aws-helper': awsHelperStub
     })
 
     app = routeHelper.buildApp(route)
@@ -70,15 +82,34 @@ describe('routes/download-payment-files', function () {
   })
 
   describe('GET /download-payment-files/download', function () {
-    it('should respond respond with 200 if valid id entered', function () {
+    it('should respond with 200 if valid id entered', function () {
       getDirectPaymentFiles.resolves(FILES)
+
+      awsStub = function () {
+        return {
+          download: sinon.stub().resolves(FILES.adiJournalFiles[1].Filepath)
+        }
+      }
+
+      awsHelperStub = {
+        AWSHelper: awsStub
+      }
+
+      const route = proxyquire('../../../app/routes/download-payment-files', {
+        '../services/authorisation': { hasRoles: hasRoles },
+        '../services/data/get-direct-payment-files': getDirectPaymentFiles,
+        '../services/aws-helper': awsHelperStub
+      })
+
+      app = routeHelper.buildApp(route)
+
       return supertest(app)
         .get('/download-payment-files/download?id=2')
         .expect(200)
         .expect(function (response) {
+          expect(response.header['content-length']).to.equal('4')
           expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(getDirectPaymentFiles.calledOnce).to.be.true //eslint-disable-line
-          expect(response.header['content-length']).to.equal('4')
         })
     })
 

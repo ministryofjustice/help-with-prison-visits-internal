@@ -2,6 +2,8 @@ const authorisation = require('../services/authorisation')
 const getDirectPaymentFiles = require('../services/data/get-direct-payment-files')
 const dateHelper = require('../views/helpers/date-helper')
 const applicationRoles = require('../constants/application-roles-enum')
+const { AWSHelper } = require('../services/aws-helper')
+const aws = new AWSHelper()
 
 module.exports = function (router) {
   router.get('/download-payment-files', function (req, res, next) {
@@ -53,7 +55,7 @@ module.exports = function (router) {
     const id = parseInt(req.query.id)
     if (id) {
       getDirectPaymentFiles()
-        .then(function (directPaymentFiles) {
+        .then(async function (directPaymentFiles) {
           let matchingFile = directPaymentFiles.accessPayFiles.find(function (file) { return file.PaymentFileId === id })
           if (!matchingFile && directPaymentFiles.adiJournalFiles) {
             matchingFile = directPaymentFiles.adiJournalFiles.find(function (file) { return file.PaymentFileId === id })
@@ -65,7 +67,9 @@ module.exports = function (router) {
             throw new Error('Unable to find file')
           }
 
-          return res.download(matchingFile.Filepath)
+          const awsDownload = await aws.download(matchingFile.Filepath, matchingFile.Filepath)
+
+          res.download(awsDownload, matchingFile.Filepath)
         })
         .catch(function (error) {
           next(error)

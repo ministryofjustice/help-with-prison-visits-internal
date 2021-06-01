@@ -14,7 +14,7 @@ module.exports = {
   EXT_WEB_USERNAME: process.env.APVS_EXT_WEB_USERNAME,
 
   // MoJ SSO
-  AUTHENTICATION_ENABLED: process.env.APVS_MOJ_SSO_AUTHENTICATION_ENABLED || false,
+  AUTHENTICATION_ENABLED: process.env.APVS_MOJ_SSO_AUTHENTICATION_ENABLED || 'true',
   SESSION_SECRET: process.env.APVS_MOJ_SSO_SESSION_SECRET, // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
   CLIENT_ID: process.env.APVS_MOJ_SSO_CLIENT_ID,
   CLIENT_SECRET: process.env.APVS_MOJ_SSO_CLIENT_SECRET,
@@ -33,9 +33,14 @@ module.exports = {
   // Payment
   PAYMENT_NUMBER_OF_PAYMENT_FILES: process.env.APVS_PAYMENT_NUMBER_OF_PAYMENT_FILES || '31',
 
-  // File upload
-  FILE_UPLOAD_LOCATION: process.env.FILE_UPLOAD_LOCATION || './uploads',
+  // File upload/download
+  FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/tmp',
   FILE_UPLOAD_MAXSIZE: process.env.FILE_UPLOAD_MAXSIZE || '5242880', // 5MB in Bytes.
+
+  // S3
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
 
   // Assisted Digital external link
   EXTERNAL_SERVICE_URL: process.env.APVS_EXTERNAL_SERVICE_URL || 'http://localhost:3000',

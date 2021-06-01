@@ -39,6 +39,8 @@ const getRejectionReasons = require('../../services/data/get-rejection-reasons')
 const getRejectionReasonId = require('../../services/data/get-rejection-reason-id')
 const updateVisitorBenefitExpiryDate = require('../../services/data/update-visitor-benefit-expiry-date')
 const applicationRoles = require('../../constants/application-roles-enum')
+const { AWSHelper } = require('../../services/aws-helper')
+const aws = new AWSHelper()
 
 let claimExpenses
 let claimDeductions
@@ -73,9 +75,11 @@ module.exports = function (router) {
       }
 
       return getClaimDocumentFilePath(claimDocumentId)
-        .then(function (document) {
+        .then(async function (document) {
           if (document && document.Filepath) {
-            res.download(document.Filepath)
+            const awsDownload = await aws.download(document.Filepath, document.Filepath)
+
+            res.download(awsDownload, document.Filepath)
           } else {
             throw new Error('No path to file provided')
           }
