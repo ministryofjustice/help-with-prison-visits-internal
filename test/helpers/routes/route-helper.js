@@ -9,7 +9,6 @@ const VIEWS_DIRECTORY = '../../../app/views'
 
 module.exports.buildApp = function (route) {
   const app = express()
-  app.set('port', 3000)
   app.use(bodyParser.json())
   app.use(expressSanitized())
   app.use(cookieParser())

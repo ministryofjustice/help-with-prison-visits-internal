@@ -1,4 +1,3 @@
-const R = require('ramda')
 const authorisation = require('../../services/authorisation')
 const DocumentTypeEnum = require('../../constants/document-type-enum')
 const Upload = require('../../services/upload')
@@ -10,6 +9,7 @@ const csrfProtection = require('csurf')({ cookie: true })
 const generateCSRFToken = require('../../services/generate-csrf-token')
 const applicationRoles = require('../../constants/application-roles-enum')
 const { AWSHelper } = require('../../services/aws-helper')
+const { getFileUploadPath, getUploadFilename, getFilenamePrefix } = require('./file-upload-path-helper')
 const aws = new AWSHelper()
 
 let csrfToken
@@ -51,41 +51,37 @@ module.exports = function (router) {
           } else {
             throw error
           }
+        }
+
+        const originalUploadPath = getFileUploadPath(req)
+
+        if (!Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params.documentType)) {
+          throw new Error('Not a valid document type')
+        }
+
+        const filenamePrefix = getFilenamePrefix(req.params, req.query)
+        const filename = getUploadFilename(req)
+        const targetFileName = `${filenamePrefix}/${filename}`
+
+        if (req.file) {
+          req.file.destination = ''
+          req.file.path = targetFileName
         } else {
-          const originalUploadPath = R.pathOr('', ['file', 'path'], req)
-
-          if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params.documentType)) {
-            let filenamePrefix
-            if (req.query.document !== 'VISIT_CONFIRMATION' && req.query.document !== 'RECEIPT') {
-              filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.documentType}`
-            } else if (req.query.claimExpenseId) {
-              filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.query.claimExpenseId}/${req.params.documentType}`
-            } else {
-              filenamePrefix = `${req.params.referenceId}-${req.query.eligibilityId}/${req.params.claimId}/${req.params.documentType}`
-            }
-
-            const filename = req.file.filename
-            const targetFileName = `${filenamePrefix}/${filename}`
-            req.file.destination = ''
-            req.file.path = targetFileName
-
-            const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
-
-            try {
-              await aws.upload(targetFileName, originalUploadPath)
-            } catch (error) {
-              next(error)
-            }
-
-            ClaimDocumentUpdate(req.params.referenceId, fileUpload).then(function () {
-              res.redirect(`/claim/${req.params.claimId}`)
-            }).catch(function (error) {
-              next(error)
-            })
-          } else {
-            throw new Error('Not a valid document type')
+          req.file = {
+            destination: '',
+            path: targetFileName
           }
         }
+
+        const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
+
+        await aws.upload(targetFileName, originalUploadPath)
+
+        ClaimDocumentUpdate(req.params.referenceId, fileUpload).then(function () {
+          res.redirect(`/claim/${req.params.claimId}`)
+        }).catch(function (error) {
+          next(error)
+        })
       } catch (error) {
         if (error instanceof ValidationError) {
           return res.status(400).render('claim/file-upload', {

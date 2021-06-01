@@ -4,7 +4,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
-const nock = require('nock')
 
 let authorisation
 let stubGetIndividualClaimDetails
@@ -33,7 +32,6 @@ let stubRejectionReasonId
 let stubRejectionReasons
 let stubUpdateVisitorBenefirExpiryDate
 let stubBenefitExpiryDate
-let stubAWSDownload
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 const VALID_CLAIMDEDUCTION_DATA = [{ Amount: '20.00' }]
@@ -94,9 +92,13 @@ const INCOMPLETE_DATA = {
 }
 const CLAIM_RETURN = { claim: {} }
 
+const CLAIM_DOCUMENT = {
+  Filepath: 'test/resources/testfile.txt'
+}
+
 describe('routes/claim/view-claim', function () {
   let app
-  let AWS
+  let awsStub
 
   beforeEach(function () {
     authorisation = { hasRoles: sinon.stub() }
@@ -126,16 +128,15 @@ describe('routes/claim/view-claim', function () {
     stubInsertTopUp = sinon.stub().resolves()
     stubTopupResponse = sinon.stub()
     stubCancelTopUp = sinon.stub().resolves()
-    stubAWSDownload = sinon.stub()
 
-    const helper = function () {
+    awsStub = function () {
       return {
-        download: stubAWSDownload
+        download: sinon.stub().resolves(CLAIM_DOCUMENT.Filepath)
       }
     }
 
-    AWS = {
-      AWSHelper: helper
+    const awsHelperStub = {
+      AWSHelper: awsStub
     }
 
     const route = proxyquire('../../../../app/routes/claim/view-claim', {
@@ -166,7 +167,7 @@ describe('routes/claim/view-claim', function () {
       '../../services/data/get-rejection-reason-id': stubRejectionReasonId,
       '../../services/data/update-visitor-benefit-expiry-date': stubUpdateVisitorBenefirExpiryDate,
       '../../services/domain/benefit-expiry-date': stubBenefitExpiryDate,
-      '../../services/aws-helper': AWS
+      '../../services/aws-helper': awsHelperStub
     })
     app = routeHelper.buildApp(route)
     route(app)
@@ -315,21 +316,9 @@ describe('routes/claim/view-claim', function () {
   })
 
   describe('GET /claim/:claimId/download', function () {
-    const CLAIM_DOCUMENT = {
-      Filepath: 'test/resources/testfile.txt'
-    }
-
     it('should respond with 200 if a valid file path is returned', function () {
       stubGetClaimDocumentFilePath.resolves(CLAIM_DOCUMENT)
-
-      const testApp = supertest(app)
-      const testHost = testApp.get('').url
-
-      nock(testHost)
-        .get('/claim/123/download?claim-document-id=55')
-        .reply(200, {}, { 'content-length': 4 })
-
-      return testApp
+      return supertest(app)
         .get('/claim/123/download?claim-document-id=55')
         .expect(200)
         .expect('content-length', '4')
