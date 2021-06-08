@@ -21,23 +21,24 @@ module.exports = function (app) {
       tls: config.PRODUCTION ? {} : false
     })
     redisClient.on('error', function (err) {
-      console.log('Could not establish a connection with redis. ' + err)
+      log.error('Could not establish a connection with redis. ' + err)
     })
     redisClient.on('connect', function () {
-      console.log('Connected to redis successfully')
+      log.info('Connected to redis successfully')
     })
 
     app.use(session({
       store: new RedisStore({ client: redisClient }),
-      secret: config.HMPPSCOOKIE.SESSION_SECRET,
+      secret: config.HWPVCOOKIE.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       rolling: true,
       proxy: true,
+      name: config.HWPVCOOKIE.NAME,
       cookie: {
-        domain: config.HMPPSCOOKIE.DOMAIN,
+        domain: config.HWPVCOOKIE.DOMAIN,
         httpOnly: true,
-        maxAge: config.HMPPSCOOKIE.EXPIRYMINUTES * 60 * 1000,
+        maxAge: config.HWPVCOOKIE.EXPIRYMINUTES * 60 * 1000,
         sameSite: 'lax',
         secure: config.PRODUCTION,
         signed: true

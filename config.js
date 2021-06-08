@@ -64,15 +64,17 @@ module.exports = {
   // Assignment rules
   ASSIGNMENT_EXPIRY_TIME: process.env.APVS_ASSIGNMENT_EXPIRY_TIME || '60', // Number of minutes of inactivity to unassign caseworkers
   PRODUCTION: process.env.NODE_ENV === 'production',
+
+  // ReDiS and cookie stuff for auth
   REDIS: {
     ENABLED: process.env.REDIS_ENABLED === 'true',
     HOST: process.env.REDIS_HOST,
     PORT: process.env.REDIS_PORT || 6379,
     PASSWORD: process.env.REDIS_AUTH_TOKEN
   },
-  HMPPSCOOKIE: {
-    NAME: process.env.HMPPS_COOKIE_NAME || 'hmpps-session-dev',
-    DOMAIN: process.env.HMPPS_COOKIE_DOMAIN || 'localhost',
+  HWPVCOOKIE: {
+    NAME: process.env.HWPV_COOKIE_NAME || 'hwpv-session-dev',
+    DOMAIN: process.env.HWPV_COOKIE_DOMAIN || 'localhost',
     EXPIRYMINUTES: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 60,
     SESSION_SECRET: process.env.APVS_MOJ_SSO_SESSION_SECRET // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
   }
