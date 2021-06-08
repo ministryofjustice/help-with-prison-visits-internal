@@ -1,27 +1,49 @@
 const config = require('../config')
 const session = require('express-session')
+const redis = require('redis')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
 const request = require('request')
+const RedisStore = require('connect-redis')(session)
 const log = require('./services/log')
 const applicationRoles = require('./constants/application-roles-enum')
 
 module.exports = function (app) {
   if (config.AUTHENTICATION_ENABLED === 'true') {
-    // Using local session storage
-    const sessionOptions = {
-      secret: config.SESSION_SECRET,
-      cookie: {}
-    }
+    app.set('trust proxy', true)
 
-    if (app.get('env') === 'production') {
-      log.info('using production settings')
-      app.set('trust proxy', true)
-      sessionOptions.proxy = true
-      sessionOptions.cookie.secure = true
-    }
+    // Configure redis client
+    const { HOST, PORT, PASSWORD } = config.REDIS
+    const redisClient = redis.createClient({
+      host: HOST,
+      port: PORT,
+      password: PASSWORD,
+      tls: config.PRODUCTION ? {} : false
+    })
+    redisClient.on('error', function (err) {
+      log.error('Could not establish a connection with redis. ' + err)
+    })
+    redisClient.on('connect', function () {
+      log.info('Connected to redis successfully')
+    })
 
-    app.use(session(sessionOptions))
+    app.use(session({
+      store: new RedisStore({ client: redisClient }),
+      secret: config.HWPVCOOKIE.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      rolling: true,
+      proxy: true,
+      name: config.HWPVCOOKIE.NAME,
+      cookie: {
+        domain: config.HWPVCOOKIE.DOMAIN,
+        httpOnly: true,
+        maxAge: config.HWPVCOOKIE.EXPIRYMINUTES * 60 * 1000,
+        sameSite: 'lax',
+        secure: config.PRODUCTION,
+        signed: true
+      }
+    }))
 
     app.use(passport.initialize())
     app.use(passport.session())

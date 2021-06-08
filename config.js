@@ -15,7 +15,6 @@ module.exports = {
 
   // MoJ SSO
   AUTHENTICATION_ENABLED: process.env.APVS_MOJ_SSO_AUTHENTICATION_ENABLED || 'true',
-  SESSION_SECRET: process.env.APVS_MOJ_SSO_SESSION_SECRET, // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
   CLIENT_ID: process.env.APVS_MOJ_SSO_CLIENT_ID,
   CLIENT_SECRET: process.env.APVS_MOJ_SSO_CLIENT_SECRET,
   TOKEN_HOST: process.env.APVS_MOJ_SSO_TOKEN_HOST,
@@ -63,5 +62,20 @@ module.exports = {
   AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS: process.env.APVS_AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS || '4',
 
   // Assignment rules
-  ASSIGNMENT_EXPIRY_TIME: process.env.APVS_ASSIGNMENT_EXPIRY_TIME || '60' // Number of minutes of inactivity to unassign caseworkers
+  ASSIGNMENT_EXPIRY_TIME: process.env.APVS_ASSIGNMENT_EXPIRY_TIME || '60', // Number of minutes of inactivity to unassign caseworkers
+  PRODUCTION: process.env.NODE_ENV === 'production',
+
+  // ReDiS and cookie stuff for auth
+  REDIS: {
+    ENABLED: process.env.REDIS_ENABLED === 'true',
+    HOST: process.env.REDIS_HOST,
+    PORT: process.env.REDIS_PORT || 6379,
+    PASSWORD: process.env.REDIS_AUTH_TOKEN
+  },
+  HWPVCOOKIE: {
+    NAME: process.env.HWPV_COOKIE_NAME || 'hwpv-session-dev',
+    DOMAIN: process.env.HWPV_COOKIE_DOMAIN || 'localhost',
+    EXPIRYMINUTES: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 60,
+    SESSION_SECRET: process.env.APVS_MOJ_SSO_SESSION_SECRET // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
+  }
 }
