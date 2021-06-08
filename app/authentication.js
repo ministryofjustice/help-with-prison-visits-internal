@@ -40,7 +40,7 @@ module.exports = function (app) {
         httpOnly: true,
         maxAge: config.HWPVCOOKIE.EXPIRYMINUTES * 60 * 1000,
         sameSite: 'lax',
-        secure: config.PRODUCTION,
+        secure: true,
         signed: true
       }
     }))
@@ -49,8 +49,8 @@ module.exports = function (app) {
     app.use(passport.session())
 
     passport.use(new OAuth2Strategy({
-      authorizationURL: config.TOKEN_HOST + config.AUTHORIZE_PATH,
-      tokenURL: config.TOKEN_HOST + config.TOKEN_PATH,
+      authorizationURL: `${config.TOKEN_HOST}${config.AUTHORIZE_PATH}`,
+      tokenURL: `${config.TOKEN_HOST}${config.TOKEN_PATH}`,
       clientID: config.CLIENT_ID,
       clientSecret: config.CLIENT_SECRET,
       callbackURL: config.REDIRECT_URI,
@@ -62,17 +62,17 @@ module.exports = function (app) {
     function (accessToken, refreshToken, params, profile, cb) {
       // Call API to get details on user
       const options = {
-        uri: config.TOKEN_HOST + config.USER_PATH_PREFIX + config.USER_DETAILS_PATH,
+        uri: `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_DETAILS_PATH}`,
         qs: { access_token: accessToken },
         json: true
       }
       request(options, function (error, response, userDetails) {
         if (!error && response.statusCode === 200) {
           let roles = []
-          options.uri = config.TOKEN_HOST + config.USER_PATH_PREFIX + `/${userDetails.username}` + config.USER_EMAIL_PATH
+          options.uri = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}/${userDetails.username}${config.USER_EMAIL_PATH}`
           request(options, function (error, response, userEmail) {
             if (!error && response.statusCode === 200) {
-              options.uri = config.TOKEN_HOST + config.USER_PATH_PREFIX + config.USER_ROLES_PATH
+              options.uri = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_ROLES_PATH}`
               request(options, function (error, response, userRoles) {
                 if (!error && response.statusCode === 200) {
                   userRoles.forEach(function (role) {

@@ -1,7 +1,7 @@
 // APVS0246
 function isAuthenticated (req) {
   if (!req.user) {
-    const error = new Error('unauthenticated')
+    const error = new Error('Unauthorized')
     error.status = 401
     throw error
   }
@@ -17,10 +17,11 @@ function hasRoles (req, roles) {
     }
   })
   if (!hasDesiredRole) {
-    const error = new Error('unauthorised')
+    const error = new Error('Forbidden')
     error.status = 403
     throw error
   }
+  return true
 }
 
 module.exports.isAuthenticated = isAuthenticated

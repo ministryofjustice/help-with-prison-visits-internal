@@ -12,6 +12,8 @@ node_modules
 .port.tmp
 .tmuxp.*
 .env
+stunnel.pid
+redis-ssl.conf
 
 # Static managed assets
 app/views/govuk_template.html
