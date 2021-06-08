@@ -16,7 +16,7 @@ module.exports = function (router) {
     authorisation.hasRoles(req, allowedRoles)
 
     res.render('index', {
-      title: 'APVS index',
+      title: 'HwPV index',
       active: req.query.status
     })
   })

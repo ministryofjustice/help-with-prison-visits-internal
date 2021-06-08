@@ -11,15 +11,15 @@ module.exports = function (router) {
 
   router.get('/auth/:provider', passport.authenticate('oauth2'))
 
-  router.get('/auth/:provider/callback', passport.authenticate('oauth2', { failureRedirect: '/unauthorised' }),
+  router.get('/auth/:provider/callback', passport.authenticate('oauth2', { failureRedirect: '/unauthorized' }),
     function (req, res) {
       // Successful authentication, redirect home.
       log.info({ user: req.user }, 'login')
       return res.redirect('/')
     })
 
-  router.get('/unauthorised', function (req, res) {
-    log.info({ user: req.user }, 'unauthorised')
-    return res.status(401).render('includes/error-401', { title: 'HwPV - unauthorised' })
+  router.get('/unauthorized', function (req, res) {
+    log.info({ user: req.user }, 'unauthorized')
+    return res.status(401).render('includes/error-401', { title: 'HwPV - unauthorized' })
   })
 }
