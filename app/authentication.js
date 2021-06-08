@@ -12,20 +12,20 @@ module.exports = function (app) {
   if (config.AUTHENTICATION_ENABLED === 'true') {
     app.set('trust proxy', true)
 
-    //Configure redis client
-    const { ENABLED, HOST, PORT, PASSWORD } = config.REDIS
+    // Configure redis client
+    const { HOST, PORT, PASSWORD } = config.REDIS
     const redisClient = redis.createClient({
       host: HOST,
       port: PORT,
       password: PASSWORD,
-      tls: config.PRODUCTION ? {} : false,
+      tls: config.PRODUCTION ? {} : false
     })
     redisClient.on('error', function (err) {
-      console.log('Could not establish a connection with redis. ' + err);
-    });
-    redisClient.on('connect', function (err) {
-      console.log('Connected to redis successfully');
-    });
+      console.log('Could not establish a connection with redis. ' + err)
+    })
+    redisClient.on('connect', function () {
+      console.log('Connected to redis successfully')
+    })
 
     app.use(session({
       store: new RedisStore({ client: redisClient }),

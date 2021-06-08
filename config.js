@@ -68,12 +68,12 @@ module.exports = {
     ENABLED: process.env.REDIS_ENABLED === 'true',
     HOST: process.env.REDIS_HOST,
     PORT: process.env.REDIS_PORT || 6379,
-    PASSWORD: process.env.REDIS_AUTH_TOKEN,
+    PASSWORD: process.env.REDIS_AUTH_TOKEN
   },
   HMPPSCOOKIE: {
     NAME: process.env.HMPPS_COOKIE_NAME || 'hmpps-session-dev',
     DOMAIN: process.env.HMPPS_COOKIE_DOMAIN || 'localhost',
-    EXPIRYMINUTES: toInt(process.env.WEB_SESSION_TIMEOUT_IN_MINUTES, 60),
-    SESSION_SECRET: process.env.APVS_MOJ_SSO_SESSION_SECRET, // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
+    EXPIRYMINUTES: process.env.WEB_SESSION_TIMEOUT_IN_MINUTES || 60,
+    SESSION_SECRET: process.env.APVS_MOJ_SSO_SESSION_SECRET // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
   }
 }
