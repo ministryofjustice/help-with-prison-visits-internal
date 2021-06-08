@@ -20,6 +20,6 @@ module.exports = function (router) {
 
   router.get('/unauthorised', function (req, res) {
     log.info({ user: req.user }, 'unauthorised')
-    return res.status(401).render('includes/error-401', { title: 'APVS - unauthorised' })
+    return res.status(401).render('includes/error-401', { title: 'HwPV - unauthorised' })
   })
 }
