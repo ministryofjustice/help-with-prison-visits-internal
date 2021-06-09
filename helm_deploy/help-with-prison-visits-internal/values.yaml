@@ -38,6 +38,7 @@ generic-service:
     APVS_MOJ_SSO_USER_ROLES_PATH: '/me/roles'
     APVS_MOJ_SSO_LOGOUT_PATH: '/logout'
     APVS_INT_SECURE_COOKIE: 'true'
+    NODE_ENV: 'production'
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
