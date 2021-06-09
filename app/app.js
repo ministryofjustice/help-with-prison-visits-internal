@@ -14,8 +14,8 @@ const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
-
 const app = express()
+const router = express.Router()
 
 authentication(app)
 
@@ -42,7 +42,7 @@ app.use(helmet.contentSecurityPolicy({
 }))
 
 const packageJson = require('../package.json')
-const developmentMode = app.get('env') === 'development'
+const developmentMode = !config.PRODUCTION
 const releaseVersion = packageJson.version
 const serviceName = 'Help with Prison Visits'
 
@@ -90,10 +90,10 @@ app.use(function (req, res, next) {
 })
 
 // Use cookie parser middleware (required for csurf)
-app.use(cookieParser(config.INT_APPLICATION_SECRET, { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' }))
+app.use(cookieParser(config.INT_APPLICATION_SECRET, { httpOnly: true, secure: config.INT_SECURE_COOKIE }))
 
 // Check for valid CSRF tokens on state-changing methods.
-const csrfProtection = csurf({ cookie: { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' } })
+const csrfProtection = csurf({ cookie: { httpOnly: true, secure: config.INT_SECURE_COOKIE } })
 
 app.use(function (req, res, next) {
   let exclude = false
@@ -118,7 +118,6 @@ app.use(function (req, res, next) {
 })
 
 // Build the router to route all HTTP requests and pass to the routes file for route configuration.
-const router = express.Router()
 routes(router)
 app.use('/', router)
 
@@ -130,24 +129,23 @@ app.use(function (req, res, next) {
   next(err)
 })
 
-// catch CSRF token errors
 app.use(function (err, req, res, next) {
-  if (err.code !== 'EBADCSRFTOKEN') return next(err)
   log.error({ error: err })
-  res.status(403)
-  res.render('includes/error', {
-    error: 'Invalid CSRF token'
-  })
-})
 
-// Development error handler.
-app.use(function (err, req, res, next) {
-  log.error({ error: err })
+  // catch CSRF token errors
+  if (err.code === 'EBADCSRFTOKEN') {
+    res.status(403)
+    res.render('includes/error', {
+      error: 'Invalid CSRF token'
+    })
+  }
+
   res.status(err.status || 500)
+
   if (err.status === 404) {
     res.render('includes/error-404')
   } else if (err.status === 401) {
-    res.redirect('/auth/oauth2')
+    res.redirect('/login')
   } else if (err.status === 403) {
     res.render('includes/error-403')
   } else {

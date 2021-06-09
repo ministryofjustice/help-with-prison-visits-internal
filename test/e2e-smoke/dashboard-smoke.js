@@ -4,7 +4,7 @@ const expect = require('chai').expect
 describe('Smoke test', () => {
   before(async function () {
     // IF SSO ENABLED LOGIN TO SSO
-    if (config.AUTHENTICATION_ENABLED === 'true') {
+    if (config.AUTHENTICATION_ENABLED) {
       await browser.url(config.TOKEN_HOST)
       const email = await $('#user_email')
       const password = await $('#user_password')

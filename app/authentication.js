@@ -9,26 +9,31 @@ const log = require('./services/log')
 const applicationRoles = require('./constants/application-roles-enum')
 
 module.exports = function (app) {
-  if (config.AUTHENTICATION_ENABLED === 'true') {
+  if (config.AUTHENTICATION_ENABLED) {
     app.set('trust proxy', true)
 
-    // Configure redis client
-    const { HOST, PORT, PASSWORD } = config.REDIS
-    const redisClient = redis.createClient({
-      host: HOST,
-      port: PORT,
-      password: PASSWORD,
-      tls: config.PRODUCTION ? {} : false
-    })
-    redisClient.on('error', function (err) {
-      log.error('Could not establish a connection with redis. ' + err)
-    })
-    redisClient.on('connect', function () {
-      log.info('Connected to redis successfully')
-    })
+    const getSessionStore = () => {
+      const { HOST, PORT, PASSWORD } = config.REDIS
+      if (!HOST) return null
+
+      const client = redis.createClient({
+        host: HOST,
+        port: PORT,
+        password: PASSWORD,
+        tls: config.PRODUCTION ? {} : false
+      })
+      client.on('error', function (error) {
+        log.error('Could not establish a connection with redis', error)
+      })
+      client.on('connect', function () {
+        log.info('Connected to redis successfully')
+      })
+
+      return new RedisStore({ client })
+    }
 
     app.use(session({
-      store: new RedisStore({ client: redisClient }),
+      store: getSessionStore(),
       secret: config.HWPVCOOKIE.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
@@ -40,13 +45,10 @@ module.exports = function (app) {
         httpOnly: true,
         maxAge: config.HWPVCOOKIE.EXPIRYMINUTES * 60 * 1000,
         sameSite: 'lax',
-        secure: true,
-        signed: true
+        signed: true,
+        secure: config.INT_SECURE_COOKIE
       }
     }))
-
-    app.use(passport.initialize())
-    app.use(passport.session())
 
     passport.use(new OAuth2Strategy({
       authorizationURL: `${config.TOKEN_HOST}${config.AUTHORIZE_PATH}`,
@@ -59,7 +61,7 @@ module.exports = function (app) {
         Authorization: `Basic ${Buffer.from(`${config.CLIENT_ID}:${config.CLIENT_SECRET}`).toString('base64')}`
       }
     },
-    function (accessToken, refreshToken, params, profile, cb) {
+    function (accessToken, refreshToken, params, profile, done) {
       // Call API to get details on user
       const options = {
         uri: `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_DETAILS_PATH}`,
@@ -85,26 +87,26 @@ module.exports = function (app) {
                       name: userDetails.name,
                       roles: roles
                     }
-                    cb(null, sessionUser)
+                    done(null, sessionUser)
                   } else {
                     log.error('no roles found for user')
                     const notAuthorisedError = new Error('You are not authorised for this service')
                     notAuthorisedError.status = 403
-                    cb(notAuthorisedError, null)
+                    done(notAuthorisedError, null)
                   }
                 } else {
                   log.error({ error: error }, 'error returned when requesting user roles from SSO')
-                  cb(error, null)
+                  done(error, null)
                 }
               })
             } else {
               log.error({ error: error }, 'error returned when requesting user email from SSO')
-              cb(error, null)
+              done(error, null)
             }
           })
         } else {
           log.error({ error: error }, 'error returned when requesting user details from SSO')
-          cb(error, null)
+          done(error, null)
         }
       })
     }))
@@ -114,6 +116,9 @@ module.exports = function (app) {
     passport.deserializeUser(function (user, done) {
       done(null, user)
     })
+
+    app.use(passport.initialize())
+    app.use(passport.session())
   } else {
     app.use(function (req, res, next) {
       req.user = {

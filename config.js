@@ -14,7 +14,7 @@ module.exports = {
   EXT_WEB_USERNAME: process.env.APVS_EXT_WEB_USERNAME,
 
   // MoJ SSO
-  AUTHENTICATION_ENABLED: process.env.APVS_MOJ_SSO_AUTHENTICATION_ENABLED || 'true',
+  AUTHENTICATION_ENABLED: process.env.APVS_MOJ_SSO_AUTHENTICATION_ENABLED === 'true' || true,
   CLIENT_ID: process.env.APVS_MOJ_SSO_CLIENT_ID,
   CLIENT_SECRET: process.env.APVS_MOJ_SSO_CLIENT_SECRET,
   TOKEN_HOST: process.env.APVS_MOJ_SSO_TOKEN_HOST,
@@ -49,7 +49,7 @@ module.exports = {
 
   // Session and Cookie security (CSRF)
   INT_APPLICATION_SECRET: process.env.APVS_INT_APPLICATION_SECRET, // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
-  INT_SECURE_COOKIE: process.env.APVS_INT_SECURE_COOKIE || 'false',
+  INT_SECURE_COOKIE: process.env.APVS_INT_SECURE_COOKIE === 'true' || false,
 
   // Auto approval config defaults
   AUTO_APPROVAL_ENABLED: process.env.APVS_AUTO_APPROVAL_ENABLED || 'true',
