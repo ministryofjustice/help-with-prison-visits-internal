@@ -67,7 +67,6 @@ module.exports = {
 
   // ReDiS and cookie stuff for auth
   REDIS: {
-    ENABLED: process.env.REDIS_ENABLED === 'true',
     HOST: process.env.REDIS_HOST,
     PORT: process.env.REDIS_PORT || 6379,
     PASSWORD: process.env.REDIS_AUTH_TOKEN

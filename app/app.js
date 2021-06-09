@@ -4,8 +4,7 @@ const express = require('express')
 const nunjucks = require('express-nunjucks')
 const path = require('path')
 const favicon = require('serve-favicon')
-const bodyParser = require('body-parser')
-const expressSanitized = require('express-sanitized')
+const expressSanitizer = require('express-sanitizer')
 const helmet = require('helmet')
 const compression = require('compression')
 const routes = require('./routes/routes')
@@ -60,9 +59,9 @@ app.use('/public', express.static(path.join(__dirname, 'govuk_modules', 'govuk_t
 app.use('/public', express.static(path.join(__dirname, 'govuk_modules', 'govuk_frontend_toolkit')))
 app.use(favicon(path.join(__dirname, 'govuk_modules', 'govuk_template', 'images', 'favicon.ico')))
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(expressSanitized())
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(expressSanitizer())
 
 // Send assetPath to all views.
 app.use(function (req, res, next) {

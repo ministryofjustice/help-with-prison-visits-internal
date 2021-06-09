@@ -3,7 +3,6 @@ const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const express = require('express')
 const queryString = require('querystring')
-const bodyParser = require('body-parser')
 const dateFormatter = require('../../../app/services/date-formatter')
 const path = require('path')
 const sinon = require('sinon')
@@ -170,7 +169,7 @@ describe('routes/index', function () {
     })
     app.set('view engine', 'html')
     app.set('views', [path.join(__dirname, '../../../app/views'), path.join(__dirname, '../../../lib/')])
-    app.use(bodyParser.json())
+    app.use(express.json())
 
     route(app)
   })
