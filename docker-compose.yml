@@ -1,14 +1,35 @@
 version: '3'
 services:
-  help-with-prison-visits-internal:
-    build:
-      context: .
-    volumes:
-      - "./gulpfile.js:/usr/src/app/gulpfile.js"
-      - "./nodemon.json:/usr/src/app/nodemon.json"
-      - "./app:/usr/src/app/app"
-      - "./logs:/usr/src/app/logs"
-      - "./uploads:/usr/src/app/uploads"
+  # help-with-prison-visits-internal:
+  #   build:
+  #     context: .
+  #   volumes:
+  #     - "./gulpfile.js:/usr/src/app/gulpfile.js"
+  #     - "./nodemon.json:/usr/src/app/nodemon.json"
+  #     - "./app:/usr/src/app/app"
+  #     - "./logs:/usr/src/app/logs"
+  #     - "./uploads:/usr/src/app/uploads"
+  #   ports:
+  #     - "3001:3001"
+  #   env_file: ./.env
+  redis:
+    image: "redis:6.2.3-alpine"
+    networks:
+      - hmpps
+    container_name: redis
     ports:
-      - "3001:3001"
-    env_file: ./.env
+      - "6379:6379"
+  oauth:
+    image: quay.io/hmpps/hmpps-auth:latest
+    networks:
+      - hmpps
+    container_name: oauth
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9090/auth/health"]
+    environment:
+      - SERVER_PORT=9090
+      - SPRING_PROFILES_ACTIVE=dev
+networks:
+  hmpps:

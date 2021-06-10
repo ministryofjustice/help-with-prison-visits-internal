@@ -147,7 +147,7 @@ app.use(function (err, req, res, next) {
   if (err.status === 404) {
     res.render('includes/error-404')
   } else if (err.status === 401) {
-    res.redirect('/auth/oauth2')
+    res.redirect('/login')
   } else if (err.status === 403) {
     res.render('includes/error-403')
   } else {
