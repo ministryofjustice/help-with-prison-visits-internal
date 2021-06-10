@@ -64,7 +64,8 @@ module.exports = function (router) {
     const allowedRoles = [
       applicationRoles.CLAIM_ENTRY_BAND_2,
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     authorisation.hasRoles(req, allowedRoles)
 
@@ -111,7 +112,10 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/add-deduction', function (req, res, next) {
     const needAssignmentCheck = true
-    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    const allowedRoles = [
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.APPLICATION_DEVELOPER
+    ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       const deductionType = req.body.deductionType
       // var amount = Number(req.body.deductionAmount).toFixed(2)
@@ -128,7 +132,10 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/remove-deduction', function (req, res, next) {
     const needAssignmentCheck = true
-    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    const allowedRoles = [
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.APPLICATION_DEVELOPER
+    ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       const removeDeductionId = getClaimDeductionId(req.body)
 
@@ -145,7 +152,8 @@ module.exports = function (router) {
     const allowedRoles = [
       applicationRoles.CLAIM_ENTRY_BAND_2,
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       const benefitExpiryDate = new BenefitExpiryDate(req.body['expiry-day'], req.body['expiry-month'], req.body['expiry-year'])
@@ -158,7 +166,10 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/update-overpayment-status', function (req, res, next) {
     const needAssignmentCheck = true
-    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    const allowedRoles = [
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.APPLICATION_DEVELOPER
+    ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
@@ -179,7 +190,8 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'], req.user.email)
@@ -190,7 +202,8 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
@@ -206,7 +219,10 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/add-top-up', function (req, res, next) {
     const needAssignmentCheck = true
-    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    const allowedRoles = [
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.APPLICATION_DEVELOPER
+    ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
@@ -228,7 +244,10 @@ module.exports = function (router) {
 
   router.post('/claim/:claimId/cancel-top-up', function (req, res, next) {
     const needAssignmentCheck = true
-    const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+    const allowedRoles = [
+      applicationRoles.CLAIM_PAYMENT_BAND_3,
+      applicationRoles.APPLICATION_DEVELOPER
+    ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return getIndividualClaimDetails(req.params.claimId)
         .then(function (data) {
@@ -245,7 +264,8 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return payoutBarcodeExpiredClaim(req.params.claimId, req.body['payout-barcode-expired-additional-information'])
@@ -256,7 +276,8 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return disableReferenceNumber(req.params.claimId, req.body.referenceToBeDisabled, req.body['disable-reference-number-additional-information'], req.user.email)
@@ -267,7 +288,8 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return reEnableReferenceNumber(req.params.claimId, req.body.referenceToBeReEnabled, req.body['re-enable-reference-number-additional-information'], req.user.email)
@@ -280,7 +302,8 @@ module.exports = function (router) {
     const allowedRoles = [
       applicationRoles.CLAIM_ENTRY_BAND_2,
       applicationRoles.CLAIM_PAYMENT_BAND_3,
-      applicationRoles.CASEWORK_MANAGER_BAND_5
+      applicationRoles.CASEWORK_MANAGER_BAND_5,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     if (!req.body['note-information']) {
       return handleError('Note must not be blank.', req, res, false, next)
@@ -296,7 +319,8 @@ module.exports = function (router) {
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5,
-      applicationRoles.BAND_9
+      applicationRoles.BAND_9,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return updateAssignmentOfClaims(req.params.claimId, req.user.email)
@@ -311,7 +335,8 @@ module.exports = function (router) {
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5,
-      applicationRoles.BAND_9
+      applicationRoles.BAND_9,
+      applicationRoles.APPLICATION_DEVELOPER
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return updateAssignmentOfClaims(req.params.claimId, null)
