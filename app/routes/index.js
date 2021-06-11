@@ -7,8 +7,7 @@ const allowedRoles = [
   applicationRoles.CLAIM_ENTRY_BAND_2,
   applicationRoles.CLAIM_PAYMENT_BAND_3,
   applicationRoles.CASEWORK_MANAGER_BAND_5,
-  applicationRoles.BAND_9,
-  applicationRoles.APPLICATION_DEVELOPER
+  applicationRoles.BAND_9
 ]
 
 module.exports = function (router) {

@@ -126,7 +126,6 @@ module.exports = function (app) {
           applicationRoles.CLAIM_PAYMENT_BAND_3,
           applicationRoles.CASEWORK_MANAGER_BAND_5,
           applicationRoles.BAND_9,
-          applicationRoles.APPLICATION_DEVELOPER,
           applicationRoles.HWPV_SSCL
         ]
         // old roles: ['caseworker', 'admin', 'sscl']
