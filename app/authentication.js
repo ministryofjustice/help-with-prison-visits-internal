@@ -3,7 +3,7 @@ const session = require('express-session')
 const redis = require('redis')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
-const request = require('request')
+const axios = require('axios')
 const RedisStore = require('connect-redis')(session)
 const log = require('./services/log')
 const applicationRoles = require('./constants/application-roles-enum')
@@ -66,14 +66,14 @@ module.exports = function (app) {
         qs: { access_token: accessToken },
         json: true
       }
-      request(options, function (error, response, userDetails) {
+      axios(options, function (error, response, userDetails) {
         if (!error && response.statusCode === 200) {
           let roles = []
           options.uri = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}/${userDetails.username}${config.USER_EMAIL_PATH}`
-          request(options, function (error, response, userEmail) {
+          axios(options, function (error, response, userEmail) {
             if (!error && response.statusCode === 200) {
               options.uri = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_ROLES_PATH}`
-              request(options, function (error, response, userRoles) {
+              axios(options, function (error, response, userRoles) {
                 if (!error && response.statusCode === 200) {
                   userRoles.forEach(function (role) {
                     roles = roles.concat(role.roleCode)

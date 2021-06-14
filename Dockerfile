@@ -11,7 +11,7 @@ WORKDIR /app
 COPY . .
 
 RUN npm ci --no-audit && \
-    npm run generate-assets && \
+    npm run css-build && \
     export BUILD_NUMBER=${BUILD_NUMBER} && \
     export GIT_REF=${GIT_REF} && \
     npm run record-build-info
@@ -46,6 +46,7 @@ COPY --from=builder --chown=appuser:appgroup \
         /app/knexfile.js \
         /app/config.js \
         /app/build-info.json \
+        /app/build-css \
         ./
 
 COPY --from=builder --chown=appuser:appgroup \

@@ -15,10 +15,6 @@ node_modules
 stunnel.pid
 redis-ssl.conf
 
-# Static managed assets
-app/views/govuk_template.html
-app/govuk_modules
-
 # e2e selenium
 errorShots
 
@@ -37,7 +33,6 @@ run-end-to-end-tests-firefox.sh
 run-integration-tests.sh
 run-knex-migrations.sh
 run-knex-rollback.sh
-run-nodemon.sh
 run-standard-linter.sh
 run-test-coverage.sh
 run-unit-tests.sh
