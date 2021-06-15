@@ -1,5 +1,5 @@
-const Promise = require('bluebird')
-const generateCsvString = Promise.promisify(require('csv-stringify'))
+const util = require('util')
+const generateCsvString = util.promisify(require('csv-stringify'))
 const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-for-advanced-search')
 const transformData = require('../services/transform-claim-data-for-export')
 const getCSVColumnHeaders = require('./get-csv-column-headers')
