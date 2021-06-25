@@ -1,6 +1,7 @@
 var expect = require('chai').expect
 var { db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
+var { db } = require('../../../helpers/database-setup-for-tests')
 
 const TEST_PATH = 'TEST_PATH'
 
