@@ -2,8 +2,8 @@
 const expect = require('chai').expect
 const moment = require('moment')
 const dateFormatter = require('../../../../app/services/date-formatter')
-const config = require('../../../../knexfile').migrations
-const knex = require('knex')(config)
+const knexConfig = require('../../../../knexfile').migrations
+const knex = require('knex')(knexConfig)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const updateRelatedClaimRemainingOverpaymentAmount = require('../../../../app/services/data/update-related-claims-remaining-overpayment-amount')
 

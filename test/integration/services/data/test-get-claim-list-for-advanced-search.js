@@ -1,5 +1,5 @@
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
+const knexConfig = require('../../../../knexfile').intweb
+const knex = require('knex')(knexConfig)
 
 const getClaimListForAdvancedSearch = require('../../../../app/services/data/get-claim-list-for-advanced-search')
 var dateFormatter = require('../../../../app/services/date-formatter')

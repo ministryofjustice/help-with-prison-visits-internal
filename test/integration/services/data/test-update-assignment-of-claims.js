@@ -1,9 +1,10 @@
+require('dotenv').config()
 const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
+const knexConfig = require('../../../../knexfile').migrations
+const knex = require('knex')(knexConfig)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
-const environmentVariables = require('../../../../config')
+const config = require('../../../../config')
 
 const updateAssignmentOfClaims = require('../../../../app/services/data/update-assignment-of-claims')
 var reference = 'ASSIGN1'
@@ -21,7 +22,7 @@ describe('services/data/update-assignment-of-claim', function () {
 
     it('should assign a claim, setting the time and updating when it was last updated', function () {
       var assignedTo = 'test@test.com'
-      var expiryTime = parseInt(environmentVariables.ASSIGNMENT_EXPIRY_TIME)
+      var expiryTime = parseInt(config.ASSIGNMENT_EXPIRY_TIME)
       var currentDate = dateFormatter.now()
       var twoMinutesAgoExpiry = dateFormatter.now().minutes(currentDate.get('minutes') + (expiryTime - 2))
       var twoMinutesAheadExpiry = dateFormatter.now().minutes(currentDate.get('minutes') + (expiryTime + 2))

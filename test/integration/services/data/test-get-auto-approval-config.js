@@ -1,3 +1,4 @@
+require('dotenv').config()
 var expect = require('chai').expect
 var getAutoApprovalConfig = require('../../../../app/services/data/get-auto-approval-config')
 var knexConfig = require('../../../../knexfile').migrations

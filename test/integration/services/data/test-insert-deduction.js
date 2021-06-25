@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
+const knexConfig = require('../../../../knexfile').migrations
+const knex = require('knex')(knexConfig)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 const insertDeduction = require('../../../../app/services/data/insert-deduction')

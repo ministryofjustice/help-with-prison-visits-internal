@@ -6,6 +6,7 @@ const databaseHelper = require('../../../../helpers/database-setup-for-tests')
 const getRejectedClaimCount = require('../../../../../app/services/data/dashboard/get-rejected-claim-count')
 const claimStatusEnum = require('../../../../../app/constants/claim-status-enum')
 const dashboardFilterEnum = require('../../../../../app/constants/dashboard-filter-enum')
+const knexConfig = require('../../../../../knexfile').migrations
 
 var reference = 'PENDING'
 var claimId2
@@ -37,7 +38,7 @@ var fourMonthsAgoCount
 describe('services/data/dashboard/get-rejected-claim-count', function () {
   describe('module', function () {
     before(function () {
-      return getCountsBeforeTest()
+      return getCountsBeforeTest(knexConfig)
         .then(function () {
           return databaseHelper.insertTestData(reference, date, claimStatusEnum.REJECTED.value)
             .then(function (ids) {

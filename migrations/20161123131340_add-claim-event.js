@@ -5,6 +5,7 @@ exports.up = function (knex, Promise) {
     table.string('Reference', 10).notNullable().index()
     table.integer('ClaimId').unsigned().notNullable().references('Claim.ClaimId')
     table.integer('ClaimDocumentId').unsigned().references('ClaimDocument.ClaimDocumentId')
+    table.string('Reference', 10).notNullable().index()
     table.dateTime('DateAdded').notNullable()
     table.string('Event', 100).notNullable()
     table.string('AdditionalData', 100)

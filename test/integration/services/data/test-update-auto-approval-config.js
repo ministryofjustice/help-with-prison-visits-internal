@@ -1,9 +1,10 @@
+require('dotenv').config()
 var expect = require('chai').expect
 var updateAutoApprovalConfig = require('../../../../app/services/data/update-auto-approval-config')
-var config = require('../../../../knexfile').migrations
-var knex = require('knex')(config)
+var knexConfig = require('../../../../knexfile').migrations
+var knex = require('knex')(knexConfig)
 var dateFormatter = require('../../../../app/services/date-formatter')
-var defaultsConfig = require('../../../../config')
+var config = require('../../../../config')
 
 var insertedIds = []
 
@@ -49,7 +50,7 @@ describe('services/data/update-auto-approval-config', function () {
             expect(result.AutoApprovalEnabled).to.equal(true)
             expect(result.CostVariancePercentage).to.equal(null)
             expect(result.RulesDisabled).to.equal('auto-approval-rule-1,auto-approval-rule-2')
-            expect(result.CostPerMile, 'should have set CostPerMile to default').to.equal(parseFloat(defaultsConfig.AUTO_APPROVAL_COST_PER_MILE))
+            expect(result.CostPerMile, 'should have set CostPerMile to default').to.equal(parseFloat(config.AUTO_APPROVAL_COST_PER_MILE))
           })
       })
   })

@@ -1,8 +1,8 @@
 var expect = require('chai').expect
 var dateFormatter = require('../../../../app/services/date-formatter')
 var databaseHelper = require('../../../helpers/database-setup-for-tests')
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
+const knexConfig = require('../../../../knexfile').intweb
+const knex = require('knex')(knexConfig)
 
 var getClaimListAndCount = require('../../../../app/services/data/get-claim-list-and-count')
 var testData

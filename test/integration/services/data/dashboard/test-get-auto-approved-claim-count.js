@@ -6,6 +6,7 @@ const databaseHelper = require('../../../../helpers/database-setup-for-tests')
 const getAutoApprovedClaimCount = require('../../../../../app/services/data/dashboard/get-auto-approved-claim-count')
 const claimStatusEnum = require('../../../../../app/constants/claim-status-enum')
 const dashboardFilterEnum = require('../../../../../app/constants/dashboard-filter-enum')
+const knexConfig = require('../../../../../knexfile').migrations
 
 var reference = 'AUTOAPP'
 var claimId2
@@ -34,10 +35,10 @@ var twoMonthsAgoCount
 var threeMonthsAgoCount
 var fourMonthsAgoCount
 
-describe('services/data/dashboard/get-auto-approved-claim-count', function () {
+describe.only('services/data/dashboard/get-auto-approved-claim-count', function () {
   describe('module', function () {
     before(function () {
-      return getCountsBeforeTest()
+      return getCountsBeforeTest(knexConfig)
         .then(function () {
           return databaseHelper.insertTestData(reference, date, claimStatusEnum.AUTOAPPROVED.value)
             .then(function (ids) {
@@ -131,16 +132,16 @@ function checkCount (filter, expectedCount) {
     })
 }
 
-function getCountsBeforeTest () {
+function getCountsBeforeTest (knexConfig) {
   var promises = []
 
-  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.TODAY).then(function (result) { todayCount = result[0].Count }))
-  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.YESTERDAY).then(function (result) { yesterdayCount = result[0].Count }))
-  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.LAST_7_DAYS).then(function (result) { last7DaysCount = result[0].Count }))
-  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.ONE_MONTH_AGO).then(function (result) { oneMonthAgoCount = result[0].Count }))
-  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.TWO_MONTHS_AGO).then(function (result) { twoMonthsAgoCount = result[0].Count }))
-  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.THREE_MONTHS_AGO).then(function (result) { threeMonthsAgoCount = result[0].Count }))
-  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.FOUR_MONTHS_AGO).then(function (result) { fourMonthsAgoCount = result[0].Count }))
+  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.TODAY, knexConfig).then(function (result) { todayCount = result[0].Count }))
+  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.YESTERDAY, knexConfig).then(function (result) { yesterdayCount = result[0].Count }))
+  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.LAST_7_DAYS, knexConfig).then(function (result) { last7DaysCount = result[0].Count }))
+  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.ONE_MONTH_AGO, knexConfig).then(function (result) { oneMonthAgoCount = result[0].Count }))
+  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.TWO_MONTHS_AGO, knexConfig).then(function (result) { twoMonthsAgoCount = result[0].Count }))
+  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.THREE_MONTHS_AGO, knexConfig).then(function (result) { threeMonthsAgoCount = result[0].Count }))
+  promises.push(getAutoApprovedClaimCount(dashboardFilterEnum.FOUR_MONTHS_AGO, knexConfig).then(function (result) { fourMonthsAgoCount = result[0].Count }))
 
   return Promise.all(promises)
 }

@@ -1,6 +1,6 @@
 const expect = require('chai').expect
-const config = require('../../../../knexfile').migrations
-const knex = require('knex')(config)
+const knexConfig = require('../../../../knexfile').migrations
+const knex = require('knex')(knexConfig)
 const dateFormatter = require('../../../../app/services/date-formatter')
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 

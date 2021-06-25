@@ -6,6 +6,7 @@ const databaseHelper = require('../../../../helpers/database-setup-for-tests')
 const getPaidClaimCount = require('../../../../../app/services/data/dashboard/get-paid-claim-count')
 const claimStatusEnum = require('../../../../../app/constants/claim-status-enum')
 const dashboardFilterEnum = require('../../../../../app/constants/dashboard-filter-enum')
+const knexConfig = require('../../../../../knexfile').migrations
 
 const reference = 'PAID'
 const paymentStatusProcessed = 'PROCESSED'
@@ -38,7 +39,7 @@ var fourMonthsAgoCount
 describe('services/data/dashboard/get-paid-claim-count', function () {
   describe('module', function () {
     before(function () {
-      return getCountsBeforeTest()
+      return getCountsBeforeTest(knexConfig)
         .then(function () {
           return databaseHelper.insertTestData(reference, date, claimStatusEnum.AUTOAPPROVED.value)
             .then(function (ids) {

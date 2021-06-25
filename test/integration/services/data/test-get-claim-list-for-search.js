@@ -1,5 +1,5 @@
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
+const knexConfig = require('../../../../knexfile').migrations
+const knex = require('knex')(knexConfig)
 
 var expect = require('chai').expect
 var dateFormatter = require('../../../../app/services/date-formatter')

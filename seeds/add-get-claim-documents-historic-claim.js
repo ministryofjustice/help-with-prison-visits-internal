@@ -6,12 +6,12 @@ const config = require('../config')
  */
 exports.seed = function (knex, Promise) {
   return knex.schema
-    .raw('DROP FUNCTION IF EXISTS IntSchema.getClaimDocumentsHistoricClaim')
+    .raw('DROP FUNCTION IF EXISTS getClaimDocumentsHistoricClaim')
     .then(function () {
       return knex.schema
         .raw(
           `
-            CREATE FUNCTION IntSchema.getClaimDocumentsHistoricClaim(@reference varchar(7), @eligibilityId int, @claimId int)
+            CREATE FUNCTION getClaimDocumentsHistoricClaim(@reference varchar(7), @eligibilityId int, @claimId int)
             RETURNS TABLE
             AS
             RETURN
@@ -20,7 +20,7 @@ exports.seed = function (knex, Promise) {
                 ClaimDocument.DocumentStatus,
                 ClaimDocument.DocumentType,
                 ClaimDocument.ClaimExpenseId
-              FROM IntSchema.ClaimDocument AS ClaimDocument
+              FROM ClaimDocument AS ClaimDocument
               WHERE
                 ClaimDocument.Reference = @reference AND
                 ClaimDocument.EligibilityId = @eligibilityId AND
@@ -30,7 +30,7 @@ exports.seed = function (knex, Promise) {
             )
           `
         )
-        .raw('GRANT SELECT ON IntSchema.getClaimDocumentsHistoricClaim TO ??;', [config.EXT_WEB_USERNAME])
+        .raw('GRANT SELECT ON getClaimDocumentsHistoricClaim TO ??;', [config.EXT_WEB_USERNAME])
     })
     .catch(function (error) {
       console.log(error)

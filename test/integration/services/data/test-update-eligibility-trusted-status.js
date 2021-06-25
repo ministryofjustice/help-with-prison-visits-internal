@@ -1,8 +1,8 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
-const config = require('../../../../knexfile').migrations
-const knex = require('knex')(config)
+const knexConfig = require('../../../../knexfile').migrations
+const knex = require('knex')(knexConfig)
 const databaseHelper = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
