@@ -1,3 +1,4 @@
+require('dotenv').config()
 const config = require('./config')
 
 module.exports = {
@@ -23,10 +24,10 @@ module.exports = {
   migrations: {
     client: 'mssql',
     connection: {
-      host: config.DATABASE_SERVER,
+      host: 'localhost',
       user: config.INT_MIGRATION_USERNAME,
       password: config.INT_MIGRATION_PASSWORD,
-      database: config.DATABASE,
+      database: 'hwpvinternal',
       options: {
         encrypt: false,
         enableArithAbort: true
