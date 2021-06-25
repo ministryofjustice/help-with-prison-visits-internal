@@ -1,5 +1,7 @@
 exports.up = function (knex, Promise) {
-  return knex.raw('ALTER TABLE IntSchema.ClaimDocument ALTER COLUMN ClaimId INT NULL')
+  return knex.schema.alterTable('ClaimDocument', function (table) {
+    table.integer('ClaimId').unsigned().alter()
+  })
     .catch(function (error) {
       console.log(error)
       throw error
@@ -7,7 +9,9 @@ exports.up = function (knex, Promise) {
 }
 
 exports.down = function (knex, Promise) {
-  return knex.raw('ALTER TABLE IntSchema.ClaimDocument ALTER COLUMN ClaimId INT NOT NULL')
+  return knex.schema.alterTable('ClaimDocument', function (table) {
+    table.integer('ClaimId').unsigned().notNullable().alter()
+  })
     .catch(function (error) {
       console.log(error)
       throw error

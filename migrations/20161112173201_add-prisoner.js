@@ -2,7 +2,7 @@ exports.up = function (knex, Promise) {
   return knex.schema.createTable('Prisoner', function (table) {
     table.integer('PrisonerId').unsigned().primary()
     table.integer('EligibilityId').unsigned().notNullable().references('Eligibility.EligibilityId')
-    table.string('Reference', 10).notNullable().index().references('Eligibility.Reference')
+    table.string('Reference', 10).notNullable().index()
     table.string('FirstName', 100).notNullable()
     table.string('LastName', 100).notNullable()
     table.dateTime('DateOfBirth').notNullable()
