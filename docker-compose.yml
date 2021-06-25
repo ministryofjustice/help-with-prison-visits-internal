@@ -29,5 +29,20 @@ services:
     environment:
       - SERVER_PORT=9090
       - SPRING_PROFILES_ACTIVE=dev
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    command: /bin/bash ./entrypoint.sh
+    networks:
+      - hmpps
+    ports:
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Express
+      - SA_PASSWORD=mssqlPassw0rd!
+    volumes:
+      - ./test/db/docker-entrypoint.sh:/entrypoint.sh
+      - ./test/db/docker-db-init.sh:/db-init.sh
+      - ./test/db/mssql-hwpvinternal.sql:/db-init.sql
 networks:
   hmpps:
