@@ -1,9 +1,7 @@
-const knexConfig = require('../../knexfile').migrations
-const knex = require('knex')(knexConfig)
 const config = require('../../config')
 
 const dateFormatter = require('../../app/services/date-formatter')
-const databaseHelper = require('../helpers/database-setup-for-tests')
+const { db, insertTestData, deleteAll } = require('../helpers/database-setup-for-tests')
 const moment = require('moment')
 const expect = require('chai').expect
 
@@ -20,11 +18,11 @@ describe('Advanced search flow', () => {
     date = dateFormatter.now()
     yesterday = moment(date).subtract(1, 'day')
     tomorrow = moment(date).add(1, 'day')
-    return databaseHelper.insertTestData(reference1, date.toDate(), 'APPROVED')
+    return insertTestData(reference1, date.toDate(), 'APPROVED')
       .then(function (ids) {
         reference1ClaimId = ids.claimId
 
-        const reference1Update = knex('Claim')
+        const reference1Update = db('IntSchema.Claim')
           .update({
             AssistedDigitalCaseworker: 'test@test.com',
             DateOfJourney: date.toDate(),
@@ -33,14 +31,14 @@ describe('Advanced search flow', () => {
           })
           .where('Reference', reference1)
 
-        const reference2Insert = databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
+        const reference2Insert = insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
           .then(function (ids) {
             reference2ClaimId = ids.claimId
           })
 
         return Promise.all([reference1Update, reference2Insert])
           .then(function () {
-            return knex('Claim')
+            return db('IntSchema.Claim')
               .update({
                 DateReviewed: date.toDate()
               })
@@ -172,8 +170,8 @@ describe('Advanced search flow', () => {
   })
 
   after(function () {
-    const deleteReference1 = databaseHelper.deleteAll(reference1)
-    const deleteReference2 = databaseHelper.deleteAll(reference2)
+    const deleteReference1 = deleteAll(reference1)
+    const deleteReference2 = deleteAll(reference2)
 
     return Promise.all([deleteReference1, deleteReference2])
   })
