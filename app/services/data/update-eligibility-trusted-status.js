@@ -2,6 +2,7 @@ const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 const insertClaimEvent = require('./insert-claim-event')
 const claimEventEnum = require('../../constants/claim-event-enum')
+const db = getDatabaseConnector()
 
 module.exports = function (claimId, isTrusted, untrustedReason) {
   return getEligibilityData(claimId)

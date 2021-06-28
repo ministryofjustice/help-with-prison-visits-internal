@@ -3,6 +3,8 @@ const claimEventEnum = require('../../constants/claim-event-enum')
 const closedClaimStatusMap = require('../../constants/closed-claim-status-map')
 
 module.exports = function (claimId) {
+  const db = getDatabaseConnector()
+
   var claimEvents = [
     claimEventEnum.REQUEST_NEW_BANK_DETAILS.value,
     claimEventEnum.PAYOUT_BARCODE_EXPIRED.value,

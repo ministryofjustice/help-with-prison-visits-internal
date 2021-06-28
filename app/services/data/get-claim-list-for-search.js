@@ -7,6 +7,8 @@ const Promise = require('bluebird').Promise
 const getClosedClaimStatus = require('./get-closed-claim-status')
 
 module.exports = function (query, offset, limit) {
+  const db = getDatabaseConnector()
+
   query = `%${query}%` // wrap in % for where clause
   const db = getDatabaseConnector()
 

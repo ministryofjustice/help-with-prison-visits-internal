@@ -7,6 +7,7 @@ const insertClaimEvent = require('./insert-claim-event')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 const updateRelatedClaimRemainingOverpaymentAmount = require('./update-related-claims-remaining-overpayment-amount')
 const log = require('../log')
+const db = getDatabaseConnector()
 
 module.exports = function (claimId, claimDecision) {
   const db = getDatabaseConnector()

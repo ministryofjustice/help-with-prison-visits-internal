@@ -8,6 +8,7 @@ const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const topUpStatusEnum = require('../../constants/top-up-status-enum')
 const dateFormatter = require('../date-formatter')
 const moment = require('moment')
+const db = getDatabaseConnector()
 
 module.exports = function (claimId) {
   var claim

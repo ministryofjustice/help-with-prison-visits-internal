@@ -3,6 +3,8 @@ const dateFormatter = require('../date-formatter')
 const environmentVariables = require('../../../config')
 
 module.exports = function (claimId, assignedTo) {
+  const db = getDatabaseConnector()
+
   var assignmentExpiry = null
   const db = getDatabaseConnector()
 

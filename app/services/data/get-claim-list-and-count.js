@@ -7,6 +7,8 @@ const Promise = require('bluebird').Promise
 const getClosedClaimStatus = require('./get-closed-claim-status')
 
 module.exports = function (status, advanceClaims, offset, limit, user, sortType, sortOrder) {
+  const db = getDatabaseConnector()
+
   var currentDateTime = dateFormatter.now().toDate()
   const db = getDatabaseConnector()
 

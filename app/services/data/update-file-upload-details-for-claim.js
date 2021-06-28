@@ -5,7 +5,6 @@ module.exports = function (reference, fileUpload) {
   if (!(fileUpload instanceof FileUpload)) {
     throw new Error('Provided fileUpload object is not an instance of the expected class')
   }
-
   const db = getDatabaseConnector()
 
   return db('ClaimDocument')

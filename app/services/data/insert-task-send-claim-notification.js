@@ -3,6 +3,7 @@ const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 const tasksEnum = require('../../constants/tasks-enum')
 const taskStatusEnum = require('../../constants/task-status-enum')
+const db = getDatabaseConnector()
 
 module.exports = function (notificationType, reference, eligibilityId, claimId, emailAddress) {
   if (notificationType !== tasksEnum.ACCEPT_CLAIM_NOTIFICATION &&

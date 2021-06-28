@@ -22,7 +22,7 @@ describe('Advanced search flow', () => {
       .then(function (ids) {
         reference1ClaimId = ids.claimId
 
-        const reference1Update = db('IntSchema.Claim')
+        const reference1Update = db('Claim')
           .update({
             AssistedDigitalCaseworker: 'test@test.com',
             DateOfJourney: date.toDate(),
@@ -38,7 +38,7 @@ describe('Advanced search flow', () => {
 
         return Promise.all([reference1Update, reference2Insert])
           .then(function () {
-            return db('IntSchema.Claim')
+            return db('Claim')
               .update({
                 DateReviewed: date.toDate()
               })
