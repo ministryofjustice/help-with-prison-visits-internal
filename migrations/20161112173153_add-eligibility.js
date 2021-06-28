@@ -1,7 +1,7 @@
 exports.up = function (knex, Promise) {
   return knex.schema.createTable('Eligibility', function (table) {
     table.integer('EligibilityId').unsigned().primary().unique()
-    table.string('Reference', 10).notNullable().index().unique()
+    table.string('Reference', 10).notNullable().index()
     table.boolean('IsTrusted').defaultTo(true)
     table.string('UntrustedReason')
     table.dateTime('UntrustedDate')

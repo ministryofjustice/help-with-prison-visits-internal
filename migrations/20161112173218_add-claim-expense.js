@@ -2,7 +2,7 @@ exports.up = function (knex, Promise) {
   return knex.schema.createTable('ClaimExpense', function (table) {
     table.integer('ClaimExpenseId').unsigned().primary()
     table.integer('EligibilityId').unsigned().notNullable().references('Eligibility.EligibilityId')
-    table.string('Reference', 10).notNullable().index().references('Eligibility.Reference')
+    table.string('Reference', 10).notNullable().index()
     table.integer('ClaimId').unsigned().notNullable().references('Claim.ClaimId')
     table.string('ExpenseType', 100).notNullable()
     table.decimal('Cost').notNullable()
