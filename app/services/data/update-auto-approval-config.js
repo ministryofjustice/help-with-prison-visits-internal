@@ -1,6 +1,7 @@
 const defaultsConfig = require('../../../config')
 const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
+var defaultsConfig = require('../../../config')
 const db = getDatabaseConnector()
 
 module.exports = function (autoApprovalConfig) {

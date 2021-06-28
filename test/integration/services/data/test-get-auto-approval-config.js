@@ -3,6 +3,7 @@ var getAutoApprovalConfig = require('../../../../app/services/data/get-auto-appr
 const { db } = require('../../../helpers/database-setup-for-tests')
 var config = require('../../../../config')
 var dateFormatter = require('../../../../app/services/date-formatter')
+const databaseHelper = require('../../../helpers/database-setup-for-tests')
 
 var insertedIds
 
