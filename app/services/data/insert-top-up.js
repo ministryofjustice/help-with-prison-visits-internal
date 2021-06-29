@@ -1,11 +1,12 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const insertClaimEvent = require('./insert-claim-event')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (claim, topup, caseworker) {
-  return knex('TopUp')
+  const db = getDatabaseConnector()
+
+  return db('TopUp')
     .insert({
       ClaimId: claim.ClaimId,
       PaymentStatus: 'PENDING',

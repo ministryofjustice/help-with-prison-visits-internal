@@ -1,13 +1,13 @@
-const Promise = require('bluebird')
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const insertClaimEvent = require('./insert-claim-event')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const insertTaskSendClaimNotification = require('./insert-task-send-claim-notification')
 const tasksEnum = require('../../constants/tasks-enum')
 
 module.exports = function (reference, eligibilityId, claimId, emailAddress, phoneNumber, previousEmailAddress, previousPhoneNumber, caseworker) {
-  return knex('Visitor')
+  const db = getDatabaseConnector()
+
+  return db('Visitor')
     .where('EligibilityId', eligibilityId)
     .update({ EmailAddress: emailAddress, PhoneNumber: phoneNumber })
     .then(function () {

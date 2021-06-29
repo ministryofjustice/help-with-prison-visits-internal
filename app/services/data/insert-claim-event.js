@@ -1,9 +1,10 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (ref, eligibilityId, claimId, event, additionalData, note, caseworker, isInternal) {
-  return knex('ClaimEvent').insert({
+  const db = getDatabaseConnector()
+
+  return db('ClaimEvent').insert({
     EligibilityId: eligibilityId,
     Reference: ref,
     ClaimId: claimId,

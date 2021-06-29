@@ -1,14 +1,13 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 const displayHelper = require('../../views/helpers/display-helper')
-
 const insertClaimEvent = require('./insert-claim-event')
 const overpaymentActionEnum = require('../../constants/overpayment-action-enum')
-
 const newLine = '<br >'
 
 module.exports = function (claim, overpaymentResponse) {
+  const db = getDatabaseConnector()
+
   var eventLabel = overpaymentResponse.action
   var note = overpaymentResponse.reason
   var toBeMarkedAsOverpaid = overpaymentResponse.action === overpaymentActionEnum.OVERPAID
@@ -36,7 +35,7 @@ module.exports = function (claim, overpaymentResponse) {
     updateClaim.OverpaymentReason = updateClaim.OverpaymentReason.substring(0, 250)
   }
 
-  return knex('Claim')
+  return db('Claim')
     .where('ClaimId', claim.ClaimId)
     .update(updateClaim)
     .then(function () {

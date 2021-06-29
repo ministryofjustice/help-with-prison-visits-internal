@@ -1,8 +1,9 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (reference, currentClaimId) {
-  return knex('Claim')
+  const db = getDatabaseConnector()
+
+  return db('Claim')
     .where({
       Reference: reference,
       IsOverpaid: true

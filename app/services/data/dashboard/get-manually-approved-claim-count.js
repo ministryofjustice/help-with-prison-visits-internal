@@ -1,11 +1,12 @@
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../../databaseConnector')
 const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
 const applyFilter = require('./apply-filter')
 
 module.exports = function (filter) {
+  const db = getDatabaseConnector()
+
   return applyFilter(
-    knex('Claim')
+    db('Claim')
       .count('ClaimId AS Count')
       .where('Status', claimStatusEnum.APPROVED.value),
     filter

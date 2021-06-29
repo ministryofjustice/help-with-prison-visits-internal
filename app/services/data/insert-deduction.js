@@ -1,10 +1,11 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (claimId, claimDeduction) {
+  const db = getDatabaseConnector()
+
   return getClaim(claimId)
     .then(function (claim) {
-      return knex('ClaimDeduction')
+      return db('ClaimDeduction')
         .returning('ClaimDeductionId')
         .insert({
           EligibilityId: claim.EligibilityId,
@@ -18,7 +19,9 @@ module.exports = function (claimId, claimDeduction) {
 }
 
 function getClaim (claimId) {
-  return knex('Claim')
+  const db = getDatabaseConnector()
+
+  return db('Claim')
     .where('ClaimId', claimId)
     .first()
 }

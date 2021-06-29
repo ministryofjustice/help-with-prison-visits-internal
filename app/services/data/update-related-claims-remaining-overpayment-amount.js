@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const getIndividualClaimDetails = require('./get-individual-claim-details')
 const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference')
 const insertClaimEvent = require('./insert-claim-event')
@@ -60,6 +59,8 @@ function subtractTotalDeductionsFromRemainingOverpayments (overpaidClaims, deduc
 }
 
 function updateRemainingOverpaymentAmount (claim, newRemainingOverpaymentAmount, deductionAmount, isOverpaid) {
+  const db = getDatabaseConnector()
+
   var updatedClaim = {
     ClaimId: claim.ClaimId,
     RemainingOverpaymentAmount: newRemainingOverpaymentAmount,
@@ -69,7 +70,7 @@ function updateRemainingOverpaymentAmount (claim, newRemainingOverpaymentAmount,
   var eventLabel = isOverpaid ? overpaymentActionEnum.UPDATE : overpaymentActionEnum.RESOLVE
   var note = `Deduction of £${displayHelper.toDecimal(deductionAmount)} applied on related claim`
 
-  return knex('Claim').where('ClaimId', claim.ClaimId).update(updatedClaim)
+  return db('Claim').where('ClaimId', claim.ClaimId).update(updatedClaim)
     .then(function () {
       return insertClaimEvent(claim.Reference, claim.EligibilityId, claim.ClaimId, eventLabel, null, note, null, true)
     })

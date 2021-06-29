@@ -1,9 +1,10 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').intweb
-const knex = require('knex')(knexConfig)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function () {
-  return knex('AutoApprovalConfig')
+  const db = getDatabaseConnector()
+
+  return db('AutoApprovalConfig')
     .where('IsEnabled', true)
     .orderBy('DateCreated', 'desc')
     .first()

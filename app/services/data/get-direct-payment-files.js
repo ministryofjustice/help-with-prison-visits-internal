@@ -1,7 +1,5 @@
 const config = require('../../../config')
-const knexConfig = require('../../../knexfile').intweb
-const knex = require('knex')(knexConfig)
-const Promise = require('bluebird')
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function () {
   const NUMBER_OF_PAYMENT_FILES = parseInt(config.PAYMENT_NUMBER_OF_PAYMENT_FILES)
@@ -24,7 +22,9 @@ module.exports = function () {
 }
 
 function getPaymentFiles (fileType, limit) {
-  return knex('DirectPaymentFile')
+  const db = getDatabaseConnector()
+
+  return db('DirectPaymentFile')
     .select()
     .where({ FileType: fileType, IsEnabled: true })
     .orderBy('DateCreated', 'desc')
