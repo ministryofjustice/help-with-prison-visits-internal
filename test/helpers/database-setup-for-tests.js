@@ -1,20 +1,20 @@
-const config = require('../../knexfile').migrations
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../app/databaseConnector')
+const db = getDatabaseConnector()
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-module.exports.insertTestData = function (reference, date, status, visitDate, increment, paymentStatus = null) {
+function insertTestData (reference, date, status, visitDate, increment, paymentStatus = null) {
   const idIncrement = increment || 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
   const uniqueId = Math.floor(Date.now() / 100) - 15000000000 + idIncrement
 
-  return this.insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus)
+  return insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus)
 }
 
-module.exports.insertTestDataForIds = function (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus) {
-  const data = this.getTestData(reference, status)
+function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus) {
+  const data = getTestData(reference, status)
 
   const ids = {}
-  return knex('IntSchema.Eligibility')
+  return db('Eligibility')
     .insert({
       EligibilityId: uniqueId,
       Reference: reference,
@@ -25,7 +25,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     .returning('EligibilityId')
     .then(function (result) {
       ids.eligibilityId = result[0]
-      return knex('IntSchema.Prisoner')
+      return db('Prisoner')
         .returning('PrisonerId')
         .insert({
           PrisonerId: uniqueId,
@@ -43,7 +43,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
         })
     })
     .then(function () {
-      return knex('IntSchema.Visitor')
+      return db('Visitor')
         .returning('VisitorId')
         .insert({
           VisitorId: uniqueId,
@@ -70,7 +70,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
         })
     })
     .then(function () {
-      return knex('IntSchema.Claim')
+      return db('Claim')
         .returning(['ClaimId', 'LastUpdated'])
         .insert({
           ClaimId: uniqueId,
@@ -95,7 +95,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
       ids.lastUpdated = result[0].LastUpdated
     })
     .then(function () {
-      return knex('IntSchema.ClaimExpense')
+      return db('ClaimExpense')
         .returning('ClaimExpenseId')
         .insert({
           ClaimExpenseId: uniqueId,
@@ -112,7 +112,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.expenseId1 = result[0]
-      return knex('IntSchema.ClaimExpense')
+      return db('ClaimExpense')
         .returning('ClaimExpenseId')
         .insert({
           ClaimExpenseId: uniqueId2,
@@ -127,7 +127,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.expenseId2 = result[0]
-      return knex('IntSchema.ClaimChild')
+      return db('ClaimChild')
         .returning('ClaimChildId')
         .insert({
           ClaimChildId: uniqueId,
@@ -143,7 +143,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.childId1 = result[0]
-      return knex('IntSchema.ClaimChild')
+      return db('ClaimChild')
         .returning('ClaimChildId')
         .insert({
           ClaimChildId: uniqueId2,
@@ -159,7 +159,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.childId2 = result[0]
-      return knex('IntSchema.ClaimDocument')
+      return db('ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
           ClaimDocumentId: uniqueId,
@@ -175,7 +175,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimDocumentId1 = result[0]
-      return knex('IntSchema.ClaimDocument')
+      return db('ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
           ClaimDocumentId: uniqueId2,
@@ -191,7 +191,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimDocumentId2 = result[0]
-      return knex('IntSchema.ClaimDocument')
+      return db('ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
           ClaimDocumentId: uniqueId3,
@@ -208,7 +208,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimDocumentId3 = result[0]
-      return knex('IntSchema.ClaimDocument')
+      return db('ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
           ClaimDocumentId: uniqueId4,
@@ -225,7 +225,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimDocumentId4 = result[0]
-      return knex('IntSchema.ClaimEvent')
+      return db('ClaimEvent')
         .returning('ClaimEventId')
         .insert({
           EligibilityId: ids.eligibilityId,
@@ -241,7 +241,7 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
     })
     .then(function (result) {
       ids.claimEventId1 = result[0]
-      return knex('IntSchema.ClaimEvent')
+      return db('ClaimEvent')
         .returning('ClaimEventId')
         .insert({
           EligibilityId: ids.eligibilityId,
@@ -274,15 +274,15 @@ module.exports.insertTestDataForIds = function (reference, date, status, visitDa
 }
 
 function deleteByReference (schemaTable, reference) {
-  return knex(schemaTable).where('Reference', reference).del()
+  return db(schemaTable).where('Reference', reference).del()
 }
 
 function deleteByClaimIds (schemaTable, claimIds) {
-  return knex(schemaTable).whereIn('ClaimId', claimIds).del()
+  return db(schemaTable).whereIn('ClaimId', claimIds).del()
 }
 
 function getClaimIdsForReference (schemaTable, reference) {
-  return knex(schemaTable).where('Reference', reference).select('ClaimId')
+  return db(schemaTable).where('Reference', reference).select('ClaimId')
     .then(function (results) {
       const claimIdArray = []
       results.forEach(function (result) {
@@ -292,24 +292,24 @@ function getClaimIdsForReference (schemaTable, reference) {
     })
 }
 
-module.exports.deleteAll = function (reference) {
-  return deleteByReference('IntSchema.Task', reference)
-    .then(function () { return deleteByReference('IntSchema.ClaimEvent', reference) })
-    .then(function () { return deleteByReference('IntSchema.ClaimBankDetail', reference) })
-    .then(function () { return deleteByReference('IntSchema.ClaimDocument', reference) })
-    .then(function () { return deleteByReference('IntSchema.ClaimExpense', reference) })
-    .then(function () { return deleteByReference('IntSchema.ClaimChild', reference) })
-    .then(function () { return deleteByReference('IntSchema.ClaimDeduction', reference) })
-    .then(function () { return deleteByReference('IntSchema.ClaimEscort', reference) })
-    .then(function () { return getClaimIdsForReference('IntSchema.Claim', reference) })
-    .then(function (claimIds) { return deleteByClaimIds('IntSchema.TopUp', claimIds) })
-    .then(function () { return deleteByReference('IntSchema.Claim', reference) })
-    .then(function () { return deleteByReference('IntSchema.Visitor', reference) })
-    .then(function () { return deleteByReference('IntSchema.Prisoner', reference) })
-    .then(function () { return deleteByReference('IntSchema.Eligibility', reference) })
+function deleteAll (reference) {
+  return deleteByReference('Task', reference)
+    .then(function () { return deleteByReference('ClaimEvent', reference) })
+    .then(function () { return deleteByReference('ClaimBankDetail', reference) })
+    .then(function () { return deleteByReference('ClaimDocument', reference) })
+    .then(function () { return deleteByReference('ClaimExpense', reference) })
+    .then(function () { return deleteByReference('ClaimChild', reference) })
+    .then(function () { return deleteByReference('ClaimDeduction', reference) })
+    .then(function () { return deleteByReference('ClaimEscort', reference) })
+    .then(function () { return getClaimIdsForReference('Claim', reference) })
+    .then(function (claimIds) { return deleteByClaimIds('TopUp', claimIds) })
+    .then(function () { return deleteByReference('Claim', reference) })
+    .then(function () { return deleteByReference('Visitor', reference) })
+    .then(function () { return deleteByReference('Prisoner', reference) })
+    .then(function () { return deleteByReference('Eligibility', reference) })
 }
 
-module.exports.getTestData = function (reference, status) {
+function getTestData (reference, status) {
   return {
     Prisoner: {
       FirstName: 'TestFirst',
@@ -416,8 +416,8 @@ module.exports.getTestData = function (reference, status) {
   }
 }
 
-module.exports.insertClaim = function (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount, remainingOverpaymentAmount, isAdvanceClaim, paymentStatus) {
-  return knex('Claim')
+function insertClaim (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount, remainingOverpaymentAmount, isAdvanceClaim, paymentStatus) {
+  return db('Claim')
     .returning('ClaimId')
     .insert({
       ClaimId: claimId,
@@ -436,7 +436,7 @@ module.exports.insertClaim = function (claimId, eligibilityId, reference, date, 
 }
 
 function insertClaimDeduction (claimId, reference, eligibilityId, deductionType, amount) {
-  return knex('ClaimDeduction')
+  return db('ClaimDeduction')
     .returning('ClaimDeductionId')
     .insert({
       EligibilityId: eligibilityId,
@@ -449,7 +449,7 @@ function insertClaimDeduction (claimId, reference, eligibilityId, deductionType,
 }
 
 function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
-  return knex('ClaimEscort')
+  return db('ClaimEscort')
     .returning('ClaimEscortId')
     .insert({
       ClaimEscortId: claimId,
@@ -463,14 +463,14 @@ function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
     })
 }
 
-module.exports.getBenefitExpiryDate = function (reference) {
-  return knex('IntSchema.Visitor')
+function getBenefitExpiryDate (reference) {
+  return db('Visitor')
     .first('BenefitExpiryDate')
     .where('Reference', reference)
 }
 
-module.exports.getLastTopUpAdded = function getLastTopUpAdded (claimId) {
-  return knex('IntSchema.TopUp')
+function getLastTopUpAdded (claimId) {
+  return db('TopUp')
     .first()
     .where('ClaimId', claimId)
     .then(function (result) {
@@ -479,4 +479,14 @@ module.exports.getLastTopUpAdded = function getLastTopUpAdded (claimId) {
     })
 }
 
-module.exports.insertClaimDeduction = insertClaimDeduction
+module.exports = {
+  insertTestData,
+  deleteAll,
+  getTestData,
+  insertClaim,
+  getBenefitExpiryDate,
+  getLastTopUpAdded,
+  insertClaimDeduction,
+  getDatabaseConnector,
+  db
+}
