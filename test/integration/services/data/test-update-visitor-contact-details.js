@@ -1,9 +1,7 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
-const config = require('../../../../knexfile').migrations
-const knex = require('knex')(config)
-const databaseHelper = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 var sandbox = sinon.createSandbox()
@@ -31,7 +29,7 @@ describe('services/data/update-visitor-contact-details', function () {
   })
 
   before(function () {
-    return databaseHelper.insertTestData(REFERENCE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
+    return insertTestData(REFERENCE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
       eligibilityId = ids.eligibilityId
       claimId = ids.claimId
     })
@@ -51,11 +49,11 @@ describe('services/data/update-visitor-contact-details', function () {
   })
 
   after(function () {
-    return databaseHelper.deleteAll(REFERENCE)
+    return deleteAll(REFERENCE)
   })
 })
 
 function getVisitor (eligibilityId) {
-  return knex('IntSchema.Visitor').first()
+  return db('IntSchema.Visitor').first()
     .where('EligibilityId', eligibilityId)
 }

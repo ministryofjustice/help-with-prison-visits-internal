@@ -1,8 +1,6 @@
 const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
-const databaseHelper = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
 
 const updateClaimStatusRequestingBankDetails = require('../../../../app/services/data/update-claim-status-requesting-bank-details')
@@ -15,7 +13,7 @@ describe('services/data/update-claim-status-requesting-bank-details', function (
   describe('module', function () {
     before(function () {
       date = dateFormatter.now()
-      return databaseHelper.insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
+      return insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
         previousLastUpdated = ids.lastUpdated
       })
@@ -24,7 +22,7 @@ describe('services/data/update-claim-status-requesting-bank-details', function (
     it(`should set claim status to ${claimStatusEnum.REQUEST_INFO_PAYMENT.value} and null payment status`, function () {
       return updateClaimStatusRequestingBankDetails(reference, claimId)
         .then(function () {
-          return knex('Claim').first().where('ClaimId', claimId)
+          return db('Claim').first().where('ClaimId', claimId)
             .then(function (claim) {
               expect(claim.Status).to.equal(claimStatusEnum.REQUEST_INFO_PAYMENT.value)
               expect(claim.PaymentStatus).to.equal(null)
@@ -37,7 +35,7 @@ describe('services/data/update-claim-status-requesting-bank-details', function (
     })
 
     after(function () {
-      return databaseHelper.deleteAll(reference)
+      return deleteAll(reference)
     })
   })
 })

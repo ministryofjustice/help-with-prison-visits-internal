@@ -1,6 +1,6 @@
 var expect = require('chai').expect
 var dateFormatter = require('../../../../app/services/date-formatter')
-var databaseHelper = require('../../../helpers/database-setup-for-tests')
+var { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
 var getClaimEscort = require('../../../../app/services/data/get-claim-escort')
 var reference = 'GETESCORT'
@@ -9,7 +9,7 @@ var claimEscortId
 
 describe('services/data/get-claim-escort', function () {
   before(function () {
-    return databaseHelper.insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')
+    return insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')
       .then(function (ids) {
         claimId = ids.claimId
         claimEscortId = ids.claimEscortId
@@ -27,6 +27,6 @@ describe('services/data/get-claim-escort', function () {
   })
 
   after(function () {
-    return databaseHelper.deleteAll(reference)
+    return deleteAll(reference)
   })
 })

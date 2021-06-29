@@ -2,10 +2,8 @@
 const expect = require('chai').expect
 const proxyquire = require('proxyquire')
 const sinon = require('sinon')
-const config = require('../../../../knexfile').migrations
-const knex = require('knex')(config)
 const dateFormatter = require('../../../../app/services/date-formatter')
-const databaseHelper = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const claimDecisionEnum = require('../../../../app/constants/claim-decision-enum')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const paymentMethodEnum = require('../../../../app/constants/payment-method-enum')
@@ -27,7 +25,7 @@ var rejectionReasonIdentifier = 1
 
 describe('services/data/submit-claim-response', function () {
   before(function () {
-    return databaseHelper.insertTestData(reference, dateFormatter.now().toDate(), 'NEW').then(function (ids) {
+    return insertTestData(reference, dateFormatter.now().toDate(), 'NEW').then(function (ids) {
       newIds = {
         claimId: ids.claimId,
         eligibilityId: ids.eligibilityId,
@@ -84,7 +82,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return knex('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
+        return db('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
           .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
           .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
           .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
@@ -105,7 +103,7 @@ describe('services/data/submit-claim-response', function () {
             expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true //eslint-disable-line
             expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).to.be.true //eslint-disable-line
 
-            return knex('IntSchema.ClaimExpense').where('ClaimId', newIds.claimId).select()
+            return db('IntSchema.ClaimExpense').where('ClaimId', newIds.claimId).select()
               .then(function (claimExpenses) {
                 expect(claimExpenses[0].Status).to.be.equal(claimDecisionEnum.REJECTED)
                 expect(claimExpenses[0].ApprovedCost).to.be.equal(10)
@@ -134,7 +132,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+        return db('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.DateApproved).not.to.be.null //eslint-disable-line
@@ -160,7 +158,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+        return db('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.DateApproved).to.be.null //eslint-disable-line
@@ -186,7 +184,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return knex('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+        return db('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.DateApproved).to.be.null //eslint-disable-line
@@ -213,7 +211,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return knex('IntSchema.Prisoner').where('IntSchema.Prisoner.Reference', reference)
+        return db('IntSchema.Prisoner').where('IntSchema.Prisoner.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.ReleaseDateIsSet).to.be.equal(true)
@@ -241,7 +239,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return knex('IntSchema.Prisoner').where('IntSchema.Prisoner.Reference', reference)
+        return db('IntSchema.Prisoner').where('IntSchema.Prisoner.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.ReleaseDateIsSet).to.be.equal(false)
@@ -268,7 +266,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return knex('IntSchema.Claim').where('ClaimId', claimId).first()
+        return db('IntSchema.Claim').where('ClaimId', claimId).first()
       })
       .then(function (claim) {
         expect(claim.PaymentMethod).to.equal(paymentMethodEnum.MANUALLY_PROCESSED.value)
@@ -276,7 +274,7 @@ describe('services/data/submit-claim-response', function () {
   })
 
   after(function () {
-    return databaseHelper.deleteAll(reference)
+    return deleteAll(reference)
   })
 
   afterEach(function () {

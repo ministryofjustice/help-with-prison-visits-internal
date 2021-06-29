@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const moment = require('moment')
 const dateFormatter = require('../../../../../app/services/date-formatter')
-const databaseHelper = require('../../../../helpers/database-setup-for-tests')
+const { insertTestData, insertClaim, deleteAll } = require('../../../../helpers/database-setup-for-tests')
 
 const getPendingClaimCount = require('../../../../../app/services/data/dashboard/get-pending-claim-count')
 const claimStatusEnum = require('../../../../../app/constants/claim-status-enum')
@@ -39,7 +39,7 @@ describe('services/data/dashboard/get-pending-claim-count', function () {
     before(function () {
       return getCountsBeforeTest()
         .then(function () {
-          return databaseHelper.insertTestData(reference, date, claimStatusEnum.PENDING.value)
+          return insertTestData(reference, date, claimStatusEnum.PENDING.value)
             .then(function (ids) {
               var eligibilityId = ids.eligibilityId
               claimId2 = ids.claimId + 1
@@ -54,15 +54,15 @@ describe('services/data/dashboard/get-pending-claim-count', function () {
 
               var promises = []
 
-              promises.push(databaseHelper.insertClaim(claimId2, eligibilityId, reference, yesterday, claimStatusEnum.PENDING.value, false))
-              promises.push(databaseHelper.insertClaim(claimId3, eligibilityId, reference, lastWeek, claimStatusEnum.PENDING.value, false))
-              promises.push(databaseHelper.insertClaim(claimId4, eligibilityId, reference, oneMonthAgo, claimStatusEnum.PENDING.value, false))
-              promises.push(databaseHelper.insertClaim(claimId5, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.PENDING.value, false))
-              promises.push(databaseHelper.insertClaim(claimId6, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.PENDING.value, false))
-              promises.push(databaseHelper.insertClaim(claimId7, eligibilityId, reference, fourMonthsAgo, claimStatusEnum.PENDING.value, false))
-              promises.push(databaseHelper.insertClaim(claimId8, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED.value, false))
-              promises.push(databaseHelper.insertClaim(claimId9, eligibilityId, reference, oneMonthAgo, claimStatusEnum.REJECTED.value, false))
-              promises.push(databaseHelper.insertClaim(claimId10, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.NEW.value, false))
+              promises.push(insertClaim(claimId2, eligibilityId, reference, yesterday, claimStatusEnum.PENDING.value, false))
+              promises.push(insertClaim(claimId3, eligibilityId, reference, lastWeek, claimStatusEnum.PENDING.value, false))
+              promises.push(insertClaim(claimId4, eligibilityId, reference, oneMonthAgo, claimStatusEnum.PENDING.value, false))
+              promises.push(insertClaim(claimId5, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.PENDING.value, false))
+              promises.push(insertClaim(claimId6, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.PENDING.value, false))
+              promises.push(insertClaim(claimId7, eligibilityId, reference, fourMonthsAgo, claimStatusEnum.PENDING.value, false))
+              promises.push(insertClaim(claimId8, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED.value, false))
+              promises.push(insertClaim(claimId9, eligibilityId, reference, oneMonthAgo, claimStatusEnum.REJECTED.value, false))
+              promises.push(insertClaim(claimId10, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.NEW.value, false))
 
               return Promise.all(promises)
             })
@@ -116,7 +116,7 @@ describe('services/data/dashboard/get-pending-claim-count', function () {
     })
 
     after(function () {
-      return databaseHelper.deleteAll(reference)
+      return deleteAll(reference)
     })
   })
 })

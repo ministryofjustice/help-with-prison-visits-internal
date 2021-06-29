@@ -1,6 +1,5 @@
 var expect = require('chai').expect
-const config = require('../../../../knexfile').migrations
-const knex = require('knex')(config)
+var { db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 const TEST_PATH = 'TEST_PATH'
@@ -26,7 +25,7 @@ describe('services/data/get-direct-payment-files', function () {
         directPaymentFiles.push(getTestDirectPaymentFile('ADI_JOURNAL_FILE', descendingDate))
       }
 
-      return knex('DirectPaymentFile').insert(directPaymentFiles)
+      return db('DirectPaymentFile').insert(directPaymentFiles)
     })
 
     it('should return list of last 31 ACCESSPAY_FILE and ADI_JOURNAL_FILE records', function () {
@@ -41,7 +40,7 @@ describe('services/data/get-direct-payment-files', function () {
     })
 
     after(function () {
-      return knex('DirectPaymentFile').where('Filepath', TEST_PATH).del()
+      return db('DirectPaymentFile').where('Filepath', TEST_PATH).del()
     })
   })
 })

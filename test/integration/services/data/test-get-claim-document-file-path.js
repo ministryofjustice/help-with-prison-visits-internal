@@ -1,6 +1,6 @@
 var expect = require('chai').expect
 var dateFormatter = require('../../../../app/services/date-formatter')
-var databaseHelper = require('../../../helpers/database-setup-for-tests')
+var { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
 var getClaimDocumentFilePath = require('../../../../app/services/data/get-claim-document-file-path')
 var reference = 'V954638'
@@ -10,7 +10,7 @@ var claimDocumentId
 describe('services/data/get-claim-document-file-path', function () {
   before(function () {
     date = dateFormatter.now()
-    return databaseHelper.insertTestData(reference, date.toDate(), 'TESTING')
+    return insertTestData(reference, date.toDate(), 'TESTING')
       .then(function (ids) {
         claimDocumentId = ids.claimDocumentId1
       })
@@ -27,6 +27,6 @@ describe('services/data/get-claim-document-file-path', function () {
   })
 
   after(function () {
-    return databaseHelper.deleteAll(reference)
+    return deleteAll(reference)
   })
 })

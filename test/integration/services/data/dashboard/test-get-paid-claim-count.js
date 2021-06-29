@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const moment = require('moment')
 const dateFormatter = require('../../../../../app/services/date-formatter')
-const databaseHelper = require('../../../../helpers/database-setup-for-tests')
+const { insertTestData, insertClaim, deleteAll } = require('../../../../helpers/database-setup-for-tests')
 
 const getPaidClaimCount = require('../../../../../app/services/data/dashboard/get-paid-claim-count')
 const claimStatusEnum = require('../../../../../app/constants/claim-status-enum')
@@ -40,7 +40,7 @@ describe('services/data/dashboard/get-paid-claim-count', function () {
     before(function () {
       return getCountsBeforeTest()
         .then(function () {
-          return databaseHelper.insertTestData(reference, date, claimStatusEnum.AUTOAPPROVED.value)
+          return insertTestData(reference, date, claimStatusEnum.AUTOAPPROVED.value)
             .then(function (ids) {
               var eligibilityId = ids.eligibilityId
               claimId2 = ids.claimId + 1
@@ -55,15 +55,15 @@ describe('services/data/dashboard/get-paid-claim-count', function () {
 
               var promises = []
 
-              promises.push(databaseHelper.insertClaim(claimId2, eligibilityId, reference, date, claimStatusEnum.APPROVED.value, false, null, null, true, paymentStatusProcessed))
-              promises.push(databaseHelper.insertClaim(claimId3, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, true, null))
-              promises.push(databaseHelper.insertClaim(claimId4, eligibilityId, reference, lastWeek, claimStatusEnum.AUTOAPPROVED.value, false, null, null, false, paymentStatusProcessed))
-              promises.push(databaseHelper.insertClaim(claimId5, eligibilityId, reference, oneMonthAgo, claimStatusEnum.APPROVED.value, false, null, null, false, paymentStatusProcessed))
-              promises.push(databaseHelper.insertClaim(claimId6, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, true, null))
-              promises.push(databaseHelper.insertClaim(claimId7, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false, null, null, false, paymentStatusProcessed))
-              promises.push(databaseHelper.insertClaim(claimId8, eligibilityId, reference, fourMonthsAgo, claimStatusEnum.APPROVED.value, false, null, null, false, paymentStatusProcessed))
-              promises.push(databaseHelper.insertClaim(claimId9, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, false, null))
-              promises.push(databaseHelper.insertClaim(claimId10, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.PENDING.value, false, null, null, false, null))
+              promises.push(insertClaim(claimId2, eligibilityId, reference, date, claimStatusEnum.APPROVED.value, false, null, null, true, paymentStatusProcessed))
+              promises.push(insertClaim(claimId3, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, true, null))
+              promises.push(insertClaim(claimId4, eligibilityId, reference, lastWeek, claimStatusEnum.AUTOAPPROVED.value, false, null, null, false, paymentStatusProcessed))
+              promises.push(insertClaim(claimId5, eligibilityId, reference, oneMonthAgo, claimStatusEnum.APPROVED.value, false, null, null, false, paymentStatusProcessed))
+              promises.push(insertClaim(claimId6, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, true, null))
+              promises.push(insertClaim(claimId7, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false, null, null, false, paymentStatusProcessed))
+              promises.push(insertClaim(claimId8, eligibilityId, reference, fourMonthsAgo, claimStatusEnum.APPROVED.value, false, null, null, false, paymentStatusProcessed))
+              promises.push(insertClaim(claimId9, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, false, null, null, false, null))
+              promises.push(insertClaim(claimId10, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.PENDING.value, false, null, null, false, null))
 
               return Promise.all(promises)
             })
@@ -117,7 +117,7 @@ describe('services/data/dashboard/get-paid-claim-count', function () {
     })
 
     after(function () {
-      return databaseHelper.deleteAll(reference)
+      return deleteAll(reference)
     })
   })
 })

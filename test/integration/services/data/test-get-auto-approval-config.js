@@ -1,7 +1,6 @@
 var expect = require('chai').expect
 var getAutoApprovalConfig = require('../../../../app/services/data/get-auto-approval-config')
-var knexConfig = require('../../../../knexfile').migrations
-var knex = require('knex')(knexConfig)
+const { db } = require('../../../helpers/database-setup-for-tests')
 var config = require('../../../../config')
 var dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -49,7 +48,7 @@ describe('services/data/get-auto-approval-config', function () {
   })
 
   after(function () {
-    return knex('AutoApprovalConfig')
+    return db('AutoApprovalConfig')
       .whereIn('AutoApprovalConfigId', insertedIds)
       .del()
       .then(function () {
@@ -61,7 +60,7 @@ describe('services/data/get-auto-approval-config', function () {
 })
 
 function insertTestData () {
-  return knex('AutoApprovalConfig')
+  return db('AutoApprovalConfig')
     .insert([{
       Caseworker: 'caseworker1@test.com',
       DateCreated: dateFormatter.now().toDate(),
@@ -93,7 +92,7 @@ function insertTestData () {
 }
 
 function setIsEnabled (autoApprovalConfigId, isEnabled) {
-  return knex('IntSchema.AutoApprovalConfig')
+  return db('IntSchema.AutoApprovalConfig')
     .where('AutoApprovalConfigId', autoApprovalConfigId)
     .update({
       IsEnabled: isEnabled
@@ -101,7 +100,7 @@ function setIsEnabled (autoApprovalConfigId, isEnabled) {
 }
 
 function getCurrentAutoApprovalConfigId () {
-  return knex('IntSchema.AutoApprovalConfig')
+  return db('IntSchema.AutoApprovalConfig')
     .first()
     .where('IsEnabled', true)
     .select('AutoApprovalConfigId')

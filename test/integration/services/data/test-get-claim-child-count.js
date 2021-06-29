@@ -1,6 +1,6 @@
 var expect = require('chai').expect
 var dateFormatter = require('../../../../app/services/date-formatter')
-var databaseHelper = require('../../../helpers/database-setup-for-tests')
+var { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
 var getClaimChildCount = require('../../../../app/services/data/get-claim-child-count')
 var reference = 'CHILDCOUNT'
@@ -9,10 +9,10 @@ var expectedValue
 
 describe('services/data/get-claim-child-count', function () {
   before(function () {
-    var testData = databaseHelper.getTestData(reference, '')
+    var testData = getTestData(reference, '')
     expectedValue = testData.ClaimChild.length
 
-    return databaseHelper.insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')
+    return insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')
       .then(function (ids) {
         claimId = ids.claimId
       })
@@ -29,6 +29,6 @@ describe('services/data/get-claim-child-count', function () {
   })
 
   after(function () {
-    return databaseHelper.deleteAll(reference)
+    return deleteAll(reference)
   })
 })
