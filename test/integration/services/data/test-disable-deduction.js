@@ -1,8 +1,6 @@
 const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
-const databaseHelper = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
 const disableDeduction = require('../../../../app/services/data/disable-deduction')
 var reference = 'V123456'
@@ -13,7 +11,7 @@ describe('services/data/disable-deduction', function () {
   describe('module', function () {
     before(function () {
       date = dateFormatter.now()
-      return databaseHelper.insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
+      return insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimDeductionId = ids.claimDeductionId1
       })
     })
@@ -23,7 +21,7 @@ describe('services/data/disable-deduction', function () {
 
       return disableDeduction(claimDeductionId)
         .then(function (claimDeductionId) {
-          return knex('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId)
+          return db('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId)
             .then(function (deduction) {
               claimDeduction = deduction
 
@@ -36,7 +34,7 @@ describe('services/data/disable-deduction', function () {
     })
 
     after(function () {
-      return databaseHelper.deleteAll(reference)
+      return deleteAll(reference)
     })
   })
 })

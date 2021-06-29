@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-const databaseHelper = require('../../../helpers/database-setup-for-tests')
+const { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
 const REFERENCE1 = 'DUPCHK1'
 const REFERENCE2 = 'DUPCHK2'
@@ -23,7 +23,7 @@ describe('services/data/duplicate-claim-check', function () {
   describe('module', function () {
     before(function () {
       // Insert two duplicate claims, and a third unique claim
-      testData = databaseHelper.getTestData(REFERENCE1, 'Test')
+      testData = getTestData(REFERENCE1, 'Test')
 
       date1 = dateFormatter.now().toDate()
       date2 = dateFormatter.now().toDate()
@@ -40,13 +40,13 @@ describe('services/data/duplicate-claim-check', function () {
 
       prisonerNumber = duplicatePrisonerNumber + 'A'
 
-      return databaseHelper.insertTestData(REFERENCE1, date1, 'Test', visitDate)
+      return insertTestData(REFERENCE1, date1, 'Test', visitDate)
         .then(function (ids) {
           claimIds.push(ids.claimId)
-          return databaseHelper.insertTestData(REFERENCE2, date2, 'Test', duplicateVisitDate, 10000)
+          return insertTestData(REFERENCE2, date2, 'Test', duplicateVisitDate, 10000)
             .then(function () {
               claimIds.push(ids.claimId)
-              return databaseHelper.insertTestData(REFERENCE3, date3, 'Test', duplicateVisitDate, 20000)
+              return insertTestData(REFERENCE3, date3, 'Test', duplicateVisitDate, 20000)
                 .then(function (ids) {
                   claimIds.push(ids.claimId)
                 })
@@ -70,9 +70,9 @@ describe('services/data/duplicate-claim-check', function () {
 
     after(function () {
       return Promise.all([
-        databaseHelper.deleteAll(REFERENCE1),
-        databaseHelper.deleteAll(REFERENCE2),
-        databaseHelper.deleteAll(REFERENCE3)
+        deleteAll(REFERENCE1),
+        deleteAll(REFERENCE2),
+        deleteAll(REFERENCE3)
       ])
     })
   })

@@ -1,9 +1,6 @@
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
-
 const getClaimListForAdvancedSearch = require('../../../../app/services/data/get-claim-list-for-advanced-search')
 var dateFormatter = require('../../../../app/services/date-formatter')
-var databaseHelper = require('../../../helpers/database-setup-for-tests')
+var { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 var expect = require('chai').expect
 
 var date = dateFormatter.build('10', '09', '2016') // set date in past so that is always at top of list returned
@@ -18,17 +15,17 @@ var prison
 
 describe('services/data/get-claim-list-for-advanced-search', function () {
   before(function () {
-    testData = databaseHelper.getTestData(reference1, 'APPROVED')
+    testData = getTestData(reference1, 'APPROVED')
     name = testData.Visitor.FirstName + ' ' + testData.Visitor.LastName
     ninumber = testData.Visitor.NationalInsuranceNumber
     prisonerNumber = testData.Prisoner.PrisonNumber
     prison = testData.Prisoner.NameOfPrison
-    return databaseHelper.insertTestData(reference1, date.toDate(), 'APPROVED')
+    return insertTestData(reference1, date.toDate(), 'APPROVED')
       .then(function (ids) {
         claimId = ids.claimId
-        return databaseHelper.insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
+        return insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
           .then(function () {
-            var reference1ClaimUpdate = knex('Claim')
+            var reference1ClaimUpdate = db('Claim')
               .update({
                 AssistedDigitalCaseworker: 'test@test.com',
                 DateOfJourney: date.toDate(),
@@ -37,19 +34,19 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
                 PaymentDate: date.add(5, 'days').toDate()
               })
               .where('Reference', reference1)
-            var reference2ClaimUpdate = knex('Claim')
+            var reference2ClaimUpdate = db('Claim')
               .update({
                 DateReviewed: date.toDate()
               })
               .where('Reference', reference2)
-            var visitorUpdate = knex('Visitor')
+            var visitorUpdate = db('Visitor')
               .update({
                 FirstName: 'Ref2FirstName',
                 LastName: 'Ref2LastName',
                 NationalInsuranceNumber: 'Ref2NINum'
               })
               .where('Reference', reference2)
-            var prisonerUpdate = knex('Prisoner')
+            var prisonerUpdate = db('Prisoner')
               .update({
                 PrisonNumber: 'REF2PNO',
                 NameOfPrison: 'Ref2Prison'
@@ -771,8 +768,8 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   after(function () {
     var promises = []
 
-    promises.push(databaseHelper.deleteAll(reference1))
-    promises.push(databaseHelper.deleteAll(reference2))
+    promises.push(deleteAll(reference1))
+    promises.push(deleteAll(reference2))
 
     return Promise.all(promises)
   })

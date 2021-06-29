@@ -1,9 +1,7 @@
 const expect = require('chai').expect
 const sinon = require('sinon')
 const proxyquire = require('proxyquire')
-const config = require('../../../../knexfile').migrations
-const knex = require('knex')(config)
-const databaseHelper = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 var sandbox = sinon.createSandbox()
@@ -27,11 +25,11 @@ describe('services/data/update-eligibility-trusted-status', function () {
   })
 
   before(function () {
-    return databaseHelper.insertTestData(REFERENCE_ONE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
+    return insertTestData(REFERENCE_ONE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
       claimId1 = ids.claimId
       eligibilityId1 = ids.eligibilityId
 
-      return databaseHelper.insertTestData(REFERENCE_TWO, dateFormatter.now().toDate(), 'Test', dateFormatter.now().toDate(), 10).then(function (ids2) {
+      return insertTestData(REFERENCE_TWO, dateFormatter.now().toDate(), 'Test', dateFormatter.now().toDate(), 10).then(function (ids2) {
         claimId2 = ids2.claimId
         eligibilityId2 = ids2.eligibilityId
       })
@@ -92,19 +90,19 @@ describe('services/data/update-eligibility-trusted-status', function () {
 
   after(function () {
     return Promise.all([
-      databaseHelper.deleteAll(REFERENCE_ONE),
-      databaseHelper.deleteAll(REFERENCE_TWO)
+      deleteAll(REFERENCE_ONE),
+      deleteAll(REFERENCE_TWO)
     ])
   })
 })
 
 function getEligibility (eligibilityId) {
-  return knex('IntSchema.Eligibility').first()
+  return db('IntSchema.Eligibility').first()
     .where('EligibilityId', eligibilityId)
 }
 
 function setEligibilityTrusted (eligibilityId, isTrusted) {
-  return knex('Eligibility')
+  return db('Eligibility')
     .where('EligibilityId', eligibilityId)
     .update({
       IsTrusted: isTrusted

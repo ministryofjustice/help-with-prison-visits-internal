@@ -2,7 +2,7 @@ var expect = require('chai').expect
 var sinon = require('sinon')
 var proxyquire = require('proxyquire')
 var dateFormatter = require('../../../../app/services/date-formatter')
-var databaseHelper = require('../../../helpers/database-setup-for-tests')
+var { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
 var stubOverpaidClaimsData = {}
 var stubGetOverpaidClaims = sinon.stub().resolves(stubOverpaidClaimsData)
@@ -17,9 +17,9 @@ var claimId
 describe('services/data/get-individual-claim-details', function () {
   describe('get', function () {
     before(function () {
-      testData = databaseHelper.getTestData(reference, 'Test')
+      testData = getTestData(reference, 'Test')
       date = dateFormatter.now().toDate()
-      return databaseHelper.insertTestData(reference, date, 'Test').then(function (ids) {
+      return insertTestData(reference, date, 'Test').then(function (ids) {
         claimId = ids.claimId
       })
     })
@@ -61,7 +61,7 @@ describe('services/data/get-individual-claim-details', function () {
     })
 
     after(function () {
-      return databaseHelper.deleteAll(reference)
+      return deleteAll(reference)
     })
   })
 })

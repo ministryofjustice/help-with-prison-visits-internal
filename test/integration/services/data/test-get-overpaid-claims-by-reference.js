@@ -1,6 +1,6 @@
 var expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-var databaseHelper = require('../../../helpers/database-setup-for-tests')
+var { insertTestData, insertClaim, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
 var getOverpaidClaimsByReference = require('../../../../app/services/data/get-overpaid-claims-by-reference')
 var reference = 'V123456'
@@ -13,16 +13,16 @@ describe('services/data/get-overpaid-claims-by-reference', function () {
     before(function () {
       var date = dateFormatter.now().toDate()
       var twoWeeksAgo = dateFormatter.now().subtract(14, 'days').toDate()
-      return databaseHelper.insertTestData(reference, date, 'Test')
+      return insertTestData(reference, date, 'Test')
         .then(function (ids) {
           var eligibilityId = ids.eligibilityId
           claimId1 = ids.claimId
           claimId2 = ids.claimId + 1
           claimId3 = ids.claimId + 2
 
-          return databaseHelper.insertClaim(claimId2, eligibilityId, reference, twoWeeksAgo, 'APPROVED', true, 50)
+          return insertClaim(claimId2, eligibilityId, reference, twoWeeksAgo, 'APPROVED', true, 50)
             .then(function () {
-              return databaseHelper.insertClaim(claimId3, eligibilityId, reference, twoWeeksAgo, 'APPROVED', false)
+              return insertClaim(claimId3, eligibilityId, reference, twoWeeksAgo, 'APPROVED', false)
             })
         })
     })
@@ -39,7 +39,7 @@ describe('services/data/get-overpaid-claims-by-reference', function () {
     })
 
     after(function () {
-      return databaseHelper.deleteAll(reference)
+      return deleteAll(reference)
     })
   })
 })

@@ -1,6 +1,6 @@
 var expect = require('chai').expect
 var dateFormatter = require('../../../../app/services/date-formatter')
-var databaseHelper = require('../../../helpers/database-setup-for-tests')
+var { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
 var getClaimExpenses = require('../../../../app/services/data/get-claim-expenses')
 var reference = 'GETEXP'
@@ -10,7 +10,7 @@ var claimExpenseId2
 
 describe('services/data/get-claim-expenses', function () {
   before(function () {
-    return databaseHelper.insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')
+    return insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')
       .then(function (ids) {
         claimId = ids.claimId
         claimExpenseId1 = ids.expenseId1
@@ -48,7 +48,7 @@ describe('services/data/get-claim-expenses', function () {
   })
 
   after(function () {
-    return databaseHelper.deleteAll(reference)
+    return deleteAll(reference)
   })
 })
 

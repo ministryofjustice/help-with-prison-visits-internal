@@ -1,8 +1,6 @@
 const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
-const databaseHelper = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const environmentVariables = require('../../../../config')
 
 const updateAssignmentOfClaims = require('../../../../app/services/data/update-assignment-of-claims')
@@ -14,7 +12,7 @@ describe('services/data/update-assignment-of-claim', function () {
   describe('module', function () {
     before(function () {
       date = dateFormatter.now()
-      return databaseHelper.insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
+      return insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
       })
     })
@@ -29,7 +27,7 @@ describe('services/data/update-assignment-of-claim', function () {
       var twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
       return updateAssignmentOfClaims(claimId, assignedTo)
         .then(function () {
-          return knex('Claim').first().where('ClaimId', claimId)
+          return db('Claim').first().where('ClaimId', claimId)
             .then(function (claim) {
               expect(claim.AssignedTo).to.equal(assignedTo)
               expect(claim.AssignmentExpiry).to.be.within(twoMinutesAgoExpiry.toDate(), twoMinutesAheadExpiry.toDate())
@@ -42,7 +40,7 @@ describe('services/data/update-assignment-of-claim', function () {
     })
 
     after(function () {
-      return databaseHelper.deleteAll(reference)
+      return deleteAll(reference)
     })
   })
 })

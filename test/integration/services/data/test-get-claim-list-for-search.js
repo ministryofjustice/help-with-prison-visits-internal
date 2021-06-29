@@ -1,9 +1,6 @@
-const config = require('../../../../knexfile').intweb
-const knex = require('knex')(config)
-
 var expect = require('chai').expect
 var dateFormatter = require('../../../../app/services/date-formatter')
-var databaseHelper = require('../../../helpers/database-setup-for-tests')
+var { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
 var testData
 var reference1 = 'SEARCH1'
@@ -23,23 +20,23 @@ var getClaimsListForSearch = require('../../../../app/services/data/get-claim-li
 describe('services/data/get-claim-list-for-search', function () {
   before(function () {
     date = dateFormatter.build('10', '09', '2016')
-    testData = databaseHelper.getTestData(reference1, 'TESTING')
+    testData = getTestData(reference1, 'TESTING')
 
     var promises = []
-    promises.push(databaseHelper.insertTestData(reference1, date.toDate(), 'TESTING')
+    promises.push(insertTestData(reference1, date.toDate(), 'TESTING')
       .then(function (ids) {
         claimId1 = ids.claimId
       })
     )
-    promises.push(databaseHelper.insertTestData(reference2, date.toDate(), 'TESTING', date.toDate(), 10)
+    promises.push(insertTestData(reference2, date.toDate(), 'TESTING', date.toDate(), 10)
       .then(function (ids) {
         claimId2 = ids.claimId
       })
     )
     promises.push(
-      databaseHelper.insertTestData(reference3, date.toDate(), 'TESTING', date.toDate(), 20)
+      insertTestData(reference3, date.toDate(), 'TESTING', date.toDate(), 20)
         .then(function (ids) {
-          return knex('Visitor')
+          return db('Visitor')
             .update({
               NationalInsuranceNumber: '00000',
               FirstName: 'Ref3FirstName',
@@ -47,7 +44,7 @@ describe('services/data/get-claim-list-for-search', function () {
             })
             .where('Reference', reference3)
             .then(function () {
-              return knex('Prisoner')
+              return db('Prisoner')
                 .update({
                   PrisonNumber: '00000'
                 })
@@ -213,9 +210,9 @@ describe('services/data/get-claim-list-for-search', function () {
 
   after(function () {
     var promises = []
-    promises.push(databaseHelper.deleteAll(reference1))
-    promises.push(databaseHelper.deleteAll(reference2))
-    promises.push(databaseHelper.deleteAll(reference3))
+    promises.push(deleteAll(reference1))
+    promises.push(deleteAll(reference2))
+    promises.push(deleteAll(reference3))
 
     return Promise.all(promises)
   })

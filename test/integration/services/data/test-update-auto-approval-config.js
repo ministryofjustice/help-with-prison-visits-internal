@@ -1,7 +1,6 @@
 var expect = require('chai').expect
 var updateAutoApprovalConfig = require('../../../../app/services/data/update-auto-approval-config')
-var config = require('../../../../knexfile').migrations
-var knex = require('knex')(config)
+const { db } = require('../../../helpers/database-setup-for-tests')
 var dateFormatter = require('../../../../app/services/date-formatter')
 var defaultsConfig = require('../../../../config')
 
@@ -40,7 +39,7 @@ describe('services/data/update-auto-approval-config', function () {
     return updateAutoApprovalConfig(AutoApprovalConfig)
       .then(function (result) {
         insertedIds.push(result)
-        return knex('AutoApprovalConfig')
+        return db('AutoApprovalConfig')
           .where('IsEnabled', true)
           .orderBy('DateCreated', 'desc')
           .first()
@@ -69,7 +68,7 @@ describe('services/data/update-auto-approval-config', function () {
     return updateAutoApprovalConfig(AutoApprovalConfig)
       .then(function (result) {
         insertedIds.push(result)
-        return knex('AutoApprovalConfig')
+        return db('AutoApprovalConfig')
           .where('IsEnabled', true)
           .orderBy('DateCreated', 'desc')
           .first()
@@ -83,7 +82,7 @@ describe('services/data/update-auto-approval-config', function () {
   })
 
   after(function () {
-    return knex('AutoApprovalConfig')
+    return db('AutoApprovalConfig')
       .whereIn('AutoApprovalConfigId', insertedIds)
       .del()
       .then(function () {
@@ -95,7 +94,7 @@ describe('services/data/update-auto-approval-config', function () {
 })
 
 function insertTestData () {
-  return knex('AutoApprovalConfig')
+  return db('AutoApprovalConfig')
     .insert({
       Caseworker: 'first-caseworker',
       DateCreated: dateFormatter.now().toDate(),
@@ -117,7 +116,7 @@ function insertTestData () {
 }
 
 function setIsEnabled (autoApprovalConfigId, isEnabled) {
-  return knex('IntSchema.AutoApprovalConfig')
+  return db('IntSchema.AutoApprovalConfig')
     .where('AutoApprovalConfigId', autoApprovalConfigId)
     .update({
       IsEnabled: isEnabled
@@ -125,7 +124,7 @@ function setIsEnabled (autoApprovalConfigId, isEnabled) {
 }
 
 function getCurrentAutoApprovalConfigId () {
-  return knex('IntSchema.AutoApprovalConfig')
+  return db('IntSchema.AutoApprovalConfig')
     .first()
     .where('IsEnabled', true)
     .select('AutoApprovalConfigId')
