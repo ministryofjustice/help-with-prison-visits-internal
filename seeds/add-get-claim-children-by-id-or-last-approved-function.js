@@ -6,12 +6,12 @@ const config = require('../config')
  */
 exports.seed = function (knex, Promise) {
   return knex.schema
-    .raw('DROP FUNCTION IF EXISTS IntSchema.getClaimChildrenByIdOrLastApproved')
+    .raw('DROP FUNCTION IF EXISTS getClaimChildrenByIdOrLastApproved')
     .then(function () {
       return knex.schema
         .raw(
           `
-            CREATE FUNCTION IntSchema.getClaimChildrenByIdOrLastApproved(@reference varchar(7), @eligibiltyId int, @claimId int)
+            CREATE FUNCTION getClaimChildrenByIdOrLastApproved(@reference varchar(7), @eligibiltyId int, @claimId int)
             RETURNS TABLE
             AS
             RETURN
@@ -21,12 +21,12 @@ exports.seed = function (knex, Promise) {
                 ClaimChild.LastName,
                 ClaimChild.DateOfBirth,
                 ClaimChild.Relationship
-              FROM IntSchema.ClaimChild AS ClaimChild
+              FROM ClaimChild AS ClaimChild
               WHERE
                 ClaimChild.ClaimId = @claimId OR
                 ClaimChild.ClaimId IN (
                   SELECT TOP(1) Claim.ClaimId
-                  FROM IntSchema.Claim AS Claim
+                  FROM Claim AS Claim
                   WHERE
                     Claim.Reference = @reference AND
                     Claim.EligibilityId = @eligibiltyId AND
@@ -37,7 +37,7 @@ exports.seed = function (knex, Promise) {
             )
           `
         )
-        .raw('GRANT SELECT ON IntSchema.getClaimChildrenByIdOrLastApproved TO ??;', [config.EXT_WEB_USERNAME])
+        .raw('GRANT SELECT ON getClaimChildrenByIdOrLastApproved TO ??;', [config.EXT_WEB_USERNAME])
     })
     .catch(function (error) {
       console.log(error)

@@ -9,12 +9,12 @@ const config = require('../config')
  */
 exports.seed = function (knex, Promise) {
   return knex.schema
-    .raw('DROP FUNCTION IF EXISTS IntSchema.getHistoricClaims')
+    .raw('DROP FUNCTION IF EXISTS getHistoricClaims')
     .then(function () {
       return knex.schema
         .raw(
           `
-            CREATE FUNCTION IntSchema.getHistoricClaims(@reference varchar(7), @dob datetime)
+            CREATE FUNCTION getHistoricClaims(@reference varchar(7), @dob datetime)
             RETURNS TABLE
             AS
             RETURN
@@ -34,16 +34,16 @@ exports.seed = function (knex, Promise) {
                 Claim.IsAdvanceClaim,
                 Prisoner.NomisCheck,
                 Claim.DateSubmitted
-              FROM IntSchema.Claim AS Claim
-                JOIN IntSchema.Visitor AS Visitor ON Visitor.EligibilityId = Claim.EligibilityId
-                JOIN IntSchema.Prisoner AS Prisoner ON Prisoner.EligibilityId = Claim.EligibilityId
+              FROM Claim AS Claim
+                JOIN Visitor AS Visitor ON Visitor.EligibilityId = Claim.EligibilityId
+                JOIN Prisoner AS Prisoner ON Prisoner.EligibilityId = Claim.EligibilityId
               WHERE
                 Claim.Reference = @reference AND
                 Visitor.DateOfBirth = @dob
             )
           `
         )
-        .raw('GRANT SELECT ON IntSchema.getHistoricClaims TO ??;', [config.EXT_WEB_USERNAME])
+        .raw('GRANT SELECT ON getHistoricClaims TO ??;', [config.EXT_WEB_USERNAME])
     })
     .catch(function (error) {
       console.log(error)
