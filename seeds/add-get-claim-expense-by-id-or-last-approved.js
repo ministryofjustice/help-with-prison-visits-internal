@@ -7,12 +7,12 @@ const config = require('../config')
  */
 exports.seed = function (knex, Promise) {
   return knex.schema
-    .raw('DROP FUNCTION IF EXISTS IntSchema.getClaimExpenseByIdOrLastApproved')
+    .raw('DROP FUNCTION IF EXISTS getClaimExpenseByIdOrLastApproved')
     .then(function () {
       return knex.schema
         .raw(
           `
-            CREATE FUNCTION IntSchema.getClaimExpenseByIdOrLastApproved(@reference varchar(7), @eligibiltyId int, @claimId int)
+            CREATE FUNCTION getClaimExpenseByIdOrLastApproved(@reference varchar(7), @eligibiltyId int, @claimId int)
             RETURNS TABLE
             AS
             RETURN
@@ -34,7 +34,7 @@ exports.seed = function (knex, Promise) {
                 ClaimExpense.ToPostCode,
                 ClaimExpense.Distance,
                 ClaimExpense.ReturnTime
-              FROM IntSchema.ClaimExpense AS ClaimExpense
+              FROM ClaimExpense AS ClaimExpense
               WHERE
               (
                 ClaimExpense.ClaimId = @claimId AND
@@ -45,7 +45,7 @@ exports.seed = function (knex, Promise) {
                     ClaimExpense.ClaimId IN
                     (
                       SELECT TOP(1) Claim.ClaimId
-                      FROM IntSchema.Claim AS Claim
+                      FROM Claim AS Claim
                       WHERE
                         Claim.Reference = @reference AND
                         Claim.EligibilityId = @eligibiltyId AND
@@ -63,7 +63,7 @@ exports.seed = function (knex, Promise) {
             )
           `
         )
-        .raw('GRANT SELECT ON IntSchema.getClaimExpenseByIdOrLastApproved TO ??;', [config.EXT_WEB_USERNAME])
+        .raw('GRANT SELECT ON getClaimExpenseByIdOrLastApproved TO ??;', [config.EXT_WEB_USERNAME])
     })
     .catch(function (error) {
       console.log(error)
