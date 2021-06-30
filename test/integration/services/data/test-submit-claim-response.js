@@ -82,10 +82,10 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return db('IntSchema.Eligibility').where('IntSchema.Eligibility.Reference', reference)
-          .join('IntSchema.Claim', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Claim.EligibilityId')
-          .join('IntSchema.Visitor', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Visitor.EligibilityId')
-          .join('IntSchema.Prisoner', 'IntSchema.Eligibility.EligibilityId', '=', 'IntSchema.Prisoner.EligibilityId')
+        return db('Eligibility').where('Eligibility.Reference', reference)
+          .join('Claim', 'Eligibility.EligibilityId', '=', 'Claim.EligibilityId')
+          .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
+          .join('Prisoner', 'Eligibility.EligibilityId', '=', 'Prisoner.EligibilityId')
           .first()
           .then(function (result) {
             expect(result.Caseworker).to.be.equal(caseworker)
@@ -103,7 +103,7 @@ describe('services/data/submit-claim-response', function () {
             expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true //eslint-disable-line
             expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).to.be.true //eslint-disable-line
 
-            return db('IntSchema.ClaimExpense').where('ClaimId', newIds.claimId).select()
+            return db('ClaimExpense').where('ClaimId', newIds.claimId).select()
               .then(function (claimExpenses) {
                 expect(claimExpenses[0].Status).to.be.equal(claimDecisionEnum.REJECTED)
                 expect(claimExpenses[0].ApprovedCost).to.be.equal(10)
@@ -132,7 +132,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return db('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+        return db('Claim').where('Claim.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.DateApproved).not.to.be.null //eslint-disable-line
@@ -158,7 +158,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return db('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+        return db('Claim').where('Claim.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.DateApproved).to.be.null //eslint-disable-line
@@ -184,7 +184,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return db('IntSchema.Claim').where('IntSchema.Claim.Reference', reference)
+        return db('Claim').where('Claim.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.DateApproved).to.be.null //eslint-disable-line
@@ -211,7 +211,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return db('IntSchema.Prisoner').where('IntSchema.Prisoner.Reference', reference)
+        return db('Prisoner').where('Prisoner.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.ReleaseDateIsSet).to.be.equal(true)
@@ -239,7 +239,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return db('IntSchema.Prisoner').where('IntSchema.Prisoner.Reference', reference)
+        return db('Prisoner').where('Prisoner.Reference', reference)
           .first()
           .then(function (result) {
             expect(result.ReleaseDateIsSet).to.be.equal(false)
@@ -266,7 +266,7 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
-        return db('IntSchema.Claim').where('ClaimId', claimId).first()
+        return db('Claim').where('ClaimId', claimId).first()
       })
       .then(function (claim) {
         expect(claim.PaymentMethod).to.equal(paymentMethodEnum.MANUALLY_PROCESSED.value)

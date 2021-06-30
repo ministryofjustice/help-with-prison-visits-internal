@@ -5,7 +5,7 @@ const claimEventEnum = require('../../constants/claim-event-enum')
 const dateFormatter = require('../date-formatter')
 
 module.exports = function (claim, topup, caseworker) {
-  return knex('IntSchema.TopUp')
+  return knex('TopUp')
     .update({
       TopUpAmount: topup.amount,
       Reason: topup.reason,

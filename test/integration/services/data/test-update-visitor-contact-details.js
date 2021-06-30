@@ -54,6 +54,6 @@ describe('services/data/update-visitor-contact-details', function () {
 })
 
 function getVisitor (eligibilityId) {
-  return db('IntSchema.Visitor').first()
+  return db('Visitor').first()
     .where('EligibilityId', eligibilityId)
 }
