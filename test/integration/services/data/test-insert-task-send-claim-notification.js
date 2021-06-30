@@ -27,7 +27,7 @@ describe('services/data/insert-task-send-first-time-claim-notification', functio
   it('should insert a new task to send the first time claim notification', function () {
     return insertTaskSendClaimNotification(tasksEnum.ACCEPT_CLAIM_NOTIFICATION, reference, eligibilityId, claimId)
       .then(function () {
-        return db.first().from('IntSchema.Task').where({ Reference: reference, ClaimId: claimId })
+        return db.first().from('Task').where({ Reference: reference, ClaimId: claimId })
           .then(function (task) {
             expect(task.Task).to.equal(tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
             expect(task.Reference).to.equal(reference)
@@ -42,7 +42,7 @@ describe('services/data/insert-task-send-first-time-claim-notification', functio
   it('should insert a new task to send a notification to a specific email address', function () {
     return insertTaskSendClaimNotification(tasksEnum.ACCEPT_CLAIM_NOTIFICATION, reference, eligibilityIdDoesNotExist, claimId, emailAddress)
       .then(function () {
-        return db.first().from('IntSchema.Task').where('EligibilityId', eligibilityIdDoesNotExist)
+        return db.first().from('Task').where('EligibilityId', eligibilityIdDoesNotExist)
           .then(function (task) {
             expect(task.AdditionalData).to.equal(emailAddress)
           })

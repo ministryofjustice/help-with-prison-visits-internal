@@ -92,15 +92,15 @@ function insertTestData () {
 }
 
 function setIsEnabled (autoApprovalConfigId, isEnabled) {
-  return db('IntSchema.AutoApprovalConfig')
-    .where('AlConfigId', autoApprovalConfigId)
+  return db('AutoApprovalConfig')
+    .where('AutoApprovalConfigId', autoApprovalConfigId)
     .update({
       IsEnabled: isEnabled
     })
 }
 
 function getCurrentAutoApprovalConfigId () {
-  return db('IntSchema.AutoApprovalConfig')
+  return db('AutoApprovalConfig')
     .first()
     .where('IsEnabled', true)
     .select('AutoApprovalConfigId')

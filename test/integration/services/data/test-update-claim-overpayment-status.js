@@ -24,7 +24,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
     var amount = '50'
     var reason = 'Test Reason'
 
-    return db('IntSchema.Claim').first().where('ClaimId', claimId)
+    return db('Claim').first().where('ClaimId', claimId)
       .then(function (claimBefore) {
         var overpaymentResponse = {
           action: overpaymentActionEnum.OVERPAID,
@@ -35,9 +35,9 @@ describe('services/data/test-update-claim-overpayment-status', function () {
 
         return updateClaimOverpaymentStatus(claimBefore, overpaymentResponse)
           .then(function () {
-            return db('IntSchema.Claim').first().where('ClaimId', claimId)
+            return db('Claim').first().where('ClaimId', claimId)
               .then(function (claimAfter) {
-                return db('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
+                return db('ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
                   .then(function (claimEvent) {
                     expect(claimAfter.IsOverpaid).to.be.true //eslint-disable-line
                     expect(claimAfter.OverpaymentAmount.toString()).to.equal(amount)
@@ -56,7 +56,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
 
     return db('Claim').where('ClaimId', claimId).update({ IsOverpaid: true })
       .then(function () {
-        return db('IntSchema.Claim').first().where('ClaimId', claimId)
+        return db('Claim').first().where('ClaimId', claimId)
           .then(function (claimBefore) {
             var overpaymentResponse = {
               action: overpaymentActionEnum.UPDATE,
@@ -67,9 +67,9 @@ describe('services/data/test-update-claim-overpayment-status', function () {
 
             return updateClaimOverpaymentStatus(claimBefore, overpaymentResponse)
               .then(function () {
-                return db('IntSchema.Claim').first().where('ClaimId', claimId)
+                return db('Claim').first().where('ClaimId', claimId)
                   .then(function (claimAfter) {
-                    return db('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
+                    return db('ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
                       .then(function (claimEvent) {
                         expect(claimAfter.IsOverpaid).to.be.true //eslint-disable-line
                         expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)
@@ -93,7 +93,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
 
     return db('Claim').where('ClaimId', claimId).update({ IsOverpaid: true })
       .then(function () {
-        return db('IntSchema.Claim').first().where('ClaimId', claimId)
+        return db('Claim').first().where('ClaimId', claimId)
           .then(function (claimBefore) {
             var overpaymentResponse = {
               action: overpaymentActionEnum.RESOLVE,
@@ -104,9 +104,9 @@ describe('services/data/test-update-claim-overpayment-status', function () {
 
             return updateClaimOverpaymentStatus(claimBefore, overpaymentResponse)
               .then(function () {
-                return db('IntSchema.Claim').first().where('ClaimId', claimId)
+                return db('Claim').first().where('ClaimId', claimId)
                   .then(function (claimAfter) {
-                    return db('IntSchema.ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
+                    return db('ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
                       .then(function (claimEvent) {
                         expect(claimAfter.IsOverpaid).to.be.false //eslint-disable-line
                         expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)

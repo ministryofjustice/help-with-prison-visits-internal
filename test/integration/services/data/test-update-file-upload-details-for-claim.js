@@ -23,7 +23,7 @@ describe('services/data/update-file-upload-details-for-claim', function () {
   it('should update the claim document', function () {
     return updateClaimDocument(claimDocumentId, testFileUpload)
       .then(function () {
-        return db('IntSchema.CLaimDocument')
+        return db('CLaimDocument')
           .first()
           .where('ClaimDocumentId', '=', claimDocumentId)
       })

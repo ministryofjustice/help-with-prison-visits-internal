@@ -25,7 +25,7 @@ describe('services/data/insert-claim-event', function () {
   it('should insert a claim event', function () {
     return insertClaimEvent(REFERENCE, eligibilityId, claimId, EVENT, ADDITIONAL_DATA, NOTE, CASEWORKER, IS_INTERNAL)
       .then(function () {
-        return db.first().from('IntSchema.ClaimEvent')
+        return db.first().from('ClaimEvent')
           .where({ EligibilityId: eligibilityId, Reference: REFERENCE, ClaimId: claimId })
           .orderBy('DateAdded', 'desc')
           .then(function (claimEvent) {

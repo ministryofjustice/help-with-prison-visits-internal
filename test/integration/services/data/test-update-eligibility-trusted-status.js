@@ -97,7 +97,7 @@ describe('services/data/update-eligibility-trusted-status', function () {
 })
 
 function getEligibility (eligibilityId) {
-  return db('IntSchema.Eligibility').first()
+  return db('Eligibility').first()
     .where('EligibilityId', eligibilityId)
 }
 

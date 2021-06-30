@@ -2,7 +2,7 @@ const config = require('../../../knexfile').intweb
 const knex = require('knex')(config)
 
 module.exports = function (reason) {
-  return knex('IntSchema.ClaimRejectionReason')
+  return knex('ClaimRejectionReason')
     .first('ClaimRejectionReasonId')
     .where('RejectionReason', reason)
     .then(function (result) {

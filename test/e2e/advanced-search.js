@@ -24,7 +24,7 @@ describe('Advanced search flow', () => {
       .then(function (ids) {
         reference1ClaimId = ids.claimId
 
-        const reference1Update = knex('IntSchema.Claim')
+        const reference1Update = knex('Claim')
           .update({
             AssistedDigitalCaseworker: 'test@test.com',
             DateOfJourney: date.toDate(),
@@ -40,7 +40,7 @@ describe('Advanced search flow', () => {
 
         return Promise.all([reference1Update, reference2Insert])
           .then(function () {
-            return knex('IntSchema.Claim')
+            return knex('Claim')
               .update({
                 DateReviewed: date.toDate()
               })

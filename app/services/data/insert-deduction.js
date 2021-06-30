@@ -4,7 +4,7 @@ const knex = require('knex')(config)
 module.exports = function (claimId, claimDeduction) {
   return getClaim(claimId)
     .then(function (claim) {
-      return knex('IntSchema.ClaimDeduction')
+      return knex('ClaimDeduction')
         .returning('ClaimDeductionId')
         .insert({
           EligibilityId: claim.EligibilityId,
@@ -18,7 +18,7 @@ module.exports = function (claimId, claimDeduction) {
 }
 
 function getClaim (claimId) {
-  return knex('IntSchema.Claim')
+  return knex('Claim')
     .where('ClaimId', claimId)
     .first()
 }

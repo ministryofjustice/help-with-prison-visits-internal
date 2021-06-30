@@ -4,7 +4,7 @@ const RejectionReason = require('../domain/claim-rejection-reason')
 
 module.exports = function () {
   var rejectionReasons = []
-  return knex('IntSchema.ClaimRejectionReason')
+  return knex('ClaimRejectionReason')
     .select('ClaimRejectionReasonId', 'RejectionReason', 'IsEnabled')
     .then(function (results) {
       results.forEach(function (result) {
