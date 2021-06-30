@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const moment = require('moment')
 const dateFormatter = require('../date-formatter')
 const statusFormatter = require('../claim-status-formatter')
@@ -9,13 +8,15 @@ const getClosedClaimStatus = require('./get-closed-claim-status')
 
 module.exports = function (status, advanceClaims, offset, limit, user, sortType, sortOrder) {
   var currentDateTime = dateFormatter.now().toDate()
-  var subquery = knex('Claim')
+  const db = getDatabaseConnector()
+
+  var subquery = db('Claim')
     .whereNull('AssignedTo')
     .orWhere('AssignedTo', '=', user)
     .orWhere('AssignmentExpiry', '<', currentDateTime)
     .select('ClaimId')
 
-  return knex('Claim')
+  return db('Claim')
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
     .whereIn('Claim.Status', status)
@@ -23,7 +24,7 @@ module.exports = function (status, advanceClaims, offset, limit, user, sortType,
     .andWhere('ClaimId', 'in', subquery)
     .count('Claim.ClaimId AS Count')
     .then(function (count) {
-      return knex('Claim')
+      return db('Claim')
         .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
         .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
         .whereIn('Claim.Status', status)

@@ -1,6 +1,5 @@
 const Promise = require('bluebird')
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 const tasksEnum = require('../../constants/tasks-enum')
 const taskStatusEnum = require('../../constants/task-status-enum')
@@ -14,7 +13,9 @@ module.exports = function (notificationType, reference, eligibilityId, claimId, 
   }
 
   return getEmailAddress(eligibilityId, emailAddress).then(function (toEmailAddress) {
-    return knex('Task').insert({
+    const db = getDatabaseConnector()
+  
+    return db('Task').insert({
       Task: notificationType,
       Reference: reference,
       EligibilityId: eligibilityId,
@@ -30,7 +31,9 @@ function getEmailAddress (eligibilityId, emailAddress) {
   if (emailAddress) {
     return Promise.resolve(emailAddress)
   } else {
-    return knex('Visitor').where('EligibilityId', eligibilityId).first('EmailAddress')
+    const db = getDatabaseConnector()
+  
+    return db('Visitor').where('EligibilityId', eligibilityId).first('EmailAddress')
       .then(function (result) {
         return result.EmailAddress
       })

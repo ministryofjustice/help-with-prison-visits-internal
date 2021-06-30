@@ -1,10 +1,11 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const RejectionReason = require('../domain/claim-rejection-reason')
 
 module.exports = function () {
   var rejectionReasons = []
-  return knex('ClaimRejectionReason')
+  const db = getDatabaseConnector()
+
+  return db('ClaimRejectionReason')
     .select('ClaimRejectionReasonId', 'RejectionReason', 'IsEnabled')
     .then(function (results) {
       results.forEach(function (result) {

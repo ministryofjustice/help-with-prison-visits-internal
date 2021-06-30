@@ -1,8 +1,9 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (deductionId) {
-  return knex('ClaimDeduction')
+  const db = getDatabaseConnector()
+
+  return db('ClaimDeduction')
     .where('ClaimDeductionId', deductionId)
     .returning('ClaimDeductionId')
     .update({

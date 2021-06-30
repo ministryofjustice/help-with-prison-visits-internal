@@ -1,11 +1,12 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 const insertClaimEvent = require('./insert-claim-event')
 const log = require('../log')
 
 module.exports = function (claimId, claimNote, user) {
-  return knex('Claim').where('ClaimId', claimId)
+  const db = getDatabaseConnector()
+
+  return db('Claim').where('ClaimId', claimId)
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .first('Eligibility.EligibilityId', 'Eligibility.Reference')
     .then(function (result) {
@@ -22,6 +23,7 @@ module.exports = function (claimId, claimNote, user) {
 
 function updateClaim (claimId, note) {
   var updateObject = {}
+  const db = getDatabaseConnector()
 
   updateObject = {
     Note: note,
@@ -32,7 +34,7 @@ function updateClaim (claimId, note) {
     updateObject.Note = updateObject.Note.substring(0, 250)
   }
 
-  return knex('Claim').where('ClaimId', claimId).update(updateObject).then(
+  return db('Claim').where('ClaimId', claimId).update(updateObject).then(
     log.info('Claim ID ' + claimId + ' note added: ' + updateObject.Note)
   )
 }

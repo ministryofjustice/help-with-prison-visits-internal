@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const moment = require('moment')
 const dateFormatter = require('../date-formatter')
 const statusFormatter = require('../claim-status-formatter')
@@ -9,8 +8,9 @@ const getClosedClaimStatus = require('./get-closed-claim-status')
 
 module.exports = function (query, offset, limit) {
   query = `%${query}%` // wrap in % for where clause
+  const db = getDatabaseConnector()
 
-  return knex('Claim')
+  return db('Claim')
     .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
     .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
     .where('Claim.Reference', 'like', query)
@@ -19,7 +19,7 @@ module.exports = function (query, offset, limit) {
     .orWhere('Prisoner.PrisonNumber', 'like', query)
     .count('Claim.ClaimId AS Count')
     .then(function (count) {
-      return knex('Claim')
+      return db('Claim')
         .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
         .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
         .where('Claim.Reference', 'like', query)

@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const tasksEnum = require('../../constants/tasks-enum')
@@ -10,7 +9,9 @@ const updateRelatedClaimRemainingOverpaymentAmount = require('./update-related-c
 const log = require('../log')
 
 module.exports = function (claimId, claimDecision) {
-  return knex('Claim').where('ClaimId', claimId)
+  const db = getDatabaseConnector()
+
+  return db('Claim').where('ClaimId', claimId)
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .first('Eligibility.EligibilityId', 'Eligibility.Reference')
     .then(function (result) {
@@ -43,11 +44,15 @@ module.exports = function (claimId, claimDecision) {
 }
 
 function updateEligibility (eligibilityId, decision) {
-  return knex('Eligibility').where('EligibilityId', eligibilityId).update('Status', decision)
+  const db = getDatabaseConnector()
+
+  return db('Eligibility').where('EligibilityId', eligibilityId).update('Status', decision)
 }
 
 function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed, rejectionReasonId) {
   var updateObject = {}
+  const db = getDatabaseConnector()
+
   if (decision === claimDecisionEnum.APPROVED) {
     updateObject = {
       Caseworker: caseworker,
@@ -94,20 +99,24 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
     updateObject.PaymentMethod = paymentMethodEnum.MANUALLY_PROCESSED.value
   }
 
-  return knex('Claim').where('ClaimId', claimId).update(updateObject).then(
+  return db('Claim').where('ClaimId', claimId).update(updateObject).then(
     log.info('Claim ID ' + claimId + ' Closed with Status: ' + updateObject.Status)
   )
 }
 
 function updateVisitor (eligibilityId, dwpCheck, expiryDate) {
-  return knex('Visitor').where('EligibilityId', eligibilityId).update({
+  const db = getDatabaseConnector()
+
+  return db('Visitor').where('EligibilityId', eligibilityId).update({
     DWPCheck: dwpCheck,
     BenefitExpiryDate: expiryDate
   })
 }
 
 function updatePrisoner (eligibilityId, nomisCheck, releaseDateIsSet, releaseDate) {
-  return knex('Prisoner').where('EligibilityId', eligibilityId).update({
+  const db = getDatabaseConnector()
+
+  return db('Prisoner').where('EligibilityId', eligibilityId).update({
     NomisCheck: nomisCheck,
     ReleaseDateIsSet: releaseDateIsSet,
     ReleaseDate: releaseDate
@@ -125,7 +134,9 @@ function updateClaimExpenses (claimExpenseResponses) {
 }
 
 function updateClaimExpense (claimExpenseResponse) {
-  return knex('ClaimExpense').where('ClaimExpenseId', claimExpenseResponse.claimExpenseId).update({
+  const db = getDatabaseConnector()
+
+  return db('ClaimExpense').where('ClaimExpenseId', claimExpenseResponse.claimExpenseId).update({
     ApprovedCost: claimExpenseResponse.approvedCost,
     Status: claimExpenseResponse.status
   })

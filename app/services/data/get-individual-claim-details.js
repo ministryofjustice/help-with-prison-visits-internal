@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const duplicateClaimCheck = require('./duplicate-claim-check')
 const duplicateBankDetailsCheck = require('./duplicate-bank-details-check')
 const getClaimsForPrisonNumberAndVisitDate = require('./get-claims-for-prison-number-and-visit-date')
@@ -86,7 +85,9 @@ module.exports = function (claimId) {
 }
 
 function getClaimantDetails (claimId) {
-  return knex('Claim')
+  const db = getDatabaseConnector()
+
+  return db('Claim')
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
     .join('Prisoner', 'Eligibility.EligibilityId', '=', 'Prisoner.EligibilityId')
@@ -158,7 +159,9 @@ function getClaimantDetails (claimId) {
 }
 
 function getClaimEligibleChild (reference, eligibilityId) {
-  return knex('EligibleChild')
+  const db = getDatabaseConnector()
+
+  return db('EligibleChild')
     .where({ 'EligibleChild.Reference': reference, 'EligibleChild.EligibilityId': eligibilityId })
     .select(
       'EligibleChild.FirstName',
@@ -175,7 +178,9 @@ function getClaimEligibleChild (reference, eligibilityId) {
 }
 
 function getClaimDocuments (claimId, reference, eligibilityId) {
-  return knex('ClaimDocument')
+  const db = getDatabaseConnector()
+
+  return db('ClaimDocument')
     .where({ 'ClaimDocument.ClaimId': claimId, 'ClaimDocument.IsEnabled': true, 'ClaimDocument.ClaimExpenseId': null })
     .orWhere({
       'ClaimDocument.ClaimId': null,
@@ -193,7 +198,9 @@ function getClaimDocuments (claimId, reference, eligibilityId) {
 }
 
 function getClaimExpenses (claimId) {
-  return knex('Claim')
+  const db = getDatabaseConnector()
+
+  return db('Claim')
     .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
     .where('Claim.ClaimId', claimId)
     .select('ClaimExpense.*', 'ClaimDocument.DocumentStatus', 'ClaimDocument.DocumentType', 'ClaimDocument.ClaimDocumentId', 'ClaimDocument.Filepath')
@@ -207,12 +214,16 @@ function getClaimExpenses (claimId) {
 }
 
 function getClaimDeductions (claimId) {
-  return knex('ClaimDeduction')
+  const db = getDatabaseConnector()
+
+  return db('ClaimDeduction')
     .where({ ClaimId: claimId, IsEnabled: true })
 }
 
 function getClaimChildren (claimId) {
-  return knex('Claim')
+  const db = getDatabaseConnector()
+
+  return db('Claim')
     .join('ClaimChild', 'Claim.ClaimId', '=', 'ClaimChild.ClaimId')
     .where({ 'Claim.ClaimId': claimId, 'ClaimChild.IsEnabled': true })
     .select()
@@ -220,7 +231,9 @@ function getClaimChildren (claimId) {
 }
 
 function getClaimEscort (claimId) {
-  return knex('ClaimEscort')
+  const db = getDatabaseConnector()
+
+  return db('ClaimEscort')
     .first()
     .where({ ClaimId: claimId, IsEnabled: true })
     .select()
@@ -228,12 +241,16 @@ function getClaimEscort (claimId) {
 }
 
 function getClaimEvents (claimId) {
-  return knex('ClaimEvent')
+  const db = getDatabaseConnector()
+
+  return db('ClaimEvent')
     .where('ClaimId', claimId)
 }
 
 function getTopUp (claimId) {
-  return knex.select('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate').from('TopUp')
+  const db = getDatabaseConnector()
+
+  return db.select('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate').from('TopUp')
     .where('ClaimId', claimId)
     .then(function (TopUpResults) {
       var allTopUpsPaid = true
@@ -249,7 +266,9 @@ function getTopUp (claimId) {
 }
 
 function getLatestUnpaidTopUp (claimId) {
-  return knex.first('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate').from('TopUp')
+  const db = getDatabaseConnector()
+
+  return db.first('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate').from('TopUp')
     .where('ClaimId', claimId)
     .where('PaymentStatus', topUpStatusEnum.PENDING)
     .then(function (latestUnpaidTopUp) {

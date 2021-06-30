@@ -1,14 +1,15 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const insertClaimEvent = require('./insert-claim-event')
 const claimEventEnum = require('../../constants/claim-event-enum')
 
 module.exports = function (claimId, reference, note, email) {
-  return knex('Eligibility')
+  const db = getDatabaseConnector()
+
+  return db('Eligibility')
     .where('Reference', reference)
     .update({ ReferenceDisabled: false, ReEnabledReason: note })
     .then(function () {
-      knex('Claim')
+      db('Claim')
         .where('ClaimId', claimId)
         .first('EligibilityId')
         .then(function (eligibility) {
