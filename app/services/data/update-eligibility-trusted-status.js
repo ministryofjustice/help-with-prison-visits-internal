@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 const insertClaimEvent = require('./insert-claim-event')
 const claimEventEnum = require('../../constants/claim-event-enum')
@@ -14,7 +13,9 @@ module.exports = function (claimId, isTrusted, untrustedReason) {
           UntrustedReason: !isTrusted ? untrustedReason : null
         }
 
-        return knex('Eligibility')
+        const db = getDatabaseConnector()      
+
+        return db('Eligibility')
           .where('EligibilityId', eligibilityData.EligibilityId)
           .update(updateObject)
           .then(function () {
@@ -26,7 +27,9 @@ module.exports = function (claimId, isTrusted, untrustedReason) {
 }
 
 function getEligibilityData (claimId) {
-  return knex('Claim')
+  const db = getDatabaseConnector()
+
+  return db('Claim')
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .where('ClaimId', claimId)
     .first()

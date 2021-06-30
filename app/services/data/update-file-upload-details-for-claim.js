@@ -1,12 +1,14 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const FileUpload = require('../domain/file-upload')
 
 module.exports = function (reference, fileUpload) {
   if (!(fileUpload instanceof FileUpload)) {
     throw new Error('Provided fileUpload object is not an instance of the expected class')
   }
-  return knex('ClaimDocument')
+
+  const db = getDatabaseConnector()
+
+  return db('ClaimDocument')
     .where('ClaimDocumentId', '=', fileUpload.claimDocumentId)
     .update({
       DocumentStatus: fileUpload.documentStatus,

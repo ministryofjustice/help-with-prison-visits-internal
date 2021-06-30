@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const moment = require('moment')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const rulesEnum = require('../../../app/constants/region-rules-enum')
@@ -398,14 +397,16 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   }
 
   function createBaseQueries (limit, offset) {
-    countQuery = knex('Claim')
+    const db = getDatabaseConnector()
+  
+    countQuery = db('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
       .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
       .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
       .leftJoin('ClaimRejectionReason', 'Claim.RejectionReasonId', '=', 'ClaimRejectionReason.ClaimRejectionReasonId')
       .count('Claim.ClaimId AS Count')
 
-    selectQuery = knex('Claim')
+    selectQuery = db('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
       .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
       .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')

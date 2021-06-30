@@ -1,5 +1,4 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const closedClaimStatusMap = require('../../constants/closed-claim-status-map')
 
@@ -13,7 +12,9 @@ module.exports = function (claimId) {
     claimEventEnum.CLAIM_REJECTED.value,
     claimEventEnum.CLAIM_UPDATED.value
   ]
-  return knex('ClaimEvent')
+  const db = getDatabaseConnector()
+
+  return db('ClaimEvent')
     .first('Event')
     .whereIn('Event', claimEvents)
     .andWhere('ClaimId', claimId)

@@ -1,9 +1,10 @@
-const config = require('../../../knexfile').intweb
-const knex = require('knex')(config)
+const { getDatabaseConnector } = require('../../databaseConnector')
 
 module.exports = function (reference, accountNumber) {
   if (accountNumber) {
-    return knex('ClaimBankDetail')
+    const db = getDatabaseConnector()
+  
+    return db('ClaimBankDetail')
       .where({
         'AccountNumber': accountNumber,
       })
