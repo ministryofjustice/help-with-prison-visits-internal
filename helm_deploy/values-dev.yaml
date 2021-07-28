@@ -33,7 +33,7 @@ generic-service:
     moj-official-tgw-prod: 51.149.250.0/24
     quantum1: 62.25.109.197/32
     quantum2: 212.137.36.230/32
-    quantum3: 195.92.38.16/28s
+    quantum3: 195.92.38.16/28
 
 generic-prometheus-alerts:
   alertSeverity: help-with-prison-visits-devtest
