@@ -94,9 +94,8 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     let allowedRoles = []
 
-    if (req.body.decision === claimDecisionEnum.APPROVED || req.body.decision === claimDecisionEnum.REJECTED) {
-      allowedRoles.push(applicationRoles.CLAIM_PAYMENT_BAND_3)
-    } else if (req.body.decision === claimDecisionEnum.REQUEST_INFORMATION) {
+    if (req.body.decision === claimDecisionEnum.APPROVED || req.body.decision === claimDecisionEnum.REJECTED ||
+      req.body.decision === claimDecisionEnum.REQUEST_INFORMATION) {
       allowedRoles = [
         applicationRoles.CLAIM_PAYMENT_BAND_3,
         applicationRoles.CASEWORK_MANAGER_BAND_5
