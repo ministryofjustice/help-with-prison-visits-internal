@@ -13,7 +13,10 @@ const { getFileUploadPath, getUploadFilename, getFilenamePrefix } = require('./f
 const aws = new AWSHelper()
 
 let csrfToken
-const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
+const allowedRoles = [
+  applicationRoles.CLAIM_PAYMENT_BAND_3,
+  applicationRoles.CASEWORK_MANAGER_BAND_5
+]
 
 module.exports = function (router) {
   router.get('/claim/file-upload/:referenceId/:claimId/:documentType', function (req, res) {
