@@ -13,7 +13,6 @@
     "start": "npm run css-build && node ./app/bin/www",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "record-build-info": "node scripts/record-build-info",
-    "start-maintenance": "node app/bin/www-maintenance",
     "test": "standard && mocha --recursive test/unit/ --exit",
     "test-coverage": "nyc npm run test-unit",
     "test-unit": "mocha --recursive test/unit/ --exit",
