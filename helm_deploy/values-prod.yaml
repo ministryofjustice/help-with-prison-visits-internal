@@ -3,7 +3,8 @@
 generic-service:
   replicaCount: 2
   ingress:
-    host: "manage.hwpv.hmpps.service.justice.gov.uk"
+    host: "caseworker.help-with-prison-visits.service.gov.uk"
+    tlsSecretName: "help-with-prison-visits-caseworker-cert"
   env:
     APVS_MOJ_SSO_REDIRECT_URI: 'https://manage.hwpv.hmpps.service.justice.gov.uk/login/callback'
     APVS_MOJ_SSO_TOKEN_HOST: 'https://sign-in.hmpps.service.justice.gov.uk/auth'
