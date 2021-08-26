@@ -55,6 +55,10 @@ class AWSHelper {
   }
 
   async download (key) {
+    if (key.startsWith('/data')) {
+      key = key.substring(5)
+    }
+
     const downloadParams = {
       Bucket: this.bucketName,
       Key: key
