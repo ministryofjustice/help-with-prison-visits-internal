@@ -11,7 +11,6 @@ generic-service:
     HWPV_COOKIE_DOMAIN: "manage.hwpv.hmpps.service.justice.gov.uk"
     HWPV_POST_LOGOUT_URL: "https://manage.hwpv.hmpps.service.justice.gov.uk/"
     HWPV_COOKIE_NAME: hwpv-session-prod
-    APVS_MAINTENANCE_MODE: 'true'
 
   allowlist:
     office: "217.33.148.210/32"
