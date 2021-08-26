@@ -3,7 +3,8 @@
 generic-service:
   replicaCount: 2
   ingress:
-    host: "manage.hwpv.hmpps.service.justice.gov.uk"
+    host: "caseworker.help-with-prison-visits.service.gov.uk"
+    tlsSecretName: "help-with-prison-visits-caseworker-cert"
   env:
     APVS_MOJ_SSO_REDIRECT_URI: 'https://manage.hwpv.hmpps.service.justice.gov.uk/login/callback'
     APVS_MOJ_SSO_TOKEN_HOST: 'https://sign-in.hmpps.service.justice.gov.uk/auth'
@@ -11,7 +12,6 @@ generic-service:
     HWPV_COOKIE_DOMAIN: "manage.hwpv.hmpps.service.justice.gov.uk"
     HWPV_POST_LOGOUT_URL: "https://manage.hwpv.hmpps.service.justice.gov.uk/"
     HWPV_COOKIE_NAME: hwpv-session-prod
-    APVS_MAINTENANCE_MODE: 'true'
 
   allowlist:
     office: "217.33.148.210/32"
