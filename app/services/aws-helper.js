@@ -66,6 +66,7 @@ class AWSHelper {
       const data = await this.s3.getObject(downloadParams).promise()
       fs.writeFileSync(tempFile, data.Body)
     } catch (error) {
+      log.error(`Error occurred downloading file from s3 ${key} to ${tempFile}`, error)
       throw new Error(error)
     }
 
