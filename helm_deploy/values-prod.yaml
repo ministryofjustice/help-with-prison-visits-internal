@@ -12,7 +12,6 @@ generic-service:
     HWPV_COOKIE_DOMAIN: "caseworker.help-with-prison-visits.service.gov.uk"
     HWPV_POST_LOGOUT_URL: "https://caseworker.help-with-prison-visits.service.gov.uk/"
     HWPV_COOKIE_NAME: hwpv-session-prod
-    APVS_MAINTENANCE_MODE: 'true'
 
   allowlist:
     office: "217.33.148.210/32"
