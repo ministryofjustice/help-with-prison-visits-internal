@@ -57,11 +57,8 @@ class AWSHelper {
   }
 
   async download (key) {
-    if (key.startsWith('/data/')) {
+    if (key.startsWith('/data/') && !key.startsWith('/data/payments/')) {
       key = key.substring(6)
-    }
-    if (key.startsWith('payments/')) {
-      key = key.substring(9)
     }
 
     const downloadParams = {
