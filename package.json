@@ -47,8 +47,8 @@
     ]
   },
   "dependencies": {
-    "applicationinsights": "^2.1.1",
-    "aws-sdk": "^2.927.0",
+    "applicationinsights": "^2.1.6",
+    "aws-sdk": "^2.986.0",
     "bluebird": "^3.7.2",
     "bunyan": "^1.8.15",
     "bunyan-prettystream": "^0.1.3",
@@ -56,7 +56,7 @@
     "connect-redis": "^6.0.0",
     "cookie-parser": "^1.4.5",
     "csurf": "^1.11.0",
-    "csv": "^5.5.0",
+    "csv": "^5.5.3",
     "debug": ">=4.3.1",
     "dotenv": "^10.0.0",
     "express": "~4.17.1",
@@ -66,11 +66,11 @@
     "govuk_template_jinja": "^0.26.0",
     "govuk-elements-sass": "^2.2.1",
     "helmet": "^4.6.0",
-    "knex": "^0.95.6",
+    "knex": "^0.95.11",
     "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
-    "mssql": "^7.2.0",
-    "multer": "^1.4.2",
+    "mssql": "^7.2.1",
+    "multer": "^1.4.3",
     "nunjucks": "^3.2.3",
     "on-finished": "^2.3.0",
     "passport": "^0.4.1",
@@ -87,12 +87,12 @@
   "devDependencies": {
     "assert": "^2.0.0",
     "chai": "^4.3.4",
-    "mocha": "^9.0.0",
+    "mocha": "^9.1.1",
     "nyc": "^15.1.0",
     "proxyquire": "^2.1.3",
     "selenium-standalone": "^6.23.0",
-    "sinon": "^11.1.1",
+    "sinon": "^11.1.2",
     "standard": "^16.0.3",
-    "supertest": "^6.1.3"
+    "supertest": "^6.1.6"
   }
 }
