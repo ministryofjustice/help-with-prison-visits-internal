@@ -29,18 +29,14 @@
             </td>
             <td width="20%">
               <div class="pull-right">
-                <fieldset class="inline">
+                <fieldset>
                   <div class="multiple-choice">
-                    <label for="auto-approval-on">
-                      <input id="auto-approval-on" type="radio" name="AutoApprovalEnabled" value="true" {% if autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
-                      <span>On</span>
-                    </label>
+                    <input id="auto-approval-on" type="radio" name="AutoApprovalEnabled" value="true" {% if autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
+                    <label for="auto-approval-on">On</label>
                   </div>
                   <div class="multiple-choice">
-                    <label for="auto-approval-off" class="no-right-padding">
-                      <input id="auto-approval-off" type="radio" name="AutoApprovalEnabled" value="false" {% if not autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
-                      <span>Off</span>
-                    </label>
+                    <input id="auto-approval-off" type="radio" name="AutoApprovalEnabled" value="false" {% if not autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
+                    <label for="auto-approval-off" class="no-right-padding">Off</label>
                   </div>
                 </fieldset>
               </div>
@@ -162,9 +158,8 @@
             <td>
               <div class="form-group">
                 <div class="multiple-choice">
-                  <label for="check-{{ rule.value }}">
-                    <input type="checkbox" id="check-{{ rule.value }}" name="rulesEnabled" value="{{ rule.value }}" class="form-control" {% if rule.value not in rulesDisabled %} checked {% endif %}>
-                  </label>
+                  <label for="check-{{ rule.value }}"></label>
+                  <input type="checkbox" id="check-{{ rule.value }}" name="rulesEnabled" value="{{ rule.value }}" {% if rule.value not in rulesDisabled %} checked {% endif %}>
                 </div>
               </div>
             </td>

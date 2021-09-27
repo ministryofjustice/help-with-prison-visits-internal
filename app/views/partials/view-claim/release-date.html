@@ -1,10 +1,8 @@
 {% if unlock %}
 <div class="form-group">
   <div class="multiple-choice">
-    <label for='release-date-is-set' data-target="release-date-section">
-      <input type="checkbox" name='release-date-is-set' id='release-date-is-set' {% if Claim['ReleaseDateIsSet'] === true %} checked {% endif %} />
-      <span>Release Date is set?</span>
-    </label>
+    <input type="checkbox" name='release-date-is-set' id='release-date-is-set' {% if Claim['ReleaseDateIsSet'] === true %} checked {% endif %} />
+    <label for='release-date-is-set' data-target="release-date-section">Release Date is set?</label>
   </div>
 </div>
 

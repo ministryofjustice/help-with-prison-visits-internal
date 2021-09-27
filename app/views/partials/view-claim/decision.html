@@ -2,24 +2,18 @@
 <div id="decision" class="form-group {% if errors['decision'][0] %} form-group-error {% endif %}">
   <fieldset id='reason' class="inline">
     <div class="multiple-choice">
-      <label for="approve" data-target="accept-input">
-        <input type="radio" name="decision" value="{{ claimDecisionEnum.APPROVED }}" id="approve" {% if claimDecision['decision'] == claimDecisionEnum.APPROVED %} checked {% endif %}>
-        <span>Approve</span>
-      </label>
+      <input type="radio" name="decision" value="{{ claimDecisionEnum.APPROVED }}" id="approve" {% if claimDecision['decision'] == claimDecisionEnum.APPROVED %} checked {% endif %}>
+      <label for="approve" data-target="accept-input">Approve</label>
     </div>
 
     <div class="multiple-choice">
-      <label for="request" data-target="request-input">
-        <input type="radio" name="decision" value="{{ claimDecisionEnum.REQUEST_INFORMATION }}" id="request" {% if claimDecision['decision'] == claimDecisionEnum.REQUEST_INFORMATION %} checked {% endif %}>
-        <span>Request information</span>
-      </label>
+      <input type="radio" name="decision" value="{{ claimDecisionEnum.REQUEST_INFORMATION }}" id="request" {% if claimDecision['decision'] == claimDecisionEnum.REQUEST_INFORMATION %} checked {% endif %}>
+      <label for="request" data-target="request-input">Request information</label>
     </div>
 
     <div class="multiple-choice">
-      <label for="reject" data-target="reject-input">
-        <input type="radio" name="decision" value="{{ claimDecisionEnum.REJECTED }}" id="reject" {% if claimDecision['decision'] == claimDecisionEnum.REJECTED %} checked {% endif %}>
-        <span>Reject</span>
-      </label>
+      <input type="radio" name="decision" value="{{ claimDecisionEnum.REJECTED }}" id="reject" {% if claimDecision['decision'] == claimDecisionEnum.REJECTED %} checked {% endif %}>
+      <label for="reject" data-target="reject-input">Reject</label>
     </div>
 
     <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.APPROVED %}js-hidden{% endif %}" id="accept-input">
@@ -31,10 +25,8 @@
 
       <div class="form-group inline">
         <div class="multiple-choice">
-          <label for='is-trusted' data-target="untrusted-reason-section">
-            <input type="checkbox" name='is-trusted' id='is-trusted' {% if Claim['IsTrusted'] === true %} checked {% endif %} />
-            <span>Allow auto-approval</span>
-          </label>
+          <input type="checkbox" name='is-trusted' id='is-trusted' {% if Claim['IsTrusted'] === true %} checked {% endif %} />
+          <label for='is-trusted' data-target="untrusted-reason-section">Allow auto-approval</label>
         </div>
         <div id='untrusted-reason-section' class='form-group {% if Claim['IsTrusted'] === true %} js-hidden {% endif %}'>
           <br >
