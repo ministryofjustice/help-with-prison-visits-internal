@@ -44,7 +44,7 @@
       </table>
     </div>
 
-    <div class="form-group {% if errors['EmailAddress'][0] %} error {% endif %}">
+    <div class="form-group {% if errors['EmailAddress'][0] %} form-group-error {% endif %}">
       <label id="EmailAddress" class="form-label-bold" for="email-address-input">Email address</label>
       {% if errors['EmailAddress'][0] %}
       <span class="error-message" id="error-message-email">{{ errors['EmailAddress'][0] }}</span>
@@ -52,11 +52,11 @@
       <input id="email-address-input"
              name="EmailAddress"
              type="text"
-             class="form-control"
+             class="form-control {% if errors['EmailAddress'][0] %} form-control-error {% endif %}"
              value="{{ Claim['EmailAddress'] }}">
     </div>
 
-    <div class="form-group {% if errors['PhoneNumber'][0] %} error {% endif %}">
+    <div class="form-group {% if errors['PhoneNumber'][0] %} form-group-error {% endif %}">
       <label id="PhoneNumber" class="form-label-bold" for="phone-number-input">Phone number (optional)</label>
       {% if errors['PhoneNumber'][0] %}
       <span class="error-message" id="error-message-phone">{{ errors['PhoneNumber'][0] }}</span>
@@ -64,7 +64,7 @@
       <input id="phone-number-input"
              name="PhoneNumber"
              type="text"
-             class="form-control"
+             class="form-control {% if errors['PhoneNumber'][0] %} form-control-error {% endif %}"
              value="{{ Claim['PhoneNumber'] }}">
     </div>
 
