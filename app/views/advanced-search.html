@@ -68,10 +68,10 @@
 
       <div class="column-one-third">
         <div class="form-group margin-top">
-          <label for="assistedDigital" class="block-label inline selection-button-checkbox">
-            Assisted digital
+          <div class="multiple-choice">
             <input id="assistedDigital" type="checkbox" name="assistedDigital" {% if query.assistedDigital %} checked {% endif %}>
-          </label>
+            <label for="assistedDigital">Assisted digital</label>
+          </div>
         </div>
       </div>
 
@@ -83,64 +83,49 @@
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label for="claimStatusAll" class="block-label inline">
-            All
+          <div class="multiple-choice">
             <input id="claimStatusAll" type="radio" name="claimStatus" value="all" {% if query.claimStatus == 'all' %} checked {% endif %}>
-          </label>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <div class="form-group">
-          <label for="claimStatusNew" class="block-label inline">
-            New
-            <input id="claimStatusNew" type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
-          </label>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <div class="form-group">
-          <label for="claimStatusPending" class="block-label inline">
-            Pending
-            <input id="claimStatusPending" type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
-          </label>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <div class="form-group">
-          <label for="claimStatusInProgress" class="block-label inline">
-            In progress
-            <input id="claimStatusInProgress" type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
-          </label>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <div class="form-group">
-          <label for="claimStatusApproved" class="block-label inline">
-            Approved
+            <label for="claimStatusAll">All</label>
+          </div>
+          <div class="multiple-choice">
             <input id="claimStatusApproved" type="radio" name="claimStatus" value="approved" {% if query.claimStatus == 'approved' %} checked {% endif %}>
-          </label>
+            <label for="claimStatusApproved">Approved</label>
+          </div>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label for="claimStatusPaid" class="block-label inline">
-            Paid
+          <div class="multiple-choice">
+            <input id="claimStatusNew" type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
+            <label for="claimStatusNew">New</label>
+          </div>
+          <div class="multiple-choice">
             <input id="claimStatusPaid" type="radio" name="claimStatus" value="paid" {% if query.claimStatus == 'paid' %} checked {% endif %}>
-          </label>
+            <label for="claimStatusPaid">Paid</label>
+          </div>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <div class="form-group">
-          <label for="claimStatusRejected" class="block-label inline">
-            Rejected
+          <div class="multiple-choice">
+            <input id="claimStatusPending" type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
+            <label for="claimStatusPending">Pending</label>
+          </div>
+          <div class="multiple-choice">
             <input id="claimStatusRejected" type="radio" name="claimStatus" value="rejected" {% if query.claimStatus == 'rejected' %} checked {% endif %}>
-          </label>
+            <label for="claimStatusRejected">Rejected</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="column-one-quarter">
+        <div class="form-group">
+          <div class="multiple-choice">
+            <input id="claimStatusInProgress" type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
+            <label for="claimStatusInProgress">In progress</label>
+          </div>
         </div>
       </div>
 
@@ -150,70 +135,60 @@
       <div class="column-one-quarter">
         <h3 class="heading-small">Mode of approval</h3>
         <div class="form-group">
-          <label for="modeOfApprovalAuto" class="block-label inline">
-            Auto
+          <div class="multiple-choice">
             <input id="modeOfApprovalAuto" type="radio" name="modeOfApproval" value="auto" {% if query.modeOfApproval == 'auto' %} checked {% endif %}>
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="modeOfApprovalManual" class="block-label inline">
-            Manual
+            <label for="modeOfApprovalAuto">Auto</label>
+          </div>
+          <div class="multiple-choice">
             <input id="modeOfApprovalManual"type="radio" name="modeOfApproval" value="manual" {% if query.modeOfApproval == 'manual' %} checked {% endif %}>
-          </label>
+            <label for="modeOfApprovalManual">Manual</label>
+          </div>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <h3 class="heading-small">Type of claim</h3>
         <div class="form-group">
-          <label for="typeOfClaimPast" class="block-label inline">
-            Visit in past
+          <div class="multiple-choice">
             <input id="typeOfClaimPast" type="radio" name="pastOrFuture" value="past" {% if query.pastOrFuture == 'past' %} checked {% endif %}>
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="typeOfClaimFuture" class="block-label inline">
-            Visit in future
+            <label for="typeOfClaimPast">Visit in past</label>
+          </div>
+          <div class="multiple-choice">
             <input id="typeOfClaimFuture" type="radio" name="pastOrFuture" value="future" {% if query.pastOrFuture == 'future' %} checked {% endif %}>
-          </label>
+            <label for="typeOfClaimFuture">Visit in future</label>
+          </div>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <h3 class="heading-small">Visit rules</h3>
         <div class="form-group">
-          <label for="visitRulesEnglandWales" class="block-label inline">
-            England/Wales
+          <div class="multiple-choice">
             <input id="visitRulesEnglandWales" type="radio" name="visitRules" value="englandWales" {% if query.visitRules == 'englandWales' %} checked {% endif %}>
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="visitRulesScotland" class="block-label inline">
-            Scotland
+            <label for="visitRulesEnglandWales">England/Wales</label>
+          </div>
+          <div class="multiple-choice">
             <input id="visitRulesScotland" type="radio" name="visitRules" value="scotland" {% if query.visitRules == 'scotland' %} checked {% endif %}>
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="visitRulesNorthernIreland" class="block-label inline">
-            Northern Ireland
+            <label for="visitRulesScotland">Scotland</label>
+          </div>
+          <div class="multiple-choice">
             <input id="visitRulesNorthernIreland" type="radio" name="visitRules" value="northernIreland" {% if query.visitRules == 'northernIreland' %} checked {% endif %}>
-          </label>
+            <label for="visitRulesNorthernIreland">Northern Ireland</label>
+          </div>
         </div>
       </div>
 
       <div class="column-one-quarter">
         <h3 class="heading-small">Is Claim Overpaid?</h3>
         <div class="form-group">
-          <label for="overpaymentYes" class="block-label inline">
-            Yes
+          <div class="multiple-choice">
             <input id="overpaymentYes" type="radio" name="overpaymentStatus" value="yes" {% if query.overpaymentStatus == 'yes' %} checked {% endif %}>
-          </label>
-        </div>
-        <div class="form-group">
-          <label for="overpaymentNo" class="block-label inline">
-            No
+            <label for="overpaymentYes">Yes</label>
+          </div>
+          <div class="multiple-choice">
             <input id="overpaymentNo" type="radio" name="overpaymentStatus" value="no" {% if query.overpaymentStatus == 'no' %} checked {% endif %}>
-          </label>
+            <label for="overpaymentNo">No</label>
+          </div>
         </div>
       </div>
 
@@ -223,16 +198,14 @@
         <div class="column-one-third">
           <h3 class="heading-small">Payment Method</h3>
           <div class="form-group">
-            <label for="paymentMethodBank" class="block-label inline">
-              Bank
+            <div class="multiple-choice">
               <input id="paymentMethodBank" type="radio" name="paymentMethod" value="bank" {% if query.paymentMethod == 'bank' %} checked {% endif %}>
-            </label>
-          </div>
-          <div class="form-group">
-            <label for="paymentMethodVoucher" class="block-label inline">
-              Voucher
+              <label for="paymentMethodBank">Bank</label>
+            </div>
+            <div class="multiple-choice">
               <input id="paymentMethodVoucher"type="radio" name="paymentMethod" value="payout" {% if query.paymentMethod == 'payout' %} checked {% endif %}>
-            </label>
+              <label for="paymentMethodVoucher">Voucher</label>
+            </div>
           </div>
         </div>
     </div>

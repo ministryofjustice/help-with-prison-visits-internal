@@ -1,52 +1,52 @@
 {% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) and unlock %}
   <!-- Radio Buttons -->
   <form>
-    <fieldset id="closedClaimActions">
-      <label class="block-label inline" data-target="overpayment-input">
+    <fieldset id="closedClaimActions" class="inline">
+      <div class="multiple-choice">
         <input type="radio" name="closed-claim-action" value="OVERPAYMENT" id="overpayment-toggle">
-        <span>Manage Overpayment</span>
-      </label>
+        <label data-target="overpayment-input">Manage Overpayment</label>
+      </div>
 
       {% if Claim['Status'] == 'APPROVED' and Claim['PaymentStatus'] == 'PROCESSED' and TopUps['allTopUpsPaid'] == true %}
-      <label id="top-up-claim-label" class="block-label inline" data-target="top-up-input">
+      <div class="multiple-choice">
         <input type="radio" name="closed-claim-action" value="TOPUP" id="top-up-toggle">
-        <span>Top Up Claim</span>
-      </label>
+        <label id="top-up-claim-label" data-target="top-up-input">Top Up Claim</label>
+      </div>
       {% endif %}
 
       {% if Claim['IsAdvanceClaim'] == true and Claim['Status'] != 'APPROVED-ADVANCE-CLOSED' %}
-      <label class="block-label inline" data-target="close-advanced-claim-input">
+      <div class="multiple-choice">
         <input type="radio" name="closed-claim-action" value="CLOSE-ADVANCE-CLAIM" id="close-toggle">
-        <span>Close Advance Claim</span>
-      </label>
+        <label data-target="close-advanced-claim-input">Close Advance Claim</label>
+      </div>
       {% endif %}
 
       {% if Claim['PaymentMethod'] == 'bank' and TopUps['allTopUpsPaid'] == true %}
-      <label id="request-new-payment-details-label" class="block-label inline" data-target="request-new-payment-details-input">
+      <div class="multiple-choice">
         <input type="radio" name="closed-claim-action" value="REQUEST-NEW-PAYMENT-DETAILS" id="request-new-payment-details-toggle">
-        <span>Request new bank payment details</span>
-      </label>
+        <label id="request-new-payment-details-label" data-target="request-new-payment-details-input">Request new bank payment details</label>
+      </div>
       {% endif %}
 
       {% if Claim['PaymentMethod'] == 'payout' %}
-      <label class="block-label inline" data-target="payout-barcode-expired-input">
+      <div class="multiple-choice">
         <input type="radio" name="closed-claim-action" value="PAYOUT-BARCODE-EXPIRED" id="payout-barcode-expired-toggle">
-        <span>Payout barcode expired</span>
-      </label>
+        <label data-target="payout-barcode-expired-input">Payout barcode expired</label>
+      </div>
       {% endif %}
       
       {% if Claim['Status'] === 'REJECTED' and (Claim['ReferenceDisabled'] === false or Claim['ReferenceDisabled'] == null) %}
-      <label id="disable-reference-number-label" class="block-label inline" data-target="disable-reference-number-input">
+      <div class="multiple-choice">
         <input type="radio" name="closed-claim-action" value="DISABLE-REFERENCE-NUMBER" id="disable-reference-number-toggle">
-        <span>Disable this Reference No</span>
-      </label>
+        <label id="disable-reference-number-label" data-target="disable-reference-number-input">Disable this Reference No</label>
+      </div>
       {% endif %}
 
       {% if Claim['ReferenceDisabled'] === true %}
-      <label id="re-enable-reference-number-label" class="block-label inline" data-target="re-enable-reference-number-input">
+      <div class="multiple-choice">
         <input type="radio" name="closed-claim-action" value="RE-ENABLE-REFERENCE-NUMBER" id="re-enable-reference-number-toggle">
-        <span>Re-enable this Reference No</span>
-      </label>
+        <label id="re-enable-reference-number-label" data-target="re-enable-reference-number-input">Re-enable this Reference No</label>
+      </div>
       {% endif %}
     </fieldset>
   </form>
