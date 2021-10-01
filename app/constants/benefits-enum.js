@@ -60,5 +60,12 @@ module.exports = {
     requireBenefitUpload: true,
     displayName: 'NHS Tax Credit Exemption Certificate',
     multipage: true
+  },
+
+  YCS: {
+    value: 'ycs',
+    requireBenefitUpload: false,
+    displayName: 'YCS',
+    multipage: false
   }
 }
