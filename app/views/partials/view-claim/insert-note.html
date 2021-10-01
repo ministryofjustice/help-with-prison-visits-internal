@@ -1,11 +1,11 @@
 <div id="notes" class="form-group">
 	<div class="panel" id="request-input">
-	  <div class="form-group {% if errors['additional-info-request'][0] %} form-group-error {% endif %}" id='insert-note'>
-	    <label class="form-label-bold" for="note-information">Add Note to Claim</label>
+	  <div class="form-group" id='insert-note'>
+	    <label class="form-label-bold  {% if errors['additional-info-request'][0] %} error {% endif %}" for="note-information">Add Note to Claim</label>
 	    	{% if errors['additional-info-request'][0] %}
           <span class="error-message" id="error-message-note-request">{{ errors['additional-info-request'][0] }}</span>
       	{% endif %}
-	    <textarea type="text" class="form-control {% if errors['additional-info-request'][0] %} form-control-error {% endif %}" id="note-information" name="note-information" maxlength="2000"></textarea>
+	    <textarea type="text" class="form-control" id="note-information" name="note-information" maxlength="2000"></textarea>
 	  </div>
 	  <input type="submit" class="button" name="insert-note" id="insert-note" value="Submit">
 	</div>
