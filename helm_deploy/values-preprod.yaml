@@ -7,7 +7,7 @@ generic-service:
   env:
     APVS_MOJ_SSO_REDIRECT_URI: 'https://manage.hwpv-preprod.hmpps.service.justice.gov.uk/login/callback'
     APVS_MOJ_SSO_TOKEN_HOST: 'https://sign-in-preprod.hmpps.service.justice.gov.uk/auth'
-    APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits-preprod.service.justice.gov.uk'
+    APVS_EXTERNAL_SERVICE_URL: 'https://help-with-prison-visits-preprod.hmpps.service.justice.gov.uk'
     HWPV_COOKIE_DOMAIN: "manage.hwpv-preprod.hmpps.service.justice.gov.uk"
     HWPV_POST_LOGOUT_URL: "https://manage.hwpv-preprod.hmpps.service.justice.gov.uk/"
     HWPV_COOKIE_NAME: hwpv-session-preprod
