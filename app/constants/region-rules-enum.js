@@ -17,5 +17,10 @@ module.exports = {
   NI: {
     value: 'Northern Ireland',
     rules: 'NI'
+  },
+
+  YCS: {
+    value: 'YCS',
+    rules: 'YCS'
   }
 }
