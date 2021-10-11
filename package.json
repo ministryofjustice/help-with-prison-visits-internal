@@ -25,9 +25,6 @@
     "test-e2e-firefox-jenkins": "wdio test/wdio.conf.sauce.firefox.jenkins.js",
     "test-e2e-chrome-jenkins": "wdio test/wdio.conf.sauce.chrome.jenkins.js",
     "test-e2e-chrome-jenkins-smoke": "wdio test/wdio.conf.sauce.chrome.jenkins.smoke.js",
-    "migrations": "KNEX_CONFIG=migrations knex migrate:latest --env migrations",
-    "seed": "KNEX_CONFIG=migrations knex seed:run --env migrations",
-    "rollback": "knex migrate:rollback --env migrations",
     "css-build": "./build-css"
   },
   "standard": {

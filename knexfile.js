@@ -19,23 +19,5 @@ module.exports = {
       max: 10
     },
     acquireConnectionTimeout: 500000
-  },
-
-  migrations: {
-    client: 'mssql',
-    connection: {
-      host: 'localhost',
-      user: config.INT_MIGRATION_USERNAME,
-      password: config.INT_MIGRATION_PASSWORD,
-      database: 'hwpvinternal',
-      options: {
-        encrypt: false,
-        enableArithAbort: true
-      }
-    },
-    migrations: {
-      tableName: 'knex_int_migrations'
-    }
-    // , debug: true // Uncomment to see knex generated SQL
   }
 }
