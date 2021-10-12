@@ -19,5 +19,18 @@ module.exports = {
       max: 10
     },
     acquireConnectionTimeout: 500000
+  },
+  testing: {
+    client: 'mssql',
+    connection: {
+      host: config.TESTING_DATABASE_SERVER,
+      user: config.TESTING_USERNAME,
+      password: config.TESTING_PASSWORD,
+      database: config.TESTING_DATABASE,
+      options: {
+        encrypt: false,
+        enableArithAbort: true
+      }
+    }
   }
 }

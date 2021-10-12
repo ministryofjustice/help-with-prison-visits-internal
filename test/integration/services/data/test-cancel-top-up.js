@@ -1,6 +1,6 @@
 const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
 const insertTopup = require('../../../../app/services/data/insert-top-up')
 const cancelTopup = require('../../../../app/services/data/cancel-top-up')
