@@ -79,7 +79,7 @@
     "sass": "^1.42.1",
     "serve-favicon": "~2.5.0",
     "underscore": "^1.13.1",
-    "validator": "^13.6.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "assert": "^2.0.0",
