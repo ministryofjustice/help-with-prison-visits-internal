@@ -1,5 +1,4 @@
 /* global $ */
-/* global GOVUK */
 
 function ShowHideContent () {
   const self = this
@@ -100,11 +99,6 @@ function ShowHideContent () {
 }
 
 $(document).ready(function () {
-  // Use GOV.UK selection-buttons.js to set selected
-  // and focused states for block labels
-  const $blockLabels = $(".block-label input[type='radio'], .block-label input[type='checkbox']")
-  new GOVUK.SelectionButtons($blockLabels) // eslint-disable-line
-
   // Show and hide toggled content
   // Where .block-label uses the data-target attribute
   const toggleContent = new ShowHideContent()

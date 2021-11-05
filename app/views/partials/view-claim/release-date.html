@@ -1,8 +1,12 @@
 {% if unlock %}
-<label for='release-date-is-set' class="block-label" data-target="release-date-section">
-  <input type="checkbox" name='release-date-is-set' id='release-date-is-set' {% if Claim['ReleaseDateIsSet'] === true %} checked {% endif %} />
-  <span>Release Date is set?</span>
-</label>
+<div class="form-group">
+  <div class="multiple-choice">
+    <input type="checkbox" name='release-date-is-set' id='release-date-is-set' {% if Claim['ReleaseDateIsSet'] === true %} checked {% endif %} />
+    <label for='release-date-is-set' class="block-label" data-target="release-date-section">
+      <span>Release Date is set?</span>
+    </label>
+  </div>
+</div>
 
 <br/>
 <br/>
