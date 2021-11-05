@@ -79,6 +79,8 @@
         <span class="text-success">DWP - Eligible</span>
         {% elif Claim['DWPBenefitCheckerResult'] == 'NO' %}
         <span class="text-warning">DWP - Not eligible</span>
+        {% elif Claim['Benefit'] == 'YCS' %}
+        <span class="text-success">DWP - Not applicable</span>
         {% else %}
         <span class="text-warning">DWP - No information</span>
         {% endif %}
