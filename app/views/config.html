@@ -30,14 +30,14 @@
             <td width="20%">
               <div class="pull-right">
                 <div class="multiple-choice">
-                  <input id="auto-approval-on" type="radio" name="AutoApprovalEnabled" value="true" {% if autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
                   <label for="auto-approval-on" class="block-label inline">
+                    <input id="auto-approval-on" type="radio" name="AutoApprovalEnabled" value="true" {% if autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
                     <span>On</span>
                   </label>
                 </div>
                 <div class="multiple-choice">
-                  <input id="auto-approval-off" type="radio" name="AutoApprovalEnabled" value="false" {% if not autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
                   <label for="auto-approval-off" class="block-label inline no-right-padding">
+                    <input id="auto-approval-off" type="radio" name="AutoApprovalEnabled" value="false" {% if not autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
                     <span>Off</span>
                   </label>
                 </div>
@@ -159,8 +159,9 @@
             </td>
             <td>
               <div class="multiple-choice">
-                <label for="check-{{ rule.value }}" class="block-label"></label>
-                <input type="checkbox" id="check-{{ rule.value }}" name="rulesEnabled" value="{{ rule.value }}" {% if rule.value not in rulesDisabled %} checked {% endif %}>
+                <label for="check-{{ rule.value }}" class="block-label">
+                  <input type="checkbox" id="check-{{ rule.value }}" name="rulesEnabled" value="{{ rule.value }}" {% if rule.value not in rulesDisabled %} checked {% endif %}>
+                </label>
               </div>
             </td>
           </tr>
