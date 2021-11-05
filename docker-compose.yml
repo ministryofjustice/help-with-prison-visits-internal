@@ -1,15 +1,15 @@
 version: '3'
 services:
-  # help-with-prison-visits-internal:
-  #   build:
-  #     context: .
-  #   volumes:
-  #     - "./app:/usr/src/app/app"
-  #     - "./logs:/usr/src/app/logs"
-  #     - "./uploads:/usr/src/app/uploads"
-  #   ports:
-  #     - "3001:3001"
-  #   env_file: ./.env
+  help-with-prison-visits-internal:
+    build:
+      context: .
+    volumes:
+      - "./app:/usr/src/app/app"
+      - "./logs:/usr/src/app/logs"
+      - "./uploads:/usr/src/app/uploads"
+    ports:
+      - "3001:3001"
+    env_file: ./.env
   redis:
     image: "redis:6.2.3-alpine"
     networks:
@@ -29,20 +29,5 @@ services:
     environment:
       - SERVER_PORT=9090
       - SPRING_PROFILES_ACTIVE=dev
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2017-latest
-    command: /bin/bash ./entrypoint.sh
-    networks:
-      - hmpps
-    ports:
-      - "1433:1433"
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_PID=Express
-      - SA_PASSWORD=mssqlPassw0rd!
-    volumes:
-      - ./test/db/docker-entrypoint.sh:/entrypoint.sh
-      - ./test/db/docker-db-init.sh:/db-init.sh
-      - ./test/db/mssql-hwpvinternal.sql:/db-init.sql
 networks:
   hmpps:
