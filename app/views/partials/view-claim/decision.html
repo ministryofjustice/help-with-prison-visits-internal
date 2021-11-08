@@ -3,24 +3,18 @@
   <fieldset id='reason' >
     <div class="form-group">
       <div class="multiple-choice">
-        <label for="approve" class="block-label inline" data-target="accept-input">
-          <input type="radio" name="decision" value="{{ claimDecisionEnum.APPROVED }}" id="approve" {% if claimDecision['decision'] == claimDecisionEnum.APPROVED %} checked {% endif %}>
-          <span>Approve</span>
-        </label>
+        <input type="radio" name="decision" value="{{ claimDecisionEnum.APPROVED }}" id="approve" {% if claimDecision['decision'] == claimDecisionEnum.APPROVED %} checked {% endif %}>
+        <label for="approve" class="block-label inline" data-target="accept-input"><span>Approve</span></label>
       </div>
 
       <div class="multiple-choice">
-        <label for="request" class="block-label inline" data-target="request-input">
-          <input type="radio" name="decision" value="{{ claimDecisionEnum.REQUEST_INFORMATION }}" id="request" {% if claimDecision['decision'] == claimDecisionEnum.REQUEST_INFORMATION %} checked {% endif %}>
-          <span>Request information</span>
-        </label>
+        <input type="radio" name="decision" value="{{ claimDecisionEnum.REQUEST_INFORMATION }}" id="request" {% if claimDecision['decision'] == claimDecisionEnum.REQUEST_INFORMATION %} checked {% endif %}>
+        <label for="request" class="block-label inline" data-target="request-input"><span>Request information</span></label>
       </div>
 
       <div class="multiple-choice">
-        <label for="reject" class="block-label inline" data-target="reject-input">
-          <input type="radio" name="decision" value="{{ claimDecisionEnum.REJECTED }}" id="reject" {% if claimDecision['decision'] == claimDecisionEnum.REJECTED %} checked {% endif %}>
-          <span>Reject</span>
-        </label>
+        <input type="radio" name="decision" value="{{ claimDecisionEnum.REJECTED }}" id="reject" {% if claimDecision['decision'] == claimDecisionEnum.REJECTED %} checked {% endif %}>
+        <label for="reject" class="block-label inline" data-target="reject-input"><span>Reject</span></label>
       </div>
     </div>
 
@@ -33,10 +27,8 @@
 
       <div class="form-group">
         <div class="multiple-choice">
-          <label for='is-trusted' class="block-label" data-target="untrusted-reason-section">
-            <input type="checkbox" name='is-trusted' id='is-trusted' {% if Claim['IsTrusted'] === true %} checked {% endif %} />
-            <span>Allow auto-approval</span>
-          </label>
+          <input type="checkbox" name='is-trusted' id='is-trusted' {% if Claim['IsTrusted'] === true %} checked {% endif %} />
+          <label for='is-trusted' class="block-label" data-target="untrusted-reason-section"><span>Allow auto-approval</span></label>
         </div>
         <div id='untrusted-reason-section' class='form-group {% if Claim['IsTrusted'] === true %} js-hidden {% endif %}'>
           <br >

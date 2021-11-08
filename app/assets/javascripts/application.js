@@ -9,10 +9,10 @@ function ShowHideContent () {
   }
 
   self.showHideRadioToggledContent = function () {
-    $(".block-label input[type='radio']").each(function () {
+    $(".multiple-choice input[type='radio']").each(function () {
       const $radio = $(this)
       const $radioGroupName = $radio.attr('name')
-      const $radioLabel = $radio.parent('label')
+      const $radioLabel = $radio.next('label')
 
       const dataTarget = $radioLabel.attr('data-target')
 
@@ -25,10 +25,10 @@ function ShowHideContent () {
 
         $radio.on('click', function () {
           // Select radio buttons in the same group
-          $radio.closest('form').find('.block-label input[name=' + self.escapeElementName($radioGroupName) + ']').each(function () {
+          $radio.closest('form').find('.multiple-choice input[name=' + self.escapeElementName($radioGroupName) + ']').each(function () {
             const $this = $(this)
 
-            const groupDataTarget = $this.parent('label').attr('data-target')
+            const groupDataTarget = $this.next('label').attr('data-target')
             const $groupDataTarget = $('#' + groupDataTarget)
 
             // Hide toggled content
@@ -50,8 +50,8 @@ function ShowHideContent () {
 
         $radio.on('click', function () {
           // Select radio buttons in the same group
-          $('.block-label input[name=' + self.escapeElementName($radioGroupName) + ']').each(function () {
-            const groupDataTarget = $(this).parent('label').attr('data-target')
+          $('.multiple-choice input[name=' + self.escapeElementName($radioGroupName) + ']').each(function () {
+            const groupDataTarget = $(this).next('label').attr('data-target')
             const $groupDataTarget = $('#' + groupDataTarget)
 
             // Hide toggled content
@@ -65,9 +65,9 @@ function ShowHideContent () {
     })
   }
   self.showHideCheckboxToggledContent = function () {
-    $(".block-label input[type='checkbox']").each(function () {
+    $(".multiple-choice input[type='checkbox']").each(function () {
       const $checkbox = $(this)
-      const $checkboxLabel = $(this).parent()
+      const $checkboxLabel = $(this).next('label')
 
       const $dataTarget = $checkboxLabel.attr('data-target')
 
