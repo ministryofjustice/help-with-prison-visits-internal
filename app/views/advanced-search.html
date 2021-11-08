@@ -80,56 +80,53 @@
     <h3 class="heading-small">Claim status</h3>
 
     <div class="grid-row">
-      <div class="form-group">
-        <div class="column-one-quarter">
+      <div class="column-one-quarter">
+        <div class="form-group">
           <div class="multiple-choice">
             <input id="claimStatusAll" type="radio" name="claimStatus" value="all" {% if query.claimStatus == 'all' %} checked {% endif %}>
             <label for="claimStatusAll" class="block-label inline">All</label>
           </div>
-        </div>
-
-        <div class="column-one-quarter">
-          <div class="multiple-choice">
-            <input id="claimStatusNew" type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
-            <label for="claimStatusNew" class="block-label inline">New</label>
-          </div>
-        </div>
-
-        <div class="column-one-quarter">
-          <div class="multiple-choice">
-            <input id="claimStatusPending" type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
-            <label for="claimStatusPending" class="block-label inline">Pending</label>
-          </div>
-        </div>
-
-        <div class="column-one-quarter">
-          <div class="multiple-choice">
-            <input id="claimStatusInProgress" type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
-            <label for="claimStatusInProgress" class="block-label inline">In progress</label>
-          </div>
-        </div>
-
-        <div class="column-one-quarter">
           <div class="multiple-choice">
             <input id="claimStatusApproved" type="radio" name="claimStatus" value="approved" {% if query.claimStatus == 'approved' %} checked {% endif %}>
             <label for="claimStatusApproved" class="block-label inline">Approved</label>
           </div>
         </div>
+      </div>
 
-        <div class="column-one-quarter">
+      <div class="column-one-quarter">
+        <div class="form-group">
+          <div class="multiple-choice">
+            <input id="claimStatusNew" type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
+            <label for="claimStatusNew" class="block-label inline">New</label>
+          </div>
           <div class="multiple-choice">
             <input id="claimStatusPaid" type="radio" name="claimStatus" value="paid" {% if query.claimStatus == 'paid' %} checked {% endif %}>
             <label for="claimStatusPaid" class="block-label inline">Paid</label>
           </div>
         </div>
+      </div>
 
-        <div class="column-one-quarter">
+      <div class="column-one-quarter">
+        <div class="form-group">
+          <div class="multiple-choice">
+            <input id="claimStatusPending" type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
+            <label for="claimStatusPending" class="block-label inline">Pending</label>
+          </div>
           <div class="multiple-choice">
             <input id="claimStatusRejected" type="radio" name="claimStatus" value="rejected" {% if query.claimStatus == 'rejected' %} checked {% endif %}>
             <label for="claimStatusRejected" class="block-label inline">Rejected</label>
           </div>
         </div>
+      </div>
 
+      <div class="column-one-quarter">
+        <div class="form-group">
+          <div class="multiple-choice">
+            <input id="claimStatusInProgress" type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
+            <label for="claimStatusInProgress" class="block-label inline">In progress</label>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="grid-row">
