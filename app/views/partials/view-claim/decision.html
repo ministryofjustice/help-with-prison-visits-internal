@@ -1,5 +1,5 @@
 {% if not displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) and unlock %}
-<div id="decision" class="form-group {% if errors['decision'][0] %} error {% endif %}">
+<div id="decision" class="form-group {% if errors['decision'][0] %} form-group-error {% endif %}">
   <fieldset id='reason' >
     <div class="form-group">
       <div class="multiple-choice">
@@ -43,12 +43,12 @@
 
     <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.REQUEST_INFORMATION %}js-hidden{% endif %}" id="request-input">
 
-      <div class="form-group">
-        <label class="form-label-bold {% if errors['additional-info-request'][0] %} error {% endif %}" for="additional-info-request">Note to claimant</label>
+      <div class="form-group {% if errors['additional-info-request'][0] %} form-group-error {% endif %}">
+        <label class="form-label-bold" for="additional-info-request">Note to claimant</label>
         {% if errors['additional-info-request'][0] %}
           <span class="error-message" id="error-message-note-request">{{ errors['additional-info-request'][0] }}</span>
         {% endif %}
-        <textarea type="text" class="form-control" id="additional-info-request" name="additionalInfoRequest" maxlength="2000">{{ claimDecision['additionalInfoRequest'] }}</textarea>
+        <textarea type="text" class="form-control{% if errors['additional-info-request'][0] %} form-control-error {% endif %}" id="additional-info-request" name="additionalInfoRequest" maxlength="2000">{{ claimDecision['additionalInfoRequest'] }}</textarea>
       </div>
 
       <input type="submit" class="button" name="request" value="Send request email">
@@ -56,12 +56,12 @@
 
     <div class="panel {% if claimDecision['decision'] != claimDecisionEnum.REJECTED %}js-hidden{% endif %}" id="reject-input">
 
-      <div class="form-group">
-        <label class="form-label-bold {% if errors['additional-info-reject'][0] %} error {% endif %}" for="additional-info-reject">Reason For Rejection</label>
+      <div class="form-group {% if errors['additional-info-reject'][0] or errors['additional-info-reject-manual'][0] %} form-group-error {% endif %}">
+        <label class="form-label-bold" for="additional-info-reject">Reason For Rejection</label>
         {% if errors['additional-info-reject'][0] %}
           <span class="error-message" id="error-message-note-reject">{{ errors['additional-info-reject'][0] }}</span>
         {% endif %}
-        <select class="form-control rejection-reason" id="additional-info-reject" name="additionalInfoReject">
+        <select class="form-control rejection-reason {% if errors['additional-info-reject'][0] %} form-control-error {% endif %}" id="additional-info-reject" name="additionalInfoReject">
           <option value="">Select</option>
           {% for reason in rejectionReasons %}
             {% if reason.enabled %}
@@ -71,11 +71,11 @@
         </select>
         <br/>
         <br/>
-        <label id="manual-label" class="display-none form-label-bold {% if errors['additional-info-reject-manual'][0] %} error {% endif %}" for="additional-info-reject-manual">Enter a reason not in the dropdown</label>
+        <label id="manual-label" class="display-none form-label-bold" for="additional-info-reject-manual">Enter a reason not in the dropdown</label>
         {% if errors['additional-info-reject-manual'][0] %}
           <span class="error-message" id="error-message-note-reject-manual">{{ errors['additional-info-reject-manual'][0] }}</span>
         {% endif %}
-        <textarea type="text" class="display-none form-control" id="additional-info-reject-manual" name="additionalInfoRejectManual" maxlength="2000">{{ claimDecision['additionalInfoRejectManual'] }}</textarea>
+        <textarea type="text" class="display-none form-control {% if errors['additional-info-reject-manual'][0] %} form-control-error {% endif %}" id="additional-info-reject-manual" name="additionalInfoRejectManual" maxlength="2000">{{ claimDecision['additionalInfoRejectManual'] }}</textarea>
       </div>
 
       <input type="submit" class="button" name="reject" value="Send rejection email">
