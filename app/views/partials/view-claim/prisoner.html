@@ -20,7 +20,7 @@
     <td>{{ displayHelper.getPrisonDisplayName(Claim['NameOfPrison']) }}</td>
   </tr>
 
-  <tr {% if errors['nomis-check'][0] %} class="warning"{% endif %}>
+  <tr class="form-group {% if errors['nomis-check'][0] %} form-group-error warning{% endif %}">
     <td>Eligible for visitation?</td>
     <td>
       {% if Claim['NomisCheck'] != 'APPROVED' %}
@@ -42,7 +42,7 @@
       {% endif %}
 
       {% if unlock %}
-      <select class="form-control action-select" id="nomis-check" name="nomisCheck">
+      <select class="form-control action-select{% if errors['nomis-check'][0] %} form-control-error {% endif %}" id="nomis-check" name="nomisCheck">
         <option value="">Select</option>
         <option {% if Claim['NomisCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
         <option {% if Claim['NomisCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>

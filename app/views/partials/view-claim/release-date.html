@@ -6,28 +6,24 @@
   </div>
 </div>
 
-<br/>
-<br/>
-<br/>
-
-<div id="release-date-section" name="release-date-section" class="form-date {% if not Claim['ReleaseDateIsSet'] %} js-hidden {% endif %} {% if errors['release-date-section'][0] %} warning {% endif %}">
+<div id="release-date-section" name="release-date-section" class="form-date form-group {% if not Claim['ReleaseDateIsSet'] %} js-hidden {% endif %} {% if errors['release-date-section'][0] %} form-group-error warning {% endif %}">
   <fieldset>
     <div class="form-group form-group-day">
       <label id="release-day" for="release-day-input">Day</label>
       <input id="release-day-input" type="number" name="release-day" autocomplete="off" 
-            value="{{ Claim['releaseDay'] }}" class="form-control">
+            value="{{ Claim['releaseDay'] }}" class="form-control{% if errors['release-date-section'][0] %} form-control-error {% endif %}">
     </div>
 
     <div class="form-group form-group-month">
       <label id="release-month" for="release-month-input">Month</label>
       <input id="release-month-input" type="number" name="release-month" autocomplete="off"
-            value="{{ Claim['releaseMonth'] }}" class="form-control">
+            value="{{ Claim['releaseMonth'] }}" class="form-control{% if errors['release-date-section'][0] %} form-control-error {% endif %}">
     </div>
 
     <div class="form-group form-group-year">
       <label id="release-year" for="release-year-input">Year</label>
       <input id="release-year-input" type="number" name="release-year" autocomplete="off"
-            value="{{ Claim['releaseYear'] }}" class="form-control">
+            value="{{ Claim['releaseYear'] }}" class="form-control{% if errors['release-date-section'][0] %} form-control-error {% endif %}">
     </div>
   </fieldset>
 </div>

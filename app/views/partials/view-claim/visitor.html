@@ -39,12 +39,12 @@
     <td>{{ prisonerRelationshipsEnum[Claim['Relationship']].displayName }}</td>
   </tr>
 
-  <tr id="dwp-check" {% if errors['dwp-check'][0] %} class="warning"{% endif %}>
+  <tr id="dwp-check" class="form-group{% if errors['dwp-check'][0] %} form-group-error warning{% endif %}">
     <td>Benefit information</td>
     <td>
       {{ displayHelper.getBenefitDisplayName(Claim['Benefit']) }}
       {% if unlock %}
-      <select class="form-control action-select" id="dwp-status" name="dwpCheck">
+      <select class="form-control action-select{% if errors['dwp-check'][0] %} form-control-error {% endif %}" id="dwp-status" name="dwpCheck">
         <option value="">Select</option>
         <option {% if Claim['DWPCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
         <option {% if Claim['DWPCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>
@@ -89,26 +89,26 @@
     </td>
   </tr>
 
-  <tr class="form-date {% if errors['benefit-expiry'][0] %} warning {% endif %}" id="benefit-expiry">
+  <tr class="form-date form-group {% if errors['benefit-expiry'][0] %} form-group-error warning {% endif %}" id="benefit-expiry">
     <td>Benefit Expiry</td>
       {% if unlock %}
       <td>
         <div class="form-group form-group-day">
           <label id="expiry-day" for="expiry-day-input">Day</label>
           <input id="expiry-day-input" type="number" name="expiry-day" autocomplete="off"
-                value="{{ Claim['expiryDay'] }}" class="form-control">
+                value="{{ Claim['expiryDay'] }}" class="form-control{% if errors['benefit-expiry'][0] %} form-control-error{% endif %}">
         </div>
 
         <div class="form-group form-group-month">
           <label id="expiry-month" for="expiry-month-input">Month</label>
           <input id="expiry-month-input" type="number" name="expiry-month" autocomplete="off"
-                value="{{ Claim['expiryMonth'] }}" class="form-control">
+                value="{{ Claim['expiryMonth'] }}" class="form-control{% if errors['benefit-expiry'][0] %} form-control-error{% endif %}">
         </div>
 
         <div class="form-group form-group-year">
           <label id="expiry-year" for="expiry-year-input">Year</label>
           <input id="expiry-year-input" type="number" name="expiry-year" autocomplete="off"
-                value="{{ Claim['expiryYear'] }}" class="form-control">
+                value="{{ Claim['expiryYear'] }}" class="form-control{% if errors['benefit-expiry'][0] %} form-control-error{% endif %}">
         </div>
 
         <input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/update-benefit-expiry-date" class="button pull-right grey" name="update-benefit-expiry-date" id="update-benefit-expiry-date" value="Save benefit expiry date">
