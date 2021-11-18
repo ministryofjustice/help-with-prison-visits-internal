@@ -1,6 +1,6 @@
 <table class="col-2 no-pad-right">
   <tbody>
-    <tr {% if errors['visit-confirmation-check'][0] %} class="warning"{% endif %}>
+    <tr class="form-group{% if errors['visit-confirmation-check'][0] %} form-group-error warning {% endif %}">
       <td><span class="bold">Date of visit</span></td>
       <td>{{ getDateFormatted.shortDate(Claim['DateOfJourney']) }}</td>
       <td>
@@ -28,7 +28,7 @@
       </td>
       <td>
       {% if not Claim.IsAdvanceClaim and unlock %}
-        <select class="form-control action-select" id="visit-confirmation-check" name="visitConfirmationCheck">
+        <select class="form-control action-select{% if errors['visit-confirmation-check'][0] %} form-control-error {% endif %}" id="visit-confirmation-check" name="visitConfirmationCheck">
           <option value="">Select</option>
           <option {% if Claim['VisitConfirmationCheck'] == 'APPROVED' %} selected {% endif %} value="APPROVED">Approve</option>
           <option {% if Claim['VisitConfirmationCheck'] == 'REQUEST-INFORMATION' %} selected {% endif %} value="REQUEST-INFORMATION">Request information</option>

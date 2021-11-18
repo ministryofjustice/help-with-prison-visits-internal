@@ -18,7 +18,7 @@
   <tbody>
     {% for expense in Expenses %}
 
-      <tr {% if expense['Status'] == 'Select' %} class="warning" {% endif %} {% if expense['Error'] %} class="warning"{% endif %}>
+      <tr class="form-group{% if expense['Status'] == 'Select' or expense['Error'] %} warning form-group-error {% endif %}">
         <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
           <br>
           {# car expenses have styling for distance calculation and their data is not entered directly by users so is safe #}
@@ -58,7 +58,7 @@
         <td class="claim-expense-response">
         {% if unlock %}
           <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status"
-            class="form-control action-select claim-expense-status">
+            class="form-control action-select claim-expense-status{% if expense['Status'] == 'Select' or expense['Error'] %} form-control-error {% endif %}">
             <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
             {% if expense['Cost'] > 0 %}
             <option {% if expense['Status'] == claimDecisionEnum.APPROVED %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED }}">Approve</option>

@@ -6,9 +6,8 @@ function cleanColumnOutput (data, type, row) {
 $(document).ready(function () {
   const searchQuery = decodeURIComponent(window.location.search.substring(1))
 
-  const search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}')
-
   if (searchQuery) {
+    const search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}')
     $('#search-results-header').show()
     $('#advanced-search-results').show()
     const dataReference = '/advanced-search-results'
