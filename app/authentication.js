@@ -3,7 +3,7 @@ const session = require('express-session')
 const redis = require('redis')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
-const request = require('request')
+const axios = require('axios')
 const RedisStore = require('connect-redis')(session)
 const log = require('./services/log')
 const applicationRoles = require('./constants/application-roles-enum')
@@ -62,51 +62,61 @@ module.exports = function (app) {
     function (accessToken, refreshToken, params, profile, done) {
       // Call API to get details on user
       const options = {
-        uri: `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_DETAILS_PATH}`,
-        qs: { access_token: accessToken },
-        json: true
+        url: `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_DETAILS_PATH}`,
+        params: { access_token: accessToken }
       }
-      request(options, function (error, response, userDetails) {
-        if (!error && response.statusCode === 200) {
-          let roles = []
-          options.uri = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}/${userDetails.username}${config.USER_EMAIL_PATH}`
-          request(options, function (error, response, userEmail) {
-            if (!error && response.statusCode === 200) {
-              options.uri = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_ROLES_PATH}`
-              request(options, function (error, response, userRoles) {
-                if (!error && response.statusCode === 200) {
-                  userRoles.forEach(function (role) {
-                    roles = roles.concat(role.roleCode)
-                  })
+      axios(options)
+        .then(function (response) {
+          if (response.status === 200) {
+            let roles = []
+            const userDetails = response.data
+            options.url = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}/${userDetails.username}${config.USER_EMAIL_PATH}`
 
-                  if (roles) {
-                    const sessionUser = {
-                      email: userEmail.email,
-                      name: userDetails.name,
-                      roles: roles
-                    }
-                    done(null, sessionUser)
-                  } else {
-                    log.error('no roles found for user')
-                    const notAuthorisedError = new Error('You are not authorised for this service')
-                    notAuthorisedError.status = 403
-                    done(notAuthorisedError, null)
-                  }
-                } else {
-                  log.error({ error: error }, 'error returned when requesting user roles from SSO')
-                  done(error, null)
+            axios(options)
+              .then(function (response) {
+                if (response.status === 200) {
+                  const userEmail = response.data
+                  options.url = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_ROLES_PATH}`
+
+                  axios(options)
+                    .then(function (response) {
+                      if (response.status === 200) {
+                        const userRoles = response.data
+                        userRoles.forEach(function (role) {
+                          roles = roles.concat(role.roleCode)
+                        })
+
+                        if (roles) {
+                          const sessionUser = {
+                            email: userEmail.email,
+                            name: userDetails.name,
+                            roles: roles
+                          }
+                          done(null, sessionUser)
+                        } else {
+                          log.error('no roles found for user')
+                          const notAuthorisedError = new Error('You are not authorised for this service')
+                          notAuthorisedError.status = 403
+                          done(notAuthorisedError, null)
+                        }
+                      }
+                    })
+                    .catch(function (error) {
+                      log.error({ error: error }, 'error returned when requesting user roles from SSO')
+                      done(error, null)
+                    })
                 }
               })
-            } else {
-              log.error({ error: error }, 'error returned when requesting user email from SSO')
-              done(error, null)
-            }
-          })
-        } else {
+              .catch(function (error) {
+                log.error({ error: error }, 'error returned when requesting user email from SSO')
+                done(error, null)
+              })
+          }
+        })
+        .catch(function (error) {
           log.error({ error: error }, 'error returned when requesting user details from SSO')
           done(error, null)
-        }
-      })
+        })
     }))
     passport.serializeUser(function (user, done) {
       done(null, user)
