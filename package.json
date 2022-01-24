@@ -44,9 +44,9 @@
     ]
   },
   "dependencies": {
-    "applicationinsights": "^2.1.9",
-    "aws-sdk": "^2.1036.0",
-    "axios": "^0.24.0",
+    "applicationinsights": "^2.2.0",
+    "aws-sdk": "^2.1062.0",
+    "axios": "^0.25.0",
     "bluebird": "^3.7.2",
     "bunyan": "^1.8.15",
     "bunyan-prettystream": "^0.1.3",
@@ -84,11 +84,11 @@
   "devDependencies": {
     "assert": "^2.0.0",
     "chai": "^4.3.4",
-    "mocha": "^9.1.3",
+    "mocha": "^9.2.0",
     "nyc": "^15.1.0",
     "proxyquire": "^2.1.3",
     "sinon": "^12.0.1",
     "standard": "^16.0.4",
-    "supertest": "^6.1.6"
+    "supertest": "^6.2.2"
   }
 }
