@@ -5,6 +5,7 @@ generic-service:
   ingress:
     host: "caseworker.help-with-prison-visits.service.gov.uk"
     tlsSecretName: "help-with-prison-visits-caseworker-cert"
+    contextColour: green
   env:
     APVS_MOJ_SSO_REDIRECT_URI: 'https://caseworker.help-with-prison-visits.service.gov.uk/login/callback'
     APVS_MOJ_SSO_TOKEN_HOST: 'https://sign-in.hmpps.service.justice.gov.uk/auth'
