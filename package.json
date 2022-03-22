@@ -7,7 +7,8 @@
     "url": "https://github.com/ministryofjustice/help-with-prison-visits-internal.git"
   },
   "engines": {
-    "node": "12.x.x"
+    "node": "^16",
+    "npm": "^8"
   },
   "scripts": {
     "start": "npm run css-build && node ./app/bin/www",
@@ -44,9 +45,9 @@
     ]
   },
   "dependencies": {
-    "applicationinsights": "^2.2.0",
-    "aws-sdk": "^2.1062.0",
-    "axios": "^0.25.0",
+    "applicationinsights": "^2.2.2",
+    "aws-sdk": "^2.1097.0",
+    "axios": "^0.26.1",
     "bluebird": "^3.7.2",
     "bunyan": "^1.8.15",
     "bunyan-prettystream": "^0.1.3",
@@ -55,9 +56,9 @@
     "cookie-parser": "^1.4.6",
     "csurf": "^1.11.0",
     "csv": "^5.5.3",
-    "debug": ">=4.3.2",
-    "dotenv": "^10.0.0",
-    "express": "~4.17.1",
+    "debug": ">=4.3.4",
+    "dotenv": "^16.0.0",
+    "express": "~4.17.3",
     "express-sanitizer": "^1.0.6",
     "express-session": "^1.17.2",
     "govuk_frontend_toolkit": "^9.0.1",
@@ -68,26 +69,26 @@
     "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
     "mssql": "^7.3.0",
-    "multer": "^1.4.3",
+    "multer": "^1.4.4",
     "nunjucks": "^3.2.3",
-    "on-finished": "^2.3.0",
-    "passport": "^0.5.0",
+    "on-finished": "^2.4.1",
+    "passport": "^0.5.2",
     "passport-oauth2": "^1.6.1",
     "path": "^0.12.7",
-    "ramda": "^0.27.1",
+    "ramda": "^0.28.0",
     "redis": "^3.1.2",
-    "sass": "^1.43.5",
+    "sass": "^1.49.9",
     "serve-favicon": "~2.5.0",
-    "underscore": "^1.13.1",
+    "underscore": "^1.13.2",
     "validator": "^13.7.0"
   },
   "devDependencies": {
     "assert": "^2.0.0",
-    "chai": "^4.3.4",
-    "mocha": "^9.2.0",
+    "chai": "^4.3.6",
+    "mocha": "^9.2.2",
     "nyc": "^15.1.0",
     "proxyquire": "^2.1.3",
-    "sinon": "^12.0.1",
+    "sinon": "^13.0.1",
     "standard": "^16.0.4",
     "supertest": "^6.2.2"
   }
