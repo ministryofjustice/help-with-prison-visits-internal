@@ -338,7 +338,9 @@ function getTestData (reference, status) {
       IsOverpaid: false,
       OverpaymentAmount: 20,
       PaymentMethod: 'bank',
-      AssignedTo: 'TestUser@test.com'
+      AssignedTo: 'TestUser@test.com',
+      Reference: reference,
+      Status: status
     },
     ClaimExpenses: [{
       ExpenseType: 'train',
