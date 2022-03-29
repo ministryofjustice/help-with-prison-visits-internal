@@ -49,7 +49,7 @@ describe('services/data/get-auto-approval-config', function () {
 
   after(function () {
     return db('AutoApprovalConfig')
-      .whereIn('AutoApprovalConfigId', insertedIds)
+      .whereIn('AutoApprovalConfigId', [insertedIds])
       .del()
       .then(function () {
         if (existingAutoApprovalId) {
@@ -87,7 +87,7 @@ function insertTestData () {
     }])
     .returning('AutoApprovalConfigId')
     .then(function (result) {
-      insertedIds = result
+      insertedIds = result[0].AutoApprovalConfigId
     })
 }
 

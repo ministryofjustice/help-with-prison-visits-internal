@@ -25,7 +25,7 @@ describe('services/data/insert-deduction', function () {
 
       return insertDeduction(claimId, claimDeduction)
         .then(function (claimDeductionId) {
-          return db('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId)
+          return db('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId[0].ClaimDeductionId)
             .then(function (deduction) {
               var updatedClaimDeduction = deduction
 
