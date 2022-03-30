@@ -38,7 +38,7 @@ describe('services/data/update-auto-approval-config', function () {
     }
     return updateAutoApprovalConfig(AutoApprovalConfig)
       .then(function (result) {
-        insertedIds.push(result)
+        insertedIds.push(result.AutoApprovalConfigId)
         return db('AutoApprovalConfig')
           .where('IsEnabled', true)
           .orderBy('DateCreated', 'desc')
@@ -67,7 +67,7 @@ describe('services/data/update-auto-approval-config', function () {
     }
     return updateAutoApprovalConfig(AutoApprovalConfig)
       .then(function (result) {
-        insertedIds.push(result)
+        insertedIds.push(result.AutoApprovalConfigId)
         return db('AutoApprovalConfig')
           .where('IsEnabled', true)
           .orderBy('DateCreated', 'desc')
@@ -111,7 +111,7 @@ function insertTestData () {
     })
     .returning('AutoApprovalConfigId')
     .then(function (result) {
-      insertedIds.push(result[0])
+      insertedIds.push(result[0].AutoApprovalConfigId)
     })
 }
 

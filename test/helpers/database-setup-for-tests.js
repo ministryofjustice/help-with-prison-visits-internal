@@ -24,7 +24,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
     })
     .returning('EligibilityId')
     .then(function (result) {
-      ids.eligibilityId = result[0]
+      ids.eligibilityId = result[0].EligibilityId
       return db('Prisoner')
         .returning('PrisonerId')
         .insert({
@@ -38,7 +38,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
           NameOfPrison: data.Prisoner.NameOfPrison
         })
         .then(function (result) {
-          ids.prisonerId = result[0]
+          ids.prisonerId = result[0].PrisonerId
           return ids.prisonerId
         })
     })
@@ -65,7 +65,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
           DWPBenefitCheckerResult: data.Visitor.DWPBenefitCheckerResult
         })
         .then(function (result) {
-          ids.visitorId = result[0]
+          ids.visitorId = result[0].VisitorId
           return ids.visitorId
         })
     })
@@ -111,7 +111,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.expenseId1 = result[0]
+      ids.expenseId1 = result[0].ClaimExpenseId
       return db('ClaimExpense')
         .returning('ClaimExpenseId')
         .insert({
@@ -126,7 +126,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.expenseId2 = result[0]
+      ids.expenseId2 = result[0].ClaimExpenseId
       return db('ClaimChild')
         .returning('ClaimChildId')
         .insert({
@@ -142,7 +142,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.childId1 = result[0]
+      ids.childId1 = result[0].ClaimChildId
       return db('ClaimChild')
         .returning('ClaimChildId')
         .insert({
@@ -158,7 +158,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.childId2 = result[0]
+      ids.childId2 = result[0].ClaimChildId
       return db('ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
@@ -174,7 +174,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.claimDocumentId1 = result[0]
+      ids.claimDocumentId1 = result[0].ClaimDocumentId
       return db('ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
@@ -190,7 +190,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.claimDocumentId2 = result[0]
+      ids.claimDocumentId2 = result[0].ClaimDocumentId
       return db('ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
@@ -207,7 +207,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.claimDocumentId3 = result[0]
+      ids.claimDocumentId3 = result[0].ClaimDocumentId
       return db('ClaimDocument')
         .returning('ClaimDocumentId')
         .insert({
@@ -224,7 +224,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.claimDocumentId4 = result[0]
+      ids.claimDocumentId4 = result[0].ClaimDocumentId
       return db('ClaimEvent')
         .returning('ClaimEventId')
         .insert({
@@ -240,7 +240,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.claimEventId1 = result[0]
+      ids.claimEventId1 = result[0].ClaimEventId
       return db('ClaimEvent')
         .returning('ClaimEventId')
         .insert({
@@ -256,19 +256,19 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
         })
     })
     .then(function (result) {
-      ids.claimEventId2 = result[0]
+      ids.claimEventId2 = result[0].ClaimEventId
       return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction.hc3.DeductionType, data.ClaimDeduction.hc3.Amount)
     })
     .then(function (result) {
-      ids.claimDeductionId1 = result[0]
+      ids.claimDeductionId1 = result[0].ClaimDeductionId
       return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction.overpayment.DeductionType, data.ClaimDeduction.overpayment.Amount)
     })
     .then(function (result) {
-      ids.claimDeductionId2 = result[0]
+      ids.claimDeductionId2 = result[0].ClaimDeductionId
       return insertClaimEscort(uniqueId, reference, ids.eligibilityId, data.ClaimEscort)
     })
     .then(function (result) {
-      ids.claimEscortId = result[0]
+      ids.claimEscortId = result[0].ClaimEscortId
       return ids
     })
 }
@@ -338,7 +338,9 @@ function getTestData (reference, status) {
       IsOverpaid: false,
       OverpaymentAmount: 20,
       PaymentMethod: 'bank',
-      AssignedTo: 'TestUser@test.com'
+      AssignedTo: 'TestUser@test.com',
+      Reference: reference,
+      Status: status
     },
     ClaimExpenses: [{
       ExpenseType: 'train',

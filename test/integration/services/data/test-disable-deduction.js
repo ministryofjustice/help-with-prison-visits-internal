@@ -21,7 +21,7 @@ describe('services/data/disable-deduction', function () {
 
       return disableDeduction(claimDeductionId)
         .then(function (claimDeductionId) {
-          return db('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId)
+          return db('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId[0].ClaimDeductionId)
             .then(function (deduction) {
               claimDeduction = deduction
 
