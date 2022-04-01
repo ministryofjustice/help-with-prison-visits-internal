@@ -1,7 +1,7 @@
 const mockViewEngine = require('../../unit/routes/mock-view-engine')
 const express = require('express')
-const expressSanitizer = require('express-sanitizer')
 const cookieParser = require('cookie-parser')
+const htmlSanitizerMiddleware = require('../../../app/middleware/htmlSanitizer')
 const applicationRoles = require('../../../app/constants/application-roles-enum')
 
 const VIEWS_DIRECTORY = '../../../app/views'
@@ -9,7 +9,7 @@ const VIEWS_DIRECTORY = '../../../app/views'
 module.exports.buildApp = function (route) {
   const app = express()
   app.use(express.json())
-  app.use(expressSanitizer())
+  app.use(htmlSanitizerMiddleware())
   app.use(cookieParser())
 
   app.use(function (req, res, next) {
