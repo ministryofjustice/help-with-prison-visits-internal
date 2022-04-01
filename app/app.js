@@ -4,9 +4,9 @@ const express = require('express')
 const nunjucks = require('nunjucks')
 const path = require('path')
 const favicon = require('serve-favicon')
-const expressSanitizer = require('express-sanitizer')
 const helmet = require('helmet')
 const compression = require('compression')
+const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
 const routes = require('./routes/routes')
 const log = require('./services/log')
 const onFinished = require('on-finished')
@@ -71,7 +71,7 @@ app.use(favicon(path.join(__dirname, '../node_modules/govuk_template_jinja/asset
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(expressSanitizer())
+app.use(htmlSanitizerMiddleware())
 
 // Send assetPath to all views.
 app.use(function (req, res, next) {
