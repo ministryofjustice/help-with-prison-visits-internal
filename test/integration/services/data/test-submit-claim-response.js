@@ -87,31 +87,31 @@ describe('services/data/submit-claim-response', function () {
           .join('Visitor', 'Eligibility.EligibilityId', '=', 'Visitor.EligibilityId')
           .join('Prisoner', 'Eligibility.EligibilityId', '=', 'Prisoner.EligibilityId')
           .first()
-          .then(function (result) {
-            expect(result.Caseworker).to.be.equal(caseworker)
-            expect(result.AssignedTo, 'should clear assignment').to.be.null //eslint-disable-line
-            expect(result.AssignmentExpiry, 'should clear assignment').to.be.null //eslint-disable-line
-            expect(result.Status[0]).to.be.equal(claimDecisionEnum.REJECTED)
-            expect(result.Status[1]).to.be.equal(claimDecisionEnum.REJECTED)
-            expect(result.Note).to.be.equal(claimResponse.note)
-            expect(result.NomisCheck).to.be.equal(claimDecisionEnum.REJECTED)
-            expect(result.DWPCheck).to.be.equal(claimDecisionEnum.REJECTED)
-            expect(result.LastUpdated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
-            expect(result.DateReviewed).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
-            expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
-            expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).to.be.true //eslint-disable-line
-            expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true //eslint-disable-line
-            expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).to.be.true //eslint-disable-line
+      })
+      .then(function (result) {
+        expect(result.Caseworker).to.be.equal(caseworker)
+        expect(result.AssignedTo, 'should clear assignment').to.be.null //eslint-disable-line
+        expect(result.AssignmentExpiry, 'should clear assignment').to.be.null //eslint-disable-line
+        expect(result.Status[0]).to.be.equal(claimDecisionEnum.REJECTED)
+        expect(result.Status[1]).to.be.equal(claimDecisionEnum.REJECTED)
+        expect(result.Note).to.be.equal(claimResponse.note)
+        expect(result.NomisCheck).to.be.equal(claimDecisionEnum.REJECTED)
+        expect(result.DWPCheck).to.be.equal(claimDecisionEnum.REJECTED)
+        expect(result.LastUpdated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
+        expect(result.DateReviewed).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
+        expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
+        expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).to.be.true //eslint-disable-line
+        expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true //eslint-disable-line
+        expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).to.be.true //eslint-disable-line
 
-            return db('ClaimExpense').where('ClaimId', newIds.claimId).select()
-              .then(function (claimExpenses) {
-                expect(claimExpenses[0].Status).to.be.equal(claimDecisionEnum.REJECTED)
-                expect(claimExpenses[0].ApprovedCost).to.be.equal(10)
+        return db('ClaimExpense').where('ClaimId', newIds.claimId).select()
+      })
+      .then(function (claimExpenses) {
+        expect(claimExpenses[0].Status).to.be.equal(claimDecisionEnum.REJECTED)
+        expect(claimExpenses[0].ApprovedCost).to.be.equal(10)
 
-                expect(claimExpenses[1].Status).to.be.equal(claimDecisionEnum.REQUEST_INFORMATION)
-                expect(claimExpenses[1].ApprovedCost).to.be.equal(20)
-              })
-          })
+        expect(claimExpenses[1].Status).to.be.equal(claimDecisionEnum.REQUEST_INFORMATION)
+        expect(claimExpenses[1].ApprovedCost).to.be.equal(20)
       })
   })
 
@@ -134,9 +134,9 @@ describe('services/data/submit-claim-response', function () {
       .then(function (result) {
         return db('Claim').where('Claim.Reference', reference)
           .first()
-          .then(function (result) {
-            expect(result.DateApproved).not.to.be.null //eslint-disable-line
-          })
+      })
+      .then(function (result) {
+        expect(result.DateApproved).not.to.be.null //eslint-disable-line
       })
   })
 
@@ -160,10 +160,10 @@ describe('services/data/submit-claim-response', function () {
       .then(function (result) {
         return db('Claim').where('Claim.Reference', reference)
           .first()
-          .then(function (result) {
-            expect(result.DateApproved).to.be.null //eslint-disable-line
-            expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
-          })
+      })
+      .then(function (result) {
+        expect(result.DateApproved).to.be.null //eslint-disable-line
+        expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
       })
   })
 
@@ -186,9 +186,9 @@ describe('services/data/submit-claim-response', function () {
       .then(function (result) {
         return db('Claim').where('Claim.Reference', reference)
           .first()
-          .then(function (result) {
-            expect(result.DateApproved).to.be.null //eslint-disable-line
-          })
+      })
+      .then(function (result) {
+        expect(result.DateApproved).to.be.null //eslint-disable-line
       })
   })
 
@@ -213,10 +213,10 @@ describe('services/data/submit-claim-response', function () {
       .then(function (result) {
         return db('Prisoner').where('Prisoner.Reference', reference)
           .first()
-          .then(function (result) {
-            expect(result.ReleaseDateIsSet).to.be.equal(true)
-            expect(result.ReleaseDate).not.to.be.null //eslint-disable-line
-          })
+      })
+      .then(function (result) {
+        expect(result.ReleaseDateIsSet).to.be.equal(true)
+        expect(result.ReleaseDate).not.to.be.null //eslint-disable-line
       })
   })
 
@@ -241,10 +241,10 @@ describe('services/data/submit-claim-response', function () {
       .then(function (result) {
         return db('Prisoner').where('Prisoner.Reference', reference)
           .first()
-          .then(function (result) {
-            expect(result.ReleaseDateIsSet).to.be.equal(false)
-            expect(result.ReleaseDate).to.be.null //eslint-disable-line
-          })
+      })
+      .then(function (result) {
+        expect(result.ReleaseDateIsSet).to.be.equal(false)
+        expect(result.ReleaseDate).to.be.null //eslint-disable-line
       })
   })
 

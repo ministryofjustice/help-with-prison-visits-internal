@@ -17,16 +17,12 @@ describe('services/data/disable-deduction', function () {
     })
 
     it('should set IsEnabled to false for the specified ClaimDeduction a claim deduction when called', function () {
-      var claimDeduction
-
       return disableDeduction(claimDeductionId)
         .then(function (claimDeductionId) {
           return db('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId[0].ClaimDeductionId)
-            .then(function (deduction) {
-              claimDeduction = deduction
-
-              expect(claimDeduction.IsEnabled).to.be.false //eslint-disable-line
-            })
+        })
+        .then(function (deduction) {
+          expect(deduction.IsEnabled).to.be.false //eslint-disable-line
         })
         .catch(function (error) {
           throw error

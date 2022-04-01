@@ -22,23 +22,24 @@ describe('services/data/insert-deduction', function () {
       var claimDeductionType = deductionTypeEnum.OVERPAYMENT.value
       var claimDeductionAmount = 5
       var claimDeduction = new ClaimDeduction(claimDeductionType, claimDeductionAmount.toString())
+      var updatedClaimDeduction
 
       return insertDeduction(claimId, claimDeduction)
         .then(function (claimDeductionId) {
           return db('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId[0].ClaimDeductionId)
-            .then(function (deduction) {
-              var updatedClaimDeduction = deduction
+        })
+        .then(function (deduction) {
+          updatedClaimDeduction = deduction
 
-              return db('Claim').first().where('ClaimId', claimId)
-                .then(function (claim) {
-                  expect(updatedClaimDeduction.EligibilityId).to.equal(claim.EligibilityId)
-                  expect(updatedClaimDeduction.Reference).to.equal(claim.Reference)
-                  expect(updatedClaimDeduction.ClaimId).to.equal(claim.ClaimId)
-                  expect(updatedClaimDeduction.Amount).to.equal(claimDeductionAmount)
-                  expect(updatedClaimDeduction.DeductionType).to.equal(claimDeductionType)
-                  expect(updatedClaimDeduction.IsEnabled).to.be.true //eslint-disable-line
-                })
-            })
+          return db('Claim').first().where('ClaimId', claimId)
+        })
+        .then(function (claim) {
+          expect(updatedClaimDeduction.EligibilityId).to.equal(claim.EligibilityId)
+          expect(updatedClaimDeduction.Reference).to.equal(claim.Reference)
+          expect(updatedClaimDeduction.ClaimId).to.equal(claim.ClaimId)
+          expect(updatedClaimDeduction.Amount).to.equal(claimDeductionAmount)
+          expect(updatedClaimDeduction.DeductionType).to.equal(claimDeductionType)
+          expect(updatedClaimDeduction.IsEnabled).to.be.true //eslint-disable-line
         })
         .catch(function (error) {
           throw error

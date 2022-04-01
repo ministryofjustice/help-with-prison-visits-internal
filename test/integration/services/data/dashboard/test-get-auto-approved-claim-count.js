@@ -40,32 +40,32 @@ describe('services/data/dashboard/get-auto-approved-claim-count', function () {
       return getCountsBeforeTest()
         .then(function () {
           return insertTestData(reference, date, claimStatusEnum.AUTOAPPROVED.value)
-            .then(function (ids) {
-              var eligibilityId = ids.eligibilityId
-              claimId2 = ids.claimId + 1
-              claimId3 = ids.claimId + 2
-              claimId4 = ids.claimId + 3
-              claimId5 = ids.claimId + 4
-              claimId6 = ids.claimId + 5
-              claimId7 = ids.claimId + 6
-              claimId8 = ids.claimId + 7
-              claimId9 = ids.claimId + 8
-              claimId10 = ids.claimId + 9
+        })
+        .then(function (ids) {
+          var eligibilityId = ids.eligibilityId
+          claimId2 = ids.claimId + 1
+          claimId3 = ids.claimId + 2
+          claimId4 = ids.claimId + 3
+          claimId5 = ids.claimId + 4
+          claimId6 = ids.claimId + 5
+          claimId7 = ids.claimId + 6
+          claimId8 = ids.claimId + 7
+          claimId9 = ids.claimId + 8
+          claimId10 = ids.claimId + 9
 
-              var promises = []
+          var promises = []
 
-              promises.push(insertClaim(claimId2, eligibilityId, reference, yesterday, claimStatusEnum.AUTOAPPROVED.value, false))
-              promises.push(insertClaim(claimId3, eligibilityId, reference, lastWeek, claimStatusEnum.AUTOAPPROVED.value, false))
-              promises.push(insertClaim(claimId4, eligibilityId, reference, oneMonthAgo, claimStatusEnum.AUTOAPPROVED.value, false))
-              promises.push(insertClaim(claimId5, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false))
-              promises.push(insertClaim(claimId6, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false))
-              promises.push(insertClaim(claimId7, eligibilityId, reference, fourMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false))
-              promises.push(insertClaim(claimId8, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED.value, false))
-              promises.push(insertClaim(claimId9, eligibilityId, reference, oneMonthAgo, claimStatusEnum.REJECTED.value, false))
-              promises.push(insertClaim(claimId10, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.PENDING.value, false))
+          promises.push(insertClaim(claimId2, eligibilityId, reference, yesterday, claimStatusEnum.AUTOAPPROVED.value, false))
+          promises.push(insertClaim(claimId3, eligibilityId, reference, lastWeek, claimStatusEnum.AUTOAPPROVED.value, false))
+          promises.push(insertClaim(claimId4, eligibilityId, reference, oneMonthAgo, claimStatusEnum.AUTOAPPROVED.value, false))
+          promises.push(insertClaim(claimId5, eligibilityId, reference, twoMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false))
+          promises.push(insertClaim(claimId6, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false))
+          promises.push(insertClaim(claimId7, eligibilityId, reference, fourMonthsAgo, claimStatusEnum.AUTOAPPROVED.value, false))
+          promises.push(insertClaim(claimId8, eligibilityId, reference, yesterday, claimStatusEnum.APPROVED.value, false))
+          promises.push(insertClaim(claimId9, eligibilityId, reference, oneMonthAgo, claimStatusEnum.REJECTED.value, false))
+          promises.push(insertClaim(claimId10, eligibilityId, reference, threeMonthsAgo, claimStatusEnum.PENDING.value, false))
 
-              return Promise.all(promises)
-            })
+          return Promise.all(promises)
         })
     })
 

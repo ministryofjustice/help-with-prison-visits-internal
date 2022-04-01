@@ -26,22 +26,23 @@ describe('services/data/payout-barcode-expired-claim', function () {
       return payoutBarcodeExpiredClaim(claimId, reason)
         .then(function () {
           return db('Claim').first().where('ClaimId', claimId)
-            .then(function (claim) {
-              expect(claim.Status).to.equal(claimStatusEnum.APPROVED.value)
-              expect(claim.DateApproved).to.be.null //eslint-disable-line
-              expect(claim.PaymentStatus).to.be.null //eslint-disable-line
-              expect(claim.lastUpdated).to.not.equal(previousLastUpdated)
-              return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
-            })
-            .then(function (claimEvent) {
-              expect(claimEvent.Event).to.equal(claimEventEnum.PAYMENT_REISSUED.value)
-              expect(claimEvent.Note).to.equal(null)
-              return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc').limit(1).offset(1)
-            })
-            .then(function (claimEvent) {
-              expect(claimEvent.Event).to.equal(claimEventEnum.PAYOUT_BARCODE_EXPIRED.value)
-              expect(claimEvent.Note).to.equal(reason)
-            })
+        })
+        .then(function (claim) {
+          expect(claim.Status).to.equal(claimStatusEnum.APPROVED.value)
+          expect(claim.DateApproved).to.be.null //eslint-disable-line
+          expect(claim.PaymentStatus).to.be.null //eslint-disable-line
+          expect(claim.lastUpdated).to.not.equal(previousLastUpdated)
+
+          return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
+        })
+        .then(function (claimEvent) {
+          expect(claimEvent.Event).to.equal(claimEventEnum.PAYMENT_REISSUED.value)
+          expect(claimEvent.Note).to.equal(null)
+          return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc').limit(1).offset(1)
+        })
+        .then(function (claimEvent) {
+          expect(claimEvent.Event).to.equal(claimEventEnum.PAYOUT_BARCODE_EXPIRED.value)
+          expect(claimEvent.Note).to.equal(reason)
         })
         .catch(function (error) {
           throw error

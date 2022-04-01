@@ -1,6 +1,7 @@
 const getClaimListForAdvancedSearch = require('../../../../app/services/data/get-claim-list-for-advanced-search')
 var dateFormatter = require('../../../../app/services/date-formatter')
 var { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
+const { getClaimReference } = require('../../../helpers/integration')
 var expect = require('chai').expect
 
 var date = dateFormatter.build('10', '09', '2016') // set date in past so that is always at top of list returned
@@ -24,38 +25,38 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       .then(function (ids) {
         claimId = ids.claimId
         return insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
-          .then(function () {
-            var reference1ClaimUpdate = db('Claim')
-              .update({
-                AssistedDigitalCaseworker: 'test@test.com',
-                DateOfJourney: date.toDate(),
-                DateReviewed: date.toDate(),
-                PaymentAmount: '12',
-                PaymentDate: date.add(5, 'days').toDate()
-              })
-              .where('Reference', reference1)
-            var reference2ClaimUpdate = db('Claim')
-              .update({
-                DateReviewed: date.toDate()
-              })
-              .where('Reference', reference2)
-            var visitorUpdate = db('Visitor')
-              .update({
-                FirstName: 'Ref2FirstName',
-                LastName: 'Ref2LastName',
-                NationalInsuranceNumber: 'Ref2NINum'
-              })
-              .where('Reference', reference2)
-            var prisonerUpdate = db('Prisoner')
-              .update({
-                PrisonNumber: 'REF2PNO',
-                NameOfPrison: 'Ref2Prison'
-              })
-              .where('Reference', reference2)
-            var updates = []
-            updates.push(reference1ClaimUpdate, reference2ClaimUpdate, visitorUpdate, prisonerUpdate)
-            return Promise.all(updates)
+      })
+      .then(function () {
+        var reference1ClaimUpdate = db('Claim')
+          .update({
+            AssistedDigitalCaseworker: 'test@test.com',
+            DateOfJourney: date.toDate(),
+            DateReviewed: date.toDate(),
+            PaymentAmount: '12',
+            PaymentDate: date.add(5, 'days').toDate()
           })
+          .where('Reference', reference1)
+        var reference2ClaimUpdate = db('Claim')
+          .update({
+            DateReviewed: date.toDate()
+          })
+          .where('Reference', reference2)
+        var visitorUpdate = db('Visitor')
+          .update({
+            FirstName: 'Ref2FirstName',
+            LastName: 'Ref2LastName',
+            NationalInsuranceNumber: 'Ref2NINum'
+          })
+          .where('Reference', reference2)
+        var prisonerUpdate = db('Prisoner')
+          .update({
+            PrisonNumber: 'REF2PNO',
+            NameOfPrison: 'Ref2Prison'
+          })
+          .where('Reference', reference2)
+        var updates = []
+        updates.push(reference1ClaimUpdate, reference2ClaimUpdate, visitorUpdate, prisonerUpdate)
+        return Promise.all(updates)
       })
   })
 
@@ -101,9 +102,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference2 = result.claims.filter(function (claim) {
-          return claim.Reference === reference2
-        })
+        var claimsWithCurrentReference2 = getClaimReference(result, reference2)
         expect(claimsWithCurrentReference2.length, 'Claims length should equal 1').to.equal(0)
       })
   })
@@ -115,9 +114,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
         expect(claimsWithCurrentReference[0].Name, `Name should equal ${name}`).to.equal(name)
       })
@@ -130,9 +127,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -144,9 +139,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = result.claims.filter(function (claim) {
-          return claim.Reference === reference2
-        })
+        var claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
@@ -158,9 +151,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -172,9 +163,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = result.claims.filter(function (claim) {
-          return claim.Reference === reference2
-        })
+        var claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
@@ -186,9 +175,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -200,9 +187,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = result.claims.filter(function (claim) {
-          return claim.Reference === reference2
-        })
+        var claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
@@ -214,9 +199,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -228,9 +211,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = result.claims.filter(function (claim) {
-          return claim.Reference === reference2
-        })
+        var claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
@@ -242,9 +223,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -254,9 +233,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = result.claims.filter(function (claim) {
-          return claim.Reference === reference2
-        })
+        var claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
@@ -268,9 +245,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -282,9 +257,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -296,9 +269,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = result.claims.filter(function (claim) {
-          return claim.Reference === reference2
-        })
+        var claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
@@ -310,9 +281,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -324,9 +293,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -338,9 +305,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -352,9 +317,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -366,9 +329,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -380,9 +341,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -395,9 +354,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -410,9 +367,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -425,9 +380,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -440,9 +393,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -455,9 +406,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -470,9 +419,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -485,9 +432,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -500,9 +445,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -515,9 +458,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -530,9 +471,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -545,9 +484,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -560,9 +497,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -575,9 +510,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = result.claims.filter(function (claim) {
-          return claim.Reference === reference2
-        })
+        var claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 1').to.equal(1)
       })
   })
@@ -590,9 +523,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -605,9 +536,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = result.claims.filter(function (claim) {
-          return claim.Reference === reference2
-        })
+        var claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 1').to.equal(1)
       })
   })
@@ -620,9 +549,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
@@ -635,9 +562,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference1 = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithReference1 = getClaimReference(result, reference1)
         expect(claimsWithReference1[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -650,9 +575,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference1 = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithReference1 = getClaimReference(result, reference1)
         expect(claimsWithReference1.length, 'Claims with reference1 length should equal 0').to.equal(0)
       })
   })
@@ -665,9 +588,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference1 = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithReference1 = getClaimReference(result, reference1)
         expect(claimsWithReference1[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
@@ -680,9 +601,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference1 = result.claims.filter(function (claim) {
-          return claim.Reference === reference1
-        })
+        var claimsWithReference1 = getClaimReference(result, reference1)
         expect(claimsWithReference1.length, 'Claims with reference1 length should equal 0').to.equal(0)
       })
   })

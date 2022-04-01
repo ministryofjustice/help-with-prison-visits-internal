@@ -1,53 +1,24 @@
 const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-const { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
+const duplicateClaimCheck = require('../../../../app/services/data/duplicate-claim-check')
 
 const REFERENCE1 = 'DUPCHK1'
 const REFERENCE2 = 'DUPCHK2'
-const REFERENCE3 = 'DUPCHK3'
-
-var duplicateClaimCheck = require('../../../../app/services/data/duplicate-claim-check')
-
-var testData
-var date1
-var date2
-var date3
-var duplicateNiNumber
-var duplicatePrisonerNumber
-var duplicateVisitDate
-var prisonerNumber
-var visitDate
-var claimIds = []
+const prisonerNumber = 'A123456'
+const niNumber = 'QQ123456C'
+const visitDate = dateFormatter.buildFromDateString('2022-03-03').toDate()
+const claimIds = []
 
 describe('services/data/duplicate-claim-check', function () {
   describe('module', function () {
     before(function () {
-      // Insert two duplicate claims, and a third unique claim
-      testData = getTestData(REFERENCE1, 'Test')
+      const dateOfBirth = dateFormatter.buildFromDateString('1999-01-01').toDate()
 
-      date1 = dateFormatter.now().toDate()
-      date2 = dateFormatter.now().toDate()
-      date2.setDate(date1.getDate() + 1000)
-      date3 = new Date()
-      date3.setDate(date2.getDate() + 1000)
-      visitDate = new Date()
-      visitDate.setDate(date3.getDate() + 1000)
-
-      duplicateVisitDate = new Date()
-      duplicateVisitDate.setDate(visitDate.getDate() + 1000)
-      duplicateNiNumber = testData.Visitor.NationalInsuranceNumber
-      duplicatePrisonerNumber = testData.Prisoner.PrisonNumber
-
-      prisonerNumber = duplicatePrisonerNumber + 'A'
-
-      return insertTestData(REFERENCE1, date1, 'Test', visitDate)
+      return insertTestData(REFERENCE1, dateOfBirth, 'Test', visitDate)
         .then(function (ids) {
           claimIds.push(ids.claimId)
-          return insertTestData(REFERENCE2, date2, 'Test', duplicateVisitDate, 10000)
-        })
-        .then(function (ids) {
-          claimIds.push(ids.claimId)
-          return insertTestData(REFERENCE3, date3, 'Test', duplicateVisitDate, 20000)
+          return insertTestData(REFERENCE2, dateOfBirth, 'Test', visitDate, 10000)
         })
         .then(function (ids) {
           claimIds.push(ids.claimId)
@@ -55,14 +26,14 @@ describe('services/data/duplicate-claim-check', function () {
     })
 
     it('returns true if another claim exists with the same NI number, prisoner number and date of visit', function () {
-      return duplicateClaimCheck(claimIds[1], duplicateNiNumber, duplicatePrisonerNumber, duplicateVisitDate)
+      return duplicateClaimCheck(claimIds[1], niNumber, prisonerNumber, visitDate)
         .then(function (result) {
           expect(result).to.have.length.above(0)
         })
     })
 
     it('returns false if no other claim exists with the same NI number, prisoner number and date of visit', function () {
-      return duplicateClaimCheck(claimIds[0], duplicateNiNumber, prisonerNumber, duplicateVisitDate)
+      return duplicateClaimCheck(claimIds[0], niNumber, `${prisonerNumber}A`, visitDate)
         .then(function (result) {
           expect(result).to.have.length.below(1)
         })
@@ -71,8 +42,7 @@ describe('services/data/duplicate-claim-check', function () {
     after(function () {
       return Promise.all([
         deleteAll(REFERENCE1),
-        deleteAll(REFERENCE2),
-        deleteAll(REFERENCE3)
+        deleteAll(REFERENCE2)
       ])
     })
   })

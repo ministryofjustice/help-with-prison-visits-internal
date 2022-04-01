@@ -13,17 +13,18 @@ describe('services/data/get-overpaid-claims-by-reference', function () {
     before(function () {
       var date = dateFormatter.now().toDate()
       var twoWeeksAgo = dateFormatter.now().subtract(14, 'days').toDate()
+      let eligibilityId
       return insertTestData(reference, date, 'Test')
         .then(function (ids) {
-          var eligibilityId = ids.eligibilityId
+          eligibilityId = ids.eligibilityId
           claimId1 = ids.claimId
           claimId2 = ids.claimId + 1
           claimId3 = ids.claimId + 2
 
           return insertClaim(claimId2, eligibilityId, reference, twoWeeksAgo, 'APPROVED', true, 50)
-            .then(function () {
-              return insertClaim(claimId3, eligibilityId, reference, twoWeeksAgo, 'APPROVED', false)
-            })
+        })
+        .then(function () {
+          return insertClaim(claimId3, eligibilityId, reference, twoWeeksAgo, 'APPROVED', false)
         })
     })
 
