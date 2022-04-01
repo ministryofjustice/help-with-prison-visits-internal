@@ -28,15 +28,16 @@ describe('services/data/cancel-top-up', function () {
       return cancelTopup({ ClaimId: claimId, Reference: reference, EligibilityId: claimId }, 'test@test.com')
         .then(function () {
           return db('TopUp').first().where('ClaimId', claimId)
-            .then(function (topUpReturned) {
-              expect(Number(topUpReturned.TopUpAmount).toFixed(2), 'Inserted TopUp TopUpAmount should equal ' + amount).to.equal(amount)
-              expect(topUpReturned.Reason, 'Inserted Top Up TopUpReason should equal ' + reason).to.equal(reason)
-              expect(topUpReturned.PaymentStatus, 'Inserted Top Up PaymentStatus should equal CANCELLED').to.equal(topUpStatusEnum.CANCELLED)
-              return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('ClaimEventId', 'desc')
-                .then(function (claimEvent) {
-                  expect(claimEvent.Event, 'ClaimEvent Event should equal ' + claimEventEnum.TOP_UP_CANCELLED.value).to.equal(claimEventEnum.TOP_UP_CANCELLED.value)
-                })
-            })
+        })
+        .then(function (topUpReturned) {
+          expect(Number(topUpReturned.TopUpAmount).toFixed(2), 'Inserted TopUp TopUpAmount should equal ' + amount).to.equal(amount)
+          expect(topUpReturned.Reason, 'Inserted Top Up TopUpReason should equal ' + reason).to.equal(reason)
+          expect(topUpReturned.PaymentStatus, 'Inserted Top Up PaymentStatus should equal CANCELLED').to.equal(topUpStatusEnum.CANCELLED)
+
+          return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('ClaimEventId', 'desc')
+        })
+        .then(function (claimEvent) {
+          expect(claimEvent.Event, 'ClaimEvent Event should equal ' + claimEventEnum.TOP_UP_CANCELLED.value).to.equal(claimEventEnum.TOP_UP_CANCELLED.value)
         })
         .catch(function (error) {
           throw error

@@ -26,15 +26,15 @@ describe('services/data/close-advance-claim', function () {
       return closeAdvanceClaim(claimId, reason)
         .then(function () {
           return db('Claim').first().where('ClaimId', claimId)
-            .then(function (claim) {
-              expect(claim.Status).to.equal(claimStatusEnum.APPROVED_ADVANCE_CLOSED.value)
-              expect(claim.lastUpdated).to.not.equal(previousLastUpdated)
-              return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
-            })
-            .then(function (claimEvent) {
-              expect(claimEvent.Event).to.equal(claimEventEnum.CLOSE_ADVANCE_CLAIM.value)
-              expect(claimEvent.Note).to.equal(reason)
-            })
+        })
+        .then(function (claim) {
+          expect(claim.Status).to.equal(claimStatusEnum.APPROVED_ADVANCE_CLOSED.value)
+          expect(claim.lastUpdated).to.not.equal(previousLastUpdated)
+          return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
+        })
+        .then(function (claimEvent) {
+          expect(claimEvent.Event).to.equal(claimEventEnum.CLOSE_ADVANCE_CLAIM.value)
+          expect(claimEvent.Note).to.equal(reason)
         })
         .catch(function (error) {
           throw error

@@ -29,48 +29,49 @@ describe('services/data/update-eligibility-trusted-status', function () {
       claimId1 = ids.claimId
       eligibilityId1 = ids.eligibilityId
 
-      return insertTestData(REFERENCE_TWO, dateFormatter.now().toDate(), 'Test', dateFormatter.now().toDate(), 10).then(function (ids2) {
-        claimId2 = ids2.claimId
-        eligibilityId2 = ids2.eligibilityId
-      })
+      return insertTestData(REFERENCE_TWO, dateFormatter.now().toDate(), 'Test', dateFormatter.now().toDate(), 10)
+    })
+    .then(function (ids2) {
+      claimId2 = ids2.claimId
+      eligibilityId2 = ids2.eligibilityId
     })
   })
 
   it('should set the eligibility to untrusted and create a claim event', function () {
+    var isTrusted = false
+    var untrustedReason = 'untrusted reason'
+
     return setEligibilityTrusted(eligibilityId1, true)
       .then(function () {
-        var untrustedReason = 'untrusted reason'
-        var isTrusted = false
-
         return updateEligibilityTrustedStatus(claimId1, isTrusted, untrustedReason)
-          .then(function () {
-            return getEligibility(eligibilityId1)
-              .then(function (eligibility) {
-                expect(eligibility.IsTrusted).to.equal(isTrusted)
-                expect(eligibility.UntrustedReason).to.equal(untrustedReason)
-                expect(eligibility.UntrustedDate).to.not.be.null //eslint-disable-line
-                expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
-              })
-          })
+      })
+      .then(function () {
+        return getEligibility(eligibilityId1)
+      })
+      .then(function (eligibility) {
+        expect(eligibility.IsTrusted).to.equal(isTrusted)
+        expect(eligibility.UntrustedReason).to.equal(untrustedReason)
+        expect(eligibility.UntrustedDate).to.not.be.null //eslint-disable-line
+        expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
       })
   })
 
   it('should set the eligibility to trusted and create a claim event', function () {
+    var untrustedReason = ''
+    var isTrusted = true
+
     return setEligibilityTrusted(eligibilityId1, false)
       .then(function () {
-        var untrustedReason = ''
-        var isTrusted = true
-
         return updateEligibilityTrustedStatus(claimId1, isTrusted, untrustedReason)
-          .then(function () {
-            return getEligibility(eligibilityId1)
-              .then(function (eligibility) {
-                expect(eligibility.IsTrusted).to.equal(isTrusted)
-                expect(eligibility.UntrustedReason).to.be.null //eslint-disable-line
-                expect(eligibility.UntrustedDate).to.be.null //eslint-disable-line
-                expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
-              })
-          })
+      })
+      .then(function () {
+        return getEligibility(eligibilityId1)
+      })
+      .then(function (eligibility) {
+        expect(eligibility.IsTrusted).to.equal(isTrusted)
+        expect(eligibility.UntrustedReason).to.be.null //eslint-disable-line
+        expect(eligibility.UntrustedDate).to.be.null //eslint-disable-line
+        expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
       })
   })
 
@@ -78,13 +79,13 @@ describe('services/data/update-eligibility-trusted-status', function () {
     return setEligibilityTrusted(eligibilityId2, true)
       .then(function () {
         return updateEligibilityTrustedStatus(claimId2, true, null)
-          .then(function () {
-            return getEligibility(eligibilityId2)
-              .then(function (eligibility) {
-                expect(eligibility.IsTrusted).to.equal(true)
-                expect(stubInsertClaimEvent.notCalled).to.be.true //eslint-disable-line
-              })
-          })
+      })
+      .then(function () {
+        return getEligibility(eligibilityId2)
+      })
+      .then(function (eligibility) {
+        expect(eligibility.IsTrusted).to.equal(true)
+        expect(stubInsertClaimEvent.notCalled).to.be.true //eslint-disable-line
       })
   })
 

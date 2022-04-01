@@ -28,11 +28,11 @@ describe('services/data/update-assignment-of-claim', function () {
       return updateAssignmentOfClaims(claimId, assignedTo)
         .then(function () {
           return db('Claim').first().where('ClaimId', claimId)
-            .then(function (claim) {
-              expect(claim.AssignedTo).to.equal(assignedTo)
-              expect(claim.AssignmentExpiry).to.be.within(twoMinutesAgoExpiry.toDate(), twoMinutesAheadExpiry.toDate())
-              expect(claim.LastUpdated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
-            })
+        })
+        .then(function (claim) {
+          expect(claim.AssignedTo).to.equal(assignedTo)
+          expect(claim.AssignmentExpiry).to.be.within(twoMinutesAgoExpiry.toDate(), twoMinutesAheadExpiry.toDate())
+          expect(claim.LastUpdated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
         })
         .catch(function (error) {
           throw error

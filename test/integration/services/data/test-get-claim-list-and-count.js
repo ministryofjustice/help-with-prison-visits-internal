@@ -41,18 +41,18 @@ describe('services/data/get-claim-list-and-count', function () {
       return db('Claim').where({ ClaimId: claimId }).update({ AssignedTo: null })
         .then(function () {
           return getClaimListAndCount(['TESTING'], false, 0, 1, 'TestUser@test.com', 'Claim.DateSubmitted', 'asc')
-            .then(function (result) {
-              expect(result.claims.length).to.equal(1)
-              expect(result.claims[0].Reference).to.equal(reference)
-              expect(result.claims[0].FirstName).to.equal(testData.Visitor.FirstName)
-              expect(result.claims[0].LastName).to.equal(testData.Visitor.LastName)
-              expect(result.claims[0].Name).to.be.equal(`${testData.Visitor.FirstName} ${testData.Visitor.LastName}`)
-              expect(result.claims[0].DateSubmittedFormatted.toString()).to.equal(date.format('DD/MM/YYYY - HH:mm').toString())
-              expect(result.claims[0].ClaimType).to.equal(testData.Claim.ClaimType)
-              expect(result.claims[0].AssignedTo).to.equal(null)
-              expect(result.claims[0].ClaimId).to.equal(claimId)
-              expect(result.total.Count).to.equal(1)
-            })
+        })
+        .then(function (result) {
+          expect(result.claims.length).to.equal(1)
+          expect(result.claims[0].Reference).to.equal(reference)
+          expect(result.claims[0].FirstName).to.equal(testData.Visitor.FirstName)
+          expect(result.claims[0].LastName).to.equal(testData.Visitor.LastName)
+          expect(result.claims[0].Name).to.be.equal(`${testData.Visitor.FirstName} ${testData.Visitor.LastName}`)
+          expect(result.claims[0].DateSubmittedFormatted.toString()).to.equal(date.format('DD/MM/YYYY - HH:mm').toString())
+          expect(result.claims[0].ClaimType).to.equal(testData.Claim.ClaimType)
+          expect(result.claims[0].AssignedTo).to.equal(null)
+          expect(result.claims[0].ClaimId).to.equal(claimId)
+          expect(result.total.Count).to.equal(1)
         })
         .catch(function (error) {
           throw error
@@ -63,18 +63,18 @@ describe('services/data/get-claim-list-and-count', function () {
       return db('Claim').where({ ClaimId: claimId }).update({ AssignmentExpiry: dateFormatter.now().subtract('10', 'minutes').toDate() })
         .then(function () {
           return getClaimListAndCount(['TESTING'], false, 0, 1, 'AnotherTestUser@test.com', 'Claim.DateSubmitted', 'asc')
-            .then(function (result) {
-              expect(result.claims.length).to.equal(1)
-              expect(result.claims[0].Reference).to.equal(reference)
-              expect(result.claims[0].FirstName).to.equal(testData.Visitor.FirstName)
-              expect(result.claims[0].LastName).to.equal(testData.Visitor.LastName)
-              expect(result.claims[0].Name).to.be.equal(`${testData.Visitor.FirstName} ${testData.Visitor.LastName}`)
-              expect(result.claims[0].DateSubmittedFormatted.toString()).to.equal(date.format('DD/MM/YYYY - HH:mm').toString())
-              expect(result.claims[0].ClaimType).to.equal(testData.Claim.ClaimType)
-              expect(result.claims[0].AssignedTo).to.equal(testData.Claim.AssignedTo)
-              expect(result.claims[0].ClaimId).to.equal(claimId)
-              expect(result.total.Count).to.equal(1)
-            })
+        })
+        .then(function (result) {
+          expect(result.claims.length).to.equal(1)
+          expect(result.claims[0].Reference).to.equal(reference)
+          expect(result.claims[0].FirstName).to.equal(testData.Visitor.FirstName)
+          expect(result.claims[0].LastName).to.equal(testData.Visitor.LastName)
+          expect(result.claims[0].Name).to.be.equal(`${testData.Visitor.FirstName} ${testData.Visitor.LastName}`)
+          expect(result.claims[0].DateSubmittedFormatted.toString()).to.equal(date.format('DD/MM/YYYY - HH:mm').toString())
+          expect(result.claims[0].ClaimType).to.equal(testData.Claim.ClaimType)
+          expect(result.claims[0].AssignedTo).to.equal(testData.Claim.AssignedTo)
+          expect(result.claims[0].ClaimId).to.equal(claimId)
+          expect(result.total.Count).to.equal(1)
         })
         .catch(function (error) {
           throw error

@@ -23,11 +23,11 @@ describe('services/data/update-claim-status-requesting-bank-details', function (
       return updateClaimStatusRequestingBankDetails(reference, claimId)
         .then(function () {
           return db('Claim').first().where('ClaimId', claimId)
-            .then(function (claim) {
-              expect(claim.Status).to.equal(claimStatusEnum.REQUEST_INFO_PAYMENT.value)
-              expect(claim.PaymentStatus).to.equal(null)
-              expect(claim.LastUpdated).to.not.equal(previousLastUpdated)
-            })
+        })
+        .then(function (claim) {
+          expect(claim.Status).to.equal(claimStatusEnum.REQUEST_INFO_PAYMENT.value)
+          expect(claim.PaymentStatus).to.equal(null)
+          expect(claim.LastUpdated).to.not.equal(previousLastUpdated)
         })
         .catch(function (error) {
           throw error

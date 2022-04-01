@@ -39,12 +39,12 @@ describe('services/data/update-visitor-contact-details', function () {
     return updateVisitorContactDetails(REFERENCE, eligibilityId, claimId, NEW_EMAIL_ADDRESS, NEW_PHONE_NUMBER, OLD_EMAIL_ADDRESS, OLD_PHONE_NUMBER, CASEWORKER)
       .then(function () {
         return getVisitor(eligibilityId)
-          .then(function (visitor) {
-            expect(visitor.EmailAddress).to.equal(NEW_EMAIL_ADDRESS)
-            expect(visitor.PhoneNumber).to.equal(NEW_PHONE_NUMBER)
-            expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
-            expect(stubInsertTaskSendClaimNotification.calledTwice).to.be.true //eslint-disable-line
-          })
+      })
+      .then(function (visitor) {
+        expect(visitor.EmailAddress).to.equal(NEW_EMAIL_ADDRESS)
+        expect(visitor.PhoneNumber).to.equal(NEW_PHONE_NUMBER)
+        expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
+        expect(stubInsertTaskSendClaimNotification.calledTwice).to.be.true //eslint-disable-line
       })
   })
 

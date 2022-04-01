@@ -3,7 +3,6 @@ var getAutoApprovalConfig = require('../../../../app/services/data/get-auto-appr
 const { db } = require('../../../helpers/database-setup-for-tests')
 var config = require('../../../../config')
 var dateFormatter = require('../../../../app/services/date-formatter')
-
 var insertedIds
 
 describe('services/data/get-auto-approval-config', function () {
@@ -15,9 +14,9 @@ describe('services/data/get-auto-approval-config', function () {
         if (currentAutoApprovalConfigId) {
           existingAutoApprovalId = currentAutoApprovalConfigId.AutoApprovalConfigId
           return setIsEnabled(existingAutoApprovalId, false)
-        } else {
-          return Promise.resolve()
         }
+
+        return Promise.resolve()
       })
   })
 
@@ -39,11 +38,11 @@ describe('services/data/get-auto-approval-config', function () {
     return insertTestData()
       .then(function () {
         return getAutoApprovalConfig()
-          .then(function (result) {
-            expect(result.Caseworker).to.equal('caseworker1@test.com')
-            expect(result.RulesDisabled).to.deep.equal(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
-            expect(result.IsEnabled).to.equal(true)
-          })
+      })
+      .then(function (result) {
+        expect(result.Caseworker).to.equal('caseworker1@test.com')
+        expect(result.RulesDisabled).to.deep.equal(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
+        expect(result.IsEnabled).to.equal(true)
       })
   })
 
