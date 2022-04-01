@@ -44,13 +44,13 @@ describe('services/data/duplicate-claim-check', function () {
         .then(function (ids) {
           claimIds.push(ids.claimId)
           return insertTestData(REFERENCE2, date2, 'Test', duplicateVisitDate, 10000)
-            .then(function (ids) {
-              claimIds.push(ids.claimId)
-              return insertTestData(REFERENCE3, date3, 'Test', duplicateVisitDate, 20000)
-                .then(function (ids) {
-                  claimIds.push(ids.claimId)
-                })
-            })
+        })
+        .then(function (ids) {
+          claimIds.push(ids.claimId)
+          return insertTestData(REFERENCE3, date3, 'Test', duplicateVisitDate, 20000)
+        })
+        .then(function (ids) {
+          claimIds.push(ids.claimId)
         })
     })
 
