@@ -1,3 +1,4 @@
+const moment = require('moment')
 const { getDatabaseConnector } = require('../../app/databaseConnector')
 const db = getDatabaseConnector()
 
@@ -86,7 +87,7 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
           Status: status,
           PaymentMethod: data.Claim.PaymentMethod,
           AssignedTo: data.Claim.AssignedTo,
-          AssignmentExpiry: new Date(date.getTime() + 300000), // current time + 5 minutes
+          AssignmentExpiry: moment(date).add(5, 'minutes').toDate(), // current time + 5 minutes
           PaymentStatus: paymentStatus
         })
     })
