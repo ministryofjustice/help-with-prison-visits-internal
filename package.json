@@ -18,6 +18,7 @@
     "test-coverage": "nyc npm run test-unit",
     "test-unit": "mocha --recursive test/unit/ --exit",
     "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
+    "test-e2e-cypress": "KNEX_CONFIG=testing cypress run --config video=false",
     "test-e2e": "gulp --gulpfile gulpfile-e2e.js",
     "test-e2e-smoke": "gulp --gulpfile gulpfile-e2e.js e2e-smoke",
     "test-e2e-ie8": "wdio test/wdio.conf.sauce.ie8.js",
@@ -41,7 +42,9 @@
       "afterEach",
       "it",
       "browser",
-      "$"
+      "$",
+      "cy",
+      "expect"
     ]
   },
   "dependencies": {
@@ -84,6 +87,7 @@
   "devDependencies": {
     "assert": "^2.0.0",
     "chai": "^4.3.6",
+    "cypress": "^9.5.3",
     "mocha": "^9.2.2",
     "node-mocks-http": "^1.11.0",
     "nyc": "^15.1.0",
