@@ -8,6 +8,8 @@ RUN apt-get update && \
 
 WORKDIR /app
 
+ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
+
 COPY . .
 
 RUN npm ci --no-audit && \
