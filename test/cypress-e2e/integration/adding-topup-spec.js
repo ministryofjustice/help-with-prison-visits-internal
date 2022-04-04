@@ -5,7 +5,7 @@ const expect = require('chai').expect
 const TopUpStatusEnum = require('../../../app/constants/top-up-status-enum')
 
 // Variables for creating and deleting a record
-const reference = '1111111'
+const reference = '123459'
 let claimId
 const expectedTopUpAmount = '99.02'
 const expectedTopUpReason = 'This is a test'

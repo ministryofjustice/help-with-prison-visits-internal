@@ -46,10 +46,20 @@ module.exports = (on, config) => {
      * Finds first claim reference for given Assisted Digital
      * caseworker then deletes all records with that reference
      *
-     * @param {String} claimId Claim Id
+     * @param {String} reference Reference
      */
-    deleteAll (claimId) {
-      return databaseHelper.deleteAll(claimId)
+    deleteAll (reference) {
+      return databaseHelper.deleteAll(reference)
+    },
+
+    /**
+     * Finds first claim reference for given Assisted Digital
+     * caseworker then deletes all records with that reference
+     *
+     * @param {String} reference Reference
+     */
+    getBenefitExpiryDate (reference) {
+      return databaseHelper.getBenefitExpiryDate(reference)
     }
   })
 }
