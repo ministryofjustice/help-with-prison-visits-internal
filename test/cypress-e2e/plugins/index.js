@@ -36,6 +36,21 @@ module.exports = (on, config) => {
      * Finds first claim reference for given Assisted Digital
      * caseworker then deletes all records with that reference
      *
+     * @param {String} reference email address
+     * @param {Date} date email EmailAddress
+     * @param {String} status email EmailAddress
+     * @param {Date} visitDate email EmailAddress
+     * @param {Number} increment email EmailAddress
+     * @param {String} paymentStatus email EmailAddress
+     */
+    insertTestDataAndUpdate ({ reference, date, status, visitDate, increment, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount }) {
+      return databaseHelper.insertTestData(reference, date, status, visitDate, increment, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount)
+    },
+
+    /**
+     * Finds first claim reference for given Assisted Digital
+     * caseworker then deletes all records with that reference
+     *
      * @param {String} claimId Claim Id
      */
     getLastTopUpAdded (claimId) {
@@ -46,10 +61,20 @@ module.exports = (on, config) => {
      * Finds first claim reference for given Assisted Digital
      * caseworker then deletes all records with that reference
      *
-     * @param {String} claimId Claim Id
+     * @param {String} reference Reference
      */
-    deleteAll (claimId) {
-      return databaseHelper.deleteAll(claimId)
+    deleteAll (reference) {
+      return databaseHelper.deleteAll(reference)
+    },
+
+    /**
+     * Finds first claim reference for given Assisted Digital
+     * caseworker then deletes all records with that reference
+     *
+     * @param {String} reference Reference
+     */
+    getBenefitExpiryDate (reference) {
+      return databaseHelper.getBenefitExpiryDate(reference)
     }
   })
 }
