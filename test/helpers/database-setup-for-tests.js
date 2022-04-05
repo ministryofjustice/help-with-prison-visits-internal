@@ -3,15 +3,15 @@ const { getDatabaseConnector } = require('../../app/databaseConnector')
 const db = getDatabaseConnector()
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-function insertTestData (reference, date, status, visitDate, increment, paymentStatus = null) {
+function insertTestData (reference, date, status, visitDate, increment, paymentStatus = null, dateReviewed = null, assistedDigitalCaseworker = null, paymentAmount = null) {
   const idIncrement = increment || 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
   const uniqueId = Math.floor(Date.now() / 100) - 15000000000 + idIncrement
 
-  return insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus)
+  return insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount)
 }
 
-function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus) {
+function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount) {
   const data = getTestData(reference, status)
 
   const ids = {}
@@ -88,7 +88,10 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
           PaymentMethod: data.Claim.PaymentMethod,
           AssignedTo: data.Claim.AssignedTo,
           AssignmentExpiry: moment(date).add(5, 'minutes').toDate(), // current time + 5 minutes
-          PaymentStatus: paymentStatus
+          PaymentStatus: paymentStatus,
+          AssistedDigitalCaseworker: assistedDigitalCaseworker || null,
+          DateReviewed: dateReviewed || null,
+          PaymentAmount: paymentAmount || null
         })
     })
     .then(function (result) {
