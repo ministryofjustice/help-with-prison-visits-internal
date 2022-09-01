@@ -5,8 +5,14 @@ const log = require('../services/log')
 module.exports = function (router) {
   router.get('/logout', function (req, res) {
     log.info({ user: req.user }, 'logout')
-    req.logout()
-    return res.redirect(`${config.TOKEN_HOST}${config.LOGOUT_PATH}?client_id=${config.CLIENT_ID}&redirect_uri=${config.POST_LOGOUT_URL}`)
+    const redirectUrl = `${config.TOKEN_HOST}${config.LOGOUT_PATH}?client_id=${config.CLIENT_ID}&redirect_uri=${config.POST_LOGOUT_URL}`
+    
+    if (req.user) {
+      req.logout(err => {
+        if (err) return next(err)
+        return req.session.destroy(() => res.redirect(redirectUrl))
+      })
+    } else res.redirect(redirectUrl)
   })
 
   router.get('/login', passport.authenticate('oauth2'))

@@ -42,15 +42,6 @@ module.exports = function (app) {
 
     app.set('trust proxy', true)
 
-    // Configure redis client
-    // const { HOST, PORT, PASSWORD } = config.REDIS
-    client.on('error', function (err) {
-      log.error('Could not establish a connection with redis. ' + err)
-    })
-    client.on('connect', function () {
-      log.info('Connected to redis successfully')
-    })
-
     app.use(session({
       store: new RedisStore({ client }),
       secret: config.HWPVCOOKIE.SESSION_SECRET,
