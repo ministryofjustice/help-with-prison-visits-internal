@@ -4,32 +4,55 @@ const redis = require('redis')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
 const axios = require('axios')
-const RedisStore = require('connect-redis')(session)
+const connectRedis = require('connect-redis')
 const log = require('./services/log')
 const applicationRoles = require('./constants/application-roles-enum')
 
+const RedisStore = connectRedis(session)
+
+const url =
+  config.redis.tls_enabled === 'true'
+    ? `rediss://${config.REDIS.HOST}:${config.REDIS.PORT}`
+    : `redis://${config.REDIS.HOST}:${config.REDIS.PORT}`
+
+const createRedisClient = ({ legacyMode }) => {
+  const client = redis.createClient({
+    url,
+    password: config.REDIS.PASSWORD,
+    legacyMode,
+    socket: {
+      reconnectStrategy: (attempts) => {
+        // Exponential back off: 20ms, 40ms, 80ms..., capped to retry every 30 seconds
+        const nextDelay = Math.min(2 ** attempts * 20, 30000)
+        log.info(`Retry Redis connection attempt: ${attempts}, next attempt in: ${nextDelay}ms`)
+        return nextDelay
+      }
+    }
+  })
+
+  client.on('error', (e) => log.error('Redis client error', e))
+
+  return client
+}
+
 module.exports = function (app) {
   if (config.AUTHENTICATION_ENABLED === 'true') {
+    const client = createRedisClient({ legacyMode: true })
+    client.connect().catch((err) => log.error('Error connecting to Redis', err))
+
     app.set('trust proxy', true)
 
     // Configure redis client
-    const { HOST, PORT, PASSWORD } = config.REDIS
-    const redisClient = redis.createClient({
-      legacyMode: true,
-      host: HOST,
-      port: PORT,
-      password: PASSWORD,
-      tls: config.PRODUCTION ? {} : false
-    })
-    redisClient.on('error', function (err) {
+    // const { HOST, PORT, PASSWORD } = config.REDIS
+    client.on('error', function (err) {
       log.error('Could not establish a connection with redis. ' + err)
     })
-    redisClient.on('connect', function () {
+    client.on('connect', function () {
       log.info('Connected to redis successfully')
     })
 
     app.use(session({
-      store: new RedisStore({ client: redisClient }),
+      store: new RedisStore({ client }),
       secret: config.HWPVCOOKIE.SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
