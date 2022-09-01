@@ -13,7 +13,7 @@ module.exports = function (router) {
   router.get('/search', function (req, res) {
     authorisation.hasRoles(req, allowedRoles)
     const query = req.query.q
-    return res.render('search', { query: query })
+    return res.render('search', { query })
   })
 
   router.get('/search-results', function (req, res) {
@@ -40,7 +40,7 @@ module.exports = function (router) {
             draw: req.query.draw,
             recordsTotal: data.total.Count,
             recordsFiltered: data.total.Count,
-            claims: claims
+            claims
           })
         })
         .catch(function (error) {

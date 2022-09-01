@@ -15,6 +15,7 @@ module.exports = function (app) {
     // Configure redis client
     const { HOST, PORT, PASSWORD } = config.REDIS
     const redisClient = redis.createClient({
+      legacyMode: true,
       host: HOST,
       port: PORT,
       password: PASSWORD,
@@ -90,7 +91,7 @@ module.exports = function (app) {
                           const sessionUser = {
                             email: userEmail.email,
                             name: userDetails.name,
-                            roles: roles
+                            roles
                           }
                           done(null, sessionUser)
                         } else {
@@ -102,19 +103,19 @@ module.exports = function (app) {
                       }
                     })
                     .catch(function (error) {
-                      log.error({ error: error }, 'error returned when requesting user roles from SSO')
+                      log.error({ error }, 'error returned when requesting user roles from SSO')
                       done(error, null)
                     })
                 }
               })
               .catch(function (error) {
-                log.error({ error: error }, 'error returned when requesting user email from SSO')
+                log.error({ error }, 'error returned when requesting user email from SSO')
                 done(error, null)
               })
           }
         })
         .catch(function (error) {
-          log.error({ error: error }, 'error returned when requesting user details from SSO')
+          log.error({ error }, 'error returned when requesting user details from SSO')
           done(error, null)
         })
     }))

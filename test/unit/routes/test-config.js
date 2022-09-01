@@ -21,7 +21,7 @@ describe('routes/config', function () {
     AutoApprovalConfigStub = sinon.stub().returns({})
 
     const route = proxyquire('../../../app/routes/config', {
-      '../services/authorisation': { hasRoles: hasRoles },
+      '../services/authorisation': { hasRoles },
       '../services/data/get-auto-approval-config': getAutoApprovalConfigStub,
       '../services/data/update-auto-approval-config': updateAutoApprovalConfigStub,
       '../services/domain/auto-approval-config': AutoApprovalConfigStub
