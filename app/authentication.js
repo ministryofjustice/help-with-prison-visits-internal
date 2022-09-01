@@ -11,7 +11,7 @@ const applicationRoles = require('./constants/application-roles-enum')
 const RedisStore = connectRedis(session)
 
 const url =
-  config.redis.tls_enabled === 'true'
+  config.PRODUCTION
     ? `rediss://${config.REDIS.HOST}:${config.REDIS.PORT}`
     : `redis://${config.REDIS.HOST}:${config.REDIS.PORT}`
 
