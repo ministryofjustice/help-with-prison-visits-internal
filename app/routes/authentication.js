@@ -3,20 +3,26 @@ const passport = require('passport')
 const log = require('../services/log')
 
 module.exports = function (router) {
-  router.get('/logout', function (req, res) {
+  router.get('/logout', function (req, res, next) {
     log.info({ user: req.user }, 'logout')
-    req.logout()
-    return res.redirect(`${config.TOKEN_HOST}${config.LOGOUT_PATH}?client_id=${config.CLIENT_ID}&redirect_uri=${config.POST_LOGOUT_URL}`)
+    const redirectUrl = `${config.TOKEN_HOST}${config.LOGOUT_PATH}?client_id=${config.CLIENT_ID}&redirect_uri=${config.POST_LOGOUT_URL}`
+
+    if (req.user) {
+      req.logout(err => {
+        if (err) return next(err)
+        return req.session.destroy(() => res.redirect(redirectUrl))
+      })
+    } else res.redirect(redirectUrl)
   })
 
   router.get('/login', passport.authenticate('oauth2'))
 
-  router.get('/login/callback', passport.authenticate('oauth2', { failureRedirect: '/unauthorized' }),
-    function (req, res) {
-      // Successful authentication, redirect home.
-      log.info({ user: req.user }, 'login')
-      return res.redirect('/')
-    })
+  router.get('/login/callback', (req, res, next) =>
+    passport.authenticate('oauth2', {
+      successReturnToOrRedirect: req.session.returnTo || '/',
+      failureRedirect: '/unauthorized'
+    })(req, res, next)
+  )
 
   router.get('/unauthorized', function (req, res) {
     log.info({ user: req.user }, 'unauthorized')

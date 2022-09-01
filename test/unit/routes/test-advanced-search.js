@@ -21,8 +21,8 @@ const EXPECTED_DATE_FROM = dateFormatter.build('12', '12', '2016').startOf('day'
 const EXPECTED_DATE_TO = dateFormatter.build('12', '12', '2016').endOf('day').toDate()
 
 const INPUT_SEARCH_CRITERIA = {
-  start: start,
-  length: length,
+  start,
+  length,
   reference: 'APVS123',
   name: 'testName',
   ninumber: 'apvs1234',
@@ -220,7 +220,7 @@ describe('routes/index', function () {
       getClaimListForAdvancedSearch.resolves({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
       return supertest(app)
         .post('/advanced-search-results')
-        .send({ start: start, length: length })
+        .send({ start, length })
         .expect(200)
         .expect(function (response) {
           expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line

@@ -93,7 +93,7 @@ module.exports = function (router) {
             document: req.params.documentType,
             fileUploadGuidingText: DocumentTypeEnum,
             URL: req.url,
-            csrfToken: csrfToken
+            csrfToken
           })
         } else {
           next(error)

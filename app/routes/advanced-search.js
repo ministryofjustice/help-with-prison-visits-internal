@@ -83,7 +83,7 @@ module.exports = function (router) {
             draw: 0,
             recordsTotal: 0,
             recordsFiltered: 0,
-            claims: claims
+            claims
           })
         }
 
@@ -91,7 +91,7 @@ module.exports = function (router) {
           draw: req.body.draw,
           recordsTotal: data.total.Count,
           recordsFiltered: data.total.Count,
-          claims: claims
+          claims
         })
       })
       .catch(function (error) {

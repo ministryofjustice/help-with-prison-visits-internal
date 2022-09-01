@@ -31,7 +31,7 @@ describe('routes/download-payment-files', function () {
     }
 
     const route = proxyquire('../../../app/routes/download-payment-files', {
-      '../services/authorisation': { hasRoles: hasRoles },
+      '../services/authorisation': { hasRoles },
       '../services/data/get-direct-payment-files': getDirectPaymentFiles,
       '../services/aws-helper': awsHelperStub
     })
@@ -96,7 +96,7 @@ describe('routes/download-payment-files', function () {
       }
 
       const route = proxyquire('../../../app/routes/download-payment-files', {
-        '../services/authorisation': { hasRoles: hasRoles },
+        '../services/authorisation': { hasRoles },
         '../services/data/get-direct-payment-files': getDirectPaymentFiles,
         '../services/aws-helper': awsHelperStub
       })

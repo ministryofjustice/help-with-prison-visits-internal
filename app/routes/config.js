@@ -14,9 +14,9 @@ module.exports = function (router) {
       .then(function (autoApprovalConfig) {
         const rulesDisabled = autoApprovalConfig.RulesDisabled ? autoApprovalConfig.RulesDisabled : ''
         res.render('config', {
-          autoApprovalConfig: autoApprovalConfig,
-          autoApprovalRulesEnum: autoApprovalRulesEnum,
-          rulesDisabled: rulesDisabled
+          autoApprovalConfig,
+          autoApprovalRulesEnum,
+          rulesDisabled
         })
       })
       .catch(function (error) {
@@ -52,8 +52,8 @@ module.exports = function (router) {
       if (error instanceof ValidationError) {
         res.status(400).render('config', {
           autoApprovalConfig: req.body,
-          autoApprovalRulesEnum: autoApprovalRulesEnum,
-          rulesDisabled: rulesDisabled,
+          autoApprovalRulesEnum,
+          rulesDisabled,
           errors: error.validationErrors
         })
       } else {

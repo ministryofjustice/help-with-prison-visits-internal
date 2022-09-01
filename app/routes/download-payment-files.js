@@ -35,13 +35,13 @@ module.exports = function (router) {
 
         return res.render('download-payment-files', {
           title: 'APVS Download payment files',
-          topAccessPayFile: topAccessPayFile,
-          previousAccessPayFiles: previousAccessPayFiles,
-          topApvuAccessPayFile: topApvuAccessPayFile,
-          previousApvuAccessPayFiles: previousApvuAccessPayFiles,
-          topAdiJournalFile: topAdiJournalFile,
-          previousAdiJournalFiles: previousAdiJournalFiles,
-          dateHelper: dateHelper
+          topAccessPayFile,
+          previousAccessPayFiles,
+          topApvuAccessPayFile,
+          previousApvuAccessPayFiles,
+          topAdiJournalFile,
+          previousAdiJournalFiles,
+          dateHelper
         })
       })
       .catch(function (error) {

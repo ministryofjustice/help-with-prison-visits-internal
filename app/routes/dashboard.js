@@ -38,9 +38,9 @@ function getFilterMonths () {
   const fourMonthsAgo = dateFormatter.now().subtract(4, 'months').format('MMMM')
 
   return {
-    oneMonthAgo: oneMonthAgo,
-    twoMonthsAgo: twoMonthsAgo,
-    threeMonthsAgo: threeMonthsAgo,
-    fourMonthsAgo: fourMonthsAgo
+    oneMonthAgo,
+    twoMonthsAgo,
+    threeMonthsAgo,
+    fourMonthsAgo
   }
 }
