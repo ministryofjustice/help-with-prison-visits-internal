@@ -11,7 +11,7 @@ module.exports = defineConfig({
   e2e: {
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
-    setupNodeEvents(on, config) {
+    setupNodeEvents (on, config) {
       on('task', {
 
         /**
@@ -28,7 +28,7 @@ module.exports = defineConfig({
         insertTestData ({ reference, date, status, visitDate, increment, paymentStatus }) {
           return databaseHelper.insertTestData(reference, date, status, visitDate, increment, paymentStatus)
         },
-    
+
         /**
          * Finds first claim reference for given Assisted Digital
          * caseworker then deletes all records with that reference
@@ -43,7 +43,7 @@ module.exports = defineConfig({
         insertTestDataAndUpdate ({ reference, date, status, visitDate, increment, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount }) {
           return databaseHelper.insertTestData(reference, date, status, visitDate, increment, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount)
         },
-    
+
         /**
          * Finds first claim reference for given Assisted Digital
          * caseworker then deletes all records with that reference
@@ -53,7 +53,7 @@ module.exports = defineConfig({
         getLastTopUpAdded (claimId) {
           return databaseHelper.getLastTopUpAdded(claimId)
         },
-    
+
         /**
          * Finds first claim reference for given Assisted Digital
          * caseworker then deletes all records with that reference
@@ -63,7 +63,7 @@ module.exports = defineConfig({
         deleteAll (reference) {
           return databaseHelper.deleteAll(reference)
         },
-    
+
         /**
          * Finds first claim reference for given Assisted Digital
          * caseworker then deletes all records with that reference
@@ -77,6 +77,6 @@ module.exports = defineConfig({
     },
     baseUrl: 'http://localhost:3001',
     specPattern: 'test/cypress-e2e/integration/**/*.cy.{js,jsx,ts,tsx}',
-    supportFile: 'test/cypress-e2e/support/index.js',
-  },
+    supportFile: 'test/cypress-e2e/support/index.js'
+  }
 })
