@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 const { defineConfig } = require('cypress')
-const databaseHelper = require('../../helpers/database-setup-for-tests')
+const databaseHelper = require('./test/helpers/database-setup-for-tests')
 
 module.exports = defineConfig({
   fixturesFolder: 'test/cypress-e2e/fixtures',
