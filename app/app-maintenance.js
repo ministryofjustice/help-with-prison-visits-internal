@@ -29,6 +29,16 @@ publicFolders.forEach(dir => {
   app.use('/public', express.static(path.join(__dirname, dir)))
 })
 
+// jquery asset paths
+const govukAssets = [
+  '../node_modules/jquery/dist',
+  '../node_modules/datatables.net/js',
+  '../node_modules/datatables.net-dt/css',
+]
+govukAssets.forEach(dir => {
+  app.use('/assets', express.static(path.join(__dirname, dir)))
+})
+
 app.use(favicon(path.join(__dirname, '../node_modules/govuk_template_jinja/assets/images/favicon.ico')))
 
 // Send assetPath to all views.
