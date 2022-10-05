@@ -71,7 +71,7 @@ publicFolders.forEach(dir => {
 const govukAssets = [
   '../node_modules/datatables.net/js',
   '../node_modules/datatables.net-dt/css',
-  '../node_modules/jquery/dist',
+  '../node_modules/jquery/dist'
 ]
 govukAssets.forEach(dir => {
   app.use('/assets', express.static(path.join(__dirname, dir)))
