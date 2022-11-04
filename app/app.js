@@ -1,4 +1,3 @@
-require('./azure-appinsights')
 const config = require('../config')
 const express = require('express')
 const nunjucks = require('nunjucks')
