@@ -47,7 +47,7 @@ let claimDeductions
 
 module.exports = function (router) {
   // GET
-  router.get('/claim/:claimId', function (req, res) {
+  router.get('/claim/:claimId', function (req, res, next) {
     const allowedRoles = [
       applicationRoles.CLAIM_ENTRY_BAND_2,
       applicationRoles.CLAIM_PAYMENT_BAND_3,
@@ -56,6 +56,7 @@ module.exports = function (router) {
     ]
     authorisation.hasRoles(req, allowedRoles)
     return renderViewClaimPage(req.params.claimId, req, res)
+      .catch(error => next(error))
   })
 
   // APVS0246 Need Clarification on who can do this
