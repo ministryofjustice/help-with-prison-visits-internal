@@ -9,15 +9,8 @@ const getClosedClaimStatus = require('./get-closed-claim-status')
 
 const APPROVED_STATUS_VALUES = [claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value]
 const IN_PROGRESS_STATUS_VALUES = [claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
-
-<<<<<<< HEAD
-let countQuery
 let selectQuery
 let selectFields
-=======
-var selectQuery
-var selectFields
->>>>>>> 28d35b9 (Remove count query)
 
 const validSearchOptions = [
   'reference',
@@ -206,7 +199,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
 
   return selectQuery
     .then(function (claims) {
-      var claimsToReturn = []
+      const claimsToReturn = []
       return Promise.each(claims, function (claim) {
         claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
         claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
@@ -239,7 +232,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
             total: claimsToReturn.length
           }
         })
-  })
+    })
 
   function applyReferenceFilter (query, reference) {
     query.where('Claim.Reference', 'like', `%${reference}%`)
@@ -376,16 +369,6 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
 
   function createBaseQueries (limit, offset) {
     const db = getDatabaseConnector()
-<<<<<<< HEAD
-
-    countQuery = db('Claim')
-      .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
-      .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
-      .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
-      .leftJoin('ClaimRejectionReason', 'Claim.RejectionReasonId', '=', 'ClaimRejectionReason.ClaimRejectionReasonId')
-      .count('Claim.ClaimId AS Count')
-=======
->>>>>>> 28d35b9 (Remove count query)
 
     selectQuery = db('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
