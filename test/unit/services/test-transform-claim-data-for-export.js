@@ -35,6 +35,7 @@ const TEST_CLAIM_DATA_MIXED = [
     PaymentMethod: paymentMethodEnum.DIRECT_BANK_PAYMENT.value
   }
 ]
+const TEST_CLAIM_DATA_MIXED_CLAIMIDS = [1]
 
 const TEST_CLAIM_DATA_BANK = [
   {
@@ -146,9 +147,9 @@ describe('services/transform-claim-data-for-export', function () {
   it('should call all relevant functions', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
-        expect(getClaimEscortsStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
-        expect(getClaimExpensesForClaimsStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
-        expect(getClaimChildCountsStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
+        expect(getClaimEscortsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).to.be.true //eslint-disable-line
+        expect(getClaimExpensesForClaimsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).to.be.true //eslint-disable-line
+        expect(getClaimChildCountsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).to.be.true //eslint-disable-line
       })
   })
 
