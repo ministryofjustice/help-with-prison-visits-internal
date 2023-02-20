@@ -10,11 +10,11 @@ const getClosedClaimStatus = require('./get-closed-claim-status')
 const APPROVED_STATUS_VALUES = [claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value]
 const IN_PROGRESS_STATUS_VALUES = [claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
 
-var countQuery
-var selectQuery
-var selectFields
+let countQuery
+let selectQuery
+let selectFields
 
-var validSearchOptions = [
+const validSearchOptions = [
   'reference',
   'name',
   'ninumber',
@@ -86,9 +86,9 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     selectFields = ADVANCED_SEARCH_FIELDS
   }
 
-  var validSearchOptionFound = false
+  let validSearchOptionFound = false
 
-  for (var option in searchCriteria) {
+  for (const option in searchCriteria) {
     if (validSearchOptions.indexOf(option) !== -1) {
       if (searchCriteria[option]) {
         validSearchOptionFound = true
@@ -227,7 +227,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     .then(function (count) {
       return selectQuery
         .then(function (claims) {
-          var claimsToReturn = []
+          const claimsToReturn = []
           return Promise.each(claims, function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
@@ -288,7 +288,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   }
 
   function applyClaimStatusFilter (query, claimStatus) {
-    var value = claimStatusEnum[claimStatus] ? claimStatusEnum[claimStatus].value : null
+    const value = claimStatusEnum[claimStatus] ? claimStatusEnum[claimStatus].value : null
     if (value === claimStatusEnum.APPROVED.value) {
       query.whereIn('Claim.Status', APPROVED_STATUS_VALUES)
     } else {
@@ -398,7 +398,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
 
   function createBaseQueries (limit, offset) {
     const db = getDatabaseConnector()
-  
+
     countQuery = db('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
       .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')

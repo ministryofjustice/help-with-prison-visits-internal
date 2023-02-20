@@ -1,12 +1,12 @@
-var expect = require('chai').expect
-var getAutoApprovalConfig = require('../../../../app/services/data/get-auto-approval-config')
+const expect = require('chai').expect
+const getAutoApprovalConfig = require('../../../../app/services/data/get-auto-approval-config')
 const { db } = require('../../../helpers/database-setup-for-tests')
-var config = require('../../../../config')
-var dateFormatter = require('../../../../app/services/date-formatter')
-var insertedIds
+const config = require('../../../../config')
+const dateFormatter = require('../../../../app/services/date-formatter')
+let insertedIds
 
 describe('services/data/get-auto-approval-config', function () {
-  var existingAutoApprovalId
+  let existingAutoApprovalId
 
   before(function () {
     return getCurrentAutoApprovalConfigId()

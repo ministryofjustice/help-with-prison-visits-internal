@@ -6,13 +6,13 @@ const { insertTestData, insertClaimDeduction, insertClaim, deleteAll, db } = req
 const updateRelatedClaimRemainingOverpaymentAmount = require('../../../../app/services/data/update-related-claims-remaining-overpayment-amount')
 
 describe('services/data/update-related-claim-remaining-overpayment-amount', function () {
-  var REFERENCE = 'OVERPAY'
-  var date = dateFormatter.now().toDate()
-  var currentClaimId
-  var eligibilityId
-  var claimId1
-  var claimId2
-  var claimId3
+  const REFERENCE = 'OVERPAY'
+  const date = dateFormatter.now().toDate()
+  let currentClaimId
+  let eligibilityId
+  let claimId1
+  let claimId2
+  let claimId3
 
   beforeEach(function () {
     return insertTestData(REFERENCE, date, 'Test').then(function (ids) {
@@ -66,8 +66,8 @@ describe('services/data/update-related-claim-remaining-overpayment-amount', func
   it('should reduce remaining overpayment total to £20 when deduction total < remaining overpayment total (multiple overpaid claims)', function () {
     // Deduction Total - £100
     // Remaining Overpayment Total - £40 + £40 + £40
-    var date1 = moment(date).add(10, 'days').toDate()
-    var date2 = moment(date).add(20, 'days').toDate()
+    const date1 = moment(date).add(10, 'days').toDate()
+    const date2 = moment(date).add(20, 'days').toDate()
 
     return insertClaim(claimId1, eligibilityId, REFERENCE, date, 'Test', true, 80, 40)
       .then(function () {
@@ -96,8 +96,8 @@ describe('services/data/update-related-claim-remaining-overpayment-amount', func
   it('should reduce remaining overpayment total to 0 when deduction total > remaining overpayment total (multiple overpaid claims)', function () {
     // Deduction Total - £100
     // Remaining Overpayment Total - £40 + £20 + £20
-    var date1 = moment(date).add(10, 'days').toDate()
-    var date2 = moment(date).add(20, 'days').toDate()
+    const date1 = moment(date).add(10, 'days').toDate()
+    const date2 = moment(date).add(20, 'days').toDate()
 
     return insertClaim(claimId1, eligibilityId, REFERENCE, date, 'Test', true, 80, 40)
       .then(function () {
@@ -126,8 +126,8 @@ describe('services/data/update-related-claim-remaining-overpayment-amount', func
   it('should reduce remaining overpayment total to 0 when deduction total = remaining overpayment total (multiple overpaid claims)', function () {
     // Deduction Total - £100
     // Remaining Overpayment Total - £40 + £30 + £30
-    var date1 = moment(date).add(10, 'days').toDate()
-    var date2 = moment(date).add(20, 'days').toDate()
+    const date1 = moment(date).add(10, 'days').toDate()
+    const date2 = moment(date).add(20, 'days').toDate()
 
     return insertClaim(claimId1, eligibilityId, REFERENCE, date, 'Test', true, 80, 40)
       .then(function () {
@@ -151,7 +151,7 @@ describe('services/data/update-related-claim-remaining-overpayment-amount', func
   })
 
   it('should not change remaining overpayment total or overpayment status if current claim has no overpayment deductions', function () {
-    var remainingOverpaymentAmount = 40
+    const remainingOverpaymentAmount = 40
     return db('ClaimDeduction').where('Reference', REFERENCE).del()
       .then(function () {
         return insertClaim(claimId1, eligibilityId, REFERENCE, date, 'Test', true, remainingOverpaymentAmount, remainingOverpaymentAmount)

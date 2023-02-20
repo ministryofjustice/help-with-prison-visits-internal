@@ -11,8 +11,8 @@ const NOTE = 'NOTE'
 const CASEWORKER = 'CASEWORKER'
 const IS_INTERNAL = false
 
-var eligibilityId
-var claimId
+let eligibilityId
+let claimId
 
 describe('services/data/insert-claim-event', function () {
   before(function () {
@@ -28,7 +28,7 @@ describe('services/data/insert-claim-event', function () {
         return db.first().from('ClaimEvent')
           .where({ EligibilityId: eligibilityId, Reference: REFERENCE, ClaimId: claimId })
           .orderBy('DateAdded', 'desc')
-        })
+      })
       .then(function (claimEvent) {
         expect(claimEvent.EligibilityId).to.equal(eligibilityId)
         expect(claimEvent.Reference).to.equal(REFERENCE)

@@ -8,13 +8,13 @@ const newLine = '<br >'
 module.exports = function (claim, overpaymentResponse) {
   const db = getDatabaseConnector()
 
-  var eventLabel = overpaymentResponse.action
-  var note = overpaymentResponse.reason
-  var toBeMarkedAsOverpaid = overpaymentResponse.action === overpaymentActionEnum.OVERPAID
-  var toBeResolved = overpaymentResponse.action === overpaymentActionEnum.RESOLVE
-  var toBeUpdated = overpaymentResponse.action === overpaymentActionEnum.UPDATE
+  const eventLabel = overpaymentResponse.action
+  let note = overpaymentResponse.reason
+  const toBeMarkedAsOverpaid = overpaymentResponse.action === overpaymentActionEnum.OVERPAID
+  const toBeResolved = overpaymentResponse.action === overpaymentActionEnum.RESOLVE
+  const toBeUpdated = overpaymentResponse.action === overpaymentActionEnum.UPDATE
 
-  var updateClaim = {
+  const updateClaim = {
     IsOverpaid: toBeMarkedAsOverpaid || toBeUpdated,
     LastUpdated: dateFormatter.now().toDate()
   }
@@ -44,7 +44,7 @@ module.exports = function (claim, overpaymentResponse) {
 }
 
 function buildUpdateNote (previousRemainingAmount, newRemainingAmount, note) {
-  var result = []
+  const result = []
   result.push(note)
   result.push(`Previous remaining amount: £${displayHelper.toDecimal(previousRemainingAmount)}`)
   result.push(`New remaining amount: £${displayHelper.toDecimal(newRemainingAmount)}`)

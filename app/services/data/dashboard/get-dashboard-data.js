@@ -6,13 +6,13 @@ const getPendingClaimCount = require('../../../services/data/dashboard/get-pendi
 const getRejectedClaimCount = require('../../../services/data/dashboard/get-rejected-claim-count')
 
 module.exports = function (filter) {
-  var promises = []
-  var pendingCount = 0
-  var inProgressCount = 0
-  var paidCount = 0
-  var autoApprovedCount = 0
-  var manuallyApprovedCount = 0
-  var rejectedCount = 0
+  const promises = []
+  let pendingCount = 0
+  let inProgressCount = 0
+  let paidCount = 0
+  let autoApprovedCount = 0
+  let manuallyApprovedCount = 0
+  let rejectedCount = 0
 
   promises.push(getAutoApprovedClaimCount(filter).then(function (result) { autoApprovedCount = result[0].Count }))
   promises.push(getInProgressClaimCount(filter).then(function (result) { inProgressCount = result[0].Count }))

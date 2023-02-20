@@ -1,12 +1,12 @@
-var expect = require('chai').expect
-var dateFormatter = require('../../../../app/services/date-formatter')
-var { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
+const expect = require('chai').expect
+const dateFormatter = require('../../../../app/services/date-formatter')
+const { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
-var getClaimListAndCount = require('../../../../app/services/data/get-claim-list-and-count')
-var testData
-var reference = 'CLISTC1'
-var date
-var claimId
+const getClaimListAndCount = require('../../../../app/services/data/get-claim-list-and-count')
+let testData
+const reference = 'CLISTC1'
+let date
+let claimId
 
 describe('services/data/get-claim-list-and-count', function () {
   describe('module', function () {

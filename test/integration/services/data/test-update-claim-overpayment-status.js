@@ -6,10 +6,10 @@ const { insertTestData, deleteAll, db } = require('../../../helpers/database-set
 const updateClaimOverpaymentStatus = require('../../../../app/services/data/update-claim-overpayment-status')
 const overpaymentActionEnum = require('../../../../app/constants/overpayment-action-enum')
 
-var date
-var reference = 'OVERPAY'
-var claimId
-var previousLastUpdated
+let date
+const reference = 'OVERPAY'
+let claimId
+let previousLastUpdated
 
 describe('services/data/test-update-claim-overpayment-status', function () {
   beforeEach(function () {
@@ -21,17 +21,17 @@ describe('services/data/test-update-claim-overpayment-status', function () {
   })
 
   it(`should mark a non-overpaid claim as overpaid (${overpaymentActionEnum.OVERPAID})`, function () {
-    var amount = '50'
-    var reason = 'Test Reason'
-    var claimAfter
+    const amount = '50'
+    const reason = 'Test Reason'
+    let claimAfter
 
     return db('Claim').first().where('ClaimId', claimId)
       .then(function (claimBefore) {
-        var overpaymentResponse = {
+        const overpaymentResponse = {
           action: overpaymentActionEnum.OVERPAID,
-          amount: amount,
+          amount,
           remaining: amount,
-          reason: reason
+          reason
         }
 
         return updateClaimOverpaymentStatus(claimBefore, overpaymentResponse)
@@ -54,21 +54,21 @@ describe('services/data/test-update-claim-overpayment-status', function () {
   })
 
   it(`should update remaining amount for overpayment (${overpaymentActionEnum.UPDATE})`, function () {
-    var remaining = '25'
-    var reason = 'Test Reason'
-    var claimAfter
-    var claimBefore
+    const remaining = '25'
+    const reason = 'Test Reason'
+    let claimAfter
+    let claimBefore
 
     return db('Claim').where('ClaimId', claimId).update({ IsOverpaid: true })
       .then(function () {
         return db('Claim').first().where('ClaimId', claimId)
       })
       .then(function (claim) {
-        var overpaymentResponse = {
+        const overpaymentResponse = {
           action: overpaymentActionEnum.UPDATE,
-          remaining: remaining,
+          remaining,
           amount: '',
-          reason: reason
+          reason
         }
 
         claimBefore = claim
@@ -97,21 +97,21 @@ describe('services/data/test-update-claim-overpayment-status', function () {
   })
 
   it(`should mark an overpaid claim as no longer overpaid (${overpaymentActionEnum.RESOLVE})`, function () {
-    var remaining = '0'
-    var reason = 'Test Reason'
-    var claimAfter
-    var claimBefore
+    const remaining = '0'
+    const reason = 'Test Reason'
+    let claimAfter
+    let claimBefore
 
     return db('Claim').where('ClaimId', claimId).update({ IsOverpaid: true })
       .then(function () {
         return db('Claim').first().where('ClaimId', claimId)
       })
       .then(function (claim) {
-        var overpaymentResponse = {
+        const overpaymentResponse = {
           action: overpaymentActionEnum.RESOLVE,
-          remaining: remaining,
+          remaining,
           amount: '',
-          reason: reason
+          reason
         }
 
         claimBefore = claim

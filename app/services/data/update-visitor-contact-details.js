@@ -11,7 +11,7 @@ module.exports = function (reference, eligibilityId, claimId, emailAddress, phon
     .where('EligibilityId', eligibilityId)
     .update({ EmailAddress: emailAddress, PhoneNumber: phoneNumber })
     .then(function () {
-      var note = `Updated email address from ${previousEmailAddress} to ${emailAddress}, phone number from ${previousPhoneNumber} to ${phoneNumber}`
+      const note = `Updated email address from ${previousEmailAddress} to ${emailAddress}, phone number from ${previousPhoneNumber} to ${phoneNumber}`
       return insertClaimEvent(reference, eligibilityId, claimId, claimEventEnum.UPDATED_CONTACT_DETAILS.value, null, note, caseworker, false)
     })
     .then(function () {

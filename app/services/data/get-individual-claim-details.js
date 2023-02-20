@@ -10,21 +10,22 @@ const dateFormatter = require('../date-formatter')
 const moment = require('moment')
 
 module.exports = function (claimId) {
-  var claim
-  var claimEligibleChild
-  var claimDocumentData
-  var claimExpenses
-  var claimChildren
-  var claimEscort
-  var claimDeductions
-  var claimDuplicatesExist
-  var claimantDuplicates
-  var claimDetails
-  var claimEvents
-  var overpaidClaimData
-  var reference
-  var topUps
-  var latestUnpaidTopUp
+  let claim
+  let claimEligibleChild
+  let claimDocumentData
+  let claimExpenses
+  let claimChildren
+  let claimEscort
+  let claimDeductions
+  let claimDuplicatesExist
+  let claimantDuplicates
+  let claimDetails
+  let claimEvents
+  let overpaidClaimData
+  let reference
+  let topUps
+  let latestUnpaidTopUp
+  let bankDuplicates
 
   return getClaimantDetails(claimId)
     .then(function (claimData) {
@@ -65,19 +66,19 @@ module.exports = function (claimId) {
       claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
 
       claimDetails = {
-        claim: claim,
-        claimEligibleChild: claimEligibleChild,
+        claim,
+        claimEligibleChild,
         claimExpenses: setClaimExpenseStatusForCarJourneys(claimExpenses),
         claimChild: claimChildren,
-        claimEscort: claimEscort,
-        claimEvents: claimEvents,
+        claimEscort,
+        claimEvents,
         deductions: claimDeductions,
         duplicates: claimDuplicatesExist,
         overpaidClaims: overpaidClaimData,
         TopUps: topUps,
-        claimantDuplicates: claimantDuplicates,
-        latestUnpaidTopUp: latestUnpaidTopUp,
-        bankDuplicates: bankDuplicates
+        claimantDuplicates,
+        latestUnpaidTopUp,
+        bankDuplicates
       }
 
       return claimDetails
@@ -253,7 +254,7 @@ function getTopUp (claimId) {
   return db.select('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate').from('TopUp')
     .where('ClaimId', claimId)
     .then(function (TopUpResults) {
-      var allTopUpsPaid = true
+      let allTopUpsPaid = true
       TopUpResults.forEach(function (TopUpResult) {
         if (TopUpResult.PaymentStatus === topUpStatusEnum.PENDING) {
           allTopUpsPaid = false

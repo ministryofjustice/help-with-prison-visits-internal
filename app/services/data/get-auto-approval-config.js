@@ -10,7 +10,7 @@ module.exports = function () {
     .first()
     .then(function (autoApprovalConfig) {
       if (autoApprovalConfig) {
-        var rulesDisabled = autoApprovalConfig.RulesDisabled
+        const rulesDisabled = autoApprovalConfig.RulesDisabled
         if (rulesDisabled) {
           autoApprovalConfig.RulesDisabled = rulesDisabled.split(',')
         }

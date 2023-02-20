@@ -4,9 +4,9 @@ const proxyquire = require('proxyquire')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
-var sandbox = sinon.createSandbox()
-var stubInsertClaimEvent = sandbox.stub().resolves()
-var stubInsertTaskSendClaimNotification = sandbox.stub().resolves()
+const sandbox = sinon.createSandbox()
+const stubInsertClaimEvent = sandbox.stub().resolves()
+const stubInsertTaskSendClaimNotification = sandbox.stub().resolves()
 
 const updateVisitorContactDetails = proxyquire('../../../../app/services/data/update-visitor-contact-details', {
   './insert-claim-event': stubInsertClaimEvent,
@@ -20,8 +20,8 @@ const OLD_EMAIL_ADDRESS = 'old@old.com'
 const OLD_PHONE_NUMBER = '123456789'
 const CASEWORKER = 'test@test.com'
 
-var eligibilityId
-var claimId
+let eligibilityId
+let claimId
 
 describe('services/data/update-visitor-contact-details', function () {
   beforeEach(function () {

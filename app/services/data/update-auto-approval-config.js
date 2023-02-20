@@ -14,7 +14,7 @@ module.exports = function (autoApprovalConfig) {
         return insertConfigData(autoApprovalConfig)
           .then(function (result) {
           // only disable current config if new config was set successfully
-            var insertResult = result[0]
+            const insertResult = result[0]
             return db('AutoApprovalConfig')
               .where('AutoApprovalConfigId', currentAutoApprovalConfig.AutoApprovalConfigId)
               .update('IsEnabled', 'false')
@@ -31,7 +31,7 @@ module.exports = function (autoApprovalConfig) {
 function insertConfigData (autoApprovalConfig) {
   const db = getDatabaseConnector()
 
-  var rulesDisabledJoined = null
+  let rulesDisabledJoined = null
   if (autoApprovalConfig.rulesDisabled) {
     rulesDisabledJoined = autoApprovalConfig.rulesDisabled.join()
   }

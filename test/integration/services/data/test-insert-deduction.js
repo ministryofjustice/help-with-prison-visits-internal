@@ -5,9 +5,9 @@ const { insertTestData, deleteAll, db } = require('../../../helpers/database-set
 const insertDeduction = require('../../../../app/services/data/insert-deduction')
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 const ClaimDeduction = require('../../../../app/services/domain/claim-deduction')
-var reference = 'V123456'
-var date
-var claimId
+const reference = 'V123456'
+let date
+let claimId
 
 describe('services/data/insert-deduction', function () {
   describe('module', function () {
@@ -19,10 +19,10 @@ describe('services/data/insert-deduction', function () {
     })
 
     it('should add a claim deduction when called', function () {
-      var claimDeductionType = deductionTypeEnum.OVERPAYMENT.value
-      var claimDeductionAmount = 5
-      var claimDeduction = new ClaimDeduction(claimDeductionType, claimDeductionAmount.toString())
-      var updatedClaimDeduction
+      const claimDeductionType = deductionTypeEnum.OVERPAYMENT.value
+      const claimDeductionAmount = 5
+      const claimDeduction = new ClaimDeduction(claimDeductionType, claimDeductionAmount.toString())
+      let updatedClaimDeduction
 
       return insertDeduction(claimId, claimDeduction)
         .then(function (claimDeductionId) {

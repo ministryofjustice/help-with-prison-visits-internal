@@ -5,10 +5,10 @@ const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
 const closeAdvanceClaim = require('../../../../app/services/data/close-advance-claim')
-var reference = 'CCACTION'
-var date
-var claimId
-var previousLastUpdated
+const reference = 'CCACTION'
+let date
+let claimId
+let previousLastUpdated
 
 describe('services/data/close-advance-claim', function () {
   describe('module', function () {
@@ -21,7 +21,7 @@ describe('services/data/close-advance-claim', function () {
     })
 
     it(`should set claim status to ${claimStatusEnum.APPROVED_ADVANCE_CLOSED.value} and create claim event`, function () {
-      var reason = 'Test reason'
+      const reason = 'Test reason'
 
       return closeAdvanceClaim(claimId, reason)
         .then(function () {

@@ -30,7 +30,7 @@ module.exports = function (query, offset, limit) {
         .orderBy('Claim.DateSubmitted', 'asc')
         .offset(offset)
         .then(function (claims) {
-          var claimsToReturn = []
+          const claimsToReturn = []
           return Promise.each(claims, function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')

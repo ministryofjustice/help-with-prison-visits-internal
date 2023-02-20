@@ -1,12 +1,12 @@
-var expect = require('chai').expect
-var dateFormatter = require('../../../../app/services/date-formatter')
-var { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
+const expect = require('chai').expect
+const dateFormatter = require('../../../../app/services/date-formatter')
+const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
-var getClaimExpenses = require('../../../../app/services/data/get-claim-expenses')
-var reference = 'GETEXP'
-var claimId
-var claimExpenseId1
-var claimExpenseId2
+const getClaimExpenses = require('../../../../app/services/data/get-claim-expenses')
+const reference = 'GETEXP'
+let claimId
+let claimExpenseId1
+let claimExpenseId2
 
 describe('services/data/get-claim-expenses', function () {
   before(function () {
@@ -21,8 +21,8 @@ describe('services/data/get-claim-expenses', function () {
   it('should return the expected claim expenses', function () {
     return getClaimExpenses(claimId)
       .then(function (result) {
-        var claimExpense1Found = claimExpenseFound(claimExpenseId1, result)
-        var claimExpense2Found = claimExpenseFound(claimExpenseId2, result)
+        const claimExpense1Found = claimExpenseFound(claimExpenseId1, result)
+        const claimExpense2Found = claimExpenseFound(claimExpenseId2, result)
 
         expect(claimExpense1Found).to.be.true //eslint-disable-line
         expect(claimExpense2Found).to.be.true //eslint-disable-line
@@ -36,7 +36,7 @@ describe('services/data/get-claim-expenses', function () {
   it('should return the expected fields', function () {
     return getClaimExpenses(claimId)
       .then(function (result) {
-        var fields = Object.keys(result[0])
+        const fields = Object.keys(result[0])
 
         expect(fields).to.contain('ClaimExpenseId')
         expect(fields).to.contain('ExpenseType')
@@ -53,7 +53,7 @@ describe('services/data/get-claim-expenses', function () {
 })
 
 function claimExpenseFound (claimExpenseId, claimExpenses) {
-  var result = false
+  let result = false
 
   claimExpenses.forEach(function (claimExpense) {
     if (claimExpense.ClaimExpenseId === claimExpenseId) {

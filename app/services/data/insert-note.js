@@ -10,11 +10,11 @@ module.exports = function (claimId, claimNote, user) {
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .first('Eligibility.EligibilityId', 'Eligibility.Reference')
     .then(function (result) {
-      var eligibilityId = result.EligibilityId
-      var reference = result.Reference
-      var caseworker = user
-      var decision = result.decision
-      var note = claimNote
+      const eligibilityId = result.EligibilityId
+      const reference = result.Reference
+      const caseworker = user
+      const decision = result.decision
+      const note = claimNote
 
       return Promise.all([updateClaim(claimId, note),
         insertClaimEventForNote(reference, eligibilityId, claimId, decision, note, caseworker)])
@@ -22,7 +22,7 @@ module.exports = function (claimId, claimNote, user) {
 }
 
 function updateClaim (claimId, note) {
-  var updateObject = {}
+  let updateObject = {}
   const db = getDatabaseConnector()
 
   updateObject = {

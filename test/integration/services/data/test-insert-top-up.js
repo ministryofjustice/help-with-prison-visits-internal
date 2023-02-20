@@ -6,9 +6,9 @@ const insertTopup = require('../../../../app/services/data/insert-top-up')
 const TopupResponse = require('../../../../app/services/domain/topup-response')
 const topUpStatusEnum = require('../../../../app/constants/top-up-status-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
-var reference = 'V123456'
-var date
-var claimId
+const reference = 'V123456'
+let date
+let claimId
 
 describe('services/data/insert-top-up', function () {
   describe('module', function () {
@@ -20,9 +20,9 @@ describe('services/data/insert-top-up', function () {
     })
 
     it('should add a claim top up when called', function () {
-      var amount = '141.80'
-      var reason = 'This is a test'
-      var topUp = new TopupResponse(amount, reason)
+      const amount = '141.80'
+      const reason = 'This is a test'
+      const topUp = new TopupResponse(amount, reason)
 
       return insertTopup({ ClaimId: claimId, Reference: reference, EligibilityId: claimId }, topUp, 'test@test.com')
         .then(function () {

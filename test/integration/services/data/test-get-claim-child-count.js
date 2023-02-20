@@ -1,15 +1,15 @@
-var expect = require('chai').expect
-var dateFormatter = require('../../../../app/services/date-formatter')
-var { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
+const expect = require('chai').expect
+const dateFormatter = require('../../../../app/services/date-formatter')
+const { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
-var getClaimChildCount = require('../../../../app/services/data/get-claim-child-count')
-var reference = 'CHILDCOUNT'
-var claimId
-var expectedValue
+const getClaimChildCount = require('../../../../app/services/data/get-claim-child-count')
+const reference = 'CHILDCOUNT'
+let claimId
+let expectedValue
 
 describe('services/data/get-claim-child-count', function () {
   before(function () {
-    var testData = getTestData(reference, '')
+    const testData = getTestData(reference, '')
     expectedValue = testData.ClaimChild.length
 
     return insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')

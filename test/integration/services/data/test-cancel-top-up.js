@@ -7,12 +7,12 @@ const cancelTopup = require('../../../../app/services/data/cancel-top-up')
 const TopupResponse = require('../../../../app/services/domain/topup-response')
 const topUpStatusEnum = require('../../../../app/constants/top-up-status-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
-var reference = 'V123456'
-var date
-var claimId
-var amount = '140.96'
-var reason = 'This is a test. To be cancelled'
-var topUp = new TopupResponse(amount, reason)
+const reference = 'V123456'
+let date
+let claimId
+const amount = '140.96'
+const reason = 'This is a test. To be cancelled'
+const topUp = new TopupResponse(amount, reason)
 
 describe('services/data/cancel-top-up', function () {
   describe('module', function () {

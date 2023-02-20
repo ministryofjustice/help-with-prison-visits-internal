@@ -4,8 +4,8 @@ const proxyquire = require('proxyquire')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
-var sandbox = sinon.createSandbox()
-var stubInsertClaimEvent = sandbox.stub().resolves()
+const sandbox = sinon.createSandbox()
+const stubInsertClaimEvent = sandbox.stub().resolves()
 
 const updateEligibilityTrustedStatus = proxyquire('../../../../app/services/data/update-eligibility-trusted-status', {
   './insert-claim-event': stubInsertClaimEvent
@@ -14,10 +14,10 @@ const updateEligibilityTrustedStatus = proxyquire('../../../../app/services/data
 const REFERENCE_ONE = 'REF12345'
 const REFERENCE_TWO = 'REF67891'
 
-var eligibilityId1
-var eligibilityId2
-var claimId1
-var claimId2
+let eligibilityId1
+let eligibilityId2
+let claimId1
+let claimId2
 
 describe('services/data/update-eligibility-trusted-status', function () {
   beforeEach(function () {
@@ -31,15 +31,15 @@ describe('services/data/update-eligibility-trusted-status', function () {
 
       return insertTestData(REFERENCE_TWO, dateFormatter.now().toDate(), 'Test', dateFormatter.now().toDate(), 10)
     })
-    .then(function (ids2) {
-      claimId2 = ids2.claimId
-      eligibilityId2 = ids2.eligibilityId
-    })
+      .then(function (ids2) {
+        claimId2 = ids2.claimId
+        eligibilityId2 = ids2.eligibilityId
+      })
   })
 
   it('should set the eligibility to untrusted and create a claim event', function () {
-    var isTrusted = false
-    var untrustedReason = 'untrusted reason'
+    const isTrusted = false
+    const untrustedReason = 'untrusted reason'
 
     return setEligibilityTrusted(eligibilityId1, true)
       .then(function () {
@@ -57,8 +57,8 @@ describe('services/data/update-eligibility-trusted-status', function () {
   })
 
   it('should set the eligibility to trusted and create a claim event', function () {
-    var untrustedReason = ''
-    var isTrusted = true
+    const untrustedReason = ''
+    const isTrusted = true
 
     return setEligibilityTrusted(eligibilityId1, false)
       .then(function () {

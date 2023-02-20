@@ -6,13 +6,13 @@ const { getTestData, insertTestData, deleteAll, db } = require('../../../helpers
 
 const insertTaskSendClaimNotification = require('../../../../app/services/data/insert-task-send-claim-notification')
 
-var testData
-var date
-var reference = 'NOTE123'
-var claimId
-var eligibilityId
-var emailAddress = 'test-apvs@apvs.com'
-var eligibilityIdDoesNotExist = 9876554
+let testData
+let date
+const reference = 'NOTE123'
+let claimId
+let eligibilityId
+const emailAddress = 'test-apvs@apvs.com'
+const eligibilityIdDoesNotExist = 9876554
 
 describe('services/data/insert-task-send-first-time-claim-notification', function () {
   before(function () {

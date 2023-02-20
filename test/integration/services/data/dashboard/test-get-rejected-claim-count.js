@@ -7,32 +7,32 @@ const getRejectedClaimCount = require('../../../../../app/services/data/dashboar
 const claimStatusEnum = require('../../../../../app/constants/claim-status-enum')
 const dashboardFilterEnum = require('../../../../../app/constants/dashboard-filter-enum')
 
-var reference = 'PENDING'
-var claimId2
-var claimId3
-var claimId4
-var claimId5
-var claimId6
-var claimId7
-var claimId8
-var claimId9
-var claimId10
+const reference = 'PENDING'
+let claimId2
+let claimId3
+let claimId4
+let claimId5
+let claimId6
+let claimId7
+let claimId8
+let claimId9
+let claimId10
 
-var date = dateFormatter.now().toDate()
-var yesterday = dateFormatter.now().subtract(1, 'days').toDate()
-var lastWeek = dateFormatter.now().subtract(7, 'days').toDate()
-var oneMonthAgo = dateFormatter.now().subtract(1, 'months').toDate()
-var twoMonthsAgo = dateFormatter.now().subtract(2, 'months').toDate()
-var threeMonthsAgo = dateFormatter.now().subtract(3, 'months').toDate()
-var fourMonthsAgo = dateFormatter.now().subtract(4, 'months').toDate()
+const date = dateFormatter.now().toDate()
+const yesterday = dateFormatter.now().subtract(1, 'days').toDate()
+const lastWeek = dateFormatter.now().subtract(7, 'days').toDate()
+const oneMonthAgo = dateFormatter.now().subtract(1, 'months').toDate()
+const twoMonthsAgo = dateFormatter.now().subtract(2, 'months').toDate()
+const threeMonthsAgo = dateFormatter.now().subtract(3, 'months').toDate()
+const fourMonthsAgo = dateFormatter.now().subtract(4, 'months').toDate()
 
-var todayCount
-var yesterdayCount
-var last7DaysCount
-var oneMonthAgoCount
-var twoMonthsAgoCount
-var threeMonthsAgoCount
-var fourMonthsAgoCount
+let todayCount
+let yesterdayCount
+let last7DaysCount
+let oneMonthAgoCount
+let twoMonthsAgoCount
+let threeMonthsAgoCount
+let fourMonthsAgoCount
 
 describe('services/data/dashboard/get-rejected-claim-count', function () {
   describe('module', function () {
@@ -42,7 +42,7 @@ describe('services/data/dashboard/get-rejected-claim-count', function () {
           return insertTestData(reference, date, claimStatusEnum.REJECTED.value)
         })
         .then(function (ids) {
-          var eligibilityId = ids.eligibilityId
+          const eligibilityId = ids.eligibilityId
           claimId2 = ids.claimId + 1
           claimId3 = ids.claimId + 2
           claimId4 = ids.claimId + 3
@@ -53,7 +53,7 @@ describe('services/data/dashboard/get-rejected-claim-count', function () {
           claimId9 = ids.claimId + 8
           claimId10 = ids.claimId + 9
 
-          var promises = []
+          const promises = []
 
           promises.push(insertClaim(claimId2, eligibilityId, reference, yesterday, claimStatusEnum.REJECTED.value, false))
           promises.push(insertClaim(claimId3, eligibilityId, reference, lastWeek, claimStatusEnum.REJECTED.value, false))
@@ -70,24 +70,24 @@ describe('services/data/dashboard/get-rejected-claim-count', function () {
     })
 
     it('should return the correct number of Pending claims submitted today', function () {
-      var expectedResult = todayCount + 1
+      const expectedResult = todayCount + 1
       return checkCount(dashboardFilterEnum.TODAY, expectedResult)
     })
 
     it('should return the correct number of Pending claims submitted yesterday', function () {
-      var expectedResult = yesterdayCount + 1
+      const expectedResult = yesterdayCount + 1
       return checkCount(dashboardFilterEnum.YESTERDAY, expectedResult)
     })
 
     it('should return the correct number of Pending claims submitted in the last 7 days', function () {
-      var expectedResult = last7DaysCount + 3
+      const expectedResult = last7DaysCount + 3
       return checkCount(dashboardFilterEnum.LAST_7_DAYS, expectedResult)
     })
 
     it('should return the correct number of Pending claims submitted in the previous calendar month', function () {
       // Need to amend expected count if test is run before the 7th of the month,
       // because yesterday and last week could potentially be in the previous calendar month
-      var expectedResult = oneMonthAgoCount + 1
+      let expectedResult = oneMonthAgoCount + 1
 
       if (moment(yesterday).isSame(oneMonthAgo, 'month')) {
         expectedResult++
@@ -101,17 +101,17 @@ describe('services/data/dashboard/get-rejected-claim-count', function () {
     })
 
     it('should return the correct number of Pending claims submitted in the calendar month before the previous month', function () {
-      var expectedResult = twoMonthsAgoCount + 1
+      const expectedResult = twoMonthsAgoCount + 1
       return checkCount(dashboardFilterEnum.TWO_MONTHS_AGO, expectedResult)
     })
 
     it('should return the correct number of Pending claims submitted in the calendar month 3 months ago', function () {
-      var expectedResult = threeMonthsAgoCount + 1
+      const expectedResult = threeMonthsAgoCount + 1
       return checkCount(dashboardFilterEnum.THREE_MONTHS_AGO, expectedResult)
     })
 
     it('should return the correct number of Pending claims submitted in the calendar month 4 months ago', function () {
-      var expectedResult = fourMonthsAgoCount + 1
+      const expectedResult = fourMonthsAgoCount + 1
       return checkCount(dashboardFilterEnum.FOUR_MONTHS_AGO, expectedResult)
     })
 
@@ -132,7 +132,7 @@ function checkCount (filter, expectedCount) {
 }
 
 function getCountsBeforeTest () {
-  var promises = []
+  const promises = []
 
   promises.push(getRejectedClaimCount(dashboardFilterEnum.TODAY).then(function (result) { todayCount = result[0].Count }))
   promises.push(getRejectedClaimCount(dashboardFilterEnum.YESTERDAY).then(function (result) { yesterdayCount = result[0].Count }))

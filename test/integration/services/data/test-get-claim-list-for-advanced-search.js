@@ -1,18 +1,18 @@
 const getClaimListForAdvancedSearch = require('../../../../app/services/data/get-claim-list-for-advanced-search')
-var dateFormatter = require('../../../../app/services/date-formatter')
-var { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
+const dateFormatter = require('../../../../app/services/date-formatter')
+const { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const { getClaimReference } = require('../../../helpers/integration')
-var expect = require('chai').expect
+const expect = require('chai').expect
 
-var date = dateFormatter.build('10', '09', '2016') // set date in past so that is always at top of list returned
-var reference1 = 'SQBUIL1'
-var reference2 = 'SQBUIL2'
-var claimId
-var testData
-var name
-var ninumber
-var prisonerNumber
-var prison
+const date = dateFormatter.build('10', '09', '2016') // set date in past so that is always at top of list returned
+const reference1 = 'SQBUIL1'
+const reference2 = 'SQBUIL2'
+let claimId
+let testData
+let name
+let ninumber
+let prisonerNumber
+let prison
 
 describe('services/data/get-claim-list-for-advanced-search', function () {
   before(function () {
@@ -27,7 +27,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         return insertTestData(reference2, date.toDate(), 'REJECTED', date.toDate(), 10)
       })
       .then(function () {
-        var reference1ClaimUpdate = db('Claim')
+        const reference1ClaimUpdate = db('Claim')
           .update({
             AssistedDigitalCaseworker: 'test@test.com',
             DateOfJourney: date.toDate(),
@@ -36,32 +36,32 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
             PaymentDate: date.add(5, 'days').toDate()
           })
           .where('Reference', reference1)
-        var reference2ClaimUpdate = db('Claim')
+        const reference2ClaimUpdate = db('Claim')
           .update({
             DateReviewed: date.toDate()
           })
           .where('Reference', reference2)
-        var visitorUpdate = db('Visitor')
+        const visitorUpdate = db('Visitor')
           .update({
             FirstName: 'Ref2FirstName',
             LastName: 'Ref2LastName',
             NationalInsuranceNumber: 'Ref2NINum'
           })
           .where('Reference', reference2)
-        var prisonerUpdate = db('Prisoner')
+        const prisonerUpdate = db('Prisoner')
           .update({
             PrisonNumber: 'REF2PNO',
             NameOfPrison: 'Ref2Prison'
           })
           .where('Reference', reference2)
-        var updates = []
+        const updates = []
         updates.push(reference1ClaimUpdate, reference2ClaimUpdate, visitorUpdate, prisonerUpdate)
         return Promise.all(updates)
       })
   })
 
   it('should return 0 claims given empty search criteria', function () {
-    var searchCriteria = {}
+    const searchCriteria = {}
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
@@ -71,7 +71,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should return the correct claim given the reference number', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       reference: reference1
     }
 
@@ -85,7 +85,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should return "N/A" for days until payment if payment date is null', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       reference: reference2
     }
 
@@ -96,523 +96,523 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should not return claims with the wrong reference number', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       reference: reference1
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference2 = getClaimReference(result, reference2)
+        const claimsWithCurrentReference2 = getClaimReference(result, reference2)
         expect(claimsWithCurrentReference2.length, 'Claims length should equal 1').to.equal(0)
       })
   })
 
   it('should return the correct claim given the name', function () {
-    var searchCriteria = {
-      name: name
+    const searchCriteria = {
+      name
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
         expect(claimsWithCurrentReference[0].Name, `Name should equal ${name}`).to.equal(name)
       })
   })
 
   it('should return the correct claim given the first name only', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       name: testData.Visitor.FirstName
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong name', function () {
-    var searchCriteria = {
-      name: name
+    const searchCriteria = {
+      name
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = getClaimReference(result, reference2)
+        const claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the national insurance number', function () {
-    var searchCriteria = {
-      ninumber: ninumber
+    const searchCriteria = {
+      ninumber
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong national insurance number', function () {
-    var searchCriteria = {
-      ninumber: ninumber
+    const searchCriteria = {
+      ninumber
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = getClaimReference(result, reference2)
+        const claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the prisoner number', function () {
-    var searchCriteria = {
-      prisonerNumber: prisonerNumber
+    const searchCriteria = {
+      prisonerNumber
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong prisoner number', function () {
-    var searchCriteria = {
-      prisonerNumber: prisonerNumber
+    const searchCriteria = {
+      prisonerNumber
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = getClaimReference(result, reference2)
+        const claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the prison', function () {
-    var searchCriteria = {
-      prison: prison
+    const searchCriteria = {
+      prison
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong prison', function () {
-    var searchCriteria = {
-      prison: prison
+    const searchCriteria = {
+      prison
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = getClaimReference(result, reference2)
+        const claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the assisted digital field', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       assistedDigital: true
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong assisted digital value', function () {
-    var searchCriteria = {}
+    const searchCriteria = {}
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = getClaimReference(result, reference2)
+        const claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the claim status', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       claimStatus: 'APPROVED'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should return the correct claim given all claim statuses', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       claimStatus: 'all'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong claim status', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       claimStatus: 'PENDING'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = getClaimReference(result, reference2)
+        const claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the mode of approval', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       modeOfApproval: 'APPROVED'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong mode of approval', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       modeOfApproval: 'AUTOAPPROVED'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given whether the visit was in the past or future', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       pastOrFuture: 'past'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for past or future', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       pastOrFuture: 'future'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the visit rules', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       visitRules: 'englandWales'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for visit rules', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       visitRules: 'northernIreland'
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the date of visit lower bound', function () {
-    var visitDateFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
-    var searchCriteria = {
-      visitDateFrom: visitDateFrom
+    const visitDateFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
+    const searchCriteria = {
+      visitDateFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for date of visit lower bound', function () {
-    var visitDateFrom = dateFormatter.now().add(1, 'day').toDate()
-    var searchCriteria = {
-      visitDateFrom: visitDateFrom
+    const visitDateFrom = dateFormatter.now().add(1, 'day').toDate()
+    const searchCriteria = {
+      visitDateFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the date of visit upper bound', function () {
-    var visitDateTo = dateFormatter.now().add(1, 'day').toDate()
-    var searchCriteria = {
-      visitDateTo: visitDateTo
+    const visitDateTo = dateFormatter.now().add(1, 'day').toDate()
+    const searchCriteria = {
+      visitDateTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for date of visit upper bound', function () {
-    var visitDateTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
-    var searchCriteria = {
-      visitDateTo: visitDateTo
+    const visitDateTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
+    const searchCriteria = {
+      visitDateTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the date submitted lower bound', function () {
-    var dateSubmittedFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
-    var searchCriteria = {
-      dateSubmittedFrom: dateSubmittedFrom
+    const dateSubmittedFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
+    const searchCriteria = {
+      dateSubmittedFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for date submitted lower bound', function () {
-    var dateSubmittedFrom = dateFormatter.now().add(1, 'day').toDate()
-    var searchCriteria = {
-      dateSubmittedFrom: dateSubmittedFrom
+    const dateSubmittedFrom = dateFormatter.now().add(1, 'day').toDate()
+    const searchCriteria = {
+      dateSubmittedFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the date submitted upper bound', function () {
-    var dateSubmittedTo = dateFormatter.now().add(1, 'day').toDate()
-    var searchCriteria = {
-      dateSubmittedTo: dateSubmittedTo
+    const dateSubmittedTo = dateFormatter.now().add(1, 'day').toDate()
+    const searchCriteria = {
+      dateSubmittedTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for date submitted upper bound', function () {
-    var dateSubmittedTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
-    var searchCriteria = {
-      dateSubmittedTo: dateSubmittedTo
+    const dateSubmittedTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
+    const searchCriteria = {
+      dateSubmittedTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the date approved lower bound', function () {
-    var dateApprovedFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
-    var searchCriteria = {
-      dateApprovedFrom: dateApprovedFrom
+    const dateApprovedFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
+    const searchCriteria = {
+      dateApprovedFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for date approved lower bound', function () {
-    var dateApprovedFrom = dateFormatter.now().add(1, 'day').toDate()
-    var searchCriteria = {
-      dateApprovedFrom: dateApprovedFrom
+    const dateApprovedFrom = dateFormatter.now().add(1, 'day').toDate()
+    const searchCriteria = {
+      dateApprovedFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the date approved upper bound', function () {
-    var dateApprovedTo = dateFormatter.now().add(1, 'day').toDate()
-    var searchCriteria = {
-      dateApprovedTo: dateApprovedTo
+    const dateApprovedTo = dateFormatter.now().add(1, 'day').toDate()
+    const searchCriteria = {
+      dateApprovedTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for date approved upper bound', function () {
-    var dateApprovedTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
-    var searchCriteria = {
-      dateApprovedTo: dateApprovedTo
+    const dateApprovedTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
+    const searchCriteria = {
+      dateApprovedTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the date rejected lower bound', function () {
-    var dateRejectedFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
-    var searchCriteria = {
-      dateRejectedFrom: dateRejectedFrom
+    const dateRejectedFrom = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
+    const searchCriteria = {
+      dateRejectedFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = getClaimReference(result, reference2)
+        const claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 1').to.equal(1)
       })
   })
 
   it('should not return claims with the wrong value for date rejected lower bound', function () {
-    var dateRejectedFrom = dateFormatter.now().add(1, 'day').toDate()
-    var searchCriteria = {
-      dateRejectedFrom: dateRejectedFrom
+    const dateRejectedFrom = dateFormatter.now().add(1, 'day').toDate()
+    const searchCriteria = {
+      dateRejectedFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the date rejected upper bound', function () {
-    var dateRejectedTo = dateFormatter.now().add(1, 'day').toDate()
-    var searchCriteria = {
-      dateRejectedTo: dateRejectedTo
+    const dateRejectedTo = dateFormatter.now().add(1, 'day').toDate()
+    const searchCriteria = {
+      dateRejectedTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference2 = getClaimReference(result, reference2)
+        const claimsWithReference2 = getClaimReference(result, reference2)
         expect(claimsWithReference2.length, 'Claims with reference2 length should equal 1').to.equal(1)
       })
   })
 
   it('should not return claims with the wrong value for date rejected upper bound', function () {
-    var dateRejectedTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
-    var searchCriteria = {
-      dateRejectedTo: dateRejectedTo
+    const dateRejectedTo = dateFormatter.build('10', '09', '2016').subtract(1, 'day').toDate()
+    const searchCriteria = {
+      dateRejectedTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length, 'Claims with current reference length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the approved claim amount lower bound', function () {
-    var approvedClaimAmountFrom = 10
-    var searchCriteria = {
-      approvedClaimAmountFrom: approvedClaimAmountFrom
+    const approvedClaimAmountFrom = 10
+    const searchCriteria = {
+      approvedClaimAmountFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference1 = getClaimReference(result, reference1)
+        const claimsWithReference1 = getClaimReference(result, reference1)
         expect(claimsWithReference1[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for approved claim amount lower bound', function () {
-    var approvedClaimAmountFrom = 20
-    var searchCriteria = {
-      approvedClaimAmountFrom: approvedClaimAmountFrom
+    const approvedClaimAmountFrom = 20
+    const searchCriteria = {
+      approvedClaimAmountFrom
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference1 = getClaimReference(result, reference1)
+        const claimsWithReference1 = getClaimReference(result, reference1)
         expect(claimsWithReference1.length, 'Claims with reference1 length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given the approved claim amount upper bound', function () {
-    var approvedClaimAmountTo = 20
-    var searchCriteria = {
-      approvedClaimAmountTo: approvedClaimAmountTo
+    const approvedClaimAmountTo = 20
+    const searchCriteria = {
+      approvedClaimAmountTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference1 = getClaimReference(result, reference1)
+        const claimsWithReference1 = getClaimReference(result, reference1)
         expect(claimsWithReference1[0].ClaimId, `ClaimId should equal ${claimId}`).to.equal(claimId)
       })
   })
 
   it('should not return claims with the wrong value for approved claim amount upper bound', function () {
-    var approvedClaimAmountTo = 10
-    var searchCriteria = {
-      approvedClaimAmountTo: approvedClaimAmountTo
+    const approvedClaimAmountTo = 10
+    const searchCriteria = {
+      approvedClaimAmountTo
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10)
       .then(function (result) {
-        var claimsWithReference1 = getClaimReference(result, reference1)
+        const claimsWithReference1 = getClaimReference(result, reference1)
         expect(claimsWithReference1.length, 'Claims with reference1 length should equal 0').to.equal(0)
       })
   })
 
   it('should return the correct claim given multiple search criteria', function () {
-    var searchCriteria = {
+    const searchCriteria = {
       reference: reference1,
-      name: name,
-      ninumber: ninumber,
-      prisonerNumber: prisonerNumber,
-      prison: prison,
+      name,
+      ninumber,
+      prisonerNumber,
+      prison,
       assistedDigital: true,
       claimStatus: 'APPROVED',
       modeOfApproval: 'APPROVED',
@@ -637,13 +637,13 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should return the correct fields when returning export data', function () {
-    var searchCriteria = {
-      prison: prison
+    const searchCriteria = {
+      prison
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10, true)
       .then(function (result) {
-        var claim = result.claims[0]
+        const claim = result.claims[0]
 
         expect(claim.hasOwnProperty('FirstName')).to.be.true //eslint-disable-line
         expect(claim.hasOwnProperty('LastName')).to.be.true //eslint-disable-line
@@ -666,13 +666,13 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   it('should return the correct fields when returning advanced search data', function () {
-    var searchCriteria = {
-      prison: prison
+    const searchCriteria = {
+      prison
     }
 
     return getClaimListForAdvancedSearch(searchCriteria, 0, 10, false)
       .then(function (result) {
-        var claim = result.claims[0]
+        const claim = result.claims[0]
 
         expect(claim.hasOwnProperty('Reference')).to.be.true //eslint-disable-line
         expect(claim.hasOwnProperty('FirstName')).to.be.true //eslint-disable-line
@@ -685,7 +685,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
   })
 
   after(function () {
-    var promises = []
+    const promises = []
 
     promises.push(deleteAll(reference1))
     promises.push(deleteAll(reference2))

@@ -14,7 +14,7 @@ module.exports = function (notificationType, reference, eligibilityId, claimId, 
 
   return getEmailAddress(eligibilityId, emailAddress).then(function (toEmailAddress) {
     const db = getDatabaseConnector()
-  
+
     return db('Task').insert({
       Task: notificationType,
       Reference: reference,
@@ -32,7 +32,7 @@ function getEmailAddress (eligibilityId, emailAddress) {
     return Promise.resolve(emailAddress)
   } else {
     const db = getDatabaseConnector()
-  
+
     return db('Visitor').where('EligibilityId', eligibilityId).first('EmailAddress')
       .then(function (result) {
         return result.EmailAddress

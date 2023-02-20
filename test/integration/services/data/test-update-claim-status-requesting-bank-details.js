@@ -4,10 +4,10 @@ const { insertTestData, deleteAll, db } = require('../../../helpers/database-set
 const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
 
 const updateClaimStatusRequestingBankDetails = require('../../../../app/services/data/update-claim-status-requesting-bank-details')
-var reference = 'NEWBANK'
-var date
-var previousLastUpdated
-var claimId
+const reference = 'NEWBANK'
+let date
+let previousLastUpdated
+let claimId
 
 describe('services/data/update-claim-status-requesting-bank-details', function () {
   describe('module', function () {
