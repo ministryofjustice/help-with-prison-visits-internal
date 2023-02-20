@@ -2,7 +2,7 @@ const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
-const getClaimExpenses = require('../../../../app/services/data/get-claim-expenses')
+const getClaimExpensesForClaims = require('../../../../app/services/data/get-claim-expenses-for-claims')
 const reference = 'GETEXP'
 let claimId
 let claimExpenseId1
@@ -12,14 +12,14 @@ describe('services/data/get-claim-expenses', function () {
   before(function () {
     return insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')
       .then(function (ids) {
-        claimId = ids.claimId
+        claimId = [ids.claimId]
         claimExpenseId1 = ids.expenseId1
         claimExpenseId2 = ids.expenseId2
       })
   })
 
   it('should return the expected claim expenses', function () {
-    return getClaimExpenses(claimId)
+    return getClaimExpensesForClaims(claimId)
       .then(function (result) {
         const claimExpense1Found = claimExpenseFound(claimExpenseId1, result)
         const claimExpense2Found = claimExpenseFound(claimExpenseId2, result)
@@ -34,7 +34,7 @@ describe('services/data/get-claim-expenses', function () {
   })
 
   it('should return the expected fields', function () {
-    return getClaimExpenses(claimId)
+    return getClaimExpensesForClaims(claimId)
       .then(function (result) {
         const fields = Object.keys(result[0])
 
