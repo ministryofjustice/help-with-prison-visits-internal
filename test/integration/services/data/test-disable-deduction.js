@@ -3,9 +3,9 @@ const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
 const disableDeduction = require('../../../../app/services/data/disable-deduction')
-var reference = 'V123456'
-var date
-var claimDeductionId
+const reference = 'V123456'
+let date
+let claimDeductionId
 
 describe('services/data/disable-deduction', function () {
   describe('module', function () {

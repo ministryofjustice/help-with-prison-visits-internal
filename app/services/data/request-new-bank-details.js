@@ -5,7 +5,7 @@ const tasksEnum = require('../../constants/tasks-enum')
 const claimEventEnum = require('../../constants/claim-event-enum')
 
 module.exports = function (reference, eligibilityId, claimId, additionalInformation, user) {
-  var promises = []
+  const promises = []
 
   promises.push(updateClaimStatusRequestingBankDetails(reference, claimId))
   promises.push(insertClaimEvent(reference, eligibilityId, claimId, claimEventEnum.REQUEST_NEW_BANK_DETAILS.value, additionalInformation, '', user, false))

@@ -1,11 +1,11 @@
-var expect = require('chai').expect
+const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-var { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
-var getClaimLastUpdated = require('../../../../app/services/data/get-claim-last-updated')
-var reference = 'V123456'
-var date
-var claimId
+const getClaimLastUpdated = require('../../../../app/services/data/get-claim-last-updated')
+const reference = 'V123456'
+let date
+let claimId
 
 describe('services/data/get-claim-last-updated', function () {
   describe('module', function () {

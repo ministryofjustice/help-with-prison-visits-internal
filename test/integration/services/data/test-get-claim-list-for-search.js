@@ -1,29 +1,29 @@
-var expect = require('chai').expect
-var dateFormatter = require('../../../../app/services/date-formatter')
-var { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
+const expect = require('chai').expect
+const dateFormatter = require('../../../../app/services/date-formatter')
+const { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const { getClaimReference, getClaimId } = require('../../../helpers/integration')
 
-var testData
-var reference1 = 'SEARCH1'
-var reference2 = 'SEARCH2'
-var reference3 = 'ASDFGH1'
+let testData
+const reference1 = 'SEARCH1'
+const reference2 = 'SEARCH2'
+const reference3 = 'ASDFGH1'
 
-var claimId1
-var claimId2
+let claimId1
+let claimId2
 
-var testFirstName = 'John'
-var testLastName = 'Smith'
-var name = testFirstName + ' ' + testLastName
+const testFirstName = 'John'
+const testLastName = 'Smith'
+const name = testFirstName + ' ' + testLastName
 
-var date
-var getClaimsListForSearch = require('../../../../app/services/data/get-claim-list-for-search')
+let date
+const getClaimsListForSearch = require('../../../../app/services/data/get-claim-list-for-search')
 
 describe('services/data/get-claim-list-for-search', function () {
   before(function () {
     date = dateFormatter.build('10', '09', '2016')
     testData = getTestData(reference1, 'TESTING')
 
-    var promises = []
+    const promises = []
     promises.push(insertTestData(reference1, date.toDate(), 'TESTING')
       .then(function (ids) {
         claimId1 = ids.claimId
@@ -68,11 +68,11 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should return inserted claims when a partial reference number is provided', function () {
     return getClaimsListForSearch('SEARCH', 0, 10)
       .then(function (result) {
-        var claimsWithMatchingReference = result.claims.filter(function (claim) {
+        const claimsWithMatchingReference = result.claims.filter(function (claim) {
           return claim.Reference === reference1 || claim.Reference === reference2
         })
         expect(claimsWithMatchingReference.length).to.equal(2)
-        var claimsWithCurrentId = result.claims.filter(function (claim) {
+        const claimsWithCurrentId = result.claims.filter(function (claim) {
           return claim.ClaimId === claimId1 || claim.ClaimId === claimId2
         })
         expect(claimsWithCurrentId.length).to.equal(2)
@@ -82,7 +82,7 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should not return claims with a reference number that does not match', function () {
     return getClaimsListForSearch('SEARCH', 0, 10)
       .then(function (result) {
-        var claimsWithReference3 = getClaimReference(result, reference3)
+        const claimsWithReference3 = getClaimReference(result, reference3)
         expect(claimsWithReference3.length).to.equal(0)
       })
   })
@@ -90,9 +90,9 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should return inserted claim when a full NI number is provided', function () {
     return getClaimsListForSearch(testData.Visitor.NationalInsuranceNumber, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).to.equal(1)
-        var claimsWithCurrentId = getClaimId(result, claimId1)
+        const claimsWithCurrentId = getClaimId(result, claimId1)
         expect(claimsWithCurrentId.length).to.equal(1)
       })
   })
@@ -100,9 +100,9 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should return inserted claim when a partial NI number is provided', function () {
     return getClaimsListForSearch(testData.Visitor.NationalInsuranceNumber.substring(3), 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).to.equal(1)
-        var claimsWithCurrentId = getClaimId(result, claimId1)
+        const claimsWithCurrentId = getClaimId(result, claimId1)
         expect(claimsWithCurrentId.length).to.equal(1)
       })
   })
@@ -110,7 +110,7 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should not return claims with a NI number that does not match', function () {
     return getClaimsListForSearch(testData.Visitor.NationalInsuranceNumber, 0, 10)
       .then(function (result) {
-        var claimsWithReference3 = getClaimReference(result, reference3)
+        const claimsWithReference3 = getClaimReference(result, reference3)
         expect(claimsWithReference3.length).to.equal(0)
       })
   })
@@ -118,9 +118,9 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should return inserted claim when a full Prison Number is provided', function () {
     return getClaimsListForSearch(testData.Prisoner.PrisonNumber, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).to.equal(1)
-        var claimsWithCurrentId = getClaimId(result, claimId1)
+        const claimsWithCurrentId = getClaimId(result, claimId1)
         expect(claimsWithCurrentId.length).to.equal(1)
       })
   })
@@ -128,7 +128,7 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should return inserted claim when a partial Prison Number is provided', function () {
     return getClaimsListForSearch(testData.Prisoner.PrisonNumber.substring(3), 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).to.equal(1)
       })
   })
@@ -136,7 +136,7 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should not return claims with a Prison number that does not match', function () {
     return getClaimsListForSearch(testData.Visitor.PrisonNumber, 0, 10)
       .then(function (result) {
-        var claimsWithReference3 = getClaimReference(result, reference3)
+        const claimsWithReference3 = getClaimReference(result, reference3)
         expect(claimsWithReference3.length).to.equal(0)
       })
   })
@@ -144,7 +144,7 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should return inserted claim when a full name is provided', function () {
     return getClaimsListForSearch(name, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).to.equal(1)
       })
   })
@@ -152,7 +152,7 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should return inserted claim when a first name is provided', function () {
     return getClaimsListForSearch(testFirstName, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).to.equal(1)
       })
   })
@@ -160,7 +160,7 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should return inserted claim when a last name is provided', function () {
     return getClaimsListForSearch(testLastName, 0, 10)
       .then(function (result) {
-        var claimsWithCurrentReference = getClaimReference(result, reference1)
+        const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).to.equal(1)
       })
   })
@@ -168,7 +168,7 @@ describe('services/data/get-claim-list-for-search', function () {
   it('should not return claims with a name that does not match', function () {
     return getClaimsListForSearch(testFirstName, 0, 10)
       .then(function (result) {
-        var claimsWithReference3 = getClaimReference(result, reference3)
+        const claimsWithReference3 = getClaimReference(result, reference3)
         expect(claimsWithReference3.length).to.equal(0)
       })
   })
@@ -182,7 +182,7 @@ describe('services/data/get-claim-list-for-search', function () {
   })
 
   after(function () {
-    var promises = []
+    const promises = []
     promises.push(deleteAll(reference1))
     promises.push(deleteAll(reference2))
     promises.push(deleteAll(reference3))

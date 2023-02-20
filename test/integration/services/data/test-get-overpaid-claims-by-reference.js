@@ -1,18 +1,18 @@
-var expect = require('chai').expect
+const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-var { insertTestData, insertClaim, deleteAll } = require('../../../helpers/database-setup-for-tests')
+const { insertTestData, insertClaim, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
-var getOverpaidClaimsByReference = require('../../../../app/services/data/get-overpaid-claims-by-reference')
-var reference = 'V123456'
-var claimId1
-var claimId2
-var claimId3
+const getOverpaidClaimsByReference = require('../../../../app/services/data/get-overpaid-claims-by-reference')
+const reference = 'V123456'
+let claimId1
+let claimId2
+let claimId3
 
 describe('services/data/get-overpaid-claims-by-reference', function () {
   describe('module', function () {
     before(function () {
-      var date = dateFormatter.now().toDate()
-      var twoWeeksAgo = dateFormatter.now().subtract(14, 'days').toDate()
+      const date = dateFormatter.now().toDate()
+      const twoWeeksAgo = dateFormatter.now().subtract(14, 'days').toDate()
       let eligibilityId
       return insertTestData(reference, date, 'Test')
         .then(function (ids) {

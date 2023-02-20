@@ -4,9 +4,9 @@ const { insertTestData, deleteAll, db } = require('../../../helpers/database-set
 const environmentVariables = require('../../../../config')
 
 const updateAssignmentOfClaims = require('../../../../app/services/data/update-assignment-of-claims')
-var reference = 'ASSIGN1'
-var date
-var claimId
+const reference = 'ASSIGN1'
+let date
+let claimId
 
 describe('services/data/update-assignment-of-claim', function () {
   describe('module', function () {
@@ -18,13 +18,13 @@ describe('services/data/update-assignment-of-claim', function () {
     })
 
     it('should assign a claim, setting the time and updating when it was last updated', function () {
-      var assignedTo = 'test@test.com'
-      var expiryTime = parseInt(environmentVariables.ASSIGNMENT_EXPIRY_TIME)
-      var currentDate = dateFormatter.now()
-      var twoMinutesAgoExpiry = dateFormatter.now().minutes(currentDate.get('minutes') + (expiryTime - 2))
-      var twoMinutesAheadExpiry = dateFormatter.now().minutes(currentDate.get('minutes') + (expiryTime + 2))
-      var twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
-      var twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
+      const assignedTo = 'test@test.com'
+      const expiryTime = parseInt(environmentVariables.ASSIGNMENT_EXPIRY_TIME)
+      const currentDate = dateFormatter.now()
+      const twoMinutesAgoExpiry = dateFormatter.now().minutes(currentDate.get('minutes') + (expiryTime - 2))
+      const twoMinutesAheadExpiry = dateFormatter.now().minutes(currentDate.get('minutes') + (expiryTime + 2))
+      const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
+      const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
       return updateAssignmentOfClaims(claimId, assignedTo)
         .then(function () {
           return db('Claim').first().where('ClaimId', claimId)

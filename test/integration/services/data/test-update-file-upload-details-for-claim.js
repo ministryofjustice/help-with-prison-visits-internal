@@ -1,15 +1,15 @@
-var expect = require('chai').expect
+const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
-var FileUpload = require('../../../../app/services/domain/file-upload')
-var { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
-var updateClaimDocument = require('../../../../app/services/data/update-file-upload-details-for-claim')
+const FileUpload = require('../../../../app/services/domain/file-upload')
+const { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
+const updateClaimDocument = require('../../../../app/services/data/update-file-upload-details-for-claim')
 
 describe('services/data/update-file-upload-details-for-claim', function () {
-  var REFERENCE = 'UPDFILE'
-  var claimDocumentId
-  var date
-  var testData
-  var testFileUpload
+  const REFERENCE = 'UPDFILE'
+  let claimDocumentId
+  let date
+  let testData
+  let testFileUpload
 
   before(function () {
     testData = getTestData(REFERENCE, 'Test').ClaimDocument['visit-confirmation']

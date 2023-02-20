@@ -2,7 +2,7 @@ const { getDatabaseConnector } = require('../../databaseConnector')
 const RejectionReason = require('../domain/claim-rejection-reason')
 
 module.exports = function () {
-  var rejectionReasons = []
+  const rejectionReasons = []
   const db = getDatabaseConnector()
 
   return db('ClaimRejectionReason')

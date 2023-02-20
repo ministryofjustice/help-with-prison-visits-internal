@@ -4,11 +4,11 @@ const proxyquire = require('proxyquire')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
-var insertTaskSendClaimNotificationStub = sinon.stub().resolves()
-var insertClaimEventStub = sinon.stub().resolves()
-var updateClaimStatusRequestingBankDetailsStub = sinon.stub().resolves()
+const insertTaskSendClaimNotificationStub = sinon.stub().resolves()
+const insertClaimEventStub = sinon.stub().resolves()
+const updateClaimStatusRequestingBankDetailsStub = sinon.stub().resolves()
 
-var requestNewBankDetails = proxyquire('../../../../app/services/data/request-new-bank-details', {
+const requestNewBankDetails = proxyquire('../../../../app/services/data/request-new-bank-details', {
   './insert-task-send-claim-notification': insertTaskSendClaimNotificationStub,
   './insert-claim-event': insertClaimEventStub,
   './update-claim-status-requesting-bank-details': updateClaimStatusRequestingBankDetailsStub
@@ -16,11 +16,11 @@ var requestNewBankDetails = proxyquire('../../../../app/services/data/request-ne
 
 describe('services/data/request-new-bank-details', function () {
   it('should call all of the relevant functions', function () {
-    var reference = 'NEWBANK'
-    var eligibilityId = 1
-    var claimId = 1
-    var additionalInformaiton = 'additionalInformaiton'
-    var user = 'user'
+    const reference = 'NEWBANK'
+    const eligibilityId = 1
+    const claimId = 1
+    const additionalInformaiton = 'additionalInformaiton'
+    const user = 'user'
     return requestNewBankDetails(reference, eligibilityId, claimId, additionalInformaiton, user)
       .then(function (result) {
         expect(updateClaimStatusRequestingBankDetailsStub.calledWith(reference, claimId)).to.be.true //eslint-disable-line

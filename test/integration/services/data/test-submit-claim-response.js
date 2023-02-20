@@ -8,20 +8,20 @@ const claimDecisionEnum = require('../../../../app/constants/claim-decision-enum
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const paymentMethodEnum = require('../../../../app/constants/payment-method-enum')
 
-var stubInsertClaimEvent = sinon.stub().resolves()
-var stubInsertTaskSendClaimNotification = sinon.stub().resolves()
-var stubUpdateRelatedClaimsRemainingOverpaymentAmount = sinon.stub().resolves()
+const stubInsertClaimEvent = sinon.stub().resolves()
+const stubInsertTaskSendClaimNotification = sinon.stub().resolves()
+let stubUpdateRelatedClaimsRemainingOverpaymentAmount = sinon.stub().resolves()
 
-var submitClaimResponse = proxyquire('../../../../app/services/data/submit-claim-response', {
+const submitClaimResponse = proxyquire('../../../../app/services/data/submit-claim-response', {
   './insert-claim-event': stubInsertClaimEvent,
   './insert-task-send-claim-notification': stubInsertTaskSendClaimNotification,
   './update-related-claims-remaining-overpayment-amount': stubUpdateRelatedClaimsRemainingOverpaymentAmount
 })
 
-var reference = 'SUBC456'
-var newIds = {}
-var caseworker = 'adam@adams.gov'
-var rejectionReasonIdentifier = 1
+const reference = 'SUBC456'
+let newIds = {}
+const caseworker = 'adam@adams.gov'
+const rejectionReasonIdentifier = 1
 
 describe('services/data/submit-claim-response', function () {
   before(function () {
@@ -40,9 +40,9 @@ describe('services/data/submit-claim-response', function () {
   })
 
   it('should update remaining overpayment amounts if claim is approved', function () {
-    var claimId = newIds.claimId
-    var claimResponse = {
-      caseworker: caseworker,
+    const claimId = newIds.claimId
+    const claimResponse = {
+      caseworker,
       decision: claimDecisionEnum.APPROVED,
       reason: 'No valid relationship to prisoner',
       note: 'Could not verify in NOMIS',
@@ -62,9 +62,9 @@ describe('services/data/submit-claim-response', function () {
   })
 
   it('should update eligibility and claim then call to send notification', function () {
-    var claimId = newIds.claimId
-    var claimResponse = {
-      caseworker: caseworker,
+    const claimId = newIds.claimId
+    const claimResponse = {
+      caseworker,
       decision: claimDecisionEnum.REJECTED,
       note: 'Could not verify in NOMIS',
       nomisCheck: claimDecisionEnum.REJECTED,
@@ -76,9 +76,9 @@ describe('services/data/submit-claim-response', function () {
         { claimExpenseId: newIds.expenseId2, approvedCost: '20', status: claimDecisionEnum.REQUEST_INFORMATION }
       ]
     }
-    var currentDate = dateFormatter.now()
-    var twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
-    var twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
+    const currentDate = dateFormatter.now()
+    const twoMinutesAgo = dateFormatter.now().minutes(currentDate.get('minutes') - 2)
+    const twoMinutesAhead = dateFormatter.now().minutes(currentDate.get('minutes') + 2)
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function (result) {
@@ -116,9 +116,9 @@ describe('services/data/submit-claim-response', function () {
   })
 
   it('should add a DateApproved if claim is approved', function () {
-    var claimId = newIds.claimId
-    var claimResponse = {
-      caseworker: caseworker,
+    const claimId = newIds.claimId
+    const claimResponse = {
+      caseworker,
       decision: claimDecisionEnum.APPROVED,
       nomisCheck: claimDecisionEnum.APPROVED,
       dwpCheck: claimDecisionEnum.APPROVED,
@@ -141,9 +141,9 @@ describe('services/data/submit-claim-response', function () {
   })
 
   it('should set DateApproved to null if claim is rejected', function () {
-    var claimId = newIds.claimId
-    var claimResponse = {
-      caseworker: caseworker,
+    const claimId = newIds.claimId
+    const claimResponse = {
+      caseworker,
       decision: claimDecisionEnum.REJECTED,
       nomisCheck: claimDecisionEnum.REJECTED,
       dwpCheck: claimDecisionEnum.REJECTED,
@@ -168,9 +168,9 @@ describe('services/data/submit-claim-response', function () {
   })
 
   it('should set DateApproved to null if caseworker requests more information', function () {
-    var claimId = newIds.claimId
-    var claimResponse = {
-      caseworker: caseworker,
+    const claimId = newIds.claimId
+    const claimResponse = {
+      caseworker,
       decision: claimDecisionEnum.REQUEST_INFORMATION,
       nomisCheck: claimDecisionEnum.REQUEST_INFORMATION,
       dwpCheck: claimDecisionEnum.REQUEST_INFORMATION,
@@ -193,9 +193,9 @@ describe('services/data/submit-claim-response', function () {
   })
 
   it('should set the Release Date', function () {
-    var claimId = newIds.claimId
-    var claimResponse = {
-      caseworker: caseworker,
+    const claimId = newIds.claimId
+    const claimResponse = {
+      caseworker,
       decision: claimDecisionEnum.REQUEST_INFORMATION,
       nomisCheck: claimDecisionEnum.REQUEST_INFORMATION,
       dwpCheck: claimDecisionEnum.REQUEST_INFORMATION,
@@ -221,9 +221,9 @@ describe('services/data/submit-claim-response', function () {
   })
 
   it('should not set the Release Date', function () {
-    var claimId = newIds.claimId
-    var claimResponse = {
-      caseworker: caseworker,
+    const claimId = newIds.claimId
+    const claimResponse = {
+      caseworker,
       decision: claimDecisionEnum.REQUEST_INFORMATION,
       nomisCheck: claimDecisionEnum.REQUEST_INFORMATION,
       dwpCheck: claimDecisionEnum.REQUEST_INFORMATION,
@@ -249,9 +249,9 @@ describe('services/data/submit-claim-response', function () {
   })
 
   it('should set payment method to manually processed if all claim expenses have been manually processed', function () {
-    var claimId = newIds.claimId
-    var claimResponse = {
-      caseworker: caseworker,
+    const claimId = newIds.claimId
+    const claimResponse = {
+      caseworker,
       decision: claimDecisionEnum.APPROVED,
       reason: 'No valid relationship to prisoner',
       note: 'Could not verify in NOMIS',

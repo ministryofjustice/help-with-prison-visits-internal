@@ -1,13 +1,13 @@
-var expect = require('chai').expect
-var updateAutoApprovalConfig = require('../../../../app/services/data/update-auto-approval-config')
+const expect = require('chai').expect
+const updateAutoApprovalConfig = require('../../../../app/services/data/update-auto-approval-config')
 const { db } = require('../../../helpers/database-setup-for-tests')
-var dateFormatter = require('../../../../app/services/date-formatter')
-var defaultsConfig = require('../../../../config')
+const dateFormatter = require('../../../../app/services/date-formatter')
+const defaultsConfig = require('../../../../config')
 
-var insertedIds = []
+const insertedIds = []
 
 describe('services/data/update-auto-approval-config', function () {
-  var existingAutoApprovalId
+  let existingAutoApprovalId
 
   before(function () {
     return getCurrentAutoApprovalConfigId()
@@ -25,7 +25,7 @@ describe('services/data/update-auto-approval-config', function () {
   })
 
   it('should disable the current Auto Approval config and insert the new one', function () {
-    var AutoApprovalConfig = {
+    const AutoApprovalConfig = {
       caseworker: 'second-caseworker',
       autoApprovalEnabled: 'true',
       costVariancePercentage: null,
@@ -54,7 +54,7 @@ describe('services/data/update-auto-approval-config', function () {
   })
 
   it('should disable the current Auto Approval config and insert the new one if rulesDisabled is null', function () {
-    var AutoApprovalConfig = {
+    const AutoApprovalConfig = {
       caseworker: 'second-caseworker',
       autoApprovalEnabled: 'false',
       costVariancePercentage: null,

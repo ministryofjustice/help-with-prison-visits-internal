@@ -1,11 +1,11 @@
-var expect = require('chai').expect
-var dateFormatter = require('../../../../app/services/date-formatter')
-var { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
+const expect = require('chai').expect
+const dateFormatter = require('../../../../app/services/date-formatter')
+const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
-var getClaimEscort = require('../../../../app/services/data/get-claim-escort')
-var reference = 'GETESCORT'
-var claimId
-var claimEscortId
+const getClaimEscort = require('../../../../app/services/data/get-claim-escort')
+const reference = 'GETESCORT'
+let claimId
+let claimEscortId
 
 describe('services/data/get-claim-escort', function () {
   before(function () {

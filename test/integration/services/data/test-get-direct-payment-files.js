@@ -1,16 +1,16 @@
-var expect = require('chai').expect
-var { db } = require('../../../helpers/database-setup-for-tests')
+const expect = require('chai').expect
+const { db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 const TEST_PATH = 'TEST_PATH'
 
-var getDirectPaymentFiles = require('../../../../app/services/data/get-direct-payment-files')
+const getDirectPaymentFiles = require('../../../../app/services/data/get-direct-payment-files')
 
 describe('services/data/get-direct-payment-files', function () {
   describe('module', function () {
     before(function () {
-      var directPaymentFiles = []
-      var getTestDirectPaymentFile = function (fileType, dateCreated) {
+      const directPaymentFiles = []
+      const getTestDirectPaymentFile = function (fileType, dateCreated) {
         return {
           FileType: fileType,
           DateCreated: dateCreated,
@@ -19,8 +19,8 @@ describe('services/data/get-direct-payment-files', function () {
         }
       }
 
-      for (var i = 0; i < 32; i++) {
-        var descendingDate = new Date(dateFormatter.now().toDate().setDate(new Date().getDate() - i))
+      for (let i = 0; i < 32; i++) {
+        const descendingDate = new Date(dateFormatter.now().toDate().setDate(new Date().getDate() - i))
         directPaymentFiles.push(getTestDirectPaymentFile('ACCESSPAY_FILE', descendingDate))
         directPaymentFiles.push(getTestDirectPaymentFile('ADI_JOURNAL_FILE', descendingDate))
       }

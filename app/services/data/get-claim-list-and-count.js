@@ -7,10 +7,10 @@ const Promise = require('bluebird').Promise
 const getClosedClaimStatus = require('./get-closed-claim-status')
 
 module.exports = function (status, advanceClaims, offset, limit, user, sortType, sortOrder) {
-  var currentDateTime = dateFormatter.now().toDate()
+  const currentDateTime = dateFormatter.now().toDate()
   const db = getDatabaseConnector()
 
-  var subquery = db('Claim')
+  const subquery = db('Claim')
     .whereNull('AssignedTo')
     .orWhere('AssignedTo', '=', user)
     .orWhere('AssignmentExpiry', '<', currentDateTime)
@@ -35,7 +35,7 @@ module.exports = function (status, advanceClaims, offset, limit, user, sortType,
         .limit(limit)
         .offset(offset)
         .then(function (claims) {
-          var claimsToReturn = []
+          const claimsToReturn = []
           return Promise.each(claims, function (claim) {
             claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
             claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')

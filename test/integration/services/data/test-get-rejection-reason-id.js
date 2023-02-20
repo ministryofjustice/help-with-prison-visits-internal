@@ -1,7 +1,7 @@
 const expect = require('chai').expect
 const getRejectionReasonId = require('../../../../app/services/data/get-rejection-reason-id')
 const getRejectionReasons = require('../../../../app/services/data/get-rejection-reasons')
-var rejectionReasons
+let rejectionReasons
 
 describe('services/data/get-rejection-reason-id', function () {
   before(function () {

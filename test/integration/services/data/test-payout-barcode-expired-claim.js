@@ -5,10 +5,10 @@ const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
 const payoutBarcodeExpiredClaim = require('../../../../app/services/data/payout-barcode-expired-claim')
-var reference = 'POBAREX'
-var date
-var claimId
-var previousLastUpdated
+const reference = 'POBAREX'
+let date
+let claimId
+let previousLastUpdated
 
 describe('services/data/payout-barcode-expired-claim', function () {
   describe('module', function () {
@@ -21,7 +21,7 @@ describe('services/data/payout-barcode-expired-claim', function () {
     })
 
     it(`should set claim status to ${claimStatusEnum.APPROVED.value} and create claim event`, function () {
-      var reason = 'Test reason'
+      const reason = 'Test reason'
 
       return payoutBarcodeExpiredClaim(claimId, reason)
         .then(function () {

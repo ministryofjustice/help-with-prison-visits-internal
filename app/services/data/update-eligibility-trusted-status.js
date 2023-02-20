@@ -7,19 +7,19 @@ module.exports = function (claimId, isTrusted, untrustedReason) {
   return getEligibilityData(claimId)
     .then(function (eligibilityData) {
       if (isTrusted !== eligibilityData.IsTrusted) {
-        var updateObject = {
-          isTrusted: isTrusted,
+        const updateObject = {
+          isTrusted,
           UntrustedDate: !isTrusted ? dateFormatter.now().toDate() : null,
           UntrustedReason: !isTrusted ? untrustedReason : null
         }
 
-        const db = getDatabaseConnector()      
+        const db = getDatabaseConnector()
 
         return db('Eligibility')
           .where('EligibilityId', eligibilityData.EligibilityId)
           .update(updateObject)
           .then(function () {
-            var event = isTrusted ? claimEventEnum.ALLOW_AUTO_APPROVAL.value : claimEventEnum.DISABLE_AUTO_APPROVAL.value
+            const event = isTrusted ? claimEventEnum.ALLOW_AUTO_APPROVAL.value : claimEventEnum.DISABLE_AUTO_APPROVAL.value
             return insertClaimEvent(eligibilityData.Reference, eligibilityData.EligibilityId, claimId, event, null, untrustedReason, null, true)
           })
       }

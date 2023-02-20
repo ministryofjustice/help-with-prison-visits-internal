@@ -1,18 +1,18 @@
-var expect = require('chai').expect
-var sinon = require('sinon')
-var proxyquire = require('proxyquire')
-var dateFormatter = require('../../../../app/services/date-formatter')
-var { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
+const expect = require('chai').expect
+const sinon = require('sinon')
+const proxyquire = require('proxyquire')
+const dateFormatter = require('../../../../app/services/date-formatter')
+const { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
-var stubOverpaidClaimsData = {}
-var stubGetOverpaidClaims = sinon.stub().resolves(stubOverpaidClaimsData)
-var getClaim = proxyquire('../../../../app/services/data/get-individual-claim-details', {
+const stubOverpaidClaimsData = {}
+const stubGetOverpaidClaims = sinon.stub().resolves(stubOverpaidClaimsData)
+const getClaim = proxyquire('../../../../app/services/data/get-individual-claim-details', {
   './get-overpaid-claims-by-reference': stubGetOverpaidClaims
 })
-var reference = 'INDIVCD'
-var testData
-var date
-var claimId
+const reference = 'INDIVCD'
+let testData
+let date
+let claimId
 
 describe('services/data/get-individual-claim-details', function () {
   describe('get', function () {

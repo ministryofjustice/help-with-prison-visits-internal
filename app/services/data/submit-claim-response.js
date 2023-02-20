@@ -15,22 +15,22 @@ module.exports = function (claimId, claimDecision) {
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .first('Eligibility.EligibilityId', 'Eligibility.Reference')
     .then(function (result) {
-      var eligibilityId = result.EligibilityId
-      var reference = result.Reference
-      var caseworker = claimDecision.caseworker
-      var decision = claimDecision.decision
-      var note = claimDecision.note
-      var nomisCheck = claimDecision.nomisCheck
-      var releaseDateIsSet = claimDecision.releaseDateIsSet
-      var releaseDate = null
+      const eligibilityId = result.EligibilityId
+      const reference = result.Reference
+      const caseworker = claimDecision.caseworker
+      const decision = claimDecision.decision
+      const note = claimDecision.note
+      const nomisCheck = claimDecision.nomisCheck
+      const releaseDateIsSet = claimDecision.releaseDateIsSet
+      let releaseDate = null
       if (claimDecision.releaseDateIsSet) {
         releaseDate = claimDecision.releaseDate.format('YYYY-MM-DD')
       }
-      var dwpCheck = claimDecision.dwpCheck
-      var visitConfirmationCheck = claimDecision.visitConfirmationCheck
-      var rejectionReasonId = claimDecision.rejectionReasonId
-      var allExpensesManuallyProcessed = areAllExpensesManuallyProcessed(claimDecision.claimExpenseResponses)
-      var expiryDate = claimDecision.expiryDate.format('YYYY-MM-DD')
+      const dwpCheck = claimDecision.dwpCheck
+      const visitConfirmationCheck = claimDecision.visitConfirmationCheck
+      const rejectionReasonId = claimDecision.rejectionReasonId
+      const allExpensesManuallyProcessed = areAllExpensesManuallyProcessed(claimDecision.claimExpenseResponses)
+      const expiryDate = claimDecision.expiryDate.format('YYYY-MM-DD')
 
       return Promise.all([updateEligibility(eligibilityId, decision),
         updateClaim(claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed, rejectionReasonId),
@@ -50,7 +50,7 @@ function updateEligibility (eligibilityId, decision) {
 }
 
 function updateClaim (claimId, caseworker, decision, note, visitConfirmationCheck, allExpensesManuallyProcessed, rejectionReasonId) {
-  var updateObject = {}
+  let updateObject = {}
   const db = getDatabaseConnector()
 
   if (decision === claimDecisionEnum.APPROVED) {
@@ -124,7 +124,7 @@ function updatePrisoner (eligibilityId, nomisCheck, releaseDateIsSet, releaseDat
 }
 
 function updateClaimExpenses (claimExpenseResponses) {
-  var updates = []
+  const updates = []
   if (claimExpenseResponses) {
     claimExpenseResponses.forEach(function (claimExpenseResponse) {
       updates.push(updateClaimExpense(claimExpenseResponse))
@@ -156,7 +156,7 @@ function updateRemainingOverpaymentAmounts (claimId, reference, decision) {
 }
 
 function sendClaimNotification (reference, eligibilityId, claimId, decision) {
-  var notificationType
+  let notificationType
   if (decision === claimDecisionEnum.APPROVED) {
     notificationType = tasksEnum.ACCEPT_CLAIM_NOTIFICATION
   } else if (decision === claimDecisionEnum.REJECTED) {
@@ -169,7 +169,7 @@ function sendClaimNotification (reference, eligibilityId, claimId, decision) {
 }
 
 function areAllExpensesManuallyProcessed (claimExpenseResponses) {
-  var result = true
+  let result = true
 
   claimExpenseResponses.forEach(function (claimExpenseResponse) {
     if (claimExpenseResponse.status !== claimDecisionEnum.MANUALLY_PROCESSED) {

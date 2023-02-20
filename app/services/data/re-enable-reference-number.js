@@ -13,7 +13,7 @@ module.exports = function (claimId, reference, note, email) {
         .where('ClaimId', claimId)
         .first('EligibilityId')
         .then(function (eligibility) {
-          var eligibilityId = eligibility.EligibilityId
+          const eligibilityId = eligibility.EligibilityId
           return insertClaimEvent(reference, eligibilityId, claimId, claimEventEnum.REFERENCE_RE_ENABLED.value, null, note, email, true)
         })
     })
