@@ -1,8 +1,9 @@
 const Promise = require('bluebird')
 const claimExpenseTypes = require('../../app/views/helpers/display-field-names')
-const getClaimEscort = require('../services/data/get-claim-escort')
-const getClaimChildCount = require('../services/data/get-claim-child-count')
-const getClaimExpenses = require('../services/data/get-claim-expenses')
+const getClaimEscorts = require('../services/data/get-claim-escorts')
+const getClaimChildCounts = require('../services/data/get-claim-child-counts')
+const getClaimExpensesForClaims = require('../services/data/get-claim-expenses-for-claims')
+const log = require('../services/log')
 
 const displayHelper = require('../views/helpers/display-helper')
 const dateHelper = require('../views/helpers/date-helper')
@@ -31,50 +32,58 @@ const REJECTION_REASON_HEADER = 'Rejection Reason'
 const DAYS_UNTIL_PAYMENT_HEADER = 'Days Until Payment'
 
 module.exports = function (claims) {
-  return Promise.map(claims, function (claim) {
-    return Promise.all([
-      getClaimChildCount(claim.ClaimId),
-      getClaimEscort(claim.ClaimId),
-      getClaimExpenses(claim.ClaimId)
-    ])
-      .then(function (result) {
-        const returnValue = {}
+  const claimIds = claims.reduce(function (currentClaimIds, claim) {
+    currentClaimIds.push(claim.ClaimId)
 
-        const childCount = result[0][0].Count
-        const hasEscort = result[1].length > 0
-        const claimExpenses = result[2]
-        const totalAmountPaid = (claim.PaymentAmount || 0) + (claim.ManuallyProcessedAmount || 0)
+    return currentClaimIds
+  }, [])
 
-        returnValue[NAME_HEADER] = claim.Name
-        returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
-        returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[claim.Relationship].displayName
-        returnValue[CHILD_COUNT_HEADER] = childCount
-        returnValue[HAS_ESCORT_HEADER] = hasEscort ? 'Y' : 'N'
-        returnValue[VISIT_DATE_HEADER] = dateHelper.shortDate(claim.DateOfJourney)
-        returnValue[CLAIM_SUBMISSION_DATE_HEADER] = dateHelper.shortDate(claim.DateSubmitted)
-        returnValue[PRISON_REGION_HEADER] = displayHelper.getPrisonRegion(claim.NameOfPrison)
-        returnValue[BENEFIT_CLAIMED_HEADER] = displayHelper.getBenefitDisplayName(claim.Benefit)
-        returnValue[ASSISTED_DIGITAL_CASEWORKER_HEADER] = claim.AssistedDigitalCaseworker
-        returnValue[CASEWORKER_HEADER] = claim.Caseworker
-        returnValue[IS_TRUSTED_HEADER] = claim.IsTrusted ? 'Y' : 'N'
-        returnValue[CLAIM_STATUS_HEADER] = claim.DisplayStatus
-        returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = claim.DateReviewed ? dateHelper.shortDate(claim.DateReviewed) : null
-        returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
-        returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
-        returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
-        returnValue[REJECTION_REASON_HEADER] = claim.RejectionReason
-        returnValue[DAYS_UNTIL_PAYMENT_HEADER] = claim.DaysUntilPayment
-        if (claim.RejectionReason === 'Other') {
-          returnValue[REJECTION_REASON_HEADER] = claim.Note
-        }
-        let expenseCount = 1
-        claimExpenses.forEach(function (expense) {
-          returnValue[CLAIM_EXPENSE_TYPE_HEADER + expenseCount] = claimExpenseTypes[expense.ExpenseType]
-          returnValue[EXPENSE_APPROVED_COST_HEADER + expenseCount] = expense.ApprovedCost ? expense.ApprovedCost : 0
-          expenseCount = expenseCount + 1
-        })
+  return Promise.all([
+    getClaimChildCounts(claimIds),
+    getClaimEscorts(claimIds),
+    getClaimExpensesForClaims(claimIds)
+  ]).then(function (data) {
+    return Promise.map(claims, function (claim) {
+      const returnValue = {}
 
-        return returnValue
+      const childCount = data[0].find(function (childCountRow) { return childCountRow.ClaimId === claim.ClaimId })
+      const hasEscort = data[1].find(function (escortRow) { return escortRow.ClaimId === claim.ClaimId }) !== undefined
+      const claimExpenses = data[2].filter(function (expenseRow) { return expenseRow.ClaimId === claim.ClaimId })
+
+      const totalAmountPaid = (claim.PaymentAmount || 0) + (claim.ManuallyProcessedAmount || 0)
+
+      returnValue[NAME_HEADER] = claim.Name
+      returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
+      returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[claim.Relationship].displayName
+      returnValue[CHILD_COUNT_HEADER] = childCount ? childCount.Count : 0
+      returnValue[HAS_ESCORT_HEADER] = hasEscort ? 'Y' : 'N'
+      returnValue[VISIT_DATE_HEADER] = dateHelper.shortDate(claim.DateOfJourney)
+      returnValue[CLAIM_SUBMISSION_DATE_HEADER] = dateHelper.shortDate(claim.DateSubmitted)
+      returnValue[PRISON_REGION_HEADER] = displayHelper.getPrisonRegion(claim.NameOfPrison)
+      returnValue[BENEFIT_CLAIMED_HEADER] = displayHelper.getBenefitDisplayName(claim.Benefit)
+      returnValue[ASSISTED_DIGITAL_CASEWORKER_HEADER] = claim.AssistedDigitalCaseworker
+      returnValue[CASEWORKER_HEADER] = claim.Caseworker
+      returnValue[IS_TRUSTED_HEADER] = claim.IsTrusted ? 'Y' : 'N'
+      returnValue[CLAIM_STATUS_HEADER] = claim.DisplayStatus
+      returnValue[DATE_REVIEWED_BY_CASEWORKER_HEADER] = claim.DateReviewed ? dateHelper.shortDate(claim.DateReviewed) : null
+      returnValue[IS_ADVANCE_CLAIM_HEADER] = claim.IsAdvanceClaim ? 'Y' : 'N'
+      returnValue[TOTAL_AMOUNT_PAID_HEADER] = totalAmountPaid
+      returnValue[PAYMENT_METHOD_HEADER] = claim.PaymentMethod ? displayHelper.getPaymentMethodDisplayName(claim.PaymentMethod) : ''
+      returnValue[REJECTION_REASON_HEADER] = claim.RejectionReason
+      returnValue[DAYS_UNTIL_PAYMENT_HEADER] = claim.DaysUntilPayment
+      if (claim.RejectionReason === 'Other') {
+        returnValue[REJECTION_REASON_HEADER] = claim.Note
+      }
+      let expenseCount = 1
+      claimExpenses.forEach(function (expense) {
+        returnValue[CLAIM_EXPENSE_TYPE_HEADER + expenseCount] = claimExpenseTypes[expense.ExpenseType]
+        returnValue[EXPENSE_APPROVED_COST_HEADER + expenseCount] = expense.ApprovedCost ? expense.ApprovedCost : 0
+        expenseCount = expenseCount + 1
       })
+
+      return returnValue
+    })
+  }).catch((error) => {
+    log.error(error.message)
   })
 }

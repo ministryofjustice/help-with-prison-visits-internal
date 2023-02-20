@@ -9,9 +9,9 @@ const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const paymentMethodEnum = require('../../../app/constants/payment-method-enum')
 
 let transformClaimDataForExport
-let getClaimEscortStub
-let getClaimChildCountStub
-let getClaimExpensesStub
+let getClaimEscortsStub
+let getClaimChildCountsStub
+let getClaimExpensesForClaimsStub
 
 const rejectionReason = 'Applicant is not sole visit/next of kin'
 
@@ -102,18 +102,18 @@ const TEST_CLAIM_DATA_REJECTED = [
 
 const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
-const CLAIM_CHILD_COUNT = [{ Count: 1 }]
+const CLAIM_CHILD_COUNT = [{ ClaimId: 1, Count: 1 }]
 
 describe('services/transform-claim-data-for-export', function () {
   beforeEach(function () {
-    getClaimEscortStub = sinon.stub().resolves(CLAIM_ESCORT)
-    getClaimChildCountStub = sinon.stub().resolves(CLAIM_CHILD_COUNT)
-    getClaimExpensesStub = sinon.stub().resolves(CLAIM_EXPENSES)
+    getClaimEscortsStub = sinon.stub().resolves(CLAIM_ESCORT)
+    getClaimChildCountsStub = sinon.stub().resolves(CLAIM_CHILD_COUNT)
+    getClaimExpensesForClaimsStub = sinon.stub().resolves(CLAIM_EXPENSES)
 
     transformClaimDataForExport = proxyquire('../../../app/services/transform-claim-data-for-export', {
-      '../services/data/get-claim-escort': getClaimEscortStub,
-      '../services/data/get-claim-child-count': getClaimChildCountStub,
-      '../services/data/get-claim-expenses': getClaimExpensesStub
+      '../services/data/get-claim-escorts': getClaimEscortsStub,
+      '../services/data/get-claim-child-counts': getClaimChildCountsStub,
+      '../services/data/get-claim-expenses-for-claims': getClaimExpensesForClaimsStub
     })
   })
 
@@ -146,9 +146,9 @@ describe('services/transform-claim-data-for-export', function () {
   it('should call all relevant functions', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
-        expect(getClaimEscortStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
-        expect(getClaimExpensesStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
-        expect(getClaimChildCountStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
+        expect(getClaimEscortsStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
+        expect(getClaimExpensesForClaimsStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
+        expect(getClaimChildCountsStub.calledWith(TEST_CLAIM_DATA_MIXED[0].ClaimId)).to.be.true //eslint-disable-line
       })
   })
 

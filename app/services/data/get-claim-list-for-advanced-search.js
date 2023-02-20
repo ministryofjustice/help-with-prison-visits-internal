@@ -1,4 +1,5 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
+const log = require('../../services/log')
 const moment = require('moment')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const rulesEnum = require('../../../app/constants/region-rules-enum')
@@ -223,45 +224,42 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     applyPaymentMethodFilter(selectQuery, searchCriteria.paymentMethod)
   }
 
-  return countQuery
-    .then(function (count) {
-      return selectQuery
-        .then(function (claims) {
-          const claimsToReturn = []
-          return Promise.each(claims, function (claim) {
-            claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
-            claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
-            claim.DateSubmittedMoment = moment(claim.DateSubmitted)
-            claim.DisplayStatus = statusFormatter(claim.Status)
-            claim.Name = claim.FirstName + ' ' + claim.LastName
-            if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
-              claim.AssignedTo = null
-            }
-            claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
-            if (claim.PaymentDate) {
-              claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
-            } else {
-              claim.DaysUntilPayment = 'N/A'
-            }
-            if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
-              return getClosedClaimStatus(claim.ClaimId)
-                .then(function (status) {
-                  claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
-                  claimsToReturn.push(claim)
-                })
-            } else {
+  return selectQuery
+    .then(function (claims) {
+      var claimsToReturn = []
+      return Promise.each(claims, function (claim) {
+        claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
+        claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+        claim.DateSubmittedMoment = moment(claim.DateSubmitted)
+        claim.DisplayStatus = statusFormatter(claim.Status)
+        claim.Name = claim.FirstName + ' ' + claim.LastName
+        if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
+          claim.AssignedTo = null
+        }
+        claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
+        if (claim.PaymentDate) {
+          claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
+        } else {
+          claim.DaysUntilPayment = 'N/A'
+        }
+        if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
+          return getClosedClaimStatus(claim.ClaimId)
+            .then(function (status) {
+              claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
               claimsToReturn.push(claim)
-              return Promise.resolve()
-            }
-          })
-            .then(function () {
-              return {
-                claims: claimsToReturn,
-                total: count[0]
-              }
             })
+        } else {
+          claimsToReturn.push(claim)
+          return Promise.resolve()
+        }
+      })
+        .then(function () {
+          return {
+            claims: claimsToReturn,
+            total: claimsToReturn.length
+          }
         })
-    })
+  })
 
   function applyReferenceFilter (query, reference) {
     query.where('Claim.Reference', 'like', `%${reference}%`)
