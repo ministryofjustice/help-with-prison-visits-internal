@@ -1,5 +1,4 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
-const log = require('../../services/log')
 const moment = require('moment')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const rulesEnum = require('../../../app/constants/region-rules-enum')
