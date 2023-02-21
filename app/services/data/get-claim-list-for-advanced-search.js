@@ -9,6 +9,8 @@ const getClosedClaimStatus = require('./get-closed-claim-status')
 
 const APPROVED_STATUS_VALUES = [claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value]
 const IN_PROGRESS_STATUS_VALUES = [claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
+
+let countQuery
 let selectQuery
 let selectFields
 
@@ -105,136 +107,161 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
 
   if (searchCriteria.reference) {
     applyReferenceFilter(selectQuery, searchCriteria.reference)
+    applyReferenceFilter(selectQuery, searchCriteria.reference)
   }
 
   if (searchCriteria.name) {
+    applyNameFilter(selectQuery, searchCriteria.name)
     applyNameFilter(selectQuery, searchCriteria.name)
   }
 
   if (searchCriteria.ninumber) {
     applyNINumberFilter(selectQuery, searchCriteria.ninumber)
+    applyNINumberFilter(selectQuery, searchCriteria.ninumber)
   }
 
   if (searchCriteria.prisonerNumber) {
+    applyPrisonerNumberFilter(selectQuery, searchCriteria.prisonerNumber)
     applyPrisonerNumberFilter(selectQuery, searchCriteria.prisonerNumber)
   }
 
   if (searchCriteria.prison) {
     applyPrisonFilter(selectQuery, searchCriteria.prison)
+    applyPrisonFilter(selectQuery, searchCriteria.prison)
   }
 
   if (searchCriteria.assistedDigital) {
+    applyAssistedDigitalFilter(selectQuery)
     applyAssistedDigitalFilter(selectQuery)
   }
 
   if (searchCriteria.claimStatus && searchCriteria.claimStatus !== 'all') {
     if (searchCriteria.claimStatus === 'paid') {
       applyPaidClaimStatusFilter(selectQuery)
+      applyPaidClaimStatusFilter(selectQuery)
     } else if (searchCriteria.claimStatus === 'inProgress') {
       applyInProgressClaimStatusFilter(selectQuery)
+      applyInProgressClaimStatusFilter(selectQuery)
     } else {
+      applyClaimStatusFilter(selectQuery, searchCriteria.claimStatus)
       applyClaimStatusFilter(selectQuery, searchCriteria.claimStatus)
     }
   }
 
   if (searchCriteria.modeOfApproval) {
     applyModeOfApprovalFilter(selectQuery, searchCriteria.modeOfApproval)
+    applyModeOfApprovalFilter(selectQuery, searchCriteria.modeOfApproval)
   }
 
   if (searchCriteria.pastOrFuture) {
+    applyPastOrFutureFilter(selectQuery, searchCriteria.pastOrFuture)
     applyPastOrFutureFilter(selectQuery, searchCriteria.pastOrFuture)
   }
 
   if (searchCriteria.visitRules) {
     applyVisitRulesFilter(selectQuery, searchCriteria.visitRules)
+    applyVisitRulesFilter(selectQuery, searchCriteria.visitRules)
   }
 
   if (searchCriteria.overpaymentStatus) {
+    applyOverpaymentStatusFilter(selectQuery, searchCriteria.overpaymentStatus)
     applyOverpaymentStatusFilter(selectQuery, searchCriteria.overpaymentStatus)
   }
 
   if (searchCriteria.visitDateFrom) {
     applyVisitDateFromFilter(selectQuery, searchCriteria.visitDateFrom)
+    applyVisitDateFromFilter(selectQuery, searchCriteria.visitDateFrom)
   }
 
   if (searchCriteria.visitDateTo) {
+    applyVisitDateToFilter(selectQuery, searchCriteria.visitDateTo)
     applyVisitDateToFilter(selectQuery, searchCriteria.visitDateTo)
   }
 
   if (searchCriteria.dateSubmittedFrom) {
     applyDateSubmittedFromFilter(selectQuery, searchCriteria.dateSubmittedFrom)
+    applyDateSubmittedFromFilter(selectQuery, searchCriteria.dateSubmittedFrom)
   }
 
   if (searchCriteria.dateSubmittedTo) {
+    applyDateSubmittedToFilter(selectQuery, searchCriteria.dateSubmittedTo)
     applyDateSubmittedToFilter(selectQuery, searchCriteria.dateSubmittedTo)
   }
 
   if (searchCriteria.dateApprovedFrom) {
     applyDateApprovedFromFilter(selectQuery, searchCriteria.dateApprovedFrom)
+    applyDateApprovedFromFilter(selectQuery, searchCriteria.dateApprovedFrom)
   }
 
   if (searchCriteria.dateApprovedTo) {
+    applyDateApprovedToFilter(selectQuery, searchCriteria.dateApprovedTo)
     applyDateApprovedToFilter(selectQuery, searchCriteria.dateApprovedTo)
   }
 
   if (searchCriteria.dateRejectedFrom) {
     applyDateRejectedFromFilter(selectQuery, searchCriteria.dateRejectedFrom)
+    applyDateRejectedFromFilter(selectQuery, searchCriteria.dateRejectedFrom)
   }
 
   if (searchCriteria.dateRejectedTo) {
+    applyDateRejectedToFilter(selectQuery, searchCriteria.dateRejectedTo)
     applyDateRejectedToFilter(selectQuery, searchCriteria.dateRejectedTo)
   }
 
   if (searchCriteria.approvedClaimAmountFrom) {
     applyApprovedClaimAmountFromFilter(selectQuery, searchCriteria.approvedClaimAmountFrom)
+    applyApprovedClaimAmountFromFilter(selectQuery, searchCriteria.approvedClaimAmountFrom)
   }
 
   if (searchCriteria.approvedClaimAmountTo) {
+    applyApprovedClaimAmountToFilter(selectQuery, searchCriteria.approvedClaimAmountTo)
     applyApprovedClaimAmountToFilter(selectQuery, searchCriteria.approvedClaimAmountTo)
   }
 
   if (searchCriteria.paymentMethod) {
     applyPaymentMethodFilter(selectQuery, searchCriteria.paymentMethod)
+    applyPaymentMethodFilter(selectQuery, searchCriteria.paymentMethod)
   }
 
-  return selectQuery
-    .then(function (claims) {
-      const claimsToReturn = []
-      return Promise.each(claims, function (claim) {
-        claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
-        claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
-        claim.DateSubmittedMoment = moment(claim.DateSubmitted)
-        claim.DisplayStatus = statusFormatter(claim.Status)
-        claim.Name = claim.FirstName + ' ' + claim.LastName
-        if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
-          claim.AssignedTo = null
-        }
-        claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
-        if (claim.PaymentDate) {
-          claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
-        } else {
-          claim.DaysUntilPayment = 'N/A'
-        }
-        if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
-          return getClosedClaimStatus(claim.ClaimId)
-            .then(function (status) {
-              claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
-              claimsToReturn.push(claim)
-            })
-        } else {
-          claimsToReturn.push(claim)
-          return Promise.resolve()
-        }
-      })
-        .then(function () {
-          return {
-            claims: claimsToReturn,
-            total: {
-              Count: claimsToReturn.length
+  return countQuery
+    .then(function (count) {
+      return selectQuery
+        .then(function (claims) {
+          const claimsToReturn = []
+          return Promise.each(claims, function (claim) {
+            claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
+            claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+            claim.DateSubmittedMoment = moment(claim.DateSubmitted)
+            claim.DisplayStatus = statusFormatter(claim.Status)
+            claim.Name = claim.FirstName + ' ' + claim.LastName
+            if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
+              claim.AssignedTo = null
             }
-          }
+            claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
+            if (claim.PaymentDate) {
+              claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
+            } else {
+              claim.DaysUntilPayment = 'N/A'
+            }
+            if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
+              return getClosedClaimStatus(claim.ClaimId)
+                .then(function (status) {
+                  claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
+                  claimsToReturn.push(claim)
+                })
+            } else {
+              claimsToReturn.push(claim)
+              return Promise.resolve()
+            }
+          })
+            .then(function () {
+              return {
+                claims: claimsToReturn,
+                total: count[0]
+              }
+            })
         })
-    })
+      })
 
   function applyReferenceFilter (query, reference) {
     query.where('Claim.Reference', 'like', `%${reference}%`)
@@ -371,6 +398,13 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
 
   function createBaseQueries (limit, offset) {
     const db = getDatabaseConnector()
+
+    countQuery = db('Claim')
+      .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
+      .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
+      .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
+      .leftJoin('ClaimRejectionReason', 'Claim.RejectionReasonId', '=', 'ClaimRejectionReason.ClaimRejectionReasonId')
+      .count('Claim.ClaimId AS Count')
 
     selectQuery = db('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
