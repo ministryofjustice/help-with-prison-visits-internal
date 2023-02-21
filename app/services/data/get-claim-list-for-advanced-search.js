@@ -107,120 +107,120 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
 
   if (searchCriteria.reference) {
     applyReferenceFilter(selectQuery, searchCriteria.reference)
-    applyReferenceFilter(selectQuery, searchCriteria.reference)
+    applyReferenceFilter(countQuery, searchCriteria.reference)
   }
 
   if (searchCriteria.name) {
     applyNameFilter(selectQuery, searchCriteria.name)
-    applyNameFilter(selectQuery, searchCriteria.name)
+    applyNameFilter(countQuery, searchCriteria.name)
   }
 
   if (searchCriteria.ninumber) {
     applyNINumberFilter(selectQuery, searchCriteria.ninumber)
-    applyNINumberFilter(selectQuery, searchCriteria.ninumber)
+    applyNINumberFilter(countQuery, searchCriteria.ninumber)
   }
 
   if (searchCriteria.prisonerNumber) {
     applyPrisonerNumberFilter(selectQuery, searchCriteria.prisonerNumber)
-    applyPrisonerNumberFilter(selectQuery, searchCriteria.prisonerNumber)
+    applyPrisonerNumberFilter(countQuery, searchCriteria.prisonerNumber)
   }
 
   if (searchCriteria.prison) {
     applyPrisonFilter(selectQuery, searchCriteria.prison)
-    applyPrisonFilter(selectQuery, searchCriteria.prison)
+    applyPrisonFilter(countQuery, searchCriteria.prison)
   }
 
   if (searchCriteria.assistedDigital) {
     applyAssistedDigitalFilter(selectQuery)
-    applyAssistedDigitalFilter(selectQuery)
+    applyAssistedDigitalFilter(countQuery)
   }
 
   if (searchCriteria.claimStatus && searchCriteria.claimStatus !== 'all') {
     if (searchCriteria.claimStatus === 'paid') {
       applyPaidClaimStatusFilter(selectQuery)
-      applyPaidClaimStatusFilter(selectQuery)
+      applyPaidClaimStatusFilter(countQuery)
     } else if (searchCriteria.claimStatus === 'inProgress') {
       applyInProgressClaimStatusFilter(selectQuery)
-      applyInProgressClaimStatusFilter(selectQuery)
+      applyInProgressClaimStatusFilter(countQuery)
     } else {
       applyClaimStatusFilter(selectQuery, searchCriteria.claimStatus)
-      applyClaimStatusFilter(selectQuery, searchCriteria.claimStatus)
+      applyClaimStatusFilter(countQuery, searchCriteria.claimStatus)
     }
   }
 
   if (searchCriteria.modeOfApproval) {
     applyModeOfApprovalFilter(selectQuery, searchCriteria.modeOfApproval)
-    applyModeOfApprovalFilter(selectQuery, searchCriteria.modeOfApproval)
+    applyModeOfApprovalFilter(countQuery, searchCriteria.modeOfApproval)
   }
 
   if (searchCriteria.pastOrFuture) {
     applyPastOrFutureFilter(selectQuery, searchCriteria.pastOrFuture)
-    applyPastOrFutureFilter(selectQuery, searchCriteria.pastOrFuture)
+    applyPastOrFutureFilter(countQuery, searchCriteria.pastOrFuture)
   }
 
   if (searchCriteria.visitRules) {
     applyVisitRulesFilter(selectQuery, searchCriteria.visitRules)
-    applyVisitRulesFilter(selectQuery, searchCriteria.visitRules)
+    applyVisitRulesFilter(countQuery, searchCriteria.visitRules)
   }
 
   if (searchCriteria.overpaymentStatus) {
     applyOverpaymentStatusFilter(selectQuery, searchCriteria.overpaymentStatus)
-    applyOverpaymentStatusFilter(selectQuery, searchCriteria.overpaymentStatus)
+    applyOverpaymentStatusFilter(countQuery, searchCriteria.overpaymentStatus)
   }
 
   if (searchCriteria.visitDateFrom) {
     applyVisitDateFromFilter(selectQuery, searchCriteria.visitDateFrom)
-    applyVisitDateFromFilter(selectQuery, searchCriteria.visitDateFrom)
+    applyVisitDateFromFilter(countQuery, searchCriteria.visitDateFrom)
   }
 
   if (searchCriteria.visitDateTo) {
     applyVisitDateToFilter(selectQuery, searchCriteria.visitDateTo)
-    applyVisitDateToFilter(selectQuery, searchCriteria.visitDateTo)
+    applyVisitDateToFilter(countQuery, searchCriteria.visitDateTo)
   }
 
   if (searchCriteria.dateSubmittedFrom) {
     applyDateSubmittedFromFilter(selectQuery, searchCriteria.dateSubmittedFrom)
-    applyDateSubmittedFromFilter(selectQuery, searchCriteria.dateSubmittedFrom)
+    applyDateSubmittedFromFilter(countQuery, searchCriteria.dateSubmittedFrom)
   }
 
   if (searchCriteria.dateSubmittedTo) {
     applyDateSubmittedToFilter(selectQuery, searchCriteria.dateSubmittedTo)
-    applyDateSubmittedToFilter(selectQuery, searchCriteria.dateSubmittedTo)
+    applyDateSubmittedToFilter(countQuery, searchCriteria.dateSubmittedTo)
   }
 
   if (searchCriteria.dateApprovedFrom) {
     applyDateApprovedFromFilter(selectQuery, searchCriteria.dateApprovedFrom)
-    applyDateApprovedFromFilter(selectQuery, searchCriteria.dateApprovedFrom)
+    applyDateApprovedFromFilter(countQuery, searchCriteria.dateApprovedFrom)
   }
 
   if (searchCriteria.dateApprovedTo) {
     applyDateApprovedToFilter(selectQuery, searchCriteria.dateApprovedTo)
-    applyDateApprovedToFilter(selectQuery, searchCriteria.dateApprovedTo)
+    applyDateApprovedToFilter(countQuery, searchCriteria.dateApprovedTo)
   }
 
   if (searchCriteria.dateRejectedFrom) {
     applyDateRejectedFromFilter(selectQuery, searchCriteria.dateRejectedFrom)
-    applyDateRejectedFromFilter(selectQuery, searchCriteria.dateRejectedFrom)
+    applyDateRejectedFromFilter(countQuery, searchCriteria.dateRejectedFrom)
   }
 
   if (searchCriteria.dateRejectedTo) {
     applyDateRejectedToFilter(selectQuery, searchCriteria.dateRejectedTo)
-    applyDateRejectedToFilter(selectQuery, searchCriteria.dateRejectedTo)
+    applyDateRejectedToFilter(countQuery, searchCriteria.dateRejectedTo)
   }
 
   if (searchCriteria.approvedClaimAmountFrom) {
     applyApprovedClaimAmountFromFilter(selectQuery, searchCriteria.approvedClaimAmountFrom)
-    applyApprovedClaimAmountFromFilter(selectQuery, searchCriteria.approvedClaimAmountFrom)
+    applyApprovedClaimAmountFromFilter(countQuery, searchCriteria.approvedClaimAmountFrom)
   }
 
   if (searchCriteria.approvedClaimAmountTo) {
     applyApprovedClaimAmountToFilter(selectQuery, searchCriteria.approvedClaimAmountTo)
-    applyApprovedClaimAmountToFilter(selectQuery, searchCriteria.approvedClaimAmountTo)
+    applyApprovedClaimAmountToFilter(countQuery, searchCriteria.approvedClaimAmountTo)
   }
 
   if (searchCriteria.paymentMethod) {
     applyPaymentMethodFilter(selectQuery, searchCriteria.paymentMethod)
-    applyPaymentMethodFilter(selectQuery, searchCriteria.paymentMethod)
+    applyPaymentMethodFilter(countQuery, searchCriteria.paymentMethod)
   }
 
   return countQuery
