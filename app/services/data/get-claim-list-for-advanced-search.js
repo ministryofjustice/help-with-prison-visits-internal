@@ -261,7 +261,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
               }
             })
         })
-      })
+    })
 
   function applyReferenceFilter (query, reference) {
     query.where('Claim.Reference', 'like', `%${reference}%`)
