@@ -229,7 +229,9 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
         .then(function () {
           return {
             claims: claimsToReturn,
-            total: claimsToReturn.length
+            total: {
+              Count: claimsToReturn.length
+            }
           }
         })
     })
