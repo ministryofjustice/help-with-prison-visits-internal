@@ -5,7 +5,7 @@ const rulesEnum = require('../../../app/constants/region-rules-enum')
 const dateFormatter = require('../date-formatter')
 const statusFormatter = require('../claim-status-formatter')
 const Promise = require('bluebird').Promise
-const getClosedClaimStatus = require('./get-closed-claim-status')
+const getClosedClaimsStatuses = require('./get-closed-claims-statuses')
 
 const APPROVED_STATUS_VALUES = [claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value]
 const IN_PROGRESS_STATUS_VALUES = [claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
@@ -228,37 +228,44 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
       return selectQuery
         .then(function (claims) {
           const claimsToReturn = []
-          return Promise.each(claims, function (claim) {
-            claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
-            claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
-            claim.DateSubmittedMoment = moment(claim.DateSubmitted)
-            claim.DisplayStatus = statusFormatter(claim.Status)
-            claim.Name = claim.FirstName + ' ' + claim.LastName
-            if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
-              claim.AssignedTo = null
-            }
-            claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
-            if (claim.PaymentDate) {
-              claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
-            } else {
-              claim.DaysUntilPayment = 'N/A'
-            }
-            if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
-              return getClosedClaimStatus(claim.ClaimId)
-                .then(function (status) {
+          const claimIds = claims.reduce(function (currentClaimIds, claim) {
+            currentClaimIds.push(claim.ClaimId)
+
+            return currentClaimIds
+          }, [])
+
+          return getClosedClaimsStatuses(claimIds)
+            .then(function (closedClaimsStatuses) {
+              return Promise.each(claims, function (claim) {
+                claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
+                claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+                claim.DateSubmittedMoment = moment(claim.DateSubmitted)
+                claim.DisplayStatus = statusFormatter(claim.Status)
+                claim.Name = claim.FirstName + ' ' + claim.LastName
+                if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
+                  claim.AssignedTo = null
+                }
+                claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
+                if (claim.PaymentDate) {
+                  claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
+                } else {
+                  claim.DaysUntilPayment = 'N/A'
+                }
+                if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
+                  const status = closedClaimsStatuses[claim.ClaimId]
                   claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
-                  claimsToReturn.push(claim)
+                }
+
+                claimsToReturn.push(claim)
+
+                return Promise.resolve()
+              })
+                .then(function () {
+                  return {
+                    claims: claimsToReturn,
+                    total: count[0]
+                  }
                 })
-            } else {
-              claimsToReturn.push(claim)
-              return Promise.resolve()
-            }
-          })
-            .then(function () {
-              return {
-                claims: claimsToReturn,
-                total: count[0]
-              }
             })
         })
     })
