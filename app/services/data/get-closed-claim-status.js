@@ -1,6 +1,7 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const closedClaimStatusMap = require('../../constants/closed-claim-status-map')
+
 module.exports = function (claimId) {
   const claimEvents = [
     claimEventEnum.REQUEST_NEW_BANK_DETAILS.value,
@@ -12,6 +13,7 @@ module.exports = function (claimId) {
     claimEventEnum.CLAIM_UPDATED.value
   ]
   const db = getDatabaseConnector()
+
   return db('ClaimEvent')
     .first('Event')
     .whereIn('Event', claimEvents)
