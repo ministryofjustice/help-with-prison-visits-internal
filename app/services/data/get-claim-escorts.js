@@ -5,5 +5,4 @@ module.exports = function (claimIds) {
 
   return db('ClaimEscort')
     .select('ClaimEscortId', 'ClaimId')
-    .whereIn('ClaimId', claimIds)
 }
