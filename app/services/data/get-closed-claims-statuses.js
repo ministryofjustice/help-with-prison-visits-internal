@@ -17,15 +17,14 @@ module.exports = function (claimIds) {
   return db('ClaimEvent')
     .select('ClaimId', 'Event')
     .whereIn('Event', claimEvents)
-    .andWhere(function () {
-      this.whereIn('ClaimId', claimIds)
-    })
     .orderBy([
       { column: 'ClaimId', order: 'desc' },
       { column: 'ClaimEventId', order: 'desc' }
     ])
     .then(function (events) {
-      return events.reduce(function (statuses, event) {
+      return events.filter(function (event) {
+        return claimIds.includes(event.ClaimId)
+      }).reduce(function (statuses, event) {
         if (!statuses[event.ClaimId]) {
           if (event && event !== null && event !== undefined) {
             statuses[event.ClaimId] = closedClaimStatusMap[event.Event]

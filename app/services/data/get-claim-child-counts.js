@@ -6,6 +6,5 @@ module.exports = function (claimIds) {
   return db('ClaimChild')
     .select('ClaimId')
     .count('ClaimChildId AS Count')
-    .whereIn('ClaimId', claimIds)
     .groupBy('ClaimId')
 }

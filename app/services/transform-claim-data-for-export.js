@@ -45,7 +45,6 @@ module.exports = function (claims) {
   ]).then(function (data) {
     return Promise.map(claims, function (claim) {
       const returnValue = {}
-
       const childCount = data[0].find(function (childCountRow) { return childCountRow.ClaimId === claim.ClaimId })
       const hasEscort = data[1].find(function (escortRow) { return escortRow.ClaimId === claim.ClaimId }) !== undefined
       const claimExpenses = data[2].filter(function (expenseRow) { return expenseRow.ClaimId === claim.ClaimId })

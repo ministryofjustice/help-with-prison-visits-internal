@@ -1,7 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const closedClaimStatusMap = require('../../constants/closed-claim-status-map')
-
 module.exports = function (claimId) {
   const claimEvents = [
     claimEventEnum.REQUEST_NEW_BANK_DETAILS.value,
@@ -13,13 +12,20 @@ module.exports = function (claimId) {
     claimEventEnum.CLAIM_UPDATED.value
   ]
   const db = getDatabaseConnector()
-
   return db('ClaimEvent')
     .first('Event')
     .whereIn('Event', claimEvents)
     .andWhere('ClaimId', claimId)
     .orderBy('ClaimEventId', 'desc')
     .then(function (event) {
-      return (event && event !== null && event !== undefined) ? closedClaimStatusMap[event.Event] : 'Closed'
+      if (event) {
+        if (event !== null && event !== undefined) {
+          return (closedClaimStatusMap[event.Event])
+        } else {
+          return 'Closed'
+        }
+      } else {
+        return 'Closed'
+      }
     })
 }
