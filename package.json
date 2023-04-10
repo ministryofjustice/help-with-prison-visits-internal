@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "applicationinsights": "^2.4.1",
-    "aws-sdk": "^2.1300.0",
+    "aws-sdk": "^2.1354.0",
     "axios": "^1.2.3",
     "bluebird": "^3.7.2",
     "bunyan": "^1.8.15",
