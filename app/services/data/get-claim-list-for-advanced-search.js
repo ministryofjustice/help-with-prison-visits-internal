@@ -59,6 +59,8 @@ const EXPORT_CLAIMS_FIELDS = [
   'Visitor.LastName',
   'Visitor.Benefit',
   'Visitor.Relationship',
+  'Prisoner.PrisonNumber',
+  'Claim.Reference',
   'Claim.DateSubmitted',
   'Claim.DateOfJourney',
   'Claim.DateReviewed',
