@@ -10,6 +10,8 @@ const dateHelper = require('../views/helpers/date-helper')
 const prisonerRelationshipEnum = require('../../app/constants/prisoner-relationships-enum')
 
 const NAME_HEADER = 'Name'
+const PRISONER_NUMBER_HEADER = 'Prisoner Number'
+const CLAIM_REFERENCE_HEADER = 'Reference'
 const PRISON_NAME_HEADER = 'Prison Name'
 const PRISONER_RELATIONSHIP_HEADER = 'Prisoner Relationship'
 const CHILD_COUNT_HEADER = 'Child Count'
@@ -53,6 +55,8 @@ module.exports = function (claims) {
       const totalAmountPaid = (claim.PaymentAmount || 0) + (claim.ManuallyProcessedAmount || 0)
 
       returnValue[NAME_HEADER] = claim.Name
+      returnValue[CLAIM_REFERENCE_HEADER] = claim.Reference
+      returnValue[PRISONER_NUMBER_HEADER] = claim.PrisonNumber
       returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
       returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[claim.Relationship].displayName
       returnValue[CHILD_COUNT_HEADER] = childCount ? childCount.Count : 0
