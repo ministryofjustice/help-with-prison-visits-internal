@@ -1,6 +1,8 @@
 module.exports = function () {
   return ['Name',
+    'Reference',
     'Prison Name',
+    'Prisoner Number',
     'Prisoner Relationship',
     'Child Count',
     'Has Escort?',
