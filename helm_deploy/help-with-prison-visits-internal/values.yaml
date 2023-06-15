@@ -2,7 +2,7 @@
 # Values here are the same across all environments
 generic-service:
   nameOverride: help-with-prison-visits-internal
-  serviceAccountName: help-with-prison-visits
+  serviceAccountName: help-with-prison-visits-internal
 
   image:
     repository: quay.io/hmpps/help-with-prison-visits-internal
