@@ -33,11 +33,12 @@ app.use(helmet.contentSecurityPolicy({
     scriptSrc: ["'self'",
       "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
       "'sha256-G29/qSW/JHHANtFhlrZVDZW1HOkCDRc78ggbqwwIJ2g='",
-      'www.google-analytics.com'],
-    connectSrc: ["'self'", 'www.google-analytics.com'],
+      '*.google-analytics.com',
+      '*.analytics.google.com'],
+    connectSrc: ["'self'", '*.google-analytics.com', '*.analytics.google.com'],
     styleSrc: ["'self'"],
     fontSrc: ["'self'", 'data:'],
-    imgSrc: ["'self'", 'www.google-analytics.com']
+    imgSrc: ["'self'", '*.google-analytics.com', '*.analytics.google.com']
   }
 }))
 
