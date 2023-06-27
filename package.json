@@ -41,7 +41,7 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.347.1",
+    "@aws-sdk/client-s3": "^3.360.0",
     "applicationinsights": "^2.7.0",
     "axios": "^1.4.0",
     "bluebird": "^3.7.2",
@@ -55,7 +55,7 @@
     "datatables.net": "^1.13.4",
     "datatables.net-dt": "^1.13.4",
     "debug": "^4.3.4",
-    "dotenv": "^16.1.4",
+    "dotenv": "^16.3.1",
     "express": "~4.18.2",
     "express-session": "^1.17.3",
     "govuk_frontend_toolkit": "^9.0.1",
@@ -74,8 +74,8 @@
     "path": "^0.12.7",
     "ramda": "^0.29.0",
     "redis": "^4.6.7",
-    "sanitize-html": "^2.10.0",
-    "sass": "^1.62.1",
+    "sanitize-html": "^2.11.0",
+    "sass": "^1.63.6",
     "serve-favicon": "~2.5.0",
     "tedious": "^16.1.0",
     "validator": "^13.9.0"
@@ -83,12 +83,12 @@
   "devDependencies": {
     "assert": "^2.0.0",
     "chai": "^4.3.7",
-    "cypress": "^12.13.0",
+    "cypress": "^12.16.0",
     "mocha": "^10.2.0",
     "node-mocks-http": "^1.12.2",
     "nyc": "^15.1.0",
     "proxyquire": "^2.1.3",
-    "sinon": "^15.1.0",
+    "sinon": "^15.2.0",
     "standard": "^17.1.0",
     "supertest": "^6.3.3"
   }
