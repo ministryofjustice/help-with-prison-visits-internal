@@ -55,7 +55,7 @@ module.exports = function (claims) {
       const totalAmountPaid = (claim.PaymentAmount || 0) + (claim.ManuallyProcessedAmount || 0)
 
       returnValue[NAME_HEADER] = claim.Name
-      returnValue[CLAIM_REFERENCE_HEADER] = claim.Reference
+      returnValue[CLAIM_REFERENCE_HEADER] = claim.ClaimId
       returnValue[PRISONER_NUMBER_HEADER] = claim.PrisonNumber
       returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
       returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[claim.Relationship].displayName
