@@ -1,6 +1,7 @@
 const appInsights = require('applicationinsights')
 const applicationVersion = require('./application-version')
 const ignoreNotFoundErrors = require('./telemetryProcessors/ignoreNotFound')
+const addUserDataToRequests = require('./telemetryProcessors/addUserDataToRequests')
 
 const { packageData, buildNumber } = applicationVersion
 if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
@@ -14,6 +15,7 @@ if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
   appInsights.defaultClient.context.tags['ai.cloud.role'] = packageData.name
   appInsights.defaultClient.context.tags['ai.application.ver'] = buildNumber
   appInsights.defaultClient.addTelemetryProcessor(ignoreNotFoundErrors)
+  appInsights.defaultClient.addTelemetryProcessor(addUserDataToRequests)
 } else {
   module.exports = null
 }
