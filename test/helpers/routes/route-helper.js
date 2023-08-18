@@ -1,6 +1,7 @@
 const mockViewEngine = require('../../unit/routes/mock-view-engine')
 const express = require('express')
 const cookieParser = require('cookie-parser')
+const sinon = require('sinon')
 const htmlSanitizerMiddleware = require('../../../app/middleware/htmlSanitizer')
 const applicationRoles = require('../../../app/constants/application-roles-enum')
 
@@ -26,6 +27,9 @@ module.exports.buildApp = function (route) {
         applicationRoles.HWPV_SSCL
       ]
       // old roles: ['caseworker', 'admin', 'sscl']
+    }
+    res.locals.appInsights = {
+      trackEvent: sinon.stub()
     }
     next()
   })
