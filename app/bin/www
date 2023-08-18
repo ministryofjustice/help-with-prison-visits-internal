@@ -4,10 +4,15 @@
  * Module dependencies.
  */
 require('dotenv').config();
-require('../azure-appinsights');
+const appInsights = require('../azure-appinsights');
 var app = process.env.APVS_MAINTENANCE_MODE === 'true' ? require('../app-maintenance') : require('../app')
 var debug = require('debug')('apvs-internal-web:server')
 var http = require('http')
+
+app.use(function (req, res, next) {
+  res.locals.appInsights = appInsights
+  next()
+})
 
 /**
  * Get port from environment and store in Express.

@@ -300,6 +300,13 @@ module.exports = function (router) {
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
       return updateAssignmentOfClaims(req.params.claimId, req.user.email)
         .then(function () {
+          res.locals.appInsights.trackEvent({
+            name: "claimApproved",
+            properties: {
+              claimNumber: req.params.claimId,
+              prisonerNumber: ""
+            }
+          })
           return false
         })
     })
