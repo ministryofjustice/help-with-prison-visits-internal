@@ -177,7 +177,7 @@ app.use(function (err, req, res, next) {
   }
 })
 
-module.exports = function(appInsights) {
+module.exports = function (appInsights) {
   app.use(function (req, res, next) {
     console.log('BING')
     res.locals.appInsights = appInsights
