@@ -5,7 +5,6 @@ module.exports = function addUserDataToRequests (envelope, contextObjects) {
   console.log(`isRequest:${isRequest}`)
   if (isRequest) {
     const { username, activeCaseLoadId } = contextObjects?.['http.ServerRequest']?.req?.user || {}
-    console.log(JSON.stringify(contextObjects))
     console.log(JSON.stringify(contextObjects?.['http.ServerRequest']?.req))
     if (username) {
       const { properties } = envelope.data.baseData
