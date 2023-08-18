@@ -147,6 +147,8 @@ module.exports = function (app) {
         email: 'test@test.com',
         first_name: 'Andrew',
         last_name: 'Adams',
+        activeCaseLoadId: '12',
+        username: 'aadams',
         // APVS0246
         roles: [
           applicationRoles.CLAIM_ENTRY_BAND_2,
