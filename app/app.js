@@ -179,7 +179,7 @@ app.use(function (err, req, res, next) {
 
 module.exports = function (appInsights) {
   app.use(function (req, res, next) {
-    console.log('BING')
+    console.log(appInsights)
     res.locals.appInsights = appInsights
     next()
   })
