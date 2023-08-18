@@ -3,7 +3,7 @@ const appInsights = require('applicationinsights')
 module.exports = function addUserDataToRequests (envelope, contextObjects) {
   const isRequest = envelope.data.baseType === appInsights.Contracts.TelemetryTypeString.Request
   if (isRequest) {
-    const { username, activeCaseLoadId } = contextObjects?.['http.ServerRequest']?.req?.user || {}
+    const { username, activeCaseLoadId } = contextObjects?.['http.ServerRequest']?.res?.locals?.user || {}
     console.log(contextObjects['http.ServerRequest'].res)
     if (username) {
       const { properties } = envelope.data.baseData

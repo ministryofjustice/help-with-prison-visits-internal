@@ -105,6 +105,8 @@ module.exports = function (app) {
                           const sessionUser = {
                             email: userEmail.email,
                             name: userDetails.name,
+                            activeCaseLoadId: userDetails.activeCaseLoadId,
+                            username: userDetails.username,
                             roles
                           }
                           done(null, sessionUser)
