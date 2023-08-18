@@ -291,6 +291,7 @@ module.exports = function (router) {
   })
 
   router.post('/claim/:claimId/assign-self', function (req, res, next) {
+    console.log(res.locals)
     const needAssignmentCheck = false
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
