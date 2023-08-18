@@ -301,10 +301,10 @@ module.exports = function (router) {
       return updateAssignmentOfClaims(req.params.claimId, req.user.email)
         .then(function () {
           res.locals.appInsights.trackEvent({
-            name: "claimApproved",
+            name: 'claimApproved',
             properties: {
               claimNumber: req.params.claimId,
-              prisonerNumber: ""
+              prisonerNumber: ''
             }
           })
           return false
