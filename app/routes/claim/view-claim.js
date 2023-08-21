@@ -311,7 +311,7 @@ module.exports = function (router) {
       return updateAssignmentOfClaims(req.params.claimId, req.user.email)
         .then(function () {
           res.locals.appInsights.trackEvent({
-            name: 'claimApproved',
+            name: 'claimAssigned',
             properties: {
               claimNumber: req.params.claimId,
               prisonerNumber: ''
