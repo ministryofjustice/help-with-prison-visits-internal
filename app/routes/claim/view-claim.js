@@ -104,7 +104,7 @@ module.exports = function (router) {
     }
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, '/', function () {
       claimExpenses = getClaimExpenseResponses(req.body)
-      
+
       const claimDecision = Object.values(claimDecisionEnum).contains(req.body.decision) ? req.body.decision : 'Invalid'
 
       res.locals.appInsights.trackEvent({
