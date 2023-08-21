@@ -104,6 +104,16 @@ module.exports = function (router) {
     }
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, '/', function () {
       claimExpenses = getClaimExpenseResponses(req.body)
+      
+      const claimDecision = Object.values(claimDecisionEnum).contains(req.body.decision) ? req.body.decision : 'Invalid'
+
+      res.locals.appInsights.trackEvent({
+        name: 'claimDecision',
+        properties: {
+          claimNumber: req.params.claimId,
+          decision: claimDecision
+        }
+      })
       return submitClaimDecision(req, res, claimExpenses)
     })
   })
@@ -291,7 +301,6 @@ module.exports = function (router) {
   })
 
   router.post('/claim/:claimId/assign-self', function (req, res, next) {
-    console.log(res.locals)
     const needAssignmentCheck = false
     const allowedRoles = [
       applicationRoles.CLAIM_PAYMENT_BAND_3,
