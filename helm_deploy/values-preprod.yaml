@@ -4,9 +4,7 @@ generic-service:
   replicaCount: 2
   ingress:
     host: "manage.hwpv-preprod.hmpps.service.justice.gov.uk"
-    contextColour: green
-    v1_2_enabled: true
-    v0_47_enabled: false
+
   env:
     APVS_MOJ_SSO_REDIRECT_URI: 'https://manage.hwpv-preprod.hmpps.service.justice.gov.uk/login/callback'
     APVS_MOJ_SSO_TOKEN_HOST: 'https://sign-in-preprod.hmpps.service.justice.gov.uk/auth'
