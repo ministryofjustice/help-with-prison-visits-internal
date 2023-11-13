@@ -112,7 +112,9 @@ workflows:
           <<: *feature_branch
           name: deploy_preprod_preview
           env: "preprod"
-          context: help-with-prison-visits-internal-preprod
+          context:
+            - hmpps-common-vars
+            - help-with-prison-visits-internal-preprod
           requires:
             - request_preprod_approval_branch
       - hmpps/deploy_env:
@@ -132,7 +134,9 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
-          context: help-with-prison-visits-internal-preprod
+          context:
+            - hmpps-common-vars
+            - help-with-prison-visits-internal-preprod
           requires:
             - request_preprod_approval
       - request_prod_approval:
