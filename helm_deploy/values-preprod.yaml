@@ -12,10 +12,5 @@ generic-service:
     HWPV_POST_LOGOUT_URL: "https://manage.hwpv-preprod.hmpps.service.justice.gov.uk/"
     HWPV_COOKIE_NAME: hwpv-session-preprod
 
-  allowlist:
-    groups:
-      - internal
-      - prisons
-
 generic-prometheus-alerts:
   alertSeverity: help-with-prison-visits-devtest
