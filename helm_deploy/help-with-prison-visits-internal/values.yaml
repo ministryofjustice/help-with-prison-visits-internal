@@ -62,10 +62,5 @@ generic-service:
       REDIS_HOST: primary_endpoint_address
       REDIS_AUTH_TOKEN: auth_token
 
-  allowlist:
-    groups:
-      - internal
-      - prisons
-
 generic-prometheus-alerts:
   targetApplication: help-with-prison-visits-internal
