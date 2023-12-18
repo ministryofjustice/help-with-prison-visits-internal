@@ -78,7 +78,7 @@ module.exports = function (app) {
       // Call API to get details on user
       const options = {
         url: `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_DETAILS_PATH}`,
-        params: { access_token: accessToken }
+        headers: `Authorization: Bearer ${accessToken}`
       }
       axios(options)
         .then(function (response) {
