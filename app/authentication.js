@@ -77,7 +77,8 @@ module.exports = function (app) {
     function (accessToken, refreshToken, params, profile, done) {
       // Call API to get details on user
       const options = {
-        url: `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_DETAILS_PATH}`,
+        // url: `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_DETAILS_PATH}`,
+        url: `${config.NEW_HOST}${config.NEW_USER_PATH_PREFIX}${config.NEW_USER_DETAILS_PATH}`,
         headers: `Authorization: Bearer ${accessToken}`
       }
       axios(options)
