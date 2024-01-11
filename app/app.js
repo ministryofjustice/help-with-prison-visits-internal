@@ -98,11 +98,11 @@ app.use(function (req, res, next) {
 // Log each HTML request and it's response.
 app.use(function (req, res, next) {
   // Log response started.
-  log.info({ request: req }, 'Route Started.')
+  log.info({ url: req.url }, 'Route Started.')
 
   // Log response finished.
   onFinished(res, function () {
-    log.info({ response: res }, 'Route Complete.')
+    // log.info({ response: res }, 'Route Complete.')
   })
 
   next()

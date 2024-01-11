@@ -55,13 +55,17 @@ module.exports = function (app) {
         httpOnly: true,
         maxAge: config.HWPVCOOKIE.EXPIRYMINUTES * 60 * 1000,
         sameSite: 'lax',
-        secure: true,
+        secure: config.PRODUCTION,
         signed: true
       }
     }))
 
-    app.use(passport.initialize())
-    app.use(passport.session())
+    passport.serializeUser(function (user, done) {
+      done(null, user)
+    })
+    passport.deserializeUser(function (user, done) {
+      done(null, user)
+    })
 
     passport.use(new OAuth2Strategy({
       authorizationURL: `${config.TOKEN_HOST}${config.AUTHORIZE_PATH}`,
@@ -135,12 +139,9 @@ module.exports = function (app) {
           done(error, null)
         })
     }))
-    passport.serializeUser(function (user, done) {
-      done(null, user)
-    })
-    passport.deserializeUser(function (user, done) {
-      done(null, user)
-    })
+    app.use(passport.initialize())
+    app.use(passport.session())
+
   } else {
     app.use(function (req, res, next) {
       req.user = {

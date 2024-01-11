@@ -17,11 +17,12 @@ module.exports = function (router) {
 
   router.get('/login', passport.authenticate('oauth2'))
 
-  router.get('/login/callback', (req, res, next) =>
-    passport.authenticate('oauth2', {
-      successReturnToOrRedirect: req.session.returnTo || '/',
-      failureRedirect: '/unauthorized'
-    })(req, res, next)
+  router.get('/login/callback', (req, res, next) => {
+    return passport.authenticate('oauth2', {
+        successReturnToOrRedirect: req.session.returnTo || '/',
+        failureRedirect: '/unauthorized?dsfgdfsgdfsg'
+      })(req, res, next)
+    }
   )
 
   router.get('/unauthorized', function (req, res) {
