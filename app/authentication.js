@@ -55,7 +55,7 @@ module.exports = function (app) {
         httpOnly: true,
         maxAge: config.HWPVCOOKIE.EXPIRYMINUTES * 60 * 1000,
         sameSite: 'lax',
-        secure: true,
+        secure: config.PRODUCTION,
         signed: true
       }
     }))
