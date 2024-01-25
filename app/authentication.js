@@ -77,7 +77,7 @@ module.exports = function (app) {
     function (accessToken, refreshToken, params, profile, done) {
       // Call API to get details on user
       const options = {
-        url: `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_DETAILS_PATH}`,
+        url: `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}${config.MANAGE_USER_DETAILS_PATH}`,
         headers: `Authorization: Bearer ${accessToken}`
       }
       axios(options)
@@ -85,13 +85,13 @@ module.exports = function (app) {
           if (response.status === 200) {
             let roles = []
             const userDetails = response.data
-            options.url = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}/${userDetails.username}${config.USER_EMAIL_PATH}`
+            options.url = `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}/${userDetails.username}${config.MANAGE_USER_EMAIL_PATH}`
 
             axios(options)
               .then(function (response) {
                 if (response.status === 200) {
                   const userEmail = response.data
-                  options.url = `${config.TOKEN_HOST}${config.USER_PATH_PREFIX}${config.USER_ROLES_PATH}`
+                  options.url = `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}${config.MANAGE_USER_ROLES_PATH}`
 
                   axios(options)
                     .then(function (response) {
