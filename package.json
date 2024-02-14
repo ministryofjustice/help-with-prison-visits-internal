@@ -43,6 +43,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.438.0",
     "applicationinsights": "^2.9.0",
+    "govuk-frontend": "^4.7.0",
     "axios": "^1.6.5",
     "bluebird": "^3.7.2",
     "bunyan": "^1.8.15",
@@ -78,7 +79,9 @@
     "sass": "^1.69.5",
     "serve-favicon": "~2.5.0",
     "tedious": "^16.6.0",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "html-pdf": "3.0.1",
+    "downloads-folder": "3.0.3"
   },
   "devDependencies": {
     "assert": "^2.1.0",

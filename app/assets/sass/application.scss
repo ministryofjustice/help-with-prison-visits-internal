@@ -1,3 +1,6 @@
+$govuk-global-styles: true;
+@import '../../../node_modules/govuk-frontend/govuk/all';
+
 // Path to assets for use with the file-url function
 // in the govuk frontend toolkit's url-helpers partial
 $path: "/public/images/";
@@ -644,4 +647,63 @@ ul.sub-tabs li a.active span.badge {
   font-weight: bold;
   margin: 30px 0 5px 0;
   padding: 15px 0 0 0;
+}
+
+.govuk-hint {
+    font-size: 19px;
+}
+
+.govuk-inset-text {
+    font-size: 19px;
+}
+
+.govuk-body {
+    font-size: 19px;
+}
+
+.govuk-back-link {
+    font-size: 16px;
+}
+
+.govuk-input {
+    height: 40px;
+    font-size: 19px;
+}
+
+.govuk-input__suffix {
+    font-size: 19px;
+    height: 40px;
+}
+
+.govuk-button {
+    font-size: 19px;
+}
+
+.govuk-label {
+    font-size: 19px;
+}
+
+.govuk-tag {
+    font-size: 16px;
+}
+
+.govuk-list {
+    font-size: 19px;
+}
+
+.govuk-details {
+    font-size: 19px;
+}
+
+.govuk-textarea {
+    font-size: 19px;
+}
+
+.govuk-panel--deletion {
+    color: #ffffff;
+    background: #993f2c;
+}
+
+.govuk-error-message {
+    font-size: 19px;
 }

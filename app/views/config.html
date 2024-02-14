@@ -165,6 +165,47 @@
       </table>
     </div>
 
+    <!-- Audit -->
+    <div class="form-group">
+      <h2 class="govuk-heading-l">Audit report configuration</h2>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Check</th>
+          <th>Description</th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr {% if errors['audit-threshold'][0] %} class="warning" {% endif %}>
+          <td>
+            Audit limit
+          </td>
+          <td>
+            Controls the minimum claim amount that will be included in audit report
+          </td>
+          <td class="pound-wrapper">
+            <span class="pound-symbol">£</span>
+            <input id="audit-threshold" type="text" name="AuditThreshold" class="form-control" value="{{ auditConfig.ThresholdAmount }}">
+          </td>
+        </tr>
+        <tr {% if errors['audit-verification-percentage'][0] %} class="warning" {% endif %}>
+          <td>
+            Audit verification percentage
+          </td>
+          <td>
+            Controls the percentage of claims to be verified
+          </td>
+          <td width="20%" class="percentage-wrapper">
+            <span>%</span>
+            <input id="audit-verification-percentage" type="text" name="AuditVerificationPercentage" class="form-control" value="{{ auditConfig.VerificationPercent }}">
+          </td>
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+
     {% include "partials/csrf-hidden-input.html" %}
 
     <input type="submit" class="button" value="Save">

@@ -40,6 +40,11 @@ exports.buildFromDateString = function (date) {
   return this.build(day, month, year)
 }
 
+exports.isFutureDate = function (date) {
+  const todayDate = moment()
+  return date.isAfter(todayDate)
+}
+
 function applyDST (date) {
   if (date.isDST()) {
     date = date.add(1, 'hour')

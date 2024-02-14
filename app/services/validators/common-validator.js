@@ -25,6 +25,10 @@ exports.isGreaterThanZero = function (value) {
   return value > 0
 }
 
+exports.isLessOrEqualToHundred = function (value) {
+  return value <= 100
+}
+
 exports.isGreaterThanOrEqualToZero = function (value) {
   return value >= 0
 }

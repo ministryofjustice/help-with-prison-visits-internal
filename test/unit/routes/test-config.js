@@ -8,8 +8,11 @@ const autoApprovalRulesEnum = require('../../../app/constants/auto-approval-rule
 
 let hasRoles
 let getAutoApprovalConfigStub
+let getAuditConfigStub
 let updateAutoApprovalConfigStub
+let updateAuditConfigStub
 let AutoApprovalConfigStub
+let AuditConfigStub
 
 describe('routes/config', function () {
   let app
@@ -17,14 +20,20 @@ describe('routes/config', function () {
   beforeEach(function () {
     hasRoles = sinon.stub()
     getAutoApprovalConfigStub = sinon.stub().resolves({ RulesDisabled: 'Test' })
+    getAuditConfigStub = sinon.stub().resolves({})
     updateAutoApprovalConfigStub = sinon.stub().resolves()
+    updateAuditConfigStub = sinon.stub().resolves()
     AutoApprovalConfigStub = sinon.stub().returns({})
+    AuditConfigStub = sinon.stub().returns({})
 
     const route = proxyquire('../../../app/routes/config', {
       '../services/authorisation': { hasRoles },
       '../services/data/get-auto-approval-config': getAutoApprovalConfigStub,
+      '../services/data/audit/get-audit-config': getAuditConfigStub,
       '../services/data/update-auto-approval-config': updateAutoApprovalConfigStub,
-      '../services/domain/auto-approval-config': AutoApprovalConfigStub
+      '../services/data/audit/update-audit-config': updateAuditConfigStub,
+      '../services/domain/auto-approval-config': AutoApprovalConfigStub,
+      '../services/domain/audit-config': AuditConfigStub
     })
 
     app = routeHelper.buildApp(route)
@@ -39,6 +48,7 @@ describe('routes/config', function () {
         .expect(function () {
           expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
+          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
 
@@ -50,6 +60,7 @@ describe('routes/config', function () {
         .expect(function () {
           expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
+          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
 
@@ -62,14 +73,16 @@ describe('routes/config', function () {
   })
 
   describe('POST /config', function () {
-    it('should respond with a 302', function () {
+    it('should respond with a 302 if Audit config is passed', function () {
       return supertest(app)
         .post('/config')
         .expect(302)
         .expect(function () {
           expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
           expect(updateAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
+          expect(updateAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
           expect(AutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
+          expect(AuditConfigStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
 
