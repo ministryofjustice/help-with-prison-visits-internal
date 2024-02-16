@@ -82,7 +82,7 @@
   },
   "devDependencies": {
     "assert": "^2.1.0",
-    "chai": "^5.1.0",
+    "chai": "^4.3.10",
     "cypress": "^13.6.4",
     "mocha": "^10.3.0",
     "node-mocks-http": "^1.14.1",
