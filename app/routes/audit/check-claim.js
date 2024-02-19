@@ -44,7 +44,7 @@ module.exports = function (router) {
       band9Validation,
       band9Description
     } = req.body
-    const claimData = band === 5 ? {
+    const claimData = band === 5 ? { //eslint-disable-line
       Band5Validity: band5Validation,
       Band5Description: band5Description,
       Band5Username: req.user.name

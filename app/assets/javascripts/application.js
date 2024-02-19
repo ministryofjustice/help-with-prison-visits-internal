@@ -107,7 +107,7 @@ $(document).ready(function () {
 })
 
 function goBack () {
-  history.back()
+  history.back() //eslint-disable-line
 }
 const el = document.getElementById('backBtn')
 el && el.addEventListener('click', goBack)

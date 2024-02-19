@@ -13,7 +13,7 @@ module.exports = function (router) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
     const reportId = req.body.reportId
 
-    let htmlTemplateContent = fs.readFileSync('./app/template/audit-report.html', 'utf8')
+    const htmlTemplateContent = fs.readFileSync('./app/template/audit-report.html', 'utf8')
 
     getReportData(reportId).then(function (claims) {
       getReportDates(reportId).then(function (dates) {
