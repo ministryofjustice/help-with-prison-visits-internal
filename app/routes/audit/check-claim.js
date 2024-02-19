@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq, multiline-ternary */
 const authorisation = require('../../services/authorisation')
 const applicationRoles = require('../../constants/application-roles-enum')
 const audit = require('../../constants/audit-enum')
@@ -44,7 +45,7 @@ module.exports = function (router) {
       band9Validation,
       band9Description
     } = req.body
-    const claimData = band === 5 ? { //eslint-disable-line
+    const claimData = band == 5 ? {
       Band5Validity: band5Validation,
       Band5Description: band5Description,
       Band5Username: req.user.name
@@ -53,7 +54,7 @@ module.exports = function (router) {
       Band9Description: band9Description,
       Band9Username: req.user.name
     }
-    if (band === 5) {
+    if (band == 5) {
       if (!band5Validation) {
         validationErrors.band5Validation = ['Please select one of the option']
       } else if (band5Validation === audit.CLAIM_STATUS.INVALID && !band5Description) {
@@ -76,7 +77,7 @@ module.exports = function (router) {
             reference,
             claimData: getAuditSessionData(req, audit.SESSION.CLAIM_DATA),
             errors: validationErrors,
-            validationValue: band === 5 ? band5Validation : band9Validation,
+            validationValue: band == 5 ? band5Validation : band9Validation,
             isBand9,
             isBand5
           })

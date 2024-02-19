@@ -10,9 +10,9 @@ module.exports = function (startDate, endDate, threshold) {
     .select('ClaimId')
     .select('PaymentAmount')
     .where('Status', 'APPROVED')
-    .andWhere(function() {
+    .andWhere(function () {
       this.orWhere('IsIncludedInAudit', null)
-      .orWhere('IsIncludedInAudit', false)
+        .orWhere('IsIncludedInAudit', false)
     })
     .andWhere('DateSubmitted', '>', moment(startDate).endOf('day').toDate())
     .andWhere('DateSubmitted', '<', moment(endDate).endOf('day').toDate())
