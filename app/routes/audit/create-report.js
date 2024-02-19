@@ -19,8 +19,8 @@ module.exports = function (router) {
     const thresholdAmount = getAuditSessionData(req, audit.SESSION.THRESHOLD_AMOUNT)
 
     res.render('audit/create-report', {
-      startDate: moment(startDate).format(audit.SESSION.DATE_FORMAT),
-      endDate: moment(endDate).format(audit.SESSION.DATE_FORMAT),
+      startDate: moment(startDate).format(audit.DATE_FORMAT),
+      endDate: moment(endDate).format(audit.DATE_FORMAT),
       totalReviewClaim: percentClaim + claimCountOverThreshold,
       claimCountOverThreshold,
       thresholdAmount
