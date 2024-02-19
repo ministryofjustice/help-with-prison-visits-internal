@@ -9,12 +9,10 @@ module.exports = function (startDate, endDate, threshold) {
     .select('Reference')
     .select('ClaimId')
     .select('PaymentAmount')
-    .whereIn('Status', [
-      'APPROVED'
+    .whereIn('IsIncludedInAudit', [
+      false, null, 0
     ])
-    .andWhere('IsIncludedInAudit', 'in', [
-      false, null
-    ])
+    .andWhere(Status, 'APPROVED')
     .andWhere('DateSubmitted', '>', moment(startDate).endOf('day').toDate())
     .andWhere('DateSubmitted', '<', moment(endDate).endOf('day').toDate())
     .andWhere('PaymentAmount', '>', threshold)
