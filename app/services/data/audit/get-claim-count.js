@@ -9,7 +9,7 @@ module.exports = function (startDate, endDate) {
     .whereIn('Status', [
       'APPROVED'
     ])
-    .whereIn('IsIncludedInAudit', [
+    .andWhere('IsIncludedInAudit', 'in', [
       false, null
     ])
     .andWhere('DateSubmitted', '>', startDate.endOf('day').toDate())
