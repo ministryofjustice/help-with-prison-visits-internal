@@ -64,6 +64,10 @@ module.exports = {
   AUTO_APPROVAL_COST_PER_MILE: process.env.APVS_AUTO_APPROVAL_COST_PER_MILE || '0.13',
   AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS: process.env.APVS_AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS || '4',
 
+  // Audit report config defaults
+  AUDIT_THRESHOLD_AMOUNT: process.env.APVS_AUDIT_THRESHOLD_AMOUNT || '250',
+  AUDIT_VERIFICATION_PERCENT: process.env.APVS_AUDIT_VERIFICATION_PERCENT || '20',
+
   // Assignment rules
   ASSIGNMENT_EXPIRY_TIME: process.env.APVS_ASSIGNMENT_EXPIRY_TIME || '60', // Number of minutes of inactivity to unassign caseworkers
   PRODUCTION: process.env.NODE_ENV === 'production',

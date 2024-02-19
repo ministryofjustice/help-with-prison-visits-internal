@@ -11,4 +11,19 @@ module.exports = function (reportId) {
     .where({
       ReportId: reportId
     })
+    .then(function () {
+      return db('ReportData')
+        .select('ClaimId')
+        .where({
+          ReportId: reportId
+        })
+    })
+    .then(function (claimList) {
+      const claimIdList = claimList.map(claim => claim.ClaimId)
+      return db('Claim')
+        .update({
+          IsIncludedInAudit: false
+        })
+        .whereIn('ClaimId', claimIdList)
+    })
 }

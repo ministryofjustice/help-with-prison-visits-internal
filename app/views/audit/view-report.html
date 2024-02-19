@@ -39,6 +39,7 @@
                             <input type="submit" class="button" value="Print report">
                         </form>
                         </br></br>
+                    {% else %}
                         <form action="/audit/delete-report-confirmation" method="post">
                             <input type="hidden" name="reportId" value="{{ reportId }}">
                             {% include "partials/csrf-hidden-input.html" %}

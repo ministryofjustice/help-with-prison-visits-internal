@@ -1,6 +1,7 @@
 const {
   getDatabaseConnector
 } = require('../../../databaseConnector')
+const config = require('../../../../config')
 
 module.exports = function () {
   const db = getDatabaseConnector()
@@ -19,7 +20,7 @@ module.exports = function () {
 
 function getDefaults () {
   return {
-    ThresholdAmount: 0,
-    VerificationPercent: 0
+    ThresholdAmount: config.AUDIT_THRESHOLD_AMOUNT,
+    VerificationPercent: config.AUDIT_VERIFICATION_PERCENT
   }
 }

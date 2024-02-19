@@ -3,6 +3,7 @@ const fs = require('fs')
 const moment = require('moment')
 const downloadsFolder = require('downloads-folder')
 const authorisation = require('../../services/authorisation')
+const audit = require('../../constants/audit-enum')
 const applicationRoles = require('../../constants/application-roles-enum')
 const getReportData = require('../../services/data/audit/get-report-data')
 const getReportDates = require('../../services/data/audit/get-report-dates')
@@ -12,30 +13,30 @@ module.exports = function (router) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
     const reportId = req.body.reportId
 
-    var htmlTemplateContent = fs.readFileSync('./app/template/audit-report.html', 'utf8')
+    let htmlTemplateContent = fs.readFileSync('./app/template/audit-report.html', 'utf8')
 
     getReportData(reportId).then(function (claims) {
       getReportDates(reportId).then(function (dates) {
         if (claims) {
-          const checkedClaimCount = claims.filter(claim => claim.Band5Validity == 'Valid' || claim.Band5Validity == 'Invalid').length
-          const validCheckedClaimCount = claims.filter(claim => claim.Band5Validity == 'Valid').length
-          const invalidCheckedClaimCount = claims.filter(claim => claim.Band5Validity == 'Invalid').length
-          const claimSelectedForVerificationCount = claims.filter(claim => claim.Band9Validity != 'Not required').length
-          const verifiedClaimCount = claims.filter(claim => claim.Band9Validity == 'Valid' || claim.Band9Validity == 'Invalid').length
-          const validVerifiedClaimCount = claims.filter(claim => claim.Band9Validity == 'Valid').length
-          const invalidVerifiedClaim = claims.filter(claim => claim.Band9Validity == 'Invalid')
+          const checkedClaimCount = claims.filter(claim => claim.Band5Validity === audit.CLAIM_STATUS.VALID || claim.Band5Validity === audit.CLAIM_STATUS.INVALID).length
+          const validCheckedClaimCount = claims.filter(claim => claim.Band5Validity === audit.CLAIM_STATUS.VALID).length
+          const invalidCheckedClaimCount = claims.filter(claim => claim.Band5Validity === audit.CLAIM_STATUS.INVALID).length
+          const claimSelectedForVerificationCount = claims.filter(claim => claim.Band9Validity !== audit.STATUS.NOT_REQUIRED).length
+          const verifiedClaimCount = claims.filter(claim => claim.Band9Validity === audit.CLAIM_STATUS.VALID || claim.Band9Validity === audit.CLAIM_STATUS.INVALID).length
+          const validVerifiedClaimCount = claims.filter(claim => claim.Band9Validity === audit.CLAIM_STATUS.VALID).length
+          const invalidVerifiedClaim = claims.filter(claim => claim.Band9Validity === audit.CLAIM_STATUS.INVALID)
           const invalidVerifiedClaimCount = invalidVerifiedClaim.length
 
-          const invalidConfirmedClaimCount = claims.filter(claim => claim.Band5Validity == 'Invalid' && claim.Band9Validity == 'Invalid').length
-          const validConfirmedClaimCount = claims.filter(claim => claim.Band5Validity == 'Invalid' && claim.Band9Validity == 'Valid').length
+          const invalidConfirmedClaimCount = claims.filter(claim => claim.Band5Validity === audit.CLAIM_STATUS.INVALID && claim.Band9Validity === audit.CLAIM_STATUS.INVALID).length
+          const validConfirmedClaimCount = claims.filter(claim => claim.Band5Validity === audit.CLAIM_STATUS.INVALID && claim.Band9Validity === audit.CLAIM_STATUS.VALID).length
 
           const totalCheckedAmount = claims.reduce((n, {
             PaymentAmount
           }) => n + PaymentAmount, 0)
-          const startDate = moment(dates[0].StartDate).format('DD MMMM YYYY')
-          const endDate = moment(dates[0].EndDate).format('DD MMMM YYYY')
+          const startDate = moment(dates[0].StartDate).format(audit.DATE_FORMAT)
+          const endDate = moment(dates[0].EndDate).format(audit.DATE_FORMAT)
 
-          var reportData = invalidVerifiedClaim.map(res => getTabularData(res)).join('')
+          const reportData = invalidVerifiedClaim.map(res => getTabularData(res)).join('')
           const pdfContent = htmlTemplateContent
             .replace('{startDate}', startDate)
             .replace('{endDate}', endDate)
@@ -55,27 +56,27 @@ module.exports = function (router) {
 
           const filePath = `${downloadsFolder()}/Report_${reportId}_${startDate}_${endDate}.pdf`
 
-          generatePDFfromHTML(pdfContent, filePath);
+          generatePDFfromHTML(pdfContent, filePath)
           res.render('audit/report-saved', {
-            filePath: filePath
+            filePath
           })
         } else {
           res.render('audit/view-report', {
             reportDeleted: true
           })
         }
-      });
-    });
+      })
+    })
   })
 }
 
-function generatePDFfromHTML(htmlContent, outputPath) {
+function generatePDFfromHTML (htmlContent, outputPath) {
   pdf.create(htmlContent).toFile(outputPath, (err, res) => {
-    if (err) return console.log(err);
-    console.log('PDF generated successfully:', res);
-  });
+    if (err) return console.log(err)
+    console.log('PDF generated successfully:', res)
+  })
 }
 
-function getTabularData(data) {
+function getTabularData (data) {
   return `<tr><td>${data.Reference}</td><td>${data.PaymentAmount}</td><td>${data.Band5Username}</td></tr>`
 }

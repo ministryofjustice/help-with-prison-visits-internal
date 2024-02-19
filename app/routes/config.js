@@ -56,12 +56,12 @@ module.exports = function (router) {
       updateAutoApprovalConfig(autoApprovalConfig)
         .then(function () {
           updateAuditConfig(auditConfig)
-          .then(function () {
-            res.redirect('/config')
-          })
-          .catch(function (error) {
-            next(error)
-          })
+            .then(function () {
+              res.redirect('/config')
+            })
+            .catch(function (error) {
+              next(error)
+            })
         })
         .catch(function (error) {
           next(error)

@@ -15,7 +15,7 @@
                 <form action="/audit/create-report-percent" method="post">
                     <div class="govuk-inset-text">
                         There are {{ claimCount }} manually approved claims in this period.</br></br>
-                        This includes {{ claimCountOver250 }} claims over £{{ thresholdAmount }}. All these will be included in the audit check.
+                        This includes {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}. All these will be included in the audit check.
                     </div>
                     <p class="govuk-body"> A number of visits will be randomly selected based on the percentage you choose.</p>
                     {% if errors['auditReportPercent'][0] %}
@@ -29,7 +29,9 @@
                         </div>
                     </div>
                     {% include "partials/csrf-hidden-input.html" %}
-                    <input class="button" type="submit" value="Continue">
+                    {% if claimCount != 0 %}
+                        <input class="button" type="submit" value="Continue">
+                    {% endif %}
                 </form>
             </div>
         </div>
