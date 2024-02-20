@@ -80,8 +80,7 @@
     "serve-favicon": "~2.5.0",
     "tedious": "^16.6.0",
     "validator": "^13.11.0",
-    "html-pdf": "3.0.1",
-    "downloads-folder": "3.0.3"
+    "html-pdf": "3.0.1"
   },
   "devDependencies": {
     "assert": "^2.1.0",

@@ -60,6 +60,9 @@ describe('routes/audit/print-report', function () {
       }])
       return supertest(app)
         .post('/audit/print-report')
+        .send({
+          reportId: 1
+        })
         .expect(200)
         .expect(function () {
           expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
