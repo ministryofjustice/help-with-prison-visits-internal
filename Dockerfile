@@ -21,6 +21,8 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
+RUN apk add --no-cache fontconfig ttf-dejavu
+
 # Stage: build assets
 FROM base as build
 
