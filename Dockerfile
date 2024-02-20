@@ -21,12 +21,15 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get -y upgrade && \
-    apt-get install -y libfreetype6 && \
-    apt-get install -y libfontconfig1 && \
-    apt-get install -y curl && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+ && apt-get install --assume-yes apt-utils \
+ && apt-get install --assume-yes software-properties-common \
+ && apt-get install --assume-yes dbus \
+ && apt-get install --assume-yes cgmanager \
+ && apt-get install --assume-yes glib-networking \
+ && apt-get install --assume-yes libnih-dbus-dev \
+ && apt-get install --assume-yes dconf-cli \
+ && apt-get install --assume-yes fontconfig
 
 # Stage: build assets
 FROM base as build
