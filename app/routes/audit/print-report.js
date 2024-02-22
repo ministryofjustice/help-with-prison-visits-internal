@@ -1,4 +1,4 @@
-const pdf = require('html-pdf')
+const puppeteer = require('puppeteer')
 const fs = require('fs')
 const log = require('../../services/log')
 const moment = require('moment')
@@ -41,7 +41,7 @@ module.exports = function (router) {
             .replace('{startDate}', startDate)
             .replace('{endDate}', endDate)
             .replace('{reportData}', reportData)
-            .replace('{userName}', req.user.name)
+            .replace('{userName}', `${req.user.first_name} ${req.user.last_name}`)
             .replace('{dateTime}', moment().format('MMMM Do YYYY, h:mm:ss a'))
             .replaceAll('{checkedClaimCount}', checkedClaimCount)
             .replace('{verifiedClaimCount}', verifiedClaimCount)
@@ -54,24 +54,7 @@ module.exports = function (router) {
             .replace('{invalidConfirmedClaimCount}', invalidConfirmedClaimCount)
             .replace('{validConfirmedClaimCount}', validConfirmedClaimCount)
 
-          const filePath = `Audit reports/Report_${reportId}_${startDate}_${endDate}.pdf`
-          pdf.create(pdfContent).toFile(filePath, (error, resp) => {
-            if (error) return log.error(error)
-            log.info('PDF generated successfully')
-            res.download(filePath, filePath, (err) => {
-              if (err) {
-                log.error('Error while downloading PDF:', err)
-              }
-              log.info('PDF downloaded successfully')
-              fs.unlink(filePath, (delErr) => {
-                if (delErr) {
-                  log.error(delErr)
-                } else {
-                  log.info('File is deleted.')
-                }
-              })
-            })
-          })
+          downloadFile(pdfContent, res)
         } else {
           res.render('audit/view-report', {
             reportDeleted: true
@@ -84,4 +67,31 @@ module.exports = function (router) {
 
 function getTabularData (data) {
   return `<tr><td>${data.Reference}</td><td>${data.PaymentAmount}</td><td>${data.Band5Username}</td></tr>`
+}
+
+async function downloadFile (pdfContent, res) {
+  const browser = await puppeteer.launch()
+
+  const page = await browser.newPage()
+
+  await page.setContent(pdfContent)
+
+  await page.pdf({ path: 'example.pdf', format: 'A4' })
+
+  await browser.close()
+
+  res.download('example.pdf', 'example.pdf', (err) => {
+    if (err) {
+      log.error('Error while downloading PDF:', err)
+    }
+    log.info('PDF downloaded successfully')
+    fs.unlink('example.pdf', (delErr) => {
+      if (delErr) {
+        log.error(delErr)
+      } else {
+        log.info('File is deleted.')
+      }
+    })
+  })
+  console.log('Here is your PDF!.')
 }
