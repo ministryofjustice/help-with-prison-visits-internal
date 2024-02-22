@@ -54,6 +54,7 @@ FROM base
 
 RUN mkdir /app/logs && chown appuser:appgroup /app/logs
 RUN mkdir /app/uploads && chown appuser:appgroup /app/uploads
+RUN mkdir /app/AuditReports && chown appuser:appgroup /app/AuditReports
 
 USER 2000
 WORKDIR /app

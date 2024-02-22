@@ -54,7 +54,7 @@ module.exports = function (router) {
             .replace('{invalidConfirmedClaimCount}', invalidConfirmedClaimCount)
             .replace('{validConfirmedClaimCount}', validConfirmedClaimCount)
 
-          const filePath = `Audit reports/Report_${reportId}_${startDate}_${endDate}.pdf`
+          const filePath = `AuditReports/Report_${reportId}_${startDate}_${endDate}.pdf`
           htmlToPdf.convertHTMLString(pdfContent, filePath,
             function (error, success) {
               if (error) {
