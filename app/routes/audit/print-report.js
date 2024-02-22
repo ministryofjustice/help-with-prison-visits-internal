@@ -1,4 +1,7 @@
 const pdf = require('html-pdf')
+var request = require('request');
+const axios = require('axios')
+const stream = require('stream');
 const fs = require('fs')
 const log = require('../../services/log')
 const moment = require('moment')
@@ -55,23 +58,24 @@ module.exports = function (router) {
             .replace('{validConfirmedClaimCount}', validConfirmedClaimCount)
 
           const filePath = `Audit reports/Report_${reportId}_${startDate}_${endDate}.pdf`
-          pdf.create(pdfContent).toFile(filePath, (error, resp) => {
-            if (error) return log.error(error)
-            log.info('PDF generated successfully')
-            res.download(filePath, filePath, (err) => {
-              if (err) {
-                log.error('Error while downloading PDF:', err)
-              }
-              log.info('PDF downloaded successfully')
-              fs.unlink(filePath, (delErr) => {
-                if (delErr) {
-                  log.error(delErr)
-                } else {
-                  log.info('File is deleted.')
-                }
-              })
-            })
-          })
+          //          pdf.create(pdfContent).toFile(filePath, (error, resp) => {
+          //            if (error) return log.error(error)
+          //            log.info('PDF generated successfully')
+          //            res.download(filePath, filePath, (err) => {
+          //              if (err) {
+          //                log.error('Error while downloading PDF:', err)
+          //              }
+          //              log.info('PDF downloaded successfully')
+          //              fs.unlink(filePath, (delErr) => {
+          //                if (delErr) {
+          //                  log.error(delErr)
+          //                } else {
+          //                  log.info('File is deleted.')
+          //                }
+          //              })
+          //            })
+          //          })
+            downloadedFile(pdfContent)
         } else {
           res.render('audit/view-report', {
             reportDeleted: true
@@ -82,6 +86,46 @@ module.exports = function (router) {
   })
 }
 
-function getTabularData (data) {
+function downloadFile(data) {
+  request.post(
+    'http://localhost:3004/generate-pdf',
+    pdfContent,
+    function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        res.setHeader('Content-disposition', 'attachment; filename=' + filePath);
+        res.setHeader('Content-type', 'application/pdf');
+        res.write(body, 'binary');
+        res.end();
+      }
+    }
+  );
+}
+
+async function downloadFile1(pdfContent) {
+  try {
+    const response = await axios.post('http://localhost:3004/generate-pdf', pdfContent, {
+      responseType: 'stream'
+    });
+
+    const writableStream = new stream.Writable({
+      write(chunk, encoding, callback) {
+        fs.appendFile('downloadedFile.txt', chunk, callback)
+      }
+    });
+
+    response.data.pipe(writableStream);
+
+    await new Promise((resolve, reject) => {
+      writableStream.on('finish', resolve);
+      writableStream.on('error', reject);
+    });
+
+    console.log('File conversion completed successfully');
+  } catch (error) {
+    console.error('Error downloading file:', error.message);
+  }
+}
+
+function getTabularData(data) {
   return `<tr><td>${data.Reference}</td><td>${data.PaymentAmount}</td><td>${data.Band5Username}</td></tr>`
 }
