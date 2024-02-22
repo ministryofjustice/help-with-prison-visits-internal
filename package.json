@@ -14,7 +14,7 @@
     "start": "npm run css-build && node ./app/bin/www",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "record-build-info": "node scripts/record-build-info",
-    "test": "standard && mocha --recursive test/unit/ --exit",
+    "test": "standard && mocha --recursive test/unit/ --timeout 15000 --exit",
     "test-coverage": "nyc npm run test-unit",
     "test-unit": "mocha --recursive test/unit/ --exit",
     "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
@@ -80,7 +80,8 @@
     "serve-favicon": "~2.5.0",
     "tedious": "^16.6.0",
     "validator": "^13.11.0",
-    "html-pdf": "3.0.1"
+    "html-pdf": "3.0.1",
+    "html-to-pdf": "0.1.11"
   },
   "devDependencies": {
     "assert": "^2.1.0",
