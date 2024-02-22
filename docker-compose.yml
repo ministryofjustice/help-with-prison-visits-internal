@@ -7,6 +7,7 @@ services:
       - "./app:/usr/src/app/app"
       - "./logs:/usr/src/app/logs"
       - "./uploads:/usr/src/app/uploads"
+      - "./Audit reports:/usr/src/app/Audit reports"
     ports:
       - "3001:3001"
     env_file: ./.env
