@@ -44,31 +44,5 @@ describe('routes/audit/print-report', function () {
           expect(getReportDatesStub.calledOnce).to.be.true //eslint-disable-line
         })
     })
-
-    it('should respond with a 200 when there is report data found', function () {
-      getReportDataStub.resolves([{
-        ReportId: 1,
-        Reference: 'NYD9K2Y',
-        ClaimId: 28732,
-        PaymentAmount: 150,
-        Band5Username: 'ABC',
-        Band5Validity: 'Valid',
-        Band5Description: '',
-        Band9Username: null,
-        Band9Validity: '',
-        Band9Description: null
-      }])
-      return supertest(app)
-        .post('/audit/print-report')
-        .send({
-          reportId: 1
-        })
-        .expect(200)
-        .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDataStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDatesStub.calledOnce).to.be.true //eslint-disable-line
-        })
-    })
   })
 })

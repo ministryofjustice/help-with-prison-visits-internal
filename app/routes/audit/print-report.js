@@ -53,7 +53,7 @@ module.exports = function (router) {
             .replace('{invalidVerifiedClaimCount}', invalidVerifiedClaimCount)
             .replace('{invalidConfirmedClaimCount}', invalidConfirmedClaimCount)
             .replace('{validConfirmedClaimCount}', validConfirmedClaimCount)
-
+          log.info('Pdf content: ' + pdfContent)
           downloadFile(pdfContent, res)
         } else {
           res.render('audit/view-report', {
@@ -70,25 +70,28 @@ function getTabularData (data) {
 }
 
 async function downloadFile (pdfContent, res) {
+  log.info('downloadFile start 1')
   const browser = await puppeteer.launch()
-
+  log.info('downloadFile start 2')
   const page = await browser.newPage()
-
+  log.info('downloadFile start 3')
   await page.setContent(pdfContent)
-
+  log.info('downloadFile start 4')
   await page.pdf({ path: 'example.pdf', format: 'A4' })
-
+  log.info('downloadFile start 5')
   await browser.close()
-
+  log.info('downloadFile start 6')
   res.download('example.pdf', 'example.pdf', (err) => {
     if (err) {
+      log.info('downloadFile start 7')
       log.error('Error while downloading PDF:', err)
     }
-    log.info('PDF downloaded successfully')
     fs.unlink('example.pdf', (delErr) => {
       if (delErr) {
+        log.info('downloadFile start 8')
         log.error(delErr)
       } else {
+        log.info('downloadFile start 9')
         log.info('File is deleted.')
       }
     })
