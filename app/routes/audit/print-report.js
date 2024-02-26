@@ -1,6 +1,3 @@
-const pdf = require('html-pdf')
-const fs = require('fs')
-const log = require('../../services/log')
 const moment = require('moment')
 const authorisation = require('../../services/authorisation')
 const audit = require('../../constants/audit-enum')
@@ -12,8 +9,6 @@ module.exports = function (router) {
   router.post('/audit/print-report', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
     const reportId = req.body.reportId
-
-    const htmlTemplateContent = fs.readFileSync('./app/template/audit-report.html', 'utf8')
 
     getReportData(reportId).then(function (claims) {
       getReportDates(reportId).then(function (dates) {
@@ -35,42 +30,25 @@ module.exports = function (router) {
           }) => n + PaymentAmount, 0)
           const startDate = moment(dates[0].StartDate).format(audit.DATE_FORMAT)
           const endDate = moment(dates[0].EndDate).format(audit.DATE_FORMAT)
-
-          const reportData = invalidVerifiedClaim.map(res => getTabularData(res)).join('')
-          const pdfContent = htmlTemplateContent
-            .replace('{startDate}', startDate)
-            .replace('{endDate}', endDate)
-            .replace('{reportData}', reportData)
-            .replace('{userName}', req.user.name)
-            .replace('{dateTime}', moment().format('MMMM Do YYYY, h:mm:ss a'))
-            .replaceAll('{checkedClaimCount}', checkedClaimCount)
-            .replace('{verifiedClaimCount}', verifiedClaimCount)
-            .replace('{totalCheckedAmount}', totalCheckedAmount)
-            .replace('{validCheckedClaimCount}', validCheckedClaimCount)
-            .replaceAll('{invalidCheckedClaimCount}', invalidCheckedClaimCount)
-            .replace('{claimSelectedForVerificationCount}', claimSelectedForVerificationCount)
-            .replace('{validVerifiedClaimCount}', validVerifiedClaimCount)
-            .replace('{invalidVerifiedClaimCount}', invalidVerifiedClaimCount)
-            .replace('{invalidConfirmedClaimCount}', invalidConfirmedClaimCount)
-            .replace('{validConfirmedClaimCount}', validConfirmedClaimCount)
-
-          const filePath = `Audit reports/Report_${reportId}_${startDate}_${endDate}.pdf`
-          pdf.create(pdfContent).toFile(filePath, (error, resp) => {
-            if (error) return log.error(error)
-            log.info('PDF generated successfully')
-            res.download(filePath, filePath, (err) => {
-              if (err) {
-                log.error('Error while downloading PDF:', err)
-              }
-              log.info('PDF downloaded successfully')
-              fs.unlink(filePath, (delErr) => {
-                if (delErr) {
-                  log.error(delErr)
-                } else {
-                  log.info('File is deleted.')
-                }
-              })
-            })
+          const dateTime = moment().format('MMMM Do YYYY, h:mm:ss a')
+          const reportData = invalidVerifiedClaim
+          const userName = req.user.name
+          res.render('audit/print-report', {
+            startDate,
+            endDate,
+            reportData,
+            userName,
+            dateTime,
+            checkedClaimCount,
+            validCheckedClaimCount,
+            verifiedClaimCount,
+            validVerifiedClaimCount,
+            totalCheckedAmount,
+            invalidCheckedClaimCount,
+            claimSelectedForVerificationCount,
+            invalidVerifiedClaimCount,
+            invalidConfirmedClaimCount,
+            validConfirmedClaimCount
           })
         } else {
           res.render('audit/view-report', {
@@ -80,8 +58,4 @@ module.exports = function (router) {
       })
     })
   })
-}
-
-function getTabularData (data) {
-  return `<tr><td>${data.Reference}</td><td>${data.PaymentAmount}</td><td>${data.Band5Username}</td></tr>`
 }

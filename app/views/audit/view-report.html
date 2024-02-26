@@ -39,7 +39,7 @@
                             <input type="submit" class="button" value="Print report">
                         </form>
                         </br></br>
-                    {% else %}
+                    {% endif %}
                         <form action="/audit/delete-report-confirmation" method="post">
                             <input type="hidden" name="reportId" value="{{ reportId }}">
                             {% include "partials/csrf-hidden-input.html" %}
@@ -47,7 +47,7 @@
                                 Delete report
                             </button>
                         </form>
-                    {% endif %}
+
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
                         <tr class="govuk-table__row">

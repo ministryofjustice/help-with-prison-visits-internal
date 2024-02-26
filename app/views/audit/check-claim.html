@@ -13,7 +13,11 @@
             <div class="govuk-grid-column-two-thirds">
                 {% include "includes/validation-error-messages.html" %}
                 <span class="govuk-caption-xl">{{ reference }}</span>
-                <h1 class="govuk-heading-xl">Verify the claim</h1>
+                {% if claimData.Band5Validity != 'Not checked' %}
+                    <h1 class="govuk-heading-xl">Verify the claim</h1>
+                {% else %}
+                    <h1 class="govuk-heading-xl">Check the claim</h1>
+                {% endif %}
                 <details class="govuk-details">
                     <summary class="govuk-details__summary">
                         <span class="govuk-details__summary-text">
@@ -30,7 +34,7 @@
                         </ul>
                     </div>
                 </details>
-                <a href="/claim/{{ claimData.ClaimId }}" class="govuk-button govuk-button--secondary">View the claim</a>
+                <a href="/claim/{{ claimData.ClaimId }}" class="govuk-button govuk-button--secondary" target="_blank">View the claim</a>
                 <!-- Band 5 result -->
                 {% if claimData.Band5Validity != 'Not checked' %}
                     <h2 class="govuk-heading-l">Check result</h2>

@@ -13,7 +13,9 @@
                 <span class="govuk-caption-xl">{{ startDate }} - {{ endDate }}</span>
                 <h1 class="govuk-heading-xl">Create audit report</h1>
                 <p class="govuk-body">You will need to review {{ totalReviewClaim }} claims for this period</p>
-                <p class="govuk-body">This will include {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}</p>
+                {% if claimCountOverThreshold != 0 %}
+                    <p class="govuk-body">This will include {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}</p>
+                {% endif %}
                 <form action="/audit/create-report" method="post">
                     {% include "partials/csrf-hidden-input.html" %}
                     {% if totalReviewClaim != 0 %}
