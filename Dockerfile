@@ -21,13 +21,6 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
-#RUN apt-get update && \
-#    apt-get -y upgrade && \
-#    apt-get install -y libfreetype6 && \
-#    apt-get install -y libfontconfig1 && \
-#    apt-get install -y curl && \
-#    rm -rf /var/lib/apt/lists/*
-
 # Stage: build assets
 FROM base as build
 
