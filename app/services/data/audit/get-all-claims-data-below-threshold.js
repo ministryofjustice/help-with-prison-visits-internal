@@ -11,10 +11,10 @@ module.exports = function (startDate, endDate, percent, threshold) {
     .select('PaymentAmount')
     .where('Status', 'APPROVED')
     .andWhere(function () {
-      this.orWhere('IsIncludedInAudit', null)
-        .orWhere('IsIncludedInAudit', false)
+      this.where('IsIncludedInAudit', false)
+        .orWhereNull('IsIncludedInAudit')
     })
-    .andWhere('DateSubmitted', '>', moment(startDate).endOf('day').toDate())
+    .andWhere('DateSubmitted', '>', moment(startDate).startOf('day').toDate())
     .andWhere('DateSubmitted', '<', moment(endDate).endOf('day').toDate())
     .andWhere('PaymentAmount', '<=', threshold)
     .orderByRaw('NEWID()')

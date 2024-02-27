@@ -1,3 +1,4 @@
+const moment = require('moment')
 const {
   getDatabaseConnector
 } = require('../../../databaseConnector')
@@ -11,7 +12,7 @@ module.exports = function (claims, startDate, endDate, claimCount) {
     .then(function () {
       return db('AuditReport').insert({
         StartDate: startDate,
-        EndDate: endDate,
+        EndDate: moment(endDate).subtract(1, 'seconds').toDate(),
         IsDeleted: false,
         CheckStatus: 'NotStarted',
         VerificationStatus: 'NotStarted',

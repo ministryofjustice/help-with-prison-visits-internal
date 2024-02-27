@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table, td, th {
+          border: 1px solid #ddd;
+          text-align: left;
+        }
+
+        table {
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        th, td {
+          padding: 5px;
+        }
+        table, th, td {
+          border-left: none;
+          border-right: none;
+
+        }
+        td, p, ul, li {
+          color: #505a5f;
+          font-size: 12px;
+        }
+        body {
+          margin-top: 60px;
+          margin-left: 60px;
+          margin-right: 60px;
+          margin-bottom: 60px;
+        }
+        table tr:nth-child(8) {
+        }
+    </style>
+</head>
+<body>
+<p>Audit report printed by {userName} on {dateTime}</p>
+<h2>Help with prison visits</h2>
+<p>This report covers the period {startDate} to {endDate}.</p>
+<p>A total of {checkedClaimCount} manually approved claims were checked, with {verifiedClaimCount} of these verified.</p>
+<p>The total amount checked was £{totalCheckedAmount}</p>
+
+<h2>Claim checks</h2>
+<p>Of the {checkedClaimCount} claims checked:</p>
+<ul>
+    <li>{validCheckedClaimCount} were found to be valid claims</li>
+    <li>{invalidCheckedClaimCount} were found to be invalid claims</li>
+</ul>
+
+<h2>Claim verification</h2>
+<p>Of the {checkedClaimCount} claims, {claimSelectedForVerificationCount} were randomly chosen for verification:</p>
+<ul>
+    <li>{validVerifiedClaimCount} were confirmed to be valid claims</li>
+    <li>{invalidVerifiedClaimCount} were found to be invalid claims</li>
+</ul>
+
+<p>Of the {invalidCheckedClaimCount} invalid claims all were sent for verification:</p>
+<ul>
+    <li>{invalidConfirmedClaimCount} were confirmed to be invalid claims</li>
+    <li>{validConfirmedClaimCount} were found to be valid claims</li>
+</ul>
+
+<h2>Report results</h2>
+<p>Further details on the verified invalid claims can be found in the table.</p>
+<table>
+    <tr>
+        <th>Reference</th>
+        <th>Amount</th>
+        <th>Approved by</th>
+    </tr>
+    {reportData}
+</table>
+
+</body>
+</html>
+

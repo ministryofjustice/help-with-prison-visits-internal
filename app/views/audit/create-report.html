@@ -16,7 +16,7 @@
                 {% if claimCountOverThreshold != 0 %}
                     <p class="govuk-body">This will include {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}</p>
                 {% endif %}
-                <form action="/audit/create-report" method="post">
+                <form action="/audit/create-report" id="create-report" method="post">
                     {% include "partials/csrf-hidden-input.html" %}
                     {% if totalReviewClaim != 0 %}
                         <input type="submit" class="button" value="Create report">

@@ -37,11 +37,14 @@
 
             <h2 class="govuk-heading-l">Report results</h2>
             <p class="govuk-hint">Further details on the verified invalid claims can be found in the table.</p>
-            <table border="1">
+            <table class="fixed">
+                <col width="200px" />
+                <col width="200px" />
+                <col width="200px" />
                 <tr>
-                    <th style="font-weight:bold">Reference</th>
-                    <th style="font-weight:bold">Amount</th>
-                    <th style="font-weight:bold">Approved by</th>
+                    <td><b>Reference</b></td>
+                    <td><b>Amount</b></td>
+                    <td><b>Approved by</b></td>
                 </tr>
                 {% for data in reportData %}
                     <tr>

@@ -14,7 +14,7 @@ module.exports = function (startDate, endDate, threshold) {
       this.orWhere('IsIncludedInAudit', null)
         .orWhere('IsIncludedInAudit', false)
     })
-    .andWhere('DateSubmitted', '>', moment(startDate).endOf('day').toDate())
+    .andWhere('DateSubmitted', '>', moment(startDate).startOf('day').toDate())
     .andWhere('DateSubmitted', '<', moment(endDate).endOf('day').toDate())
     .andWhere('PaymentAmount', '>', threshold)
 }

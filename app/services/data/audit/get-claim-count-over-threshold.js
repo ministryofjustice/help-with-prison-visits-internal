@@ -8,10 +8,10 @@ module.exports = function (startDate, endDate, threshold) {
     .count('ClaimId AS Count')
     .where('Status', 'APPROVED')
     .andWhere(function () {
-      this.orWhere('IsIncludedInAudit', null)
-        .orWhere('IsIncludedInAudit', false)
+      this.where('IsIncludedInAudit', false)
+        .orWhereNull('IsIncludedInAudit')
     })
-    .andWhere('DateSubmitted', '>', startDate.endOf('day').toDate())
+    .andWhere('DateSubmitted', '>', startDate.startOf('day').toDate())
     .andWhere('DateSubmitted', '<', endDate.endOf('day').toDate())
     .andWhere('PaymentAmount', '>', threshold)
 }
