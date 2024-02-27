@@ -18,7 +18,7 @@ module.exports = function (router) {
       reportId,
       reference
     } = req.params
-    getClaimData(reference).then(function (result) {
+    getClaimData(reference, reportId).then(function (result) {
       const claimData = result[0]
       addAuditSessionData(req, audit.SESSION.CLAIM_DATA, claimData)
       res.render('audit/check-claim', {
