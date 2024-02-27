@@ -84,7 +84,7 @@ module.exports = function (router) {
         }
       }
     }
-    updateClaimData(claimData, reference).then(function () {
+    updateClaimData(claimData, reference, reportId).then(function () {
       res.redirect(`/audit/view-report/${reportId}`)
     })
   })
