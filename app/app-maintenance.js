@@ -11,6 +11,7 @@ const developmentMode = app.get('env') === 'development'
 
 const appViews = [
   path.join(__dirname, '../node_modules/govuk_template_jinja/'),
+  path.join(__dirname, '../node_modules/govuk-frontend/'),
   path.join(__dirname, 'views')
 ]
 
@@ -31,6 +32,8 @@ publicFolders.forEach(dir => {
 
 // jquery asset paths
 const govukAssets = [
+  '../node_modules/govuk-frontend/govuk/assets',
+  '../node_modules/govuk-frontend',
   '../node_modules/jquery/dist',
   '../node_modules/datatables.net/js',
   '../node_modules/datatables.net-dt/css'

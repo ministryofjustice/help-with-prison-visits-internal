@@ -1,0 +1,61 @@
+{% extends "includes/layout.html" %}
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+{% block content %}
+<div class="govuk-width-container">
+    {% include "includes/phase_banner_beta.html" %}
+    <a href="#" id="backBtn" class="govuk-back-link">Back</a>
+    <main class="govuk-main-wrapper">
+        <input type="submit" id="print" value="Print"/>
+        <div id="print-report">
+            <p class="govuk-hint">Audit report printed by {{ userName }} on {{ dateTime }}</p>
+            <h2 class="govuk-heading-l">Help with prison visits</h2>
+            <p class="govuk-hint">This report covers the period {{ startDate }} to {{ endDate }}.</p>
+            <p class="govuk-hint">A total of {{ checkedClaimCount }} manually approved claims were checked, with {{ verifiedClaimCount }} of these verified.</p>
+            <p class="govuk-hint">The total amount checked was £{{ totalCheckedAmount }}</p>
+
+            <h2 class="govuk-heading-l">Claim checks</h2>
+            <p class="govuk-hint">Of the {{ checkedClaimCount }} claims checked:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li class="govuk-hint">{{ validCheckedClaimCount }} were found to be valid claims</li>
+                <li class="govuk-hint">{{ invalidCheckedClaimCount }} were found to be invalid claims</li>
+            </ul>
+
+            <h2 class="govuk-heading-l">Claim verification</h2>
+            <p class="govuk-hint">Of the {{ checkedClaimCount }} claims, {{ claimSelectedForVerificationCount }} were randomly chosen for verification:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li class="govuk-hint">{{ validVerifiedClaimCount }} were confirmed to be valid claims</li>
+                <li class="govuk-hint">{{ invalidVerifiedClaimCount }} were found to be invalid claims</li>
+            </ul>
+
+            <p class="govuk-hint">Of the {{ invalidCheckedClaimCount }} invalid claims all were sent for verification:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li class="govuk-hint">{{ invalidConfirmedClaimCount }} were confirmed to be invalid claims</li>
+                <li class="govuk-hint">{{ validConfirmedClaimCount }} were found to be valid claims</li>
+            </ul>
+
+            <h2 class="govuk-heading-l">Report results</h2>
+            <p class="govuk-hint">Further details on the verified invalid claims can be found in the table.</p>
+            <table class="fixed">
+                <col width="200px" />
+                <col width="200px" />
+                <col width="200px" />
+                <tr>
+                    <td><b>Reference</b></td>
+                    <td><b>Amount</b></td>
+                    <td><b>Approved by</b></td>
+                </tr>
+                {% for data in reportData %}
+                    <tr>
+                        <td class="govuk-hint">{{ data.Reference }}</td>
+                        <td class="govuk-hint">{{ data.PaymentAmount }}</td>
+                        <td class="govuk-hint">{{ data.Band5Username }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </main>
+</div>
+{% endblock %}
+

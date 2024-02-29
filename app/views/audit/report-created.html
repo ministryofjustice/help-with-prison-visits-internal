@@ -1,0 +1,27 @@
+{% extends "includes/layout.html" %}
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+{% block content %}
+<main id="content" role="main">
+    {% include "includes/phase_banner_beta.html" %}
+    <a href="#" id="backBtn" class="govuk-back-link">Back</a>
+    <div class="govuk-width-container">
+        <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds">
+                    <div class="govuk-panel govuk-panel--confirmation">
+                        <h1 class="govuk-panel__title">
+                           Report created
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+    <a href="/audit/view-report/{{ reportId }}" class="button">View report</a>
+
+</main>
+{% endblock %}

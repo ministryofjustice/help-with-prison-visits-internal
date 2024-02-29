@@ -1,0 +1,88 @@
+{% extends "includes/layout.html" %}
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+{% block content %}
+<div class="govuk-width-container">
+  {% include "includes/phase_banner_beta.html" %}
+  <a href="#" id="backBtn" class="govuk-back-link">Back</a>
+  <main class="govuk-main-wrapper">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Audit reports</h1>
+
+        <form action="/audit" method="post">
+          {% include "partials/csrf-hidden-input.html" %}
+          <input type="submit" class="button" value="Create new report">
+        </form>
+        </br></br>
+
+        {% if checkListDisplay | length %}
+          <h2 class="govuk-heading-l">Reports that need checking</h2>
+          <table class="govuk-table">
+            {% for audit in checkListDisplay %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell"><a href="/audit/view-report/{{ audit.reportId }}">{{ audit.startDate }} - {{ audit.endDate }}</a></td>
+              <td class="govuk-table__cell">
+                {% if audit.status == 'NotStarted' %}
+                  <strong class="govuk-tag govuk-tag--grey">
+                    NOT STARTED
+                  </strong>
+                {% else %}
+                  <strong class="govuk-tag govuk-tag--light-blue">
+                    IN PROGRESS
+                  </strong>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        {% endif %}
+
+        {% if verificationListDisplay | length %}
+          <h2 class="govuk-heading-l">Reports that need verification</h2>
+          <table class="govuk-table">
+            {% for audit in verificationListDisplay %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell"><a href="/audit/view-report/{{ audit.reportId }}">{{ audit.startDate }} - {{ audit.endDate }}</a></td>
+              <td class="govuk-table__cell">
+                {% if audit.status == 'NotStarted' %}
+                <strong class="govuk-tag govuk-tag--grey">
+                  NOT STARTED
+                </strong>
+                {% else %}
+                <strong class="govuk-tag govuk-tag--light-blue">
+                  IN PROGRESS
+                </strong>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        {% endif %}
+
+        {% if completeListDisplay | length %}
+          <h2 class="govuk-heading-l">Completed reports</h2>
+          <table class="govuk-table">
+            {% for audit in completeListDisplay %}
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell"><a href="/audit/view-report/{{ audit.reportId }}">{{ audit.startDate }} - {{ audit.endDate }}</a></td>
+              <td class="govuk-table__cell">
+                <strong class="govuk-tag govuk-tag--green">
+                  COMPLETED
+                </strong>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+        {% endif %}
+
+        </br>
+        {% if not isReportExist %}
+          <p class="govuk-body">There are no audit reports.</p>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

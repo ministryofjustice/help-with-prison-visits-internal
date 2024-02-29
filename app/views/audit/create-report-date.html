@@ -1,0 +1,67 @@
+{% extends "includes/layout.html" %}
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+{% block content %}
+<div class="govuk-width-container">
+    {% include "includes/phase_banner_beta.html" %}
+    <a href="#" id="backBtn" class="govuk-back-link">Back</a>
+    <main class="govuk-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                {% include "includes/validation-error-messages.html" %}
+                <h1 class="govuk-heading-xl">What is the start date and end date you would like to report on?</h1>
+                <form action="/audit/create-report-date" method="post">
+                    <div class="govuk-hint" id="create-report-date-hint">
+                        Only manually approved visits will be checked. Any claim over £{{ thresholdAmount }} is automatically included for checks.
+                    </div>
+                    <label id="auditReportStartDate" class="form-label-bold">
+                        Start date
+                    </label>
+                    {% if errors['auditReportStartDate'][0] %}
+                        <span class="error-message">{{ errors['auditReportStartDate'][0] }}</span>
+                    {% endif %}
+                    <div class="form-date">
+                        <div class="form-group form-group-day">
+                            <label for="auditReportStartDateDay">Day</label>
+                            <input id="auditReportStartDateDay" name="auditReportStartDateDay" value="{{ query.auditReportStartDateDay }}" class="form-control">
+                        </div>
+                        <div class="form-group form-group-month">
+                            <label for="auditReportStartDateMonth">Month</label>
+                            <input id="auditReportStartDateMonth" name="auditReportStartDateMonth" value="{{ query.auditReportStartDateMonth }}" class="form-control">
+                        </div>
+                        <div class="form-group form-group-year">
+                            <label for="auditReportStartDateYear">Year</label>
+                            <input id="auditReportStartDateYear" name="auditReportStartDateYear" value="{{ query.auditReportStartDateYear }}" class="form-control">
+                        </div>
+                    </div>
+                    </br></br></br>
+                    <label id="auditReportEndDate" class="form-label-bold">
+                        End date
+                    </label>
+                    {% if errors['auditReportEndDate'][0] %}
+                        <span class="error-message">{{ errors['auditReportEndDate'][0] }}</span>
+                    {% endif %}
+                    <div class="form-date">
+                        <div class="form-group form-group-day">
+                            <label for="auditReportEndDateDay">Day</label>
+                            <input id="auditReportEndDateDay" name="auditReportEndDateDay" value="{{ query.auditReportEndDateDay }}" class="form-control">
+                        </div>
+                        <div class="form-group form-group-month">
+                            <label for="auditReportEndDateMonth">Month</label>
+                            <input id="auditReportEndDateMonth" name="auditReportEndDateMonth" value="{{ query.auditReportEndDateMonth }}" class="form-control">
+                        </div>
+                        <div class="form-group form-group-year">
+                            <label for="auditReportEndDateYear">Year</label>
+                            <input id="auditReportEndDateYear" name="auditReportEndDateYear" value="{{ query.auditReportEndDateYear }}" class="form-control">
+                        </div>
+                    </div>
+                    {% include "partials/csrf-hidden-input.html" %}
+                    </br></br></br></br>
+                    <input type="submit" class="button" value="Continue">
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

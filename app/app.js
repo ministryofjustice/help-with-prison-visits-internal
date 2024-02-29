@@ -33,6 +33,7 @@ app.use(helmet.contentSecurityPolicy({
     scriptSrc: ["'self'",
       "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
       "'sha256-G29/qSW/JHHANtFhlrZVDZW1HOkCDRc78ggbqwwIJ2g='",
+      "'sha256-l1eTVSK8DTnK8+yloud7wZUqFrI0atVo6VlC6PJvYaQ='", // govuk-frontend - initAll() inline script
       'www.google-analytics.com'],
     connectSrc: ["'self'", 'www.google-analytics.com'],
     styleSrc: ["'self'"],
@@ -48,6 +49,7 @@ const serviceName = 'Help with Prison Visits'
 
 const appViews = [
   path.join(__dirname, '../node_modules/govuk_template_jinja/'),
+  path.join(__dirname, '../node_modules/govuk-frontend/'),
   path.join(__dirname, 'views')
 ]
 
@@ -68,6 +70,8 @@ publicFolders.forEach(dir => {
 
 // jquery asset paths
 const govukAssets = [
+  '../node_modules/govuk-frontend/govuk/assets',
+  '../node_modules/govuk-frontend',
   '../node_modules/datatables.net/js',
   '../node_modules/datatables.net-dt/css',
   '../node_modules/jquery/dist'

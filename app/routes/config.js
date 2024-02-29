@@ -1,8 +1,11 @@
 const authorisation = require('../services/authorisation')
 const getAutoApprovalConfig = require('../services/data/get-auto-approval-config')
+const getAuditConfig = require('../services/data/audit/get-audit-config')
 const updateAutoApprovalConfig = require('../services/data/update-auto-approval-config')
+const updateAuditConfig = require('../services/data/audit/update-audit-config')
 const autoApprovalRulesEnum = require('../constants/auto-approval-rules-enum')
 const AutoApprovalConfig = require('../services/domain/auto-approval-config')
+const AuditConfig = require('../services/domain/audit-config')
 const ValidationError = require('../services/errors/validation-error')
 const applicationRoles = require('../constants/application-roles-enum')
 
@@ -12,12 +15,16 @@ module.exports = function (router) {
 
     getAutoApprovalConfig()
       .then(function (autoApprovalConfig) {
-        const rulesDisabled = autoApprovalConfig.RulesDisabled ? autoApprovalConfig.RulesDisabled : ''
-        res.render('config', {
-          autoApprovalConfig,
-          autoApprovalRulesEnum,
-          rulesDisabled
-        })
+        getAuditConfig()
+          .then(function (auditConfig) {
+            const rulesDisabled = autoApprovalConfig.RulesDisabled ? autoApprovalConfig.RulesDisabled : ''
+            res.render('config', {
+              autoApprovalConfig,
+              auditConfig,
+              autoApprovalRulesEnum,
+              rulesDisabled
+            })
+          })
       })
       .catch(function (error) {
         next(error)
@@ -41,9 +48,20 @@ module.exports = function (router) {
         rulesDisabled
       )
 
+      const auditConfig = new AuditConfig(
+        req.body.AuditThreshold,
+        req.body.AuditVerificationPercentage
+      )
+
       updateAutoApprovalConfig(autoApprovalConfig)
         .then(function () {
-          res.redirect('/config')
+          updateAuditConfig(auditConfig)
+            .then(function () {
+              res.redirect('/config')
+            })
+            .catch(function (error) {
+              next(error)
+            })
         })
         .catch(function (error) {
           next(error)
@@ -52,6 +70,7 @@ module.exports = function (router) {
       if (error instanceof ValidationError) {
         res.status(400).render('config', {
           autoApprovalConfig: req.body,
+          auditConfig: req.body,
           autoApprovalRulesEnum,
           rulesDisabled,
           errors: error.validationErrors

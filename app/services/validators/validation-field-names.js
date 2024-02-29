@@ -36,5 +36,9 @@ module.exports = {
   'top-up-amount': 'A Top-up amount',
   'top-up-reason': 'A Top-up reason',
   'benefit-expiry': 'Benefit Expiry Date',
-  'release-date-section': 'Release Date'
+  'release-date-section': 'Release Date',
+  auditReportStartDate: 'The start date',
+  auditReportEndDate: 'The end date',
+  'audit-threshold': 'Audit threshold',
+  'audit-verification-percentage': 'Audit verification percent'
 }

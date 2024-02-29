@@ -45,6 +45,13 @@ class FieldValidator {
     return this
   }
 
+  isLessOrEqualToHundred () {
+    if (!validator.isLessOrEqualToHundred(this.data)) {
+      this.errors.add(this.fieldName, ERROR_MESSAGES.getLessOrEqualToHundred)
+    }
+    return this
+  }
+
   isGreaterThanOrEqualToZero () {
     if (!validator.isGreaterThanOrEqualToZero(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsGreaterThanOrEqualTo)
