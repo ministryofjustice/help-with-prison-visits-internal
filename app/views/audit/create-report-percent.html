@@ -11,34 +11,39 @@
             <div class="govuk-grid-column-two-thirds">
                 {% include "includes/validation-error-messages.html" %}
                 <span class="govuk-caption-xl">{{ startDate }} - {{ endDate }}</span>
-                <h1 class="govuk-heading-xl">What percentage of claims would you like to check?</h1>
-                <form action="/audit/create-report-percent" method="post">
-                    <div class="govuk-inset-text">
-                        There are {{ claimCount }} manually approved claims in this period.</br></br>
-                        {% if claimCountOverThreshold != 0 %}
-                            This includes {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}. All these will be included in the audit check.
-                        {% else %}
-                            This includes {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}.
-                        {% endif %}
-                    </div>
-
-                    {% if claimCount != 0 %}
-                        <p class="govuk-body"> A number of visits will be randomly selected based on the percentage you choose.</p>
-                        {% if errors['auditReportPercent'][0] %}
-                        <span class="error-message">{{ errors['auditReportPercent'][0] }}</span>
-                        {% endif %}
-                        <div class="govuk-form-group">
-                            <div class="govuk-input__wrapper">
-                                <input class="govuk-input govuk-input--width-5" id="auditReportPercent"
-                                       name="auditReportPercent" spellcheck="false" type="text">
-                                <div aria-hidden="true" class="govuk-input__suffix">%</div>
-                            </div>
+                {% if claimCount == 0 and claimCountOverThreshold == 0 %}
+                    <h1 class="govuk-heading-xl">There are no claims to check in this period</h1>
+                <a href="/audit/create-report-date" class="button">Change the period</a>
+                {% else  %}
+                    <h1 class="govuk-heading-xl">What percentage of claims would you like to check?</h1>
+                    <form action="/audit/create-report-percent" method="post">
+                        <div class="govuk-inset-text">
+                            There are {{ claimCount }} manually approved claims in this period.</br></br>
+                            {% if claimCountOverThreshold != 0 %}
+                                This includes {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}. All these will be included in the audit check.
+                            {% else %}
+                                This includes {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}.
+                            {% endif %}
                         </div>
-                        {% include "partials/csrf-hidden-input.html" %}
-                        <input class="button" type="submit" value="Continue">
-                    {% endif %}
 
-                </form>
+                        {% if claimCount != 0 %}
+                            <p class="govuk-body"> A number of visits will be randomly selected based on the percentage you choose.</p>
+                            {% if errors['auditReportPercent'][0] %}
+                            <span class="error-message">{{ errors['auditReportPercent'][0] }}</span>
+                            {% endif %}
+                            <div class="govuk-form-group">
+                                <div class="govuk-input__wrapper">
+                                    <input class="govuk-input govuk-input--width-5" id="auditReportPercent"
+                                           name="auditReportPercent" spellcheck="false" type="text">
+                                    <div aria-hidden="true" class="govuk-input__suffix">%</div>
+                                </div>
+                            </div>
+                            {% include "partials/csrf-hidden-input.html" %}
+                            <input class="button" type="submit" value="Continue">
+                        {% endif %}
+
+                    </form>
+                {% endif %}
             </div>
         </div>
     </main>
