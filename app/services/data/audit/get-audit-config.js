@@ -12,9 +12,8 @@ module.exports = function () {
     .then(function (auditConfig) {
       if (auditConfig) {
         return auditConfig
-      } else {
-        return getDefaults()
       }
+      return getDefaults()
     })
 }
 

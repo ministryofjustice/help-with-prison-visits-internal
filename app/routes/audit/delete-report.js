@@ -11,7 +11,7 @@ module.exports = function (router) {
     const deleteConfirmation = req.body.deleteConfirmation
     validationErrors = {}
     if (!deleteConfirmation) {
-      validationErrors.deleteConfirmation = ['Please select one of the choice']
+      validationErrors.deleteConfirmation = ['Please select one of the choices']
     }
     for (const field in validationErrors) {
       if (Object.prototype.hasOwnProperty.call(validationErrors, field)) {

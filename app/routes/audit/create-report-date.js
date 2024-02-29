@@ -75,9 +75,8 @@ function validateDate (fieldName, day, month, year) {
       if (dateFormatter.isFutureDate(date)) {
         validationErrors[fieldName] = [validationFieldName + ' must be in the past']
         return false
-      } else {
-        return date
       }
+      return date
     } else {
       validationErrors[fieldName] = [validationFieldName + ' is invalid']
       return false

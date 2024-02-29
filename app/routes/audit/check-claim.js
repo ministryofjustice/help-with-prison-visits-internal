@@ -56,15 +56,15 @@ module.exports = function (router) {
     }
     if (band == 5) {
       if (!band5Validation) {
-        validationErrors.band5Validation = ['Please select one of the option']
+        validationErrors.band5Validation = ['Please select one of the options']
       } else if (band5Validation === audit.CLAIM_STATUS.INVALID && !band5Description) {
-        validationErrors.band5Description = ['Please provide reason for invalid']
+        validationErrors.band5Description = ['Please provide a reason for the invalid claim']
       }
     } else {
       if (!band9Validation) {
-        validationErrors.band9Validation = ['Please select one of the option']
+        validationErrors.band9Validation = ['Please select one of the options']
       } else if (band9Validation === audit.CLAIM_STATUS.INVALID && !band9Description) {
-        validationErrors.band9Description = ['Please provide reason for invalid']
+        validationErrors.band9Description = ['Please provide a reason for the invalid claim']
       }
     }
     for (const field in validationErrors) {

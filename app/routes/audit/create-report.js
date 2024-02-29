@@ -41,18 +41,17 @@ module.exports = function (router) {
       return res.render('audit/report-created', {
         reportId
       })
-    } else {
-      getAllClaimsDataBelowThreshold(startDate, endDate, percentClaim, thresholdAmount).then(function (claimsDataBelowThreshold) {
-        getAllClaimsDataOverThreshold(startDate, endDate, thresholdAmount).then(function (claimsDataOverThreshold) {
-          const claims = [...claimsDataBelowThreshold, ...claimsDataOverThreshold]
-          updateReport(claims, startDate, endDate, claimCount).then(function (reportId) {
-            addAuditSessionData(req, audit.SESSION.REPORT_ID, reportId)
-            return res.render('audit/report-created', {
-              reportId
-            })
+    }
+    getAllClaimsDataBelowThreshold(startDate, endDate, percentClaim, thresholdAmount).then(function (claimsDataBelowThreshold) {
+      getAllClaimsDataOverThreshold(startDate, endDate, thresholdAmount).then(function (claimsDataOverThreshold) {
+        const claims = [...claimsDataBelowThreshold, ...claimsDataOverThreshold]
+        updateReport(claims, startDate, endDate, claimCount).then(function (reportId) {
+          addAuditSessionData(req, audit.SESSION.REPORT_ID, reportId)
+          return res.render('audit/report-created', {
+            reportId
           })
         })
       })
-    }
+    })
   })
 }

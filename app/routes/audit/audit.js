@@ -8,11 +8,9 @@ module.exports = function (router) {
   router.get('/audit', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
     getAuditData().then(function (result) {
-      const checkList = result.filter(audit => audit.CheckStatus !== auditReport.STATUS.COMPLETED)
-      const checkListDisplay = checkList.map(audit => getDisplayData(audit, auditReport.STATUS.CHECK))
+      const checkListDisplay = result.filter(audit => audit.CheckStatus !== auditReport.STATUS.COMPLETED).map(audit => getDisplayData(audit, auditReport.STATUS.CHECK))
 
-      const verificationList = result.filter(audit => audit.CheckStatus === auditReport.STATUS.COMPLETED && audit.VerificationStatus !== auditReport.STATUS.COMPLETED)
-      const verificationListDisplay = verificationList.map(audit => getDisplayData(audit, auditReport.STATUS.VERIFICATION))
+      const verificationListDisplay = result.filter(audit => audit.CheckStatus === auditReport.STATUS.COMPLETED && audit.VerificationStatus !== auditReport.STATUS.COMPLETED).map(audit => getDisplayData(audit, auditReport.STATUS.VERIFICATION))
 
       const completeList = result.filter(audit => audit.FinalStatus === auditReport.STATUS.COMPLETED)
       const completeListDisplay = completeList.map(audit => getDisplayData(audit, auditReport.STATUS.COMPLETE))
@@ -52,5 +50,7 @@ function getStatus (audit, type) {
       return audit.VerificationStatus
     case auditReport.STATUS.COMPLETE:
       return auditReport.STATUS.U_COMPLETED
+    default:
+      return ''
   }
 }
