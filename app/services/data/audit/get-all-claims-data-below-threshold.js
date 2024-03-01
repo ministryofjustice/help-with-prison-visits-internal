@@ -6,6 +6,7 @@ const {
 module.exports = function (startDate, endDate, percent, threshold) {
   const db = getDatabaseConnector()
   return db('Claim')
+    .distinct()
     .select('Reference', 'ClaimId', 'PaymentAmount')
     .where('Status', 'APPROVED')
     .andWhere(function () {
@@ -15,6 +16,6 @@ module.exports = function (startDate, endDate, percent, threshold) {
     .andWhere('DateSubmitted', '>', moment(startDate).startOf('day').toDate())
     .andWhere('DateSubmitted', '<', moment(endDate).endOf('day').toDate())
     .andWhere('PaymentAmount', '<=', threshold)
-    .orderByRaw('NEWID()')
+    .orderBy('ClaimId')
     .limit(percent)
 }

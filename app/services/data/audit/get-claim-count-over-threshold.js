@@ -4,6 +4,16 @@ const {
 
 module.exports = function (startDate, endDate, threshold) {
   const db = getDatabaseConnector()
+      return db('Claim')
+        .where('Status', 'APPROVED')
+            .andWhere(function () {
+              this.where('IsIncludedInAudit', false)
+                .orWhereNull('IsIncludedInAudit')
+            })
+            .andWhere('DateSubmitted', '>', startDate.startOf('day').toDate())
+            .andWhere('DateSubmitted', '<', endDate.endOf('day').toDate()).then(function (data) {
+        console.log('>>>>>>>> '+JSON.stringify(data))
+
   return db('Claim')
     .count('ClaimId AS Count')
     .where('Status', 'APPROVED')
@@ -14,4 +24,5 @@ module.exports = function (startDate, endDate, threshold) {
     .andWhere('DateSubmitted', '>', startDate.startOf('day').toDate())
     .andWhere('DateSubmitted', '<', endDate.endOf('day').toDate())
     .andWhere('PaymentAmount', '>', threshold)
+})
 }
