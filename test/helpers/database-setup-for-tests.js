@@ -481,7 +481,7 @@ function insertAuditReport (isDeleted, startDate, endDate) {
     })
 }
 
-function insertReportData (reportId, claimId,reference, paymentAmount) {
+function insertReportData (reportId, claimId, reference, paymentAmount) {
   return db('ReportData')
     .insert({
       ReportId: reportId,

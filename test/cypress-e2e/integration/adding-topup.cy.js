@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-const config = require('../../../config')
+// const config = require('../../../config')
 const moment = require('moment')
 const expect = require('chai').expect
 const TopUpStatusEnum = require('../../../app/constants/top-up-status-enum')
@@ -17,12 +17,12 @@ describe('Adding a new top up flow', () => {
       claimId = ids.claimId
     })
     // IF SSO ENABLED LOGIN TO SSO
-     if (config.AUTHENTICATION_ENABLED === 'true') {
-       cy.visit('https://manage-users-api-dev.hmpps.service.justice.gov.uk')
-       cy.get('#user_email').type(config.TEST_SSO_EMAIL)
-       cy.get('#user_password').type(config.TEST_SSO_PASSWORD)
-       cy.get('[name="commit"]').click()
-     }
+    // if (config.AUTHENTICATION_ENABLED === 'true') {
+    //   cy.visit(config.TOKEN_HOST)
+    //   cy.get('#user_email').type(config.TEST_SSO_EMAIL)
+    //   cy.get('#user_password').type(config.TEST_SSO_PASSWORD)
+    //   cy.get('[name="commit"]').click()
+    // }
   })
 
   it('should add a top up of ' + expectedTopUpAmount + ' with reason: ' + expectedTopUpReason, () => {
