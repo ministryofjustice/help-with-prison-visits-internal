@@ -17,7 +17,7 @@
     "test": "standard && mocha --recursive test/unit/ --exit",
     "test-coverage": "nyc npm run test-unit",
     "test-unit": "mocha --recursive test/unit/ --exit",
-    "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/services/data/audit/test-delete-report.js --timeout 15000 --exit",
+    "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
     "test-e2e": "KNEX_CONFIG=testing cypress run --config video=false",
     "test-e2e-ui": "KNEX_CONFIG=testing cypress open",
     "css-build": "./build-css"

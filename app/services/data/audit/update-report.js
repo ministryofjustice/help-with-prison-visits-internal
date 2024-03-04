@@ -26,6 +26,7 @@ module.exports = function (claims, startDate, endDate, claimCount) {
           ReportId: auditReport[0].ReportId,
           Reference: claim.Reference,
           ClaimId: claim.ClaimId,
+          Caseworker: claim.Caseworker,
           PaymentAmount: claim.PaymentAmount,
           Band5Validity: 'Not checked',
           Band9Validity: '',

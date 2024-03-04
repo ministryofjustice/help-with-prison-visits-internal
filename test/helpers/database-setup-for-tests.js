@@ -311,6 +311,9 @@ function deleteAll (reference) {
     .then(function () { return deleteByReference('Visitor', reference) })
     .then(function () { return deleteByReference('Prisoner', reference) })
     .then(function () { return deleteByReference('Eligibility', reference) })
+    .then(function () { return deleteByReference('ReportData', reference) })
+    .then(function () { return deleteByReference('ReportData', reference) })
+    .then(function () { return db('AuditReport').del() })
 }
 
 function getTestData (reference, status) {
