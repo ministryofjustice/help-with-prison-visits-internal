@@ -7,7 +7,7 @@ module.exports = function (startDate, endDate, percent, threshold) {
   const db = getDatabaseConnector()
   return db('Claim')
     .distinct()
-    .select('Reference', 'ClaimId', 'PaymentAmount')
+    .select('Reference', 'ClaimId', 'PaymentAmount', 'Caseworker')
     .where('Status', 'APPROVED')
     .andWhere(function () {
       this.where('IsIncludedInAudit', false)
