@@ -3,15 +3,15 @@ const { getDatabaseConnector } = require('../../app/databaseConnector')
 const db = getDatabaseConnector()
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-function insertTestData (reference, date, status, visitDate, increment, paymentStatus = null, dateReviewed = null, assistedDigitalCaseworker = null, paymentAmount = null) {
+function insertTestData (reference, date, status, visitDate, increment, paymentStatus = null, dateReviewed = null, assistedDigitalCaseworker = null, paymentAmount = null, isIncludedInAudit = null) {
   const idIncrement = increment || 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
   const uniqueId = Math.floor(Date.now() / 100) - 15000000000 + idIncrement
 
-  return insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount)
+  return insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount, isIncludedInAudit)
 }
 
-function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount) {
+function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount, isIncludedInAudit) {
   const data = getTestData(reference, status)
 
   const ids = {}
@@ -311,6 +311,10 @@ function deleteAll (reference) {
     .then(function () { return deleteByReference('Visitor', reference) })
     .then(function () { return deleteByReference('Prisoner', reference) })
     .then(function () { return deleteByReference('Eligibility', reference) })
+    .then(function () { return deleteByReference('ReportData', reference) })
+    .then(function () { return deleteByReference('ReportData', reference) })
+    .then(function () { return db('AuditReport').del() })
+    .then(function () { return db('AuditConfig').del() })
 }
 
 function getTestData (reference, status) {
@@ -422,7 +426,7 @@ function getTestData (reference, status) {
   }
 }
 
-function insertClaim (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount, remainingOverpaymentAmount, isAdvanceClaim, paymentStatus) {
+function insertClaim (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount, remainingOverpaymentAmount, isAdvanceClaim, paymentStatus, isIncludedInAudit, paymentAmount) {
   return db('Claim')
     .returning('ClaimId')
     .insert({
@@ -437,7 +441,9 @@ function insertClaim (claimId, eligibilityId, reference, date, status, isOverpai
       OverpaymentAmount: overpaymentAmount,
       RemainingOverpaymentAmount: remainingOverpaymentAmount,
       IsAdvanceClaim: isAdvanceClaim,
-      PaymentStatus: paymentStatus
+      PaymentStatus: paymentStatus,
+      IsIncludedInAudit: isIncludedInAudit,
+      PaymentAmount: paymentAmount
     })
 }
 
@@ -469,6 +475,34 @@ function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
     })
 }
 
+function insertAuditReport (isDeleted, startDate, endDate) {
+  return db('AuditReport')
+    .returning('ReportId')
+    .insert({
+      IsDeleted: isDeleted,
+      StartDate: startDate,
+      EndDate: endDate
+    })
+}
+
+function insertReportData (reportId, claimId, reference, paymentAmount) {
+  return db('ReportData')
+    .insert({
+      ReportId: reportId,
+      ClaimId: claimId,
+      Reference: reference,
+      PaymentAmount: paymentAmount
+    })
+}
+
+function insertAuditConfig (thresholdAmount, verificationPercent) {
+  return db('AuditConfig')
+    .insert({
+      ThresholdAmount: thresholdAmount,
+      VerificationPercent: verificationPercent
+    })
+}
+
 function getBenefitExpiryDate (reference) {
   return db('Visitor')
     .first('BenefitExpiryDate')
@@ -493,6 +527,9 @@ module.exports = {
   getBenefitExpiryDate,
   getLastTopUpAdded,
   insertClaimDeduction,
+  insertAuditConfig,
   getDatabaseConnector,
+  insertAuditReport,
+  insertReportData,
   db
 }

@@ -15,6 +15,16 @@ const routes = [
   // Configuration
   require('./config'),
 
+  // Audit
+  require('./audit/audit'),
+  require('./audit/create-report-date'),
+  require('./audit/create-report-percent'),
+  require('./audit/create-report'),
+  require('./audit/view-report'),
+  require('./audit/delete-report'),
+  require('./audit/print-report'),
+  require('./audit/check-claim'),
+
   // SSCL Download payment files
   require('./download-payment-files'),
 

@@ -1,0 +1,74 @@
+{% extends "includes/layout.html" %}
+{% block page_title %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+{% block content %}
+<div class="govuk-width-container">
+    {% include "includes/phase_banner_beta.html" %}
+    <a href="#" id="backBtn" class="govuk-back-link">Back</a>
+    <main class="govuk-main-wrapper">
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                {% include "includes/validation-error-messages.html" %}
+                {% if reportDeleted %}
+                    <h1 class="govuk-heading-xl">View  audit report</h1>
+                    <p1 class="govuk-body">This report is deleted or does not exist.</p1>
+                {% else %}
+                    <span class="govuk-caption-xl">{{ startDate }} - {{ endDate }}</span>
+                    <h1 class="govuk-heading-xl">View  audit report</h1>
+                    {% if auditStatus == 'Completed' %}
+                        <strong class="govuk-tag govuk-tag--green">
+                            Completed
+                        </strong>
+                    {% elseif auditStatus == 'NotStarted'  %}
+                        <strong class="govuk-tag govuk-tag--grey">
+                            Not Started
+                        </strong>
+                    {% elseif auditStatus == 'InProgress'  %}
+                        <strong class="govuk-tag blue">
+                            In Progress
+                        </strong>
+                    {% endif %}
+                    </br></br>
+                    <p1 class="govuk-body">You will need to review the claims and mark as valid or invalid.</p1>
+                    </br></br></br>
+                    {% if auditStatus == 'Completed' %}
+                        <form action="/audit/print-report" method="post">
+                            <input type="hidden" name="reportId" value="{{ reportId }}">
+                            {% include "partials/csrf-hidden-input.html" %}
+                            <input type="submit" class="button" value="Print report">
+                        </form>
+                        </br></br>
+                    {% endif %}
+                        <form action="/audit/delete-report-confirmation" method="post">
+                            <input type="hidden" name="reportId" value="{{ reportId }}">
+                            {% include "partials/csrf-hidden-input.html" %}
+                            <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
+                                Delete report
+                            </button>
+                        </form>
+
+                    <table class="govuk-table">
+                        <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">Reference</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">Initial check</th>
+                            <th scope="col" class="govuk-table__header govuk-!-width-one-third">Verification check</th>
+                        </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                        {% for claimCheck in claimCheckList %}
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell"><a href="/audit/check-claim/{{ reportId }}/{{ claimCheck.reference }}">{{ claimCheck.reference }}</a></td>
+                                <td class="govuk-table__cell">{{ claimCheck.initialCheck }}</td>
+                                <td class="govuk-table__cell">{{ claimCheck.verificationCheck }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
