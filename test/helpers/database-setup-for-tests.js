@@ -314,6 +314,7 @@ function deleteAll (reference) {
     .then(function () { return deleteByReference('ReportData', reference) })
     .then(function () { return deleteByReference('ReportData', reference) })
     .then(function () { return db('AuditReport').del() })
+    .then(function () { return db('AuditConfig').del() })
 }
 
 function getTestData (reference, status) {
@@ -494,6 +495,14 @@ function insertReportData (reportId, claimId, reference, paymentAmount) {
     })
 }
 
+function insertAuditConfig (thresholdAmount, verificationPercent) {
+  return db('AuditConfig')
+    .insert({
+      ThresholdAmount: thresholdAmount,
+      VerificationPercent: verificationPercent
+    })
+}
+
 function getBenefitExpiryDate (reference) {
   return db('Visitor')
     .first('BenefitExpiryDate')
@@ -518,6 +527,7 @@ module.exports = {
   getBenefitExpiryDate,
   getLastTopUpAdded,
   insertClaimDeduction,
+  insertAuditConfig,
   getDatabaseConnector,
   insertAuditReport,
   insertReportData,
