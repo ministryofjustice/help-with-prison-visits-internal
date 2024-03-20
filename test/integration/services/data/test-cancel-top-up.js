@@ -44,7 +44,7 @@ describe('services/data/cancel-top-up', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-const moment = require('moment');
+const moment = require('moment')
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, insertClaimDeduction, insertClaim, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const updateRelatedClaimRemainingOverpaymentAmount = require('../../../../app/services/data/update-related-claims-remaining-overpayment-amount')
@@ -173,5 +173,5 @@ function checkClaimOverpaymentValues (claimId, remainingOverpaymentAmount, isOve
     .then(function (claim) {
       expect(claim.RemainingOverpaymentAmount).toBe(remainingOverpaymentAmount)
       expect(claim.IsOverpaid).toBe(isOverpaid)
-    });
+    })
 }

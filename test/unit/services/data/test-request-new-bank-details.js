@@ -1,4 +1,3 @@
-const sinon = require('sinon')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 

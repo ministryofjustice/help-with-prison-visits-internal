@@ -52,5 +52,5 @@ function getClaimData (startDate, endDate, percent, threshold, expectedResult) {
     })
     .catch(function (error) {
       throw error
-    });
+    })
 }

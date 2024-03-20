@@ -128,7 +128,7 @@ function checkCount (filter, expectedCount) {
     })
     .catch(function (error) {
       throw error
-    });
+    })
 }
 
 function getCountsBeforeTest () {

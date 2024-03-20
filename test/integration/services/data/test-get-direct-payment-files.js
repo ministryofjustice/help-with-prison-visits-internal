@@ -35,7 +35,7 @@ describe('services/data/get-direct-payment-files', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

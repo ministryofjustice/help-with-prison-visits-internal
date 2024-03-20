@@ -53,5 +53,5 @@ function getCount (startDate, endDate, expectedCount) {
     })
     .catch(function (error) {
       throw error
-    });
+    })
 }

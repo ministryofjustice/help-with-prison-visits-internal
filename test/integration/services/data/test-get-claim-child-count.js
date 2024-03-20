@@ -24,7 +24,7 @@ describe('services/data/get-claim-child-count', function () {
       })
       .catch(function (error) {
         throw error
-      });
+      })
   })
 
   afterAll(function () {

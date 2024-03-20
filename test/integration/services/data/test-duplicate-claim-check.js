@@ -28,14 +28,14 @@ describe('services/data/duplicate-claim-check', function () {
       return duplicateClaimCheck(claimIds[1], niNumber, prisonerNumber, visitDate)
         .then(function (result) {
           expect(result.length).toBeGreaterThan(0)
-        });
+        })
     })
 
     it('returns false if no other claim exists with the same NI number, prisoner number and date of visit', function () {
       return duplicateClaimCheck(claimIds[0], niNumber, `${prisonerNumber}A`, visitDate)
         .then(function (result) {
           expect(result.length).toBeLessThan(1)
-        });
+        })
     })
 
     afterAll(function () {

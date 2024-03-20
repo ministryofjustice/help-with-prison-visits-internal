@@ -45,7 +45,7 @@ describe('services/data/payout-barcode-expired-claim', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

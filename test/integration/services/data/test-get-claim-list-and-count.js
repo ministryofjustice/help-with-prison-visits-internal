@@ -33,7 +33,7 @@ describe('services/data/get-claim-list-and-count', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     it('should return list of claims and total when AssignedTo is null', function () {
@@ -55,7 +55,7 @@ describe('services/data/get-claim-list-and-count', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     it('should return list of claims and total when AssignedTo is another user, but it is after AssignmentExpiry', function () {
@@ -77,7 +77,7 @@ describe('services/data/get-claim-list-and-count', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     it('should return no data for status with no records', function () {
@@ -87,7 +87,7 @@ describe('services/data/get-claim-list-and-count', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     it('should return no data for records assigned to another user and not past AssignmentExpiry', function () {
@@ -97,7 +97,7 @@ describe('services/data/get-claim-list-and-count', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     it('should return no data when no advance claims', function () {
@@ -107,7 +107,7 @@ describe('services/data/get-claim-list-and-count', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterEach(function () {

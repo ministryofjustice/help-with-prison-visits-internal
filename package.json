@@ -45,7 +45,7 @@
       "app/**/*.{ts,js,jsx,mjs}"
     ],
     "testMatch": [
-      "<rootDir>/test/unit/**/?(*.)je{ts,js,jsx,mjs}"
+      "<rootDir>/test/unit/**/?(*.){ts,js,jsx,mjs}"
     ],
     "testEnvironment": "node",
     "reporters": [

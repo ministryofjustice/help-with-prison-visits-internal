@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 let exportSearchResults
 let getClaimListForAdvancedSearchStub
 let transformClaimDataForExportStub

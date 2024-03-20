@@ -37,7 +37,7 @@ describe('services/data/close-advance-claim', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

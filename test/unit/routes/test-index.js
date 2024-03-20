@@ -19,9 +19,9 @@ const RETURNED_CLAIM = {
   Name: 'Joe Bloggs'
 }
 
-jest.mock('../services/authorisation', () => authorisation);
-jest.mock('../services/data/get-claim-list-and-count', () => getClaimsListAndCount);
-jest.mock('../views/helpers/display-helper', () => displayHelperStub);
+jest.mock('../services/authorisation', () => authorisation)
+jest.mock('../services/data/get-claim-list-and-count', () => getClaimsListAndCount)
+jest.mock('../views/helpers/display-helper', () => displayHelperStub)
 
 describe('routes/index', function () {
   let app
@@ -31,7 +31,7 @@ describe('routes/index', function () {
     authorisation = { hasRoles: mockHasRoles }
     getClaimsListAndCount = jest.fn()
     displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
-    displayHelperStub.getClaimTypeDisplayName.mockReturnValue'First time')
+    displayHelperStub.getClaimTypeDisplayName.mockReturnValue('First time')
 
     const route = require('../../../app/routes/index')
 
@@ -45,7 +45,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function () {
           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-        });
+        })
     })
   })
 
@@ -61,7 +61,7 @@ describe('routes/index', function () {
           expect(getClaimsListAndCount.calledWith(['TEST'], false, 0, 10)).toBe(true) //eslint-disable-line
           expect(response.body.recordsTotal).toBe(0)
           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
-        });
+        })
     })
 
     it('should call for advance claims when status is ADVANCE', function () {
@@ -72,7 +72,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function (response) {
           expect(getClaimsListAndCount.calledWith([claimStatusEnum.NEW.value], true, 0, 10)).toBe(true) //eslint-disable-line
-        });
+        })
     })
 
     it('should call for approved advance claims when status is ADVANCE-APPROVED', function () {
@@ -83,7 +83,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function (response) {
           expect(getClaimsListAndCount.calledWith([claimStatusEnum.APPROVED.value], true, 0, 10)).toBe(true) //eslint-disable-line
-        });
+        })
     })
 
     it('should call for updated advance claims when status is ADVANCE-UPDATED', function () {
@@ -94,7 +94,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function (response) {
           expect(getClaimsListAndCount.calledWith([claimStatusEnum.UPDATED.value], true, 0, 10)).toBe(true) //eslint-disable-line
-        });
+        })
     })
 
     it('should respond with a 500 promise rejects', function () {

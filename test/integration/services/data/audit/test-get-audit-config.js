@@ -11,7 +11,7 @@ describe('services/data/audit/get-audit-config', function () {
       return getAuditConfig()
         .then(function (result) {
           expect(JSON.stringify(result)).toBe(JSON.stringify(expectedResult))
-        });
+        })
     })
 
     it('should return the last inserted values from AuditConfig', function () {
@@ -23,7 +23,7 @@ describe('services/data/audit/get-audit-config', function () {
       return getAuditConfig()
         .then(function (result) {
           expect(JSON.stringify(result)).toBe(JSON.stringify(expectedResult))
-        });
+        })
     })
 
     afterAll(function () {

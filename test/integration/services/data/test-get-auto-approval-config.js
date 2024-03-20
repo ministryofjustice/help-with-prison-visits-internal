@@ -30,7 +30,7 @@ describe('services/data/get-auto-approval-config', function () {
         expect(result.MaxNumberOfClaimsPerMonth).toBe(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH))
         expect(result.RulesDisabled).toBeNull() //eslint-disable-line
         expect(result.NumberOfConsecutiveAutoApprovals).toBe(parseInt(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS))
-      });
+      })
   })
 
   it('should return the latest auto approval config record', function () {
@@ -42,7 +42,7 @@ describe('services/data/get-auto-approval-config', function () {
         expect(result.Caseworker).toBe('caseworker1@test.com')
         expect(result.RulesDisabled).toEqual(['auto-approval-rule-1', 'auto-approval-rule-2', 'auto-approval-rule-3'])
         expect(result.IsEnabled).toBe(true)
-      });
+      })
   })
 
   afterAll(function () {

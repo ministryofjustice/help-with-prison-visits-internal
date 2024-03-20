@@ -6,12 +6,12 @@ const sandbox = sinon.createSandbox()
 const stubInsertClaimEvent = sandbox.stub().mockResolvedValue()
 const stubInsertTaskSendClaimNotification = sandbox.stub().mockResolvedValue()
 
-jest.mock('./insert-claim-event', () => stubInsertClaimEvent);
+jest.mock('./insert-claim-event', () => stubInsertClaimEvent)
 
 jest.mock(
   './insert-task-send-claim-notification',
   () => stubInsertTaskSendClaimNotification
-);
+)
 
 const updateVisitorContactDetails = require('../../../../app/services/data/update-visitor-contact-details')
 
@@ -47,7 +47,7 @@ describe('services/data/update-visitor-contact-details', function () {
         expect(visitor.PhoneNumber).toBe(NEW_PHONE_NUMBER)
         expect(stubInsertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
         expect(stubInsertTaskSendClaimNotification.calledTwice).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   afterAll(function () {

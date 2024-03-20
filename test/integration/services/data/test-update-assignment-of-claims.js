@@ -29,15 +29,15 @@ describe('services/data/update-assignment-of-claim', function () {
           return db('Claim').first().where('ClaimId', claimId)
         })
         .then(function (claim) {
-        expect(claim.AssignedTo).toBe(assignedTo)
-        expect(claim.AssignmentExpiry).toBeGreaterThanOrEqual(twoMinutesAgoExpiry.toDate());
-        expect(claim.AssignmentExpiry).toBeLessThanOrEqual(twoMinutesAheadExpiry.toDate())
-        expect(claim.LastUpdated).toBeGreaterThanOrEqual(twoMinutesAgo.toDate());
-        expect(claim.LastUpdated).toBeLessThanOrEqual(twoMinutesAhead.toDate())
-      })
+          expect(claim.AssignedTo).toBe(assignedTo)
+          expect(claim.AssignmentExpiry).toBeGreaterThanOrEqual(twoMinutesAgoExpiry.toDate())
+          expect(claim.AssignmentExpiry).toBeLessThanOrEqual(twoMinutesAheadExpiry.toDate())
+          expect(claim.LastUpdated).toBeGreaterThanOrEqual(twoMinutesAgo.toDate())
+          expect(claim.LastUpdated).toBeLessThanOrEqual(twoMinutesAhead.toDate())
+        })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

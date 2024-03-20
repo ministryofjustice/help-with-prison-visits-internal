@@ -35,7 +35,7 @@ describe('services/data/get-overpaid-claims-by-reference', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

@@ -22,7 +22,7 @@ describe('services/data/get-claim-last-updated', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

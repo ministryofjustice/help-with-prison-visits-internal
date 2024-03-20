@@ -1,14 +1,13 @@
 const dateFormatter = require('../../../app/services/date-formatter')
 const ValidationError = require('../../../app/services/errors/validation-error')
 const ValidationErrorMessages = require('../../../app/services/validators/validation-error-messages')
-const sinon = require('sinon')
 
 const USER = 'test@test.com'
 const OTHER_USER = 'other@test.com'
 
 const checkUserAssignmentStub = jest.fn()
 
-jest.mock('./check-user-assignment', () => checkUserAssignmentStub);
+jest.mock('./check-user-assignment', () => checkUserAssignmentStub)
 
 const checkUserAndLastUpdated = require('../../../app/services/check-user-and-last-updated')
 
@@ -46,12 +45,12 @@ describe('services/check-user-and-last-updated', function () {
       needAssignmentCheck = true
     })
     it('should resolve if all details are correct', function () {
-      checkUserAssignmentStub.mockReturnValuetrue)
+      checkUserAssignmentStub.mockReturnValue(true)
       expect(checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)).toBeTruthy() //eslint-disable-line
     })
 
     it('should throw validation error for other user assigned', function () {
-      checkUserAssignmentStub.mockReturnValuefalse)
+      checkUserAssignmentStub.mockReturnValue(false)
       lastUpdatedData.AssignedTo = OTHER_USER
       try {
         checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)
@@ -65,7 +64,7 @@ describe('services/check-user-and-last-updated', function () {
     })
 
     it('should throw validation error for user not assigned', function () {
-      checkUserAssignmentStub.mockReturnValuefalse)
+      checkUserAssignmentStub.mockReturnValue(false)
       lastUpdatedData.AssignedTo = null
       try {
         checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)

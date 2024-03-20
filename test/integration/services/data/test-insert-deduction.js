@@ -42,7 +42,7 @@ describe('services/data/insert-deduction', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

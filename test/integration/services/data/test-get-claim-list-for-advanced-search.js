@@ -68,7 +68,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         expect(result.claims.length).toBe(0)
         // Total should equal 0
         expect(result.total).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the reference number', function () {
@@ -86,7 +86,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         expect(result.claims.length).toBe(1)
         // Days Until Payment should equal 5
         expect(result.claims[0].DaysUntilPayment).toBe(5)
-      });
+      })
   })
 
   it('should return "N/A" for days until payment if payment date is null', function () {
@@ -98,7 +98,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       .then(function (result) {
         // Days Until Payment should equal N/A
         expect(result.claims[0].DaysUntilPayment).toBe('N/A')
-      });
+      })
   })
 
   it('should not return claims with the wrong reference number', function () {
@@ -111,7 +111,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference2 = getClaimReference(result, reference2)
         // Claims length should equal 1
         expect(claimsWithCurrentReference2.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the name', function () {
@@ -126,7 +126,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
         // Name should equal ${name}
         expect(claimsWithCurrentReference[0].Name).toBe(name)
-      });
+      })
   })
 
   it('should return the correct claim given the first name only', function () {
@@ -139,7 +139,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong name', function () {
@@ -152,7 +152,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference2 = getClaimReference(result, reference2)
         // Claims with reference2 length should equal 0
         expect(claimsWithReference2.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the national insurance number', function () {
@@ -165,7 +165,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong national insurance number', function () {
@@ -178,7 +178,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference2 = getClaimReference(result, reference2)
         // Claims with reference2 length should equal 0
         expect(claimsWithReference2.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the prisoner number', function () {
@@ -191,7 +191,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong prisoner number', function () {
@@ -204,7 +204,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference2 = getClaimReference(result, reference2)
         // Claims with reference2 length should equal 0
         expect(claimsWithReference2.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the prison', function () {
@@ -217,7 +217,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong prison', function () {
@@ -230,7 +230,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference2 = getClaimReference(result, reference2)
         // Claims with reference2 length should equal 0
         expect(claimsWithReference2.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the assisted digital field', function () {
@@ -243,7 +243,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong assisted digital value', function () {
@@ -254,7 +254,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference2 = getClaimReference(result, reference2)
         // Claims with reference2 length should equal 0
         expect(claimsWithReference2.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the claim status', function () {
@@ -267,7 +267,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should return the correct claim given all claim statuses', function () {
@@ -280,7 +280,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong claim status', function () {
@@ -293,7 +293,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference2 = getClaimReference(result, reference2)
         // Claims with reference2 length should equal 0
         expect(claimsWithReference2.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the mode of approval', function () {
@@ -306,7 +306,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong mode of approval', function () {
@@ -319,7 +319,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given whether the visit was in the past or future', function () {
@@ -332,7 +332,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for past or future', function () {
@@ -345,7 +345,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the visit rules', function () {
@@ -358,7 +358,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for visit rules', function () {
@@ -371,7 +371,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the date of visit lower bound', function () {
@@ -385,7 +385,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for date of visit lower bound', function () {
@@ -399,7 +399,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the date of visit upper bound', function () {
@@ -413,7 +413,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for date of visit upper bound', function () {
@@ -427,7 +427,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the date submitted lower bound', function () {
@@ -441,7 +441,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for date submitted lower bound', function () {
@@ -455,7 +455,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the date submitted upper bound', function () {
@@ -469,7 +469,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for date submitted upper bound', function () {
@@ -483,7 +483,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the date approved lower bound', function () {
@@ -497,7 +497,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for date approved lower bound', function () {
@@ -511,7 +511,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the date approved upper bound', function () {
@@ -525,7 +525,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithCurrentReference[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for date approved upper bound', function () {
@@ -539,7 +539,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the date rejected lower bound', function () {
@@ -553,7 +553,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference2 = getClaimReference(result, reference2)
         // Claims with reference2 length should equal 1
         expect(claimsWithReference2.length).toBe(1)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for date rejected lower bound', function () {
@@ -567,7 +567,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the date rejected upper bound', function () {
@@ -581,7 +581,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference2 = getClaimReference(result, reference2)
         // Claims with reference2 length should equal 1
         expect(claimsWithReference2.length).toBe(1)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for date rejected upper bound', function () {
@@ -595,7 +595,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         // Claims with current reference length should equal 0
         expect(claimsWithCurrentReference.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the approved claim amount lower bound', function () {
@@ -609,7 +609,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference1 = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithReference1[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for approved claim amount lower bound', function () {
@@ -623,7 +623,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference1 = getClaimReference(result, reference1)
         // Claims with reference1 length should equal 0
         expect(claimsWithReference1.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given the approved claim amount upper bound', function () {
@@ -637,7 +637,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference1 = getClaimReference(result, reference1)
         // ClaimId should equal ${claimId}
         expect(claimsWithReference1[0].ClaimId).toBe(claimId)
-      });
+      })
   })
 
   it('should not return claims with the wrong value for approved claim amount upper bound', function () {
@@ -651,7 +651,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         const claimsWithReference1 = getClaimReference(result, reference1)
         // Claims with reference1 length should equal 0
         expect(claimsWithReference1.length).toBe(0)
-      });
+      })
   })
 
   it('should return the correct claim given multiple search criteria', function () {
@@ -684,7 +684,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         expect(result.claims[0].ClaimId).toBe(claimId)
         // Claims length should equal 1
         expect(result.claims.length).toBe(1)
-      });
+      })
   })
 
   it('should return the correct fields when returning export data', function () {
@@ -713,7 +713,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         expect(claim.hasOwnProperty('IsTrusted')).toBe(true) //eslint-disable-line
         expect(claim.hasOwnProperty('NameOfPrison')).toBe(true) //eslint-disable-line
         expect(claim.hasOwnProperty('PaymentMethod')).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   it('should return the correct fields when returning advanced search data', function () {
@@ -732,7 +732,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
         expect(claim.hasOwnProperty('DateOfJourney')).toBe(true) //eslint-disable-line
         expect(claim.hasOwnProperty('ClaimType')).toBe(true) //eslint-disable-line
         expect(claim.hasOwnProperty('ClaimId')).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   afterAll(function () {

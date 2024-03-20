@@ -31,13 +31,13 @@ describe('services/data/update-file-upload-details-for-claim', function () {
         expect(claimDocument.DocumentStatus).toBe(testData.DocumentStatus)
         expect(claimDocument.Filepath).toBe('testPath')
         expect(claimDocument.Caseworker).toBe(testData.Caseworker)
-      });
+      })
   })
 
   it('should throw an error if passed a non file upload object.', function () {
     return expect(function () {
       updateClaimDocument(claimDocumentId, {})
-    }).toThrow(Error);
+    }).toThrow(Error)
   })
 
   afterAll(function () {

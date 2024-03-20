@@ -50,7 +50,7 @@ describe('services/data/update-auto-approval-config', function () {
         expect(result.RulesDisabled).toBe('auto-approval-rule-1,auto-approval-rule-2')
         // should have set CostPerMile to default
         expect(result.CostPerMile).toBe(parseFloat(defaultsConfig.AUTO_APPROVAL_COST_PER_MILE))
-      });
+      })
   })
 
   it('should disable the current Auto Approval config and insert the new one if rulesDisabled is null', function () {
@@ -78,7 +78,7 @@ describe('services/data/update-auto-approval-config', function () {
         expect(result.AutoApprovalEnabled).toBe(false)
         expect(result.CostVariancePercentage).toBeNull()
         expect(result.RulesDisabled).toBeNull()
-      });
+      })
   })
 
   afterAll(function () {

@@ -5,7 +5,7 @@ const dateFormatter = require('../../../../app/services/date-formatter')
 const sandbox = sinon.createSandbox()
 const stubInsertClaimEvent = sandbox.stub().mockResolvedValue()
 
-jest.mock('./insert-claim-event', () => stubInsertClaimEvent);
+jest.mock('./insert-claim-event', () => stubInsertClaimEvent)
 
 const updateEligibilityTrustedStatus = require('../../../../app/services/data/update-eligibility-trusted-status')
 
@@ -51,7 +51,7 @@ describe('services/data/update-eligibility-trusted-status', function () {
         expect(eligibility.UntrustedReason).toBe(untrustedReason)
         expect(eligibility.UntrustedDate).not.toBeNull() //eslint-disable-line
         expect(stubInsertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   it('should set the eligibility to trusted and create a claim event', function () {
@@ -70,7 +70,7 @@ describe('services/data/update-eligibility-trusted-status', function () {
         expect(eligibility.UntrustedReason).toBeNull() //eslint-disable-line
         expect(eligibility.UntrustedDate).toBeNull() //eslint-disable-line
         expect(stubInsertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   it('should do nothing if current and new IsTrusted values are the same', function () {
@@ -84,7 +84,7 @@ describe('services/data/update-eligibility-trusted-status', function () {
       .then(function (eligibility) {
         expect(eligibility.IsTrusted).toBe(true)
         expect(stubInsertClaimEvent.notCalled).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   afterAll(function () {

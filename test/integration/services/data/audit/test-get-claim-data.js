@@ -39,5 +39,5 @@ function getData (reference, reportId, expectedResult) {
     })
     .catch(function (error) {
       throw error
-    });
+    })
 }

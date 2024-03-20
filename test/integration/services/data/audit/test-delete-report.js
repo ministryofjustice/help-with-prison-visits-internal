@@ -42,7 +42,7 @@ describe('services/data/audit/delete-report', function () {
           .select('IsDeleted')
           .where('ReportId', 5).then(function (isDeleted) {
             expect(isDeleted).toBe(false) //eslint-disable-line
-          });
+          })
       })
     })
 

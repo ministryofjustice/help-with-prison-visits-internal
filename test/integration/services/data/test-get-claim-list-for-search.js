@@ -61,7 +61,7 @@ describe('services/data/get-claim-list-for-search', function () {
       .then(function (result) {
         expect(result.claims[0].ClaimId).toBe(claimId1)
         expect(result.claims.length).toBe(1)
-      });
+      })
   })
 
   it('should return inserted claims when a partial reference number is provided', function () {
@@ -75,7 +75,7 @@ describe('services/data/get-claim-list-for-search', function () {
           return claim.ClaimId === claimId1 || claim.ClaimId === claimId2
         })
         expect(claimsWithCurrentId.length).toBe(2)
-      });
+      })
   })
 
   it('should not return claims with a reference number that does not match', function () {
@@ -83,7 +83,7 @@ describe('services/data/get-claim-list-for-search', function () {
       .then(function (result) {
         const claimsWithReference3 = getClaimReference(result, reference3)
         expect(claimsWithReference3.length).toBe(0)
-      });
+      })
   })
 
   it('should return inserted claim when a full NI number is provided', function () {
@@ -93,7 +93,7 @@ describe('services/data/get-claim-list-for-search', function () {
         expect(claimsWithCurrentReference.length).toBe(1)
         const claimsWithCurrentId = getClaimId(result, claimId1)
         expect(claimsWithCurrentId.length).toBe(1)
-      });
+      })
   })
 
   it('should return inserted claim when a partial NI number is provided', function () {
@@ -103,7 +103,7 @@ describe('services/data/get-claim-list-for-search', function () {
         expect(claimsWithCurrentReference.length).toBe(1)
         const claimsWithCurrentId = getClaimId(result, claimId1)
         expect(claimsWithCurrentId.length).toBe(1)
-      });
+      })
   })
 
   it('should not return claims with a NI number that does not match', function () {
@@ -111,7 +111,7 @@ describe('services/data/get-claim-list-for-search', function () {
       .then(function (result) {
         const claimsWithReference3 = getClaimReference(result, reference3)
         expect(claimsWithReference3.length).toBe(0)
-      });
+      })
   })
 
   it('should return inserted claim when a full Prison Number is provided', function () {
@@ -121,7 +121,7 @@ describe('services/data/get-claim-list-for-search', function () {
         expect(claimsWithCurrentReference.length).toBe(1)
         const claimsWithCurrentId = getClaimId(result, claimId1)
         expect(claimsWithCurrentId.length).toBe(1)
-      });
+      })
   })
 
   it('should return inserted claim when a partial Prison Number is provided', function () {
@@ -129,7 +129,7 @@ describe('services/data/get-claim-list-for-search', function () {
       .then(function (result) {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).toBe(1)
-      });
+      })
   })
 
   it('should not return claims with a Prison number that does not match', function () {
@@ -137,7 +137,7 @@ describe('services/data/get-claim-list-for-search', function () {
       .then(function (result) {
         const claimsWithReference3 = getClaimReference(result, reference3)
         expect(claimsWithReference3.length).toBe(0)
-      });
+      })
   })
 
   it('should return inserted claim when a full name is provided', function () {
@@ -145,7 +145,7 @@ describe('services/data/get-claim-list-for-search', function () {
       .then(function (result) {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).toBe(1)
-      });
+      })
   })
 
   it('should return inserted claim when a first name is provided', function () {
@@ -153,7 +153,7 @@ describe('services/data/get-claim-list-for-search', function () {
       .then(function (result) {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).toBe(1)
-      });
+      })
   })
 
   it('should return inserted claim when a last name is provided', function () {
@@ -161,7 +161,7 @@ describe('services/data/get-claim-list-for-search', function () {
       .then(function (result) {
         const claimsWithCurrentReference = getClaimReference(result, reference1)
         expect(claimsWithCurrentReference.length).toBe(1)
-      });
+      })
   })
 
   it('should not return claims with a name that does not match', function () {
@@ -169,7 +169,7 @@ describe('services/data/get-claim-list-for-search', function () {
       .then(function (result) {
         const claimsWithReference3 = getClaimReference(result, reference3)
         expect(claimsWithReference3.length).toBe(0)
-      });
+      })
   })
 
   it('should return no claims when none match search criteria', function () {
@@ -179,7 +179,7 @@ describe('services/data/get-claim-list-for-search', function () {
         expect(result.claims.length).toBe(0)
         // count should equal 0
         expect(result.total.Count).toBe(0)
-      });
+      })
   })
 
   afterAll(function () {

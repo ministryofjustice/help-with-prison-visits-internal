@@ -18,9 +18,9 @@ const RETURNED_CLAIM = {
   Name: 'Joe Bloggs'
 }
 
-jest.mock('../services/authorisation', () => authorisation);
-jest.mock('../services/data/get-claim-list-for-search', () => getClaimListForSearch);
-jest.mock('../views/helpers/display-helper', () => displayHelperStub);
+jest.mock('../services/authorisation', () => authorisation)
+jest.mock('../services/data/get-claim-list-for-search', () => getClaimListForSearch)
+jest.mock('../views/helpers/display-helper', () => displayHelperStub)
 
 describe('routes/index', function () {
   let app
@@ -30,7 +30,7 @@ describe('routes/index', function () {
     authorisation = { hasRoles: mockHasRoles }
     getClaimListForSearch = jest.fn()
     displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
-    displayHelperStub.getClaimTypeDisplayName.mockReturnValue'First time')
+    displayHelperStub.getClaimTypeDisplayName.mockReturnValue('First time')
 
     const route = require('../../../app/routes/search')
 
@@ -44,7 +44,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function () {
           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-        });
+        })
     })
   })
 
@@ -64,7 +64,7 @@ describe('routes/index', function () {
           expect(getClaimListForSearch.calledWith(searchQuery, start, length)).toBe(true) //eslint-disable-line
           expect(response.body.recordsTotal).toBe(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
-        });
+        })
     })
 
     it('should not call data object when provided an empty query', function () {
@@ -74,7 +74,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function (response) {
           expect(getClaimListForSearch).not.toHaveBeenCalled() //eslint-disable-line
-        });
+        })
     })
 
     it('should respond with a 500 promise rejects', function () {

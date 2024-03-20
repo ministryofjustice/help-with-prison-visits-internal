@@ -30,7 +30,7 @@ describe('services/data/update-claim-status-requesting-bank-details', function (
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

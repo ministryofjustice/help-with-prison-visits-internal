@@ -1,7 +1,6 @@
 const supertest = require('supertest')
 const express = require('express')
 const mockViewEngine = require('./mock-view-engine')
-const sinon = require('sinon')
 
 let mockHasRoles
 let getDashboardDataStub

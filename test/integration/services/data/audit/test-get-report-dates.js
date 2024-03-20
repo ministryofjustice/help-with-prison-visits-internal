@@ -17,7 +17,7 @@ describe('services/data/audit/get-report-dates', function () {
         return getReportDates(reportId)
           .then(function (reportDates) {
             expect(JSON.stringify(reportDates)).toBe(JSON.stringify(expectedResult))
-          });
+          })
       })
     })
 

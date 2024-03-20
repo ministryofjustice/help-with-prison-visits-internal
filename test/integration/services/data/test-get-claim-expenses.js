@@ -29,7 +29,7 @@ describe('services/data/get-claim-expenses', function () {
       })
       .catch(function (error) {
         throw error
-      });
+      })
   })
 
   it('should return the expected fields', function () {
@@ -43,7 +43,7 @@ describe('services/data/get-claim-expenses', function () {
       })
       .catch(function (error) {
         throw error
-      });
+      })
   })
 
   afterAll(function () {

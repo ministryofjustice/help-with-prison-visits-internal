@@ -45,7 +45,7 @@ describe('services/data/insert-top-up', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {

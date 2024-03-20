@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-const dateFormatter = require('../../../../app/services/date-formatter');
+const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
 const updateClaimOverpaymentStatus = require('../../../../app/services/data/update-claim-overpayment-status')
@@ -49,7 +49,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
         expect(claimAfter.OverpaymentReason).toBe(reason)
         expect(claimAfter.LastUpdated).not.toBe(previousLastUpdated)
         expect(claimEvent.Event).toBe(overpaymentActionEnum.OVERPAID)
-      });
+      })
   })
 
   it(`should update remaining amount for overpayment (${overpaymentActionEnum.UPDATE})`, function () {
@@ -96,7 +96,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
         )
         expect(claimEvent.Note).toEqual(expect.arrayContaining([reason]))
         expect(claimEvent.Event).toBe(overpaymentActionEnum.UPDATE)
-      });
+      })
   })
 
   it(`should mark an overpaid claim as no longer overpaid (${overpaymentActionEnum.RESOLVE})`, function () {
@@ -137,7 +137,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
         expect(claimAfter.LastUpdated).not.toBe(previousLastUpdated)
         expect(claimEvent.Note).toEqual(expect.arrayContaining([reason]))
         expect(claimEvent.Event).toBe(overpaymentActionEnum.RESOLVE)
-      });
+      })
   })
 
   afterEach(function () {

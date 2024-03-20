@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 const getAutoApprovedClaimCountStub = jest.fn().mockResolvedValue([{ Count: 0 }])
 const getInProgressClaimCountStub = jest.fn().mockResolvedValue([{ Count: 0 }])
 const getManuallyApprovedClaimCountStub = jest.fn().mockResolvedValue([{ Count: 0 }])

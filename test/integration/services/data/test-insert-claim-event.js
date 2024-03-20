@@ -29,17 +29,17 @@ describe('services/data/insert-claim-event', function () {
           .orderBy('DateAdded', 'desc')
       })
       .then(function (claimEvent) {
-      expect(claimEvent.EligibilityId).toBe(eligibilityId)
-      expect(claimEvent.Reference).toBe(REFERENCE)
-      expect(claimEvent.ClaimId).toBe(claimId)
-      expect(claimEvent.DateAdded).toBeGreaterThanOrEqual(dateFormatter.now().add(-2, 'minutes').toDate());
-      expect(claimEvent.DateAdded).toBeLessThanOrEqual(dateFormatter.now().add(2, 'minutes').toDate())
-      expect(claimEvent.Event).toBe(EVENT)
-      expect(claimEvent.AdditionalData).toBe(ADDITIONAL_DATA)
-      expect(claimEvent.Note).toBe(NOTE)
-      expect(claimEvent.Caseworker).toBe(CASEWORKER)
-      expect(claimEvent.IsInternal).toBe(IS_INTERNAL)
-    });
+        expect(claimEvent.EligibilityId).toBe(eligibilityId)
+        expect(claimEvent.Reference).toBe(REFERENCE)
+        expect(claimEvent.ClaimId).toBe(claimId)
+        expect(claimEvent.DateAdded).toBeGreaterThanOrEqual(dateFormatter.now().add(-2, 'minutes').toDate())
+        expect(claimEvent.DateAdded).toBeLessThanOrEqual(dateFormatter.now().add(2, 'minutes').toDate())
+        expect(claimEvent.Event).toBe(EVENT)
+        expect(claimEvent.AdditionalData).toBe(ADDITIONAL_DATA)
+        expect(claimEvent.Note).toBe(NOTE)
+        expect(claimEvent.Caseworker).toBe(CASEWORKER)
+        expect(claimEvent.IsInternal).toBe(IS_INTERNAL)
+      })
   })
 
   afterAll(function () {

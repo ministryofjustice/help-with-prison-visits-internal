@@ -29,14 +29,14 @@ describe('services/data/insert-task-send-first-time-claim-notification', functio
         return db.first().from('Task').where({ Reference: reference, ClaimId: claimId })
       })
       .then(function (task) {
-      expect(task.Task).toBe(tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
-      expect(task.Reference).toBe(reference)
-      expect(task.ClaimId).toBe(claimId)
-      expect(task.AdditionalData).toBe(testData.Visitor.EmailAddress)
-      expect(task.DateCreated).toBeGreaterThanOrEqual(dateFormatter.now().add(-2, 'minutes').toDate());
-      expect(task.DateCreated).toBeLessThanOrEqual(dateFormatter.now().add(2, 'minutes').toDate())
-      expect(task.Status).toBe(taskStatusEnum.PENDING)
-    });
+        expect(task.Task).toBe(tasksEnum.ACCEPT_CLAIM_NOTIFICATION)
+        expect(task.Reference).toBe(reference)
+        expect(task.ClaimId).toBe(claimId)
+        expect(task.AdditionalData).toBe(testData.Visitor.EmailAddress)
+        expect(task.DateCreated).toBeGreaterThanOrEqual(dateFormatter.now().add(-2, 'minutes').toDate())
+        expect(task.DateCreated).toBeLessThanOrEqual(dateFormatter.now().add(2, 'minutes').toDate())
+        expect(task.Status).toBe(taskStatusEnum.PENDING)
+      })
   })
 
   it('should insert a new task to send a notification to a specific email address', function () {
@@ -46,7 +46,7 @@ describe('services/data/insert-task-send-first-time-claim-notification', functio
       })
       .then(function (task) {
         expect(task.AdditionalData).toBe(emailAddress)
-      });
+      })
   })
 
   afterAll(function () {

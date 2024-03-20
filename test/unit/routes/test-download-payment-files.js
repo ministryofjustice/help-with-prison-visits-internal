@@ -1,39 +1,34 @@
 const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const sinon = require('sinon')
 
-let hasRoles
-let getDirectPaymentFiles
+const mockHasRoles = jest.fn()
+const mockGetDirectPaymentFiles = jest.fn()
+const mockDownload = jest.fn()
 
 const FILES = {
   accessPayFiles: [{ FilePath: 'accessPayFile1' }, { PaymentFileId: 1, Filepath: './test/resources/testfile.txt' }],
   adiJournalFiles: [{ FilePath: 'adiJournalFile1' }, { PaymentFileId: 2, Filepath: './test/resources/testfile.txt' }]
 }
 
-jest.mock('../services/authorisation', () => ({
-  hasRoles
-}))
-
-jest.mock('../services/data/get-direct-payment-files', () => getDirectPaymentFiles)
-jest.mock('../services/aws-helper', () => awsHelperStub)
-
 describe('routes/download-payment-files', function () {
   let app
-  let awsStub
-  let awsHelperStub
+  let mockAws
+  let mockAwsHelper
 
   beforeEach(function () {
-    hasRoles = jest.fn()
-    getDirectPaymentFiles = jest.fn()
-    awsStub = function () {
+    mockAws = function () {
       return {
-        download: jest.fn().mockResolvedValue()
+        download: mockDownload.mockResolvedValue()
       }
     }
 
-    awsHelperStub = {
-      AWSHelper: awsStub
+    mockAwsHelper = {
+      AWSHelper: mockAws
     }
+
+    jest.mock('../../../app/services/authorisation', () => ({ mockHasRoles }))
+    jest.mock('../../../app/services/data/get-direct-payment-files', () => mockGetDirectPaymentFiles)
+    jest.mock('../../../app/services/aws-helper', () => mockAwsHelper)
 
     const route = require('../../../app/routes/download-payment-files')
 
@@ -42,18 +37,18 @@ describe('routes/download-payment-files', function () {
 
   describe('GET /download-payment-files', function () {
     it('should respond with a 200', function () {
-      getDirectPaymentFiles.mockResolvedValue()
+      mockGetDirectPaymentFiles.mockResolvedValue()
       return supertest(app)
         .get('/download-payment-files')
         .expect(200)
         .expect(function () {
-          expect(hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(getDirectPaymentFiles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetDirectPaymentFiles).toHaveBeenCalledTimes(1) //eslint-disable-line
         })
     })
 
     it('should set top and previous access payment files', function () {
-      getDirectPaymentFiles.mockResolvedValue(FILES)
+      mockGetDirectPaymentFiles.mockResolvedValue(FILES)
       return supertest(app)
         .get('/download-payment-files')
         .expect(200)
@@ -64,7 +59,7 @@ describe('routes/download-payment-files', function () {
     })
 
     it('should set top and previous adi journal files', function () {
-      getDirectPaymentFiles.mockResolvedValue(FILES)
+      mockGetDirectPaymentFiles.mockResolvedValue(FILES)
       return supertest(app)
         .get('/download-payment-files')
         .expect(200)
@@ -75,7 +70,7 @@ describe('routes/download-payment-files', function () {
     })
 
     it('should respond with a 500 promise rejects', function () {
-      getDirectPaymentFiles.mockRejectedValue()
+      mockGetDirectPaymentFiles.mockRejectedValue()
       return supertest(app)
         .get('/download-payment-files')
         .expect(500)
@@ -84,23 +79,23 @@ describe('routes/download-payment-files', function () {
 
   describe('GET /download-payment-files/download', function () {
     it('should respond with 200 if valid id entered', function () {
-      getDirectPaymentFiles.mockResolvedValue(FILES)
+      mockGetDirectPaymentFiles.mockResolvedValue(FILES)
 
-      awsStub = function () {
+      mockAws = function () {
         return {
-          download: jest.fn().mockResolvedValue(FILES.adiJournalFiles[1].Filepath)
+          download: mockDownload.mockResolvedValue(FILES.adiJournalFiles[1].Filepath)
         }
       }
 
-      awsHelperStub = {
-        AWSHelper: awsStub
+      mockAwsHelper = {
+        AWSHelper: mockAws
       }
 
-      const route = proxyquire('../../../app/routes/download-payment-files', {
-        '../services/authorisation': { hasRoles },
-        '../services/data/get-direct-payment-files': getDirectPaymentFiles,
-        '../services/aws-helper': awsHelperStub
-      })
+      jest.mock('../../../app/services/authorisation', () => ({ mockHasRoles }))
+      jest.mock('../../../app/services/data/get-direct-payment-files', () => mockGetDirectPaymentFiles)
+      jest.mock('../../../app/services/aws-helper', () => mockAwsHelper)
+
+      const route = require('../../../app/routes/download-payment-files')
 
       app = routeHelper.buildApp(route)
 
@@ -109,8 +104,8 @@ describe('routes/download-payment-files', function () {
         .expect(200)
         .expect(function (response) {
           expect(response.header['content-length']).toBe('4')
-          expect(hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(getDirectPaymentFiles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetDirectPaymentFiles).toHaveBeenCalledTimes(1) //eslint-disable-line
         })
     })
 

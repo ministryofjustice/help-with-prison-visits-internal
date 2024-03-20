@@ -16,7 +16,7 @@ describe('services/data/audit/get-report-data', function () {
       return getReportData(1)
         .then(function (result) {
           expect(result).toBe(expectedResult)
-        });
+        })
     })
 
     it('should return the data for given reportId if it exist in ReportData', function () {
@@ -27,7 +27,7 @@ describe('services/data/audit/get-report-data', function () {
           return getReportData(reportId)
             .then(function (reportData) {
               expect(JSON.stringify(reportData)).toBe(JSON.stringify(expectedResult))
-            });
+            })
         })
       })
     })

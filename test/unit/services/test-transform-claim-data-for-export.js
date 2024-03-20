@@ -1,5 +1,3 @@
-const sinon = require('sinon')
-
 const dateFormatter = require('../../../app/services/date-formatter')
 const prisonsEnum = require('../../../app/constants/prisons-enum')
 const benefitsEnum = require('../../../app/constants/benefits-enum')

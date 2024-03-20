@@ -140,15 +140,15 @@ const RETURNED_CLAIM = {
 
 let errorsReturnedToView = {}
 
-jest.mock('../services/authorisation', () => authorisation);
+jest.mock('../services/authorisation', () => authorisation)
 
 jest.mock(
   '../services/data/get-claim-list-for-advanced-search',
   () => getClaimListForAdvancedSearch
-);
+)
 
-jest.mock('../views/helpers/display-helper', () => displayHelperStub);
-jest.mock('../services/export-search-results', () => exportSearchResultsStub);
+jest.mock('../views/helpers/display-helper', () => displayHelperStub)
+jest.mock('../services/export-search-results', () => exportSearchResultsStub)
 
 describe('routes/index', function () {
   let app
@@ -158,7 +158,7 @@ describe('routes/index', function () {
     authorisation = { hasRoles: mockHasRoles }
     getClaimListForAdvancedSearch = jest.fn()
     displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
-    displayHelperStub.getClaimTypeDisplayName.mockReturnValue'First time')
+    displayHelperStub.getClaimTypeDisplayName.mockReturnValue('First time')
     exportSearchResultsStub = jest.fn().mockResolvedValue('')
 
     const route = require('../../../app/routes/advanced-search')
@@ -184,7 +184,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function () {
           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-        });
+        })
     })
   })
 
@@ -195,7 +195,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function () {
           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-        });
+        })
     })
 
     it('should respond with a 200 with query string', function () {
@@ -204,7 +204,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function () {
           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-        });
+        })
     })
 
     it('should return validation errors for invalid data', function () {
@@ -214,7 +214,7 @@ describe('routes/index', function () {
         .get(`/advanced-search?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)
         .expect(function (response) {
           expect(errorsReturnedToView).toEqual(EXPECTED_VALIDATION_ERRORS)
-        });
+        })
     })
   })
 
@@ -231,7 +231,7 @@ describe('routes/index', function () {
           expect(getClaimListForAdvancedSearch.calledWith({}, start, length)).toBe(true) //eslint-disable-line
           expect(response.body.recordsTotal).toBe(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
-        });
+        })
     })
 
     it('should extract search criteria correctly', function () {
@@ -245,7 +245,7 @@ describe('routes/index', function () {
           expect(
             getClaimListForAdvancedSearch.calledWith(sinon.match(PROCESSED_SEARCH_CRITERIA), start, length)
           ).toBe(true) //eslint-disable-line
-        });
+        })
     })
 
     it('should respond with a 500 promise rejects', function () {
@@ -272,7 +272,7 @@ describe('routes/index', function () {
         .expect(function () {
           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(exportSearchResultsStub).toHaveBeenCalledTimes(1) //eslint-disable-line
-        });
+        })
     })
   })
 })

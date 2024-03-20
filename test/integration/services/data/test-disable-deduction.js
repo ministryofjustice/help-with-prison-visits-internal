@@ -25,7 +25,7 @@ describe('services/data/disable-deduction', function () {
         })
         .catch(function (error) {
           throw error
-        });
+        })
     })
 
     afterAll(function () {
