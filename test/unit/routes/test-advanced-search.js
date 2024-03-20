@@ -227,7 +227,7 @@
 //         .expect(function (response) {
 //           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
 //           // expected data method to be called with empty search criteria
-//           expect(mockGetClaimListForAdvancedSearch.calledWith({}, start, length)).toBe(true) //eslint-disable-line
+//           expect(mockGetClaimListForAdvancedSearch.toHaveBeenCalledWith({}, start, length)).toBe(true) //eslint-disable-line
 //           expect(response.body.recordsTotal).toBe(1)
 //           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
 //         })
@@ -242,7 +242,7 @@
 //         .expect(function (response) {
 //           // expected data method to be called with processed search criteria
 //           expect(
-//             mockGetClaimListForAdvancedSearch.calledWith(sinon.match(PROCESSED_SEARCH_CRITERIA), start, length)
+//             mockGetClaimListForAdvancedSearch.toHaveBeenCalledWith(sinon.match(PROCESSED_SEARCH_CRITERIA), start, length)
 //           ).toBe(true) //eslint-disable-line
 //         })
 //     })

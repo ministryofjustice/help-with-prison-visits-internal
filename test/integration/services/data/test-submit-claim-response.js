@@ -54,7 +54,7 @@
 
 //     return submitClaimResponse(claimId, claimResponse)
 //       .then(function () {
-//         expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.calledWith(claimId, reference)).toBe(true) //eslint-disable-line
+//         expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.toHaveBeenCalledWith(claimId, reference)).toBe(true) //eslint-disable-line
 //       })
 //   })
 
@@ -101,8 +101,8 @@
 //         expect(result.DateReviewed).toBeGreaterThanOrEqual(twoMinutesAgo.toDate())
 //         expect(result.DateReviewed).toBeLessThanOrEqual(twoMinutesAhead.toDate())
 //         expect(result.RejectionReasonId).toBe(rejectionReasonIdentifier)
-//       expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).toBe(true) //eslint-disable-line
-//       expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).toBe(true) //eslint-disable-line
+//       expect(stubInsertClaimEvent.toHaveBeenCalledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).toBe(true) //eslint-disable-line
+//       expect(stubInsertTaskSendClaimNotification.toHaveBeenCalledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).toBe(true) //eslint-disable-line
 //       expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).toBe(true) //eslint-disable-line
 
 //         return db('ClaimExpense').where('ClaimId', newIds.claimId).select()

@@ -27,7 +27,7 @@ describe('services/export-search-results', function () {
 
     return exportSearchResults(searchCriteria)
       .then(function () {
-        expect(mockGetClaimListForAdvancedSearch.calledWith(searchCriteria, 0, Number.MAX_SAFE_INTEGER)).toBe(true) //eslint-disable-line
+        expect(mockGetClaimListForAdvancedSearch).toHaveBeenCalledWith(searchCriteria, 0, Number.MAX_SAFE_INTEGER, true) //eslint-disable-line
         expect(mockTransformClaimDataForExport).toHaveBeenCalledTimes(1) //eslint-disable-line
       })
   })

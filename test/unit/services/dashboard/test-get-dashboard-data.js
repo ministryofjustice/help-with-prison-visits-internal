@@ -11,27 +11,27 @@ jest.mock(
 )
 
 jest.mock(
-  '../../../app/services/data/dashboard/get-in-progress-claim-count',
+  '../../../../app/services/data/dashboard/get-in-progress-claim-count',
   () => mockGetInProgressClaimCount
 )
 
 jest.mock(
-  '../../../app/services/data/dashboard/get-manually-approved-claim-count',
+  '../../../../app/services/data/dashboard/get-manually-approved-claim-count',
   () => mockGetManuallyApprovedClaimCount
 )
 
 jest.mock(
-  '../../../app/services/data/dashboard/get-paid-claim-count',
+  '../../../../app/services/data/dashboard/get-paid-claim-count',
   () => mockGetPaidClaimCount
 )
 
 jest.mock(
-  '../../../app/services/data/dashboard/get-pending-claim-count',
+  '../../../../app/services/data/dashboard/get-pending-claim-count',
   () => mockGetPendingClaimCount
 )
 
 jest.mock(
-  '../../../app/services/data/dashboard/get-rejected-claim-count',
+  '../../../../app/services/data/dashboard/get-rejected-claim-count',
   () => mockGetRejectedClaimCount
 )
 
@@ -42,12 +42,12 @@ describe('services/data/dashboard/get-dashboard-data', function () {
     const testFilter = 'test filter'
     return getDashboardData(testFilter)
       .then(function (result) {
-        expect(mockGetAutoApprovedClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(mockGetInProgressClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(mockGetManuallyApprovedClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(mockGetPaidClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(mockGetPendingClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(mockGetRejectedClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
+        expect(mockGetAutoApprovedClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
+        expect(mockGetInProgressClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
+        expect(mockGetManuallyApprovedClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
+        expect(mockGetPaidClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
+        expect(mockGetPendingClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
+        expect(mockGetRejectedClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
 
         expect(mockGetAutoApprovedClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
         expect(mockGetInProgressClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line

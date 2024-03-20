@@ -60,7 +60,7 @@
 //         .expect(200)
 //         .expect(function (response) {
 //           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-//           expect(mockGetClaimListForSearch.calledWith(searchQuery, start, length)).toBe(true) //eslint-disable-line
+//           expect(mockGetClaimListForSearch.toHaveBeenCalledWith(searchQuery, start, length)).toBe(true) //eslint-disable-line
 //           expect(response.body.recordsTotal).toBe(1)
 //           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
 //         })

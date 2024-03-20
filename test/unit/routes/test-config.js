@@ -121,7 +121,7 @@ describe('routes/config', function () {
           rules: allRules
         })
         .expect(function () {
-          mockAutoApprovalConfig.calledWith(
+          mockAutoApprovalConfig.toHaveBeenCalledWith(
             'test@test.com',
             undefined,
             undefined,
@@ -143,7 +143,7 @@ describe('routes/config', function () {
           rules: []
         })
         .expect(function () {
-          mockAutoApprovalConfig.calledWith(
+          mockAutoApprovalConfig.toHaveBeenCalledWith(
             'test@test.com',
             undefined,
             undefined,

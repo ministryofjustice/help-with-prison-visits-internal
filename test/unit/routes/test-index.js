@@ -57,7 +57,7 @@
 //         .expect(200)
 //         .expect(function (response) {
 //           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-//           expect(mockGetClaimsListAndCount.calledWith(['TEST'], false, 0, 10)).toBe(true) //eslint-disable-line
+//           expect(mockGetClaimsListAndCount.toHaveBeenCalledWith(['TEST'], false, 0, 10)).toBe(true) //eslint-disable-line
 //           expect(response.body.recordsTotal).toBe(0)
 //           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
 //         })
@@ -70,7 +70,7 @@
 //         .get('/claims/ADVANCE?draw=1&start=0&length=10')
 //         .expect(200)
 //         .expect(function (response) {
-//           expect(mockGetClaimsListAndCount.calledWith([claimStatusEnum.NEW.value], true, 0, 10)).toBe(true) //eslint-disable-line
+//           expect(mockGetClaimsListAndCount.toHaveBeenCalledWith([claimStatusEnum.NEW.value], true, 0, 10)).toBe(true) //eslint-disable-line
 //         })
 //     })
 
@@ -81,7 +81,7 @@
 //         .get('/claims/ADVANCE-APPROVED?draw=1&start=0&length=10')
 //         .expect(200)
 //         .expect(function (response) {
-//           expect(mockGetClaimsListAndCount.calledWith([claimStatusEnum.APPROVED.value], true, 0, 10)).toBe(true) //eslint-disable-line
+//           expect(mockGetClaimsListAndCount.toHaveBeenCalledWith([claimStatusEnum.APPROVED.value], true, 0, 10)).toBe(true) //eslint-disable-line
 //         })
 //     })
 
@@ -92,7 +92,7 @@
 //         .get('/claims/ADVANCE-UPDATED?draw=1&start=0&length=10')
 //         .expect(200)
 //         .expect(function (response) {
-//           expect(mockGetClaimsListAndCount.calledWith([claimStatusEnum.UPDATED.value], true, 0, 10)).toBe(true) //eslint-disable-line
+//           expect(mockGetClaimsListAndCount.toHaveBeenCalledWith([claimStatusEnum.UPDATED.value], true, 0, 10)).toBe(true) //eslint-disable-line
 //         })
 //     })
 

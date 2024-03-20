@@ -23,15 +23,8 @@ describe('services/domain/claim-decision', function () {
   const futureDay = futureDate.format('D')
   const futureMonth = futureDate.format('M')
   const futureYear = futureDate.format('YYYY')
-  const pastDate = dateFormatter.now().subtract(1, 'days')
-  const pastDay = pastDate.format('D')
-  const pastMonth = pastDate.format('M')
-  const pastYear = pastDate.format('YYYY')
 
   it('should construct a domain object given valid input', function () {
-    console.log(pastDay)
-    console.log(pastMonth)
-    console.log(pastYear)
     claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, VALID_DECISION_REJECTED, '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
     expect(claimDecision.decision).toBe(VALID_DECISION_REJECTED)
     expect(claimDecision.nomisCheck).toBe(VALID_NOMIS_CHECK)
