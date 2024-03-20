@@ -37,3 +37,6 @@ uploads/
 
 # data
 .vscode/
+
+#jest
+test_results

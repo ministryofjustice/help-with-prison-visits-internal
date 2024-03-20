@@ -14,9 +14,9 @@
     "start": "npm run css-build && node ./app/bin/www",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "record-build-info": "node scripts/record-build-info",
-    "test": "standard && mocha --recursive test/unit/ --exit",
+    "test": "standard --env jest && npm run test-unit",
+    "test-unit": "jest ./test/unit",
     "test-coverage": "nyc npm run test-unit",
-    "test-unit": "mocha --recursive test/unit/ --exit",
     "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
     "test-e2e": "KNEX_CONFIG=testing cypress run --config video=false",
     "test-e2e-ui": "KNEX_CONFIG=testing cypress open",
@@ -38,6 +38,37 @@
       "$",
       "cy",
       "expect"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "app/**/*.{ts,js,jsx,mjs}"
+    ],
+    "testMatch": [
+      "<rootDir>/test/unit/**/?(*.)je{ts,js,jsx,mjs}"
+    ],
+    "testEnvironment": "node",
+    "reporters": [
+      "default",
+      [
+        "jest-junit",
+        {
+          "outputDirectory": "test_results/jest/"
+        }
+      ],
+      [
+        "./node_modules/jest-html-reporter",
+        {
+          "outputPath": "test_results/unit-test-reports.html"
+        }
+      ]
+    ],
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "json",
+      "node",
+      "ts"
     ]
   },
   "dependencies": {
