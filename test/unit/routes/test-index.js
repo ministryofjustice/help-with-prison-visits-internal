@@ -1,7 +1,5 @@
 const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const sinon = require('sinon')
 
@@ -21,6 +19,10 @@ const RETURNED_CLAIM = {
   Name: 'Joe Bloggs'
 }
 
+jest.mock('../services/authorisation', () => authorisation);
+jest.mock('../services/data/get-claim-list-and-count', () => getClaimsListAndCount);
+jest.mock('../views/helpers/display-helper', () => displayHelperStub);
+
 describe('routes/index', function () {
   let app
 
@@ -31,11 +33,7 @@ describe('routes/index', function () {
     displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
 
-    const route = proxyquire('../../../app/routes/index', {
-      '../services/authorisation': authorisation,
-      '../services/data/get-claim-list-and-count': getClaimsListAndCount,
-      '../views/helpers/display-helper': displayHelperStub
-    })
+    const route = require('../../../app/routes/index')
 
     app = routeHelper.buildApp(route)
   })
@@ -46,8 +44,8 @@ describe('routes/index', function () {
         .get('/')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -59,11 +57,11 @@ describe('routes/index', function () {
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimsListAndCount.calledWith(['TEST'], false, 0, 10)).to.be.true //eslint-disable-line
-          expect(response.body.recordsTotal).to.equal(0)
-          expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getClaimsListAndCount.calledWith(['TEST'], false, 0, 10)).toBe(true) //eslint-disable-line
+          expect(response.body.recordsTotal).toBe(0)
+          expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
+        });
     })
 
     it('should call for advance claims when status is ADVANCE', function () {
@@ -73,8 +71,8 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith([claimStatusEnum.NEW.value], true, 0, 10)).to.be.true //eslint-disable-line
-        })
+          expect(getClaimsListAndCount.calledWith([claimStatusEnum.NEW.value], true, 0, 10)).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should call for approved advance claims when status is ADVANCE-APPROVED', function () {
@@ -84,8 +82,8 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE-APPROVED?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith([claimStatusEnum.APPROVED.value], true, 0, 10)).to.be.true //eslint-disable-line
-        })
+          expect(getClaimsListAndCount.calledWith([claimStatusEnum.APPROVED.value], true, 0, 10)).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should call for updated advance claims when status is ADVANCE-UPDATED', function () {
@@ -95,8 +93,8 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE-UPDATED?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith([claimStatusEnum.UPDATED.value], true, 0, 10)).to.be.true //eslint-disable-line
-        })
+          expect(getClaimsListAndCount.calledWith([claimStatusEnum.UPDATED.value], true, 0, 10)).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 promise rejects', function () {

@@ -1,7 +1,5 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 let hasRolesStub
@@ -11,6 +9,18 @@ let getReportDatesStub
 let getAuditConfigStub
 let setForVerificationStub
 let updateAuditStatusStub
+
+jest.mock('../../services/authorisation', () => authorisation);
+jest.mock('../../services/data/audit/get-report-data', () => getReportDataStub);
+jest.mock('../../services/data/audit/get-report-dates', () => getReportDatesStub);
+jest.mock('../../services/data/audit/get-audit-config', () => getAuditConfigStub);
+
+jest.mock(
+  '../../services/data/audit/set-for-verification',
+  () => setForVerificationStub
+);
+
+jest.mock('../../services/data/audit/update-audit-data', () => updateAuditStatusStub);
 
 describe('routes/audit/view-report', function () {
   let app
@@ -34,14 +44,7 @@ describe('routes/audit/view-report', function () {
     setForVerificationStub = sinon.stub().resolves({})
     updateAuditStatusStub = sinon.stub().resolves()
 
-    const route = proxyquire('../../../../app/routes/audit/view-report', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/audit/get-report-data': getReportDataStub,
-      '../../services/data/audit/get-report-dates': getReportDatesStub,
-      '../../services/data/audit/get-audit-config': getAuditConfigStub,
-      '../../services/data/audit/set-for-verification': setForVerificationStub,
-      '../../services/data/audit/update-audit-data': updateAuditStatusStub
-    })
+    const route = require('../../../../app/routes/audit/view-report')
 
     app = routeHelper.buildApp(route)
   })
@@ -53,13 +56,13 @@ describe('routes/audit/view-report', function () {
         .get('/audit/view-report/1')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDataStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDatesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditConfigStub.notCalled).to.be.true //eslint-disable-line
-          expect(updateAuditStatusStub.notCalled).to.be.true //eslint-disable-line
-          expect(setForVerificationStub.notCalled).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getReportDataStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getReportDatesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditConfigStub.notCalled).toBe(true) //eslint-disable-line
+          expect(updateAuditStatusStub.notCalled).toBe(true) //eslint-disable-line
+          expect(setForVerificationStub.notCalled).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 200 when there is report data and verification is not set', function () {
@@ -79,13 +82,13 @@ describe('routes/audit/view-report', function () {
         .get('/audit/view-report/1')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDataStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDatesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(updateAuditStatusStub.calledOnce).to.be.true //eslint-disable-line
-          expect(setForVerificationStub.notCalled).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getReportDataStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getReportDatesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditConfigStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(updateAuditStatusStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(setForVerificationStub.notCalled).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 200 when there is report data and verification is set', function () {
@@ -105,13 +108,13 @@ describe('routes/audit/view-report', function () {
         .get('/audit/view-report/1')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDataStub.calledTwice).to.be.true //eslint-disable-line
-          expect(getReportDatesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(updateAuditStatusStub.calledOnce).to.be.true //eslint-disable-line
-          expect(setForVerificationStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getReportDataStub.calledTwice).toBe(true) //eslint-disable-line
+          expect(getReportDatesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditConfigStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(updateAuditStatusStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(setForVerificationStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 })

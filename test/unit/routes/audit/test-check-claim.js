@@ -1,7 +1,5 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 let hasRolesStub
@@ -10,6 +8,12 @@ let getClaimDataStub
 let updateClaimDataStub
 let addAuditSessionDataStub
 let getAuditSessionDataStub
+
+jest.mock('../../services/authorisation', () => authorisation);
+jest.mock('../../services/data/audit/get-claim-data', () => getClaimDataStub);
+jest.mock('../../services/data/audit/update-claim-data', () => updateClaimDataStub);
+jest.mock('../../services/add-audit-session-data', () => addAuditSessionDataStub);
+jest.mock('../../services/get-audit-session-data', () => getAuditSessionDataStub);
 
 describe('routes/audit/check-claim', function () {
   let app
@@ -24,13 +28,7 @@ describe('routes/audit/check-claim', function () {
       hasRoles: hasRolesStub
     }
 
-    const route = proxyquire('../../../../app/routes/audit/check-claim', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/audit/get-claim-data': getClaimDataStub,
-      '../../services/data/audit/update-claim-data': updateClaimDataStub,
-      '../../services/add-audit-session-data': addAuditSessionDataStub,
-      '../../services/get-audit-session-data': getAuditSessionDataStub
-    })
+    const route = require('../../../../app/routes/audit/check-claim')
 
     app = routeHelper.buildApp(route)
   })
@@ -41,10 +39,10 @@ describe('routes/audit/check-claim', function () {
         .get('/audit/check-claim/1/ABC123')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimDataStub.calledOnce).to.be.true //eslint-disable-line
-          expect(addAuditSessionDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(addAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -54,9 +52,9 @@ describe('routes/audit/check-claim', function () {
         .post('/audit/check-claim/1/ABC123')
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditSessionDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 400 when band 5 selects invalid but no description is provided', function () {
@@ -69,9 +67,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditSessionDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 400 when band 9 selects invalid but no description is provided', function () {
@@ -84,9 +82,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditSessionDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 302 when band 5 selects valid', function () {
@@ -99,9 +97,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(updateClaimDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(updateClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
     it('should respond with a 302 when band 5 selects Invalid with description', function () {
       return supertest(app)
@@ -114,9 +112,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(updateClaimDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(updateClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 302 when band 9 selects valid', function () {
@@ -129,9 +127,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(updateClaimDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(updateClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
     it('should respond with a 302 when band 9 selects Invalid with description', function () {
       return supertest(app)
@@ -144,9 +142,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(updateClaimDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(updateClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 })

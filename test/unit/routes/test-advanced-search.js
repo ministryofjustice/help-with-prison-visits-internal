@@ -1,6 +1,4 @@
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const express = require('express')
 const queryString = require('querystring')
 const dateFormatter = require('../../../app/services/date-formatter')
@@ -142,6 +140,16 @@ const RETURNED_CLAIM = {
 
 let errorsReturnedToView = {}
 
+jest.mock('../services/authorisation', () => authorisation);
+
+jest.mock(
+  '../services/data/get-claim-list-for-advanced-search',
+  () => getClaimListForAdvancedSearch
+);
+
+jest.mock('../views/helpers/display-helper', () => displayHelperStub);
+jest.mock('../services/export-search-results', () => exportSearchResultsStub);
+
 describe('routes/index', function () {
   let app
 
@@ -153,12 +161,7 @@ describe('routes/index', function () {
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
     exportSearchResultsStub = sinon.stub().resolves('')
 
-    const route = proxyquire('../../../app/routes/advanced-search', {
-      '../services/authorisation': authorisation,
-      '../services/data/get-claim-list-for-advanced-search': getClaimListForAdvancedSearch,
-      '../views/helpers/display-helper': displayHelperStub,
-      '../services/export-search-results': exportSearchResultsStub
-    })
+    const route = require('../../../app/routes/advanced-search')
 
     app = express()
 
@@ -180,8 +183,8 @@ describe('routes/index', function () {
         .get('/advanced-search-input')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -191,8 +194,8 @@ describe('routes/index', function () {
         .get('/advanced-search')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 200 with query string', function () {
@@ -200,8 +203,8 @@ describe('routes/index', function () {
         .get('/advanced-search?Reference=V123456')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should return validation errors for invalid data', function () {
@@ -210,8 +213,8 @@ describe('routes/index', function () {
       return supertest(app)
         .get(`/advanced-search?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)
         .expect(function (response) {
-          expect(errorsReturnedToView).to.deep.equal(EXPECTED_VALIDATION_ERRORS)
-        })
+          expect(errorsReturnedToView).toEqual(EXPECTED_VALIDATION_ERRORS)
+        });
     })
   })
 
@@ -223,11 +226,12 @@ describe('routes/index', function () {
         .send({ start, length })
         .expect(200)
         .expect(function (response) {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimListForAdvancedSearch.calledWith({}, start, length), 'expected data method to be called with empty search criteria').to.be.true //eslint-disable-line
-          expect(response.body.recordsTotal).to.equal(1)
-          expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          // expected data method to be called with empty search criteria
+          expect(getClaimListForAdvancedSearch.calledWith({}, start, length)).toBe(true) //eslint-disable-line
+          expect(response.body.recordsTotal).toBe(1)
+          expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
+        });
     })
 
     it('should extract search criteria correctly', function () {
@@ -237,8 +241,11 @@ describe('routes/index', function () {
         .post('/advanced-search-results')
         .send(INPUT_SEARCH_CRITERIA)
         .expect(function (response) {
-          expect(getClaimListForAdvancedSearch.calledWith(sinon.match(PROCESSED_SEARCH_CRITERIA), start, length), 'expected data method to be called with processed search criteria').to.be.true //eslint-disable-line
-        })
+          // expected data method to be called with processed search criteria
+          expect(
+            getClaimListForAdvancedSearch.calledWith(sinon.match(PROCESSED_SEARCH_CRITERIA), start, length)
+          ).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 promise rejects', function () {
@@ -263,9 +270,9 @@ describe('routes/index', function () {
         .get('/advanced-search-results/export?')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(exportSearchResultsStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(exportSearchResultsStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 })

@@ -1,7 +1,5 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 let hasRolesStub
@@ -12,6 +10,23 @@ let getAllClaimsDataOverThresholdStub
 let updateReportStub
 let addAuditSessionDataStub
 let getAuditSessionDataStub
+
+jest.mock('../../services/authorisation', () => authorisation);
+jest.mock('../../services/data/audit/get-audit-data', () => getAuditDataStub);
+
+jest.mock(
+  '../../services/data/audit/get-all-claims-data-below-threshold',
+  () => getAllClaimsDataBelowThresholdStub
+);
+
+jest.mock(
+  '../../services/data/audit/get-all-claims-data-over-threshold',
+  () => getAllClaimsDataOverThresholdStub
+);
+
+jest.mock('../../services/data/audit/update-report', () => updateReportStub);
+jest.mock('../../services/add-audit-session-data', () => addAuditSessionDataStub);
+jest.mock('../../services/get-audit-session-data', () => getAuditSessionDataStub);
 
 describe('routes/audit/create-report', function () {
   let app
@@ -28,15 +43,7 @@ describe('routes/audit/create-report', function () {
     addAuditSessionDataStub = sinon.stub()
     getAuditSessionDataStub = sinon.stub()
 
-    const route = proxyquire('../../../../app/routes/audit/create-report', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/audit/get-audit-data': getAuditDataStub,
-      '../../services/data/audit/get-all-claims-data-below-threshold': getAllClaimsDataBelowThresholdStub,
-      '../../services/data/audit/get-all-claims-data-over-threshold': getAllClaimsDataOverThresholdStub,
-      '../../services/data/audit/update-report': updateReportStub,
-      '../../services/add-audit-session-data': addAuditSessionDataStub,
-      '../../services/get-audit-session-data': getAuditSessionDataStub
-    })
+    const route = require('../../../../app/routes/audit/create-report')
 
     app = routeHelper.buildApp(route)
   })
@@ -47,9 +54,9 @@ describe('routes/audit/create-report', function () {
         .get('/audit/create-report')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditSessionDataStub.callCount).to.equal(5) //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditSessionDataStub.callCount).toBe(5) //eslint-disable-line
+        });
     })
   })
 
@@ -62,9 +69,9 @@ describe('routes/audit/create-report', function () {
         .post('/audit/create-report')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditSessionDataStub.callCount).to.equal(6) //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditSessionDataStub.callCount).toBe(6) //eslint-disable-line
+        });
     })
 
     it('should respond with a 200 when reportId not exist in session', function () {
@@ -72,13 +79,13 @@ describe('routes/audit/create-report', function () {
         .post('/audit/create-report')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditSessionDataStub.callCount).to.equal(6) //eslint-disable-line
-          expect(getAllClaimsDataBelowThresholdStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAllClaimsDataOverThresholdStub.calledOnce).to.be.true //eslint-disable-line
-          expect(updateReportStub.calledOnce).to.be.true //eslint-disable-line
-          expect(addAuditSessionDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditSessionDataStub.callCount).toBe(6) //eslint-disable-line
+          expect(getAllClaimsDataBelowThresholdStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAllClaimsDataOverThresholdStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(updateReportStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(addAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 })

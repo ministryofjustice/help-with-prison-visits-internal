@@ -1,7 +1,6 @@
 const OverpaymentResponse = require('../../../../app/services/domain/overpayment-response')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 const overpaymentActionEnum = require('../../../../app/constants/overpayment-action-enum')
-const expect = require('chai').expect
 let overpaymentResponse
 
 describe('services/domain/overpayment-response', function () {
@@ -13,10 +12,10 @@ describe('services/domain/overpayment-response', function () {
 
   it('should construct a domain object given valid input', function () {
     overpaymentResponse = new OverpaymentResponse(OVERPAYMENT_AMOUNT, OVERPAYMENT_REMAINING, REASON, IS_OVERPAID)
-    expect(overpaymentResponse.action).to.not.be.null //eslint-disable-line
-    expect(overpaymentResponse.amount).to.equal(OVERPAYMENT_AMOUNT)
-    expect(overpaymentResponse.remaining).to.equal(OVERPAYMENT_REMAINING)
-    expect(overpaymentResponse.reason).to.equal(REASON)
+    expect(overpaymentResponse.action).not.toBeNull() //eslint-disable-line
+    expect(overpaymentResponse.amount).toBe(OVERPAYMENT_AMOUNT)
+    expect(overpaymentResponse.remaining).toBe(OVERPAYMENT_REMAINING)
+    expect(overpaymentResponse.reason).toBe(REASON)
   })
 
   it('should throw validation error if overpayment remaining value doesnt exist', function () {
@@ -24,8 +23,8 @@ describe('services/domain/overpayment-response', function () {
       overpaymentResponse = new OverpaymentResponse(OVERPAYMENT_AMOUNT, '', REASON, IS_OVERPAID)
       expect.fail()
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['overpayment-remaining']).to.contain('The remaining overpayment amount is required')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['overpayment-remaining']).toContain('The remaining overpayment amount is required')
     }
   })
 
@@ -42,8 +41,8 @@ describe('services/domain/overpayment-response', function () {
       overpaymentResponse = new OverpaymentResponse(OVERPAYMENT_AMOUNT, '-1', REASON, IS_OVERPAID)
       expect.fail()
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['overpayment-remaining']).to.contain('The remaining overpayment amount must be greater than or equal to zero')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['overpayment-remaining']).toContain('The remaining overpayment amount must be greater than or equal to zero')
     }
   })
 
@@ -52,8 +51,8 @@ describe('services/domain/overpayment-response', function () {
       overpaymentResponse = new OverpaymentResponse(OVERPAYMENT_AMOUNT, OVERPAYMENT_REMAINING + '!', REASON, IS_OVERPAID)
       expect.fail()
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['overpayment-remaining']).to.contain('The remaining overpayment amount must be a valid currency')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['overpayment-remaining']).toContain('The remaining overpayment amount must be a valid currency')
     }
   })
 
@@ -62,8 +61,8 @@ describe('services/domain/overpayment-response', function () {
       overpaymentResponse = new OverpaymentResponse('', OVERPAYMENT_REMAINING, REASON, IS_NOT_OVERPAID)
       expect.fail()
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['overpayment-amount']).to.contain('An overpayment amount is required')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['overpayment-amount']).toContain('An overpayment amount is required')
     }
   })
 
@@ -72,8 +71,8 @@ describe('services/domain/overpayment-response', function () {
       overpaymentResponse = new OverpaymentResponse('0', OVERPAYMENT_REMAINING, REASON, IS_NOT_OVERPAID)
       expect.fail()
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['overpayment-amount']).to.contain('An overpayment amount must be greater than zero')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['overpayment-amount']).toContain('An overpayment amount must be greater than zero')
     }
   })
 
@@ -82,8 +81,8 @@ describe('services/domain/overpayment-response', function () {
       overpaymentResponse = new OverpaymentResponse(OVERPAYMENT_AMOUNT + '!', OVERPAYMENT_REMAINING + '!', REASON, IS_NOT_OVERPAID)
       expect.fail()
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['overpayment-amount']).to.contain('An overpayment amount must be a valid currency')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['overpayment-amount']).toContain('An overpayment amount must be a valid currency')
     }
   })
 
@@ -92,7 +91,7 @@ describe('services/domain/overpayment-response', function () {
 
     overpaymentResponse = new OverpaymentResponse('', '5', REASON, claimCurrentlyOverpaid)
 
-    expect(overpaymentResponse.action).to.equal(overpaymentActionEnum.UPDATE)
+    expect(overpaymentResponse.action).toBe(overpaymentActionEnum.UPDATE)
   })
 
   it('should have an action of \'resolve\'', function () {
@@ -100,7 +99,7 @@ describe('services/domain/overpayment-response', function () {
 
     overpaymentResponse = new OverpaymentResponse('', '0', REASON, claimCurrentlyOverpaid)
 
-    expect(overpaymentResponse.action).to.equal(overpaymentActionEnum.RESOLVE)
+    expect(overpaymentResponse.action).toBe(overpaymentActionEnum.RESOLVE)
   })
 
   it('should have an action of \'overpaid\'', function () {
@@ -108,6 +107,6 @@ describe('services/domain/overpayment-response', function () {
 
     overpaymentResponse = new OverpaymentResponse('10', '10', REASON, claimCurrentlyOverpaid)
 
-    expect(overpaymentResponse.action).to.equal(overpaymentActionEnum.OVERPAID)
+    expect(overpaymentResponse.action).toBe(overpaymentActionEnum.OVERPAID)
   })
 })

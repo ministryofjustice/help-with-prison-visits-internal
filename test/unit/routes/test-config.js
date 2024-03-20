@@ -1,7 +1,5 @@
 const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const ValidationError = require('../../../app/services/errors/validation-error')
 const autoApprovalRulesEnum = require('../../../app/constants/auto-approval-rules-enum')
@@ -13,6 +11,26 @@ let updateAutoApprovalConfigStub
 let updateAuditConfigStub
 let AutoApprovalConfigStub
 let AuditConfigStub
+
+jest.mock('../services/authorisation', () => ({
+  hasRoles
+}));
+
+jest.mock(
+  '../services/data/get-auto-approval-config',
+  () => getAutoApprovalConfigStub
+);
+
+jest.mock('../services/data/audit/get-audit-config', () => getAuditConfigStub);
+
+jest.mock(
+  '../services/data/update-auto-approval-config',
+  () => updateAutoApprovalConfigStub
+);
+
+jest.mock('../services/data/audit/update-audit-config', () => updateAuditConfigStub);
+jest.mock('../services/domain/auto-approval-config', () => AutoApprovalConfigStub);
+jest.mock('../services/domain/audit-config', () => AuditConfigStub);
 
 describe('routes/config', function () {
   let app
@@ -26,15 +44,7 @@ describe('routes/config', function () {
     AutoApprovalConfigStub = sinon.stub().returns({})
     AuditConfigStub = sinon.stub().returns({})
 
-    const route = proxyquire('../../../app/routes/config', {
-      '../services/authorisation': { hasRoles },
-      '../services/data/get-auto-approval-config': getAutoApprovalConfigStub,
-      '../services/data/audit/get-audit-config': getAuditConfigStub,
-      '../services/data/update-auto-approval-config': updateAutoApprovalConfigStub,
-      '../services/data/audit/update-audit-config': updateAuditConfigStub,
-      '../services/domain/auto-approval-config': AutoApprovalConfigStub,
-      '../services/domain/audit-config': AuditConfigStub
-    })
+    const route = require('../../../app/routes/config')
 
     app = routeHelper.buildApp(route)
     route(app)
@@ -46,10 +56,10 @@ describe('routes/config', function () {
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAutoApprovalConfigStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditConfigStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 200 for rules disabled not defined', function () {
@@ -58,10 +68,10 @@ describe('routes/config', function () {
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAutoApprovalConfigStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditConfigStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 promise rejects', function () {
@@ -78,12 +88,12 @@ describe('routes/config', function () {
         .post('/config')
         .expect(302)
         .expect(function () {
-          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(updateAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(updateAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(AutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(AuditConfigStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(updateAutoApprovalConfigStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(updateAuditConfigStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(AutoApprovalConfigStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(AuditConfigStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 400 if there are validation errors', function () {

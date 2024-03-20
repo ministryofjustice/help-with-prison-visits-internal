@@ -1,7 +1,5 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -96,6 +94,94 @@ const CLAIM_DOCUMENT = {
   Filepath: 'test/resources/testfile.txt'
 }
 
+jest.mock('../../services/authorisation', () => authorisation);
+
+jest.mock(
+  '../../services/data/get-individual-claim-details',
+  () => stubGetIndividualClaimDetails
+);
+
+jest.mock('../../services/data/submit-claim-response', () => stubSubmitClaimResponse);
+jest.mock('../../services/domain/claim-decision', () => stubClaimDecision);
+
+jest.mock(
+  '../helpers/get-claim-expense-responses',
+  () => stubGetClaimExpenseResponses
+);
+
+jest.mock(
+  '../../services/data/get-claim-last-updated',
+  () => stubGetClaimLastUpdated
+);
+
+jest.mock(
+  '../../services/check-user-and-last-updated',
+  () => stubCheckUserAndLastUpdated
+);
+
+jest.mock('../../services/data/insert-deduction', () => stubInsertDeduction);
+jest.mock('../../services/data/disable-deduction', () => stubDisableDeduction);
+jest.mock('../../services/domain/claim-deduction', () => stubClaimDeduction);
+
+jest.mock(
+  '../../services/data/get-claim-document-file-path',
+  () => stubGetClaimDocumentFilePath
+);
+
+jest.mock(
+  '../../services/data/update-claim-overpayment-status',
+  () => stubUpdateClaimOverpaymentStatus
+);
+
+jest.mock(
+  '../../services/domain/overpayment-response',
+  () => stubOverpaymentResponse
+);
+
+jest.mock('../../services/data/close-advance-claim', () => stubCloseAdvanceClaim);
+
+jest.mock(
+  '../../services/data/payout-barcode-expired-claim',
+  () => stubPayoutBarcodeExpiredClaim
+);
+
+jest.mock('../../services/data/insert-note', () => stubInsertNote);
+
+jest.mock(
+  '../helpers/merge-claim-expenses-with-submitted-responses',
+  () => stubMergeClaimExpensesWithSubmittedResponses
+);
+
+jest.mock(
+  '../../services/data/request-new-bank-details',
+  () => stubRequestNewBankDetails
+);
+
+jest.mock('../../services/data/insert-top-up', () => stubInsertTopUp);
+jest.mock('../../services/domain/topup-response', () => stubTopupResponse);
+jest.mock('../../services/data/cancel-top-up', () => stubCancelTopUp);
+
+jest.mock(
+  '../../services/data/update-eligibility-trusted-status',
+  () => stubUpdateEligibilityTrustedStatus
+);
+
+jest.mock(
+  '../../services/data/update-assignment-of-claims',
+  () => stubUpdateAssignmentOfClaims
+);
+
+jest.mock('../../services/data/get-rejection-reasons', () => stubRejectionReasons);
+jest.mock('../../services/data/get-rejection-reason-id', () => stubRejectionReasonId);
+
+jest.mock(
+  '../../services/data/update-visitor-benefit-expiry-date',
+  () => stubUpdateVisitorBenefirExpiryDate
+);
+
+jest.mock('../../services/domain/benefit-expiry-date', () => stubBenefitExpiryDate);
+jest.mock('../../services/aws-helper', () => awsHelperStub);
+
 describe('routes/claim/view-claim', function () {
   let app
   let awsStub
@@ -139,36 +225,7 @@ describe('routes/claim/view-claim', function () {
       AWSHelper: awsStub
     }
 
-    const route = proxyquire('../../../../app/routes/claim/view-claim', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/get-individual-claim-details': stubGetIndividualClaimDetails,
-      '../../services/data/submit-claim-response': stubSubmitClaimResponse,
-      '../../services/domain/claim-decision': stubClaimDecision,
-      '../helpers/get-claim-expense-responses': stubGetClaimExpenseResponses,
-      '../../services/data/get-claim-last-updated': stubGetClaimLastUpdated,
-      '../../services/check-user-and-last-updated': stubCheckUserAndLastUpdated,
-      '../../services/data/insert-deduction': stubInsertDeduction,
-      '../../services/data/disable-deduction': stubDisableDeduction,
-      '../../services/domain/claim-deduction': stubClaimDeduction,
-      '../../services/data/get-claim-document-file-path': stubGetClaimDocumentFilePath,
-      '../../services/data/update-claim-overpayment-status': stubUpdateClaimOverpaymentStatus,
-      '../../services/domain/overpayment-response': stubOverpaymentResponse,
-      '../../services/data/close-advance-claim': stubCloseAdvanceClaim,
-      '../../services/data/payout-barcode-expired-claim': stubPayoutBarcodeExpiredClaim,
-      '../../services/data/insert-note': stubInsertNote,
-      '../helpers/merge-claim-expenses-with-submitted-responses': stubMergeClaimExpensesWithSubmittedResponses,
-      '../../services/data/request-new-bank-details': stubRequestNewBankDetails,
-      '../../services/data/insert-top-up': stubInsertTopUp,
-      '../../services/domain/topup-response': stubTopupResponse,
-      '../../services/data/cancel-top-up': stubCancelTopUp,
-      '../../services/data/update-eligibility-trusted-status': stubUpdateEligibilityTrustedStatus,
-      '../../services/data/update-assignment-of-claims': stubUpdateAssignmentOfClaims,
-      '../../services/data/get-rejection-reasons': stubRejectionReasons,
-      '../../services/data/get-rejection-reason-id': stubRejectionReasonId,
-      '../../services/data/update-visitor-benefit-expiry-date': stubUpdateVisitorBenefirExpiryDate,
-      '../../services/domain/benefit-expiry-date': stubBenefitExpiryDate,
-      '../../services/aws-helper': awsHelperStub
-    })
+    const route = require('../../../../app/routes/claim/view-claim')
     app = routeHelper.buildApp(route)
     route(app)
   })
@@ -181,9 +238,9 @@ describe('routes/claim/view-claim', function () {
         .get('/claim/123')
         .expect(200)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -202,14 +259,14 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_APPROVE)
         .expect(302)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimExpenseResponses.calledOnce).to.be.true //eslint-disable-line
-          expect(stubClaimDecision.calledOnce).to.be.true //eslint-disable-line
-          expect(stubSubmitClaimResponse.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimExpenseResponses.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubClaimDecision.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubSubmitClaimResponse.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 for an unhandled exception', function () {
@@ -239,15 +296,15 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_APPROVE)
         .expect(302)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimExpenseResponses.calledOnce).to.be.true //eslint-disable-line
-          expect(stubClaimDecision.calledOnce).to.be.true //eslint-disable-line
-          expect(stubSubmitClaimResponse.calledOnce).to.be.true //eslint-disable-line
-          expect(stubUpdateEligibilityTrustedStatus.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimExpenseResponses.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubClaimDecision.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubSubmitClaimResponse.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubUpdateEligibilityTrustedStatus.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 400 when user and user and last updated check throws validation error', function () {
@@ -259,11 +316,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_APPROVE)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 400 when invalid data entered', function () {
@@ -276,11 +333,11 @@ describe('routes/claim/view-claim', function () {
         .send(INCOMPLETE_DATA)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when promise is rejected', function () {
@@ -310,8 +367,8 @@ describe('routes/claim/view-claim', function () {
         .post('/claim/123')
         .send(VALID_DATA_APPROVE)
         .expect(function () {
-          expect(stubMergeClaimExpensesWithSubmittedResponses.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(stubMergeClaimExpensesWithSubmittedResponses.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -348,11 +405,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 400 including extra data if claim expenses exist and there is no update conflict when a validation error occurs', function () {
@@ -371,11 +428,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 302 when valid data entered (add deduction)', function () {
@@ -395,8 +452,8 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(302)
         .expect(function () {
-          expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).to.be.true //eslint-disable-line
-        })
+          expect(stubInsertDeduction.calledWith('123', testClaimDecisionObject)).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when promise is rejected', function () {
@@ -420,11 +477,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 302 when valid data entered (disable deduction)', function () {
@@ -441,8 +498,8 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_DISABLE_DEDUCTION)
         .expect(302)
         .expect(function () {
-          expect(stubDisableDeduction.calledWith('1')).to.be.true //eslint-disable-line
-        })
+          expect(stubDisableDeduction.calledWith('1')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when promise is rejected', function () {
@@ -466,11 +523,11 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 200 after calling assignment with users email if no conflicts', function () {
@@ -487,8 +544,8 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(302)
         .expect(function () {
-          expect(stubUpdateAssignmentOfClaims.calledWith('123', 'test@test.com')).to.be.true //eslint-disable-line
-        })
+          expect(stubUpdateAssignmentOfClaims.calledWith('123', 'test@test.com')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when promise is rejected', function () {
@@ -512,11 +569,11 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 200 after calling assignment with users email if no conflicts', function () {
@@ -533,8 +590,8 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(302)
         .expect(function () {
-          expect(stubUpdateAssignmentOfClaims.calledWith('123', null)).to.be.true //eslint-disable-line
-        })
+          expect(stubUpdateAssignmentOfClaims.calledWith('123', null)).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when promise is rejected', function () {
@@ -558,11 +615,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 302 when valid data entered', function () {
@@ -578,10 +635,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(302)
         .expect(function () {
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubUpdateClaimOverpaymentStatus.calledWith(claimData.claim, overpaymentResponse)).to.be.true //eslint-disable-line
-        })
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubUpdateClaimOverpaymentStatus.calledWith(claimData.claim, overpaymentResponse)).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 400 when adding an overpayment and a validation error occurs', function () {
@@ -597,12 +654,12 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-          expect(stubUpdateClaimOverpaymentStatus.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+          expect(stubUpdateClaimOverpaymentStatus.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when promise is rejected', function () {
@@ -628,11 +685,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 302 when valid data entered', function () {
@@ -644,10 +701,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
         .expect(302)
         .expect(function () {
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubPayoutBarcodeExpiredClaim.calledWith('123', 'Expiry reason')).to.be.true //eslint-disable-line
-        })
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubPayoutBarcodeExpiredClaim.calledWith('123', 'Expiry reason')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 400 when marking claim as payout expired and a validation error occurs', function () {
@@ -659,10 +716,10 @@ describe('routes/claim/view-claim', function () {
         .post('/claim/123/payout-barcode-expired')
         .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
         .expect(function () {
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when promise is rejected', function () {
@@ -687,10 +744,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_INSERT_NOTE)
         .expect(302)
         .expect(function () {
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubInsertNote.calledWith('123', 'This is a note')).to.be.true //eslint-disable-line
-        })
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubInsertNote.calledWith('123', 'This is a note')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when no field blank', function () {
@@ -714,11 +771,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 302 when valid data entered', function () {
@@ -730,10 +787,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(302)
         .expect(function () {
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCloseAdvanceClaim.calledWith('123', 'close advance claim reason')).to.be.true //eslint-disable-line
-        })
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCloseAdvanceClaim.calledWith('123', 'close advance claim reason')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 400 when closing claim and a validation error occurs', function () {
@@ -745,10 +802,10 @@ describe('routes/claim/view-claim', function () {
         .post('/claim/123/close-advance-claim')
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(function () {
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when promise is rejected', function () {
@@ -773,11 +830,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_REQUEST_BANK_DETAILS)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubGetIndividualClaimDetails.calledWith('123')).to.be.true //eslint-disable-line
-        })
+          expect(authorisation.hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubGetIndividualClaimDetails.calledWith('123')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 302 when request bank details submitted', function () {
@@ -798,10 +855,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_REQUEST_BANK_DETAILS)
         .expect(302)
         .expect(function () {
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubRequestNewBankDetails.calledWith('NEWBANK', '1', '123', '', 'test@test.com')).to.be.true //eslint-disable-line
-        })
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubRequestNewBankDetails.calledWith('NEWBANK', '1', '123', '', 'test@test.com')).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 when promise is rejected', function () {
@@ -838,8 +895,8 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_BENEFIT_EXPIRY_DATA)
         .expect(302)
         .expect(function () {
-          expect(stubUpdateVisitorBenefirExpiryDate.calledWith('123', benefitExpiryDate)).to.be.true //eslint-disable-line
-        })
+          expect(stubUpdateVisitorBenefirExpiryDate.calledWith('123', benefitExpiryDate)).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -869,11 +926,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_TOP_UP)
         .expect(302)
         .expect(function () {
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubInsertTopUp.calledOnce).to.be.true //eslint-disable-line
-          expect(stubInsertTopUp.calledWith({Reference: 'TOPUP', EligibilityId: '1', PaymentStatus: 'PROCESSED'}, topUpResponse, 'test@test.com')).to.be.true //eslint-disable-line
-        })
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubInsertTopUp.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubInsertTopUp.calledWith({Reference: 'TOPUP', EligibilityId: '1', PaymentStatus: 'PROCESSED'}, topUpResponse, 'test@test.com')).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -897,11 +954,11 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(302)
         .expect(function () {
-          expect(stubGetClaimLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCheckUserAndLastUpdated.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCancelTopUp.calledOnce).to.be.true //eslint-disable-line
-          expect(stubCancelTopUp.calledWith({Reference: 'CANCEL', EligibilityId: '1', PaymentStatus: 'PROCESSED'}, 'test@test.com')).to.be.true //eslint-disable-line
-        })
+          expect(stubGetClaimLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCheckUserAndLastUpdated.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCancelTopUp.calledOnce).toBe(true) //eslint-disable-line
+          expect(stubCancelTopUp.calledWith({Reference: 'CANCEL', EligibilityId: '1', PaymentStatus: 'PROCESSED'}, 'test@test.com')).toBe(true) //eslint-disable-line
+        });
     })
   })
 })

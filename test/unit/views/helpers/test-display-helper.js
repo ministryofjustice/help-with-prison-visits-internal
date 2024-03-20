@@ -1,5 +1,3 @@
-const expect = require('chai').expect
-
 const displayHelper = require('../../../../app/views/helpers/display-helper')
 const prisonsEnum = require('../../../../app/constants/prisons-enum')
 const benefitsEnum = require('../../../../app/constants/benefits-enum')
@@ -29,66 +27,66 @@ describe('views/helpers/display-helper', function () {
 
   it('should return the correct benefit display name given a valid value', function () {
     const result = displayHelper.getBenefitDisplayName(VALID_BENEFIT_VALUE)
-    expect(result).to.equal(benefitsEnum.INCOME_SUPPORT.displayName)
+    expect(result).toBe(benefitsEnum.INCOME_SUPPORT.displayName)
   })
 
   it('should return the correct require benefit upload value given a valid input', function () {
     const result = displayHelper.getBenefitRequireUpload(VALID_BENEFIT_VALUE)
-    expect(result).to.equal(benefitsEnum.INCOME_SUPPORT.requireBenefitUpload)
+    expect(result).toBe(benefitsEnum.INCOME_SUPPORT.requireBenefitUpload)
   })
 
   it('should return the correct benefit multipage value given a valid input', function () {
     const result = displayHelper.getBenefitMultipage(VALID_BENEFIT_VALUE)
-    expect(result).to.equal(benefitsEnum.INCOME_SUPPORT.multipage)
+    expect(result).toBe(benefitsEnum.INCOME_SUPPORT.multipage)
   })
 
   it('should return the correct prison display name given a valid value', function () {
     const result = displayHelper.getPrisonDisplayName(VALID_PRISON_VALUE)
-    expect(result).to.equal(prisonsEnum.ALTCOURSE.displayName)
+    expect(result).toBe(prisonsEnum.ALTCOURSE.displayName)
   })
 
   it('should return the value given if prison not found', function () {
     const result = displayHelper.getPrisonDisplayName(INVALID_PRISON_VALUE)
-    expect(result).to.equal(INVALID_PRISON_VALUE)
+    expect(result).toBe(INVALID_PRISON_VALUE)
   })
 
   it('should return the correct rules given the country value', function () {
     const result = displayHelper.getRegionRulesByValue(VALID_REGION_RULES_VALUE)
-    expect(result).to.equal(rulesEnum.NI.rules)
+    expect(result).toBe(rulesEnum.NI.rules)
   })
 
   it('should return the correct prison region given a valid value', function () {
     const result = displayHelper.getPrisonRegion(VALID_PRISON_VALUE)
-    expect(result).to.equal(prisonsEnum.ALTCOURSE.region)
+    expect(result).toBe(prisonsEnum.ALTCOURSE.region)
   })
 
   it('should return the correct claim type display name given a valid value', function () {
     const result = displayHelper.getClaimTypeDisplayName(VALID_CLAIM_TYPE_VALUE)
-    expect(result).to.equal(claimTypeEnum.FIRST_TIME.displayName)
+    expect(result).toBe(claimTypeEnum.FIRST_TIME.displayName)
   })
 
   it('should return the correct deduction type display name given a valid value', function () {
     const result = displayHelper.getDeductionTypeDisplayName(VALID_DEDUCTION_TYPE_VALUE)
-    expect(result).to.equal(deductionTypeEnum.HC3_DEDUCTION.displayName)
+    expect(result).toBe(deductionTypeEnum.HC3_DEDUCTION.displayName)
   })
 
   it('should return the correct claim event display name given a valid value', function () {
     const result = displayHelper.getClaimEventDisplayName(VALID_CLAIM_EVENT_VALUE)
-    expect(result).to.equal(claimEventEnum.FORCED_MANUAL_CHECK.displayName)
+    expect(result).toBe(claimEventEnum.FORCED_MANUAL_CHECK.displayName)
   })
 
   it('should return the correct closed value given a valid claim status', function () {
-    expect(displayHelper.getClaimStatusClosed(CLOSED_CLAIM_STATUS_VALUE)).to.be.true //eslint-disable-line
-    expect(displayHelper.getClaimStatusClosed(NOT_CLOSED_CLAIM_STATUS_VALUE)).to.be.false //eslint-disable-line
+    expect(displayHelper.getClaimStatusClosed(CLOSED_CLAIM_STATUS_VALUE)).toBe(true) //eslint-disable-line
+    expect(displayHelper.getClaimStatusClosed(NOT_CLOSED_CLAIM_STATUS_VALUE)).toBe(false) //eslint-disable-line
   })
 
   it('should return the correct closed value given a valid advance updated claim status and date of journey', function () {
-    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, DATE_OF_JOURNEY_PAST)).to.be.true //eslint-disable-line
-    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, FUTURE_DATE_OF_JOURNEY)).to.be.false //eslint-disable-line
+    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, DATE_OF_JOURNEY_PAST)).toBe(true) //eslint-disable-line
+    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, FUTURE_DATE_OF_JOURNEY)).toBe(false) //eslint-disable-line
   })
 
   it('should return the correct value given a valid integer or decimal number', function () {
-    expect(displayHelper.toDecimal(50)).to.equal('50.00')
-    expect(displayHelper.toDecimal('21.5')).to.equal('21.50')
+    expect(displayHelper.toDecimal(50)).toBe('50.00')
+    expect(displayHelper.toDecimal('21.5')).toBe('21.50')
   })
 })

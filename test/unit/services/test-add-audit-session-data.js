@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const addAuditSessionData = require('../../../app/services/add-audit-session-data')
 
 describe('services/add-audit-session-data', function () {
@@ -7,7 +6,7 @@ describe('services/add-audit-session-data', function () {
       session: {}
     }
     addAuditSessionData(req, 'test', 'value')
-    expect(req.session.audit.test).to.be.equal('value') //eslint-disable-line
+    expect(req.session.audit.test).toBe('value') //eslint-disable-line
   })
 
   it('should add given audit data to session when audit object already exist in session', function () {
@@ -17,6 +16,6 @@ describe('services/add-audit-session-data', function () {
       }
     }
     addAuditSessionData(req, 'test', 'value')
-    expect(req.session.audit.test).to.be.equal('value') //eslint-disable-line
+    expect(req.session.audit.test).toBe('value') //eslint-disable-line
   })
 })

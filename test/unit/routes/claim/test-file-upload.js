@@ -1,8 +1,27 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const ValidationError = require('../../../../app/services/errors/validation-error')
+
+jest.mock('../../services/authorisation', () => authorisation);
+jest.mock('../../services/upload', () => uploadStub);
+jest.mock('../../services/domain/file-upload', () => fileUploadStub);
+
+jest.mock(
+  '../../services/data/update-file-upload-details-for-claim',
+  () => claimDocumentUpdateStub
+);
+
+jest.mock('../../services/generate-csrf-token', () => generateCSRFTokenStub);
+
+jest.mock('./file-upload-path-helper', () => ({
+  getFileUploadPath: getFileUploadPathStub,
+  getUploadFilename: getUploadFilenameStub,
+  getFilenamePrefix: getFilenamePrefixStub
+}));
+
+jest.mock(csurf, () => (function() { return function () { } }));
+jest.mock('../../services/aws-helper', () => awsHelperStub);
 
 describe('routes/claim/file-upload', function () {
   const REFERENCE = 'V123456'
@@ -45,20 +64,7 @@ describe('routes/claim/file-upload', function () {
       AWSHelper: awsStub
     }
 
-    const route = proxyquire('../../../../app/routes/claim/file-upload', {
-      '../../services/authorisation': authorisation,
-      '../../services/upload': uploadStub,
-      '../../services/domain/file-upload': fileUploadStub,
-      '../../services/data/update-file-upload-details-for-claim': claimDocumentUpdateStub,
-      '../../services/generate-csrf-token': generateCSRFTokenStub,
-      './file-upload-path-helper': {
-        getFileUploadPath: getFileUploadPathStub,
-        getUploadFilename: getUploadFilenameStub,
-        getFilenamePrefix: getFilenamePrefixStub
-      },
-      csurf: function () { return function () { } },
-      '../../services/aws-helper': awsHelperStub
-    })
+    const route = require('../../../../app/routes/claim/file-upload')
     app = routeHelper.buildApp(route)
     route(app)
   })
@@ -68,9 +74,9 @@ describe('routes/claim/file-upload', function () {
       return supertest(app)
         .get(VALIDROUTE)
         .expect(function () {
-          sinon.assert.calledOnce(generateCSRFTokenStub)
-          sinon.assert.calledOnce(authorisation.hasRoles)
-        })
+          sinon.toHaveBeenCalledTimes(1)
+          sinon.toHaveBeenCalledTimes(1)
+        });
     })
 
     it('should respond with a 200 if passed valid document type', function () {
@@ -83,8 +89,8 @@ describe('routes/claim/file-upload', function () {
       return supertest(app)
         .get(VALIDROUTE)
         .expect(function () {
-          sinon.assert.calledOnce(authorisation.hasRoles)
-        })
+          sinon.toHaveBeenCalledTimes(1)
+        });
     })
 
     it('should respond with a 500 if passed invalid document type', function () {
@@ -102,11 +108,11 @@ describe('routes/claim/file-upload', function () {
       return supertest(app)
         .post(VALIDROUTE)
         .expect(function () {
-          sinon.assert.calledOnce(uploadStub)
-          sinon.assert.calledOnce(fileUploadStub)
-          sinon.assert.calledOnce(claimDocumentUpdateStub)
+          sinon.toHaveBeenCalledTimes(1)
+          sinon.toHaveBeenCalledTimes(1)
+          sinon.toHaveBeenCalledTimes(1)
         })
-        .expect(302)
+        .expect(302);
     })
 
     it('should catch a validation error', function () {

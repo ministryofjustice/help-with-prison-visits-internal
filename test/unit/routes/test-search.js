@@ -1,7 +1,5 @@
 const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 let getClaimListForSearch
@@ -20,6 +18,10 @@ const RETURNED_CLAIM = {
   Name: 'Joe Bloggs'
 }
 
+jest.mock('../services/authorisation', () => authorisation);
+jest.mock('../services/data/get-claim-list-for-search', () => getClaimListForSearch);
+jest.mock('../views/helpers/display-helper', () => displayHelperStub);
+
 describe('routes/index', function () {
   let app
 
@@ -30,11 +32,7 @@ describe('routes/index', function () {
     displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
     displayHelperStub.getClaimTypeDisplayName.returns('First time')
 
-    const route = proxyquire('../../../app/routes/search', {
-      '../services/authorisation': authorisation,
-      '../services/data/get-claim-list-for-search': getClaimListForSearch,
-      '../views/helpers/display-helper': displayHelperStub
-    })
+    const route = require('../../../app/routes/search')
 
     app = routeHelper.buildApp(route)
   })
@@ -45,8 +43,8 @@ describe('routes/index', function () {
         .get('/search')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -62,11 +60,11 @@ describe('routes/index', function () {
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimListForSearch.calledWith(searchQuery, start, length)).to.be.true //eslint-disable-line
-          expect(response.body.recordsTotal).to.equal(1)
-          expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getClaimListForSearch.calledWith(searchQuery, start, length)).toBe(true) //eslint-disable-line
+          expect(response.body.recordsTotal).toBe(1)
+          expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
+        });
     })
 
     it('should not call data object when provided an empty query', function () {
@@ -75,8 +73,8 @@ describe('routes/index', function () {
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
-          expect(getClaimListForSearch.notCalled).to.be.true //eslint-disable-line
-        })
+          expect(getClaimListForSearch.notCalled).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 500 promise rejects', function () {

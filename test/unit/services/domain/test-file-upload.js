@@ -1,5 +1,4 @@
 const FileUpload = require('../../../../app/services/domain/file-upload')
-const expect = require('chai').expect
 const UploadError = require('../../../../app/services/errors/upload-error')
 
 describe('services/domain/file-upload', function () {
@@ -16,10 +15,10 @@ describe('services/domain/file-upload', function () {
       CASEWORKER
     )
 
-    expect(fileUpload.path).to.equal(VALID_FILE.path)
-    expect(fileUpload.claimDocumentId).to.equal(VALID_ID)
-    expect(fileUpload.caseworker).to.equal(CASEWORKER)
-    expect(fileUpload.documentStatus).to.equal('uploaded')
+    expect(fileUpload.path).toBe(VALID_FILE.path)
+    expect(fileUpload.claimDocumentId).toBe(VALID_ID)
+    expect(fileUpload.caseworker).toBe(CASEWORKER)
+    expect(fileUpload.documentStatus).toBe('uploaded')
   })
 
   it('should throw an error if passed invalid data', function () {
@@ -30,7 +29,7 @@ describe('services/domain/file-upload', function () {
         VALID_ID,
         CASEWORKER
       ).isValid()
-    }).to.throw()
+    }).toThrow()
   })
 
   it('should throw an error if passed UploadError', function () {
@@ -41,6 +40,6 @@ describe('services/domain/file-upload', function () {
         VALID_ID,
         CASEWORKER
       ).isValid()
-    }).to.throw()
+    }).toThrow()
   })
 })

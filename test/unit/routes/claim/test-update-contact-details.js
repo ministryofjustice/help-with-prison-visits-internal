@@ -1,8 +1,24 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 const ValidationError = require('../../../../app/services/errors/validation-error')
+
+jest.mock('../../services/authorisation', () => authorisation);
+
+jest.mock(
+  '../../services/data/get-individual-claim-details',
+  () => getIndividualClaimDetails
+);
+
+jest.mock(
+  '../../services/domain/update-contact-details-response',
+  () => UpdateContactDetailsResponse
+);
+
+jest.mock(
+  '../../services/data/update-visitor-contact-details',
+  () => updateVisitorContactDetails
+);
 
 describe('routes/claim/update-contact-details', function () {
   const CLAIMID = '1'
@@ -21,12 +37,7 @@ describe('routes/claim/update-contact-details', function () {
     UpdateContactDetailsResponse = sinon.stub()
     updateVisitorContactDetails = sinon.stub().resolves()
 
-    const route = proxyquire('../../../../app/routes/claim/update-contact-details', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/get-individual-claim-details': getIndividualClaimDetails,
-      '../../services/domain/update-contact-details-response': UpdateContactDetailsResponse,
-      '../../services/data/update-visitor-contact-details': updateVisitorContactDetails
-    })
+    const route = require('../../../../app/routes/claim/update-contact-details')
     app = routeHelper.buildApp(route)
     route(app)
   })
@@ -36,9 +47,9 @@ describe('routes/claim/update-contact-details', function () {
       return supertest(app)
         .get(ROUTE)
         .expect(function () {
-          sinon.assert.calledOnce(getIndividualClaimDetails)
+          sinon.toHaveBeenCalledTimes(1)
         })
-        .expect(200)
+        .expect(200);
     })
   })
 
@@ -48,11 +59,11 @@ describe('routes/claim/update-contact-details', function () {
       return supertest(app)
         .post(ROUTE)
         .expect(function () {
-          sinon.assert.calledOnce(UpdateContactDetailsResponse)
-          sinon.assert.calledOnce(updateVisitorContactDetails)
+          sinon.toHaveBeenCalledTimes(1)
+          sinon.toHaveBeenCalledTimes(1)
         })
         .expect('location', REDIRECT_URL)
-        .expect(302)
+        .expect(302);
     })
 
     it('should respond with a 400 if domain object validation fails.', function () {

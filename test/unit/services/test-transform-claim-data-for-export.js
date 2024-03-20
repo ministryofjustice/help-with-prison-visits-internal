@@ -1,6 +1,4 @@
-const expect = require('chai').expect
 const sinon = require('sinon')
-const proxyquire = require('proxyquire')
 
 const dateFormatter = require('../../../app/services/date-formatter')
 const prisonsEnum = require('../../../app/constants/prisons-enum')
@@ -105,17 +103,21 @@ const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
 const CLAIM_CHILD_COUNT = [{ ClaimId: 1, Count: 1 }]
 
+jest.mock('../services/data/get-claim-escorts', () => getClaimEscortsStub);
+jest.mock('../services/data/get-claim-child-counts', () => getClaimChildCountsStub);
+
+jest.mock(
+  '../services/data/get-claim-expenses-for-claims',
+  () => getClaimExpensesForClaimsStub
+);
+
 describe('services/transform-claim-data-for-export', function () {
   beforeEach(function () {
     getClaimEscortsStub = sinon.stub().resolves(CLAIM_ESCORT)
     getClaimChildCountsStub = sinon.stub().resolves(CLAIM_CHILD_COUNT)
     getClaimExpensesForClaimsStub = sinon.stub().resolves(CLAIM_EXPENSES)
 
-    transformClaimDataForExport = proxyquire('../../../app/services/transform-claim-data-for-export', {
-      '../services/data/get-claim-escorts': getClaimEscortsStub,
-      '../services/data/get-claim-child-counts': getClaimChildCountsStub,
-      '../services/data/get-claim-expenses-for-claims': getClaimExpensesForClaimsStub
-    })
+    transformClaimDataForExport = require('../../../app/services/transform-claim-data-for-export')
   })
 
   it('should contain all of the required fields', function () {
@@ -123,61 +125,61 @@ describe('services/transform-claim-data-for-export', function () {
       .then(function (result) {
         const headers = Object.keys(result[0])
 
-        expect(headers).to.contain('Name')
-        expect(headers).to.contain('Prison Name')
-        expect(headers).to.contain('Prisoner Relationship')
-        expect(headers).to.contain('Child Count')
-        expect(headers).to.contain('Has Escort?')
-        expect(headers).to.contain('Region')
-        expect(headers).to.contain('Visit Date')
-        expect(headers).to.contain('Claim Submission Date')
-        expect(headers).to.contain('Benefit Claimed')
-        expect(headers).to.contain('Assisted Digital Caseworker')
-        expect(headers).to.contain('Caseworker')
-        expect(headers).to.contain('Trusted?')
-        expect(headers).to.contain('Status')
-        expect(headers).to.contain('Date Reviewed by Caseworker')
-        expect(headers).to.contain('Is Advance Claim?')
-        expect(headers).to.contain('Total amount paid')
-        expect(headers).to.contain('Payment Method')
-        expect(headers).to.contain('Rejection Reason')
-      })
+        expect(headers).toContain('Name')
+        expect(headers).toContain('Prison Name')
+        expect(headers).toContain('Prisoner Relationship')
+        expect(headers).toContain('Child Count')
+        expect(headers).toContain('Has Escort?')
+        expect(headers).toContain('Region')
+        expect(headers).toContain('Visit Date')
+        expect(headers).toContain('Claim Submission Date')
+        expect(headers).toContain('Benefit Claimed')
+        expect(headers).toContain('Assisted Digital Caseworker')
+        expect(headers).toContain('Caseworker')
+        expect(headers).toContain('Trusted?')
+        expect(headers).toContain('Status')
+        expect(headers).toContain('Date Reviewed by Caseworker')
+        expect(headers).toContain('Is Advance Claim?')
+        expect(headers).toContain('Total amount paid')
+        expect(headers).toContain('Payment Method')
+        expect(headers).toContain('Rejection Reason')
+      });
   })
 
   it('should call all relevant functions', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
-        expect(getClaimEscortsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).to.be.true //eslint-disable-line
-        expect(getClaimExpensesForClaimsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).to.be.true //eslint-disable-line
-        expect(getClaimChildCountsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).to.be.true //eslint-disable-line
-      })
+        expect(getClaimEscortsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
+        expect(getClaimExpensesForClaimsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
+        expect(getClaimChildCountsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should return the correct total amount paid for claims paid entirely by direct bank transfer', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_BANK)
       .then(function (result) {
-        expect(result[0]['Total amount paid']).to.equal(26.5)
-      })
+        expect(result[0]['Total amount paid']).toBe(26.5)
+      });
   })
 
   it('should return the correct total amount paid for claims paid entirely by manual payments', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MANUAL)
       .then(function (result) {
-        expect(result[0]['Total amount paid']).to.equal(25.5)
-      })
+        expect(result[0]['Total amount paid']).toBe(25.5)
+      });
   })
 
   it('should return the correct total amount paid for claims paid using a combination of direct bank payment and manual payments', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
-        expect(result[0]['Total amount paid']).to.equal(15)
-      })
+        expect(result[0]['Total amount paid']).toBe(15)
+      });
   })
 
   it('should return the rejection reason for a rejected claim', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_REJECTED)
       .then(function (result) {
-        expect(result[0]['Rejection Reason']).to.equal(rejectionReason)
-      })
+        expect(result[0]['Rejection Reason']).toBe(rejectionReason)
+      });
   })
 })

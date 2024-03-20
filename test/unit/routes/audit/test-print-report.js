@@ -1,13 +1,15 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 let hasRolesStub
 let authorisation
 let getReportDataStub
 let getReportDatesStub
+
+jest.mock('../../services/authorisation', () => authorisation);
+jest.mock('../../services/data/audit/get-report-data', () => getReportDataStub);
+jest.mock('../../services/data/audit/get-report-dates', () => getReportDatesStub);
 
 describe('routes/audit/print-report', function () {
   let app
@@ -23,11 +25,7 @@ describe('routes/audit/print-report', function () {
       EndDate: '2014-01-01T23:59:59.999Z'
     }])
 
-    const route = proxyquire('../../../../app/routes/audit/print-report', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/audit/get-report-data': getReportDataStub,
-      '../../services/data/audit/get-report-dates': getReportDatesStub
-    })
+    const route = require('../../../../app/routes/audit/print-report')
 
     app = routeHelper.buildApp(route)
   })
@@ -39,10 +37,10 @@ describe('routes/audit/print-report', function () {
         .post('/audit/print-report')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDataStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDatesStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getReportDataStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getReportDatesStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 200 when there is report data found', function () {
@@ -65,10 +63,10 @@ describe('routes/audit/print-report', function () {
         })
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDataStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getReportDatesStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getReportDataStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getReportDatesStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 })

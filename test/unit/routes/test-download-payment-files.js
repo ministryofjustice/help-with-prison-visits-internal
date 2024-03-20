@@ -1,7 +1,5 @@
 const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 let hasRoles
@@ -11,6 +9,13 @@ const FILES = {
   accessPayFiles: [{ FilePath: 'accessPayFile1' }, { PaymentFileId: 1, Filepath: './test/resources/testfile.txt' }],
   adiJournalFiles: [{ FilePath: 'adiJournalFile1' }, { PaymentFileId: 2, Filepath: './test/resources/testfile.txt' }]
 }
+
+jest.mock('../services/authorisation', () => ({
+  hasRoles
+}));
+
+jest.mock('../services/data/get-direct-payment-files', () => getDirectPaymentFiles);
+jest.mock('../services/aws-helper', () => awsHelperStub);
 
 describe('routes/download-payment-files', function () {
   let app
@@ -30,11 +35,7 @@ describe('routes/download-payment-files', function () {
       AWSHelper: awsStub
     }
 
-    const route = proxyquire('../../../app/routes/download-payment-files', {
-      '../services/authorisation': { hasRoles },
-      '../services/data/get-direct-payment-files': getDirectPaymentFiles,
-      '../services/aws-helper': awsHelperStub
-    })
+    const route = require('../../../app/routes/download-payment-files')
 
     app = routeHelper.buildApp(route)
   })
@@ -46,9 +47,9 @@ describe('routes/download-payment-files', function () {
         .get('/download-payment-files')
         .expect(200)
         .expect(function () {
-          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(getDirectPaymentFiles.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(getDirectPaymentFiles.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should set top and previous access payment files', function () {
@@ -57,9 +58,9 @@ describe('routes/download-payment-files', function () {
         .get('/download-payment-files')
         .expect(200)
         .expect(function (response) {
-          expect(response.text).to.contain('"topAccessPayFile":{')
-          expect(response.text).to.contain('"previousAccessPayFiles":[')
-        })
+          expect(response.text).toContain('"topAccessPayFile":{')
+          expect(response.text).toContain('"previousAccessPayFiles":[')
+        });
     })
 
     it('should set top and previous adi journal files', function () {
@@ -68,9 +69,9 @@ describe('routes/download-payment-files', function () {
         .get('/download-payment-files')
         .expect(200)
         .expect(function (response) {
-          expect(response.text).to.contain('"topAdiJournalFile":{')
-          expect(response.text).to.contain('"previousAdiJournalFiles":[')
-        })
+          expect(response.text).toContain('"topAdiJournalFile":{')
+          expect(response.text).toContain('"previousAdiJournalFiles":[')
+        });
     })
 
     it('should respond with a 500 promise rejects', function () {
@@ -107,10 +108,10 @@ describe('routes/download-payment-files', function () {
         .get('/download-payment-files/download?id=2')
         .expect(200)
         .expect(function (response) {
-          expect(response.header['content-length']).to.equal('4')
-          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(getDirectPaymentFiles.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(response.header['content-length']).toBe('4')
+          expect(hasRoles.calledOnce).toBe(true) //eslint-disable-line
+          expect(getDirectPaymentFiles.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with 500 if no path provided', function () {

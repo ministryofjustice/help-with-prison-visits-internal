@@ -1,6 +1,5 @@
 const ClaimDecision = require('../../../../app/services/domain/claim-decision')
 const ValidationError = require('../../../../app/services/errors/validation-error')
-const expect = require('chai').expect
 let claimDecision
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -34,27 +33,28 @@ describe('services/domain/claim-decision', function () {
     console.log(pastMonth)
     console.log(pastYear)
     claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, VALID_DECISION_REJECTED, '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
-    expect(claimDecision.decision).to.equal(VALID_DECISION_REJECTED)
-    expect(claimDecision.nomisCheck).to.equal(VALID_NOMIS_CHECK)
-    expect(claimDecision.dwpCheck).to.equal(VALID_DWP_CHECK)
-    expect(claimDecision.visitConfirmationCheck).to.equal(VALID_VISIT_CONFIRMATION_CHECK)
+    expect(claimDecision.decision).toBe(VALID_DECISION_REJECTED)
+    expect(claimDecision.nomisCheck).toBe(VALID_NOMIS_CHECK)
+    expect(claimDecision.dwpCheck).toBe(VALID_DWP_CHECK)
+    expect(claimDecision.visitConfirmationCheck).toBe(VALID_VISIT_CONFIRMATION_CHECK)
   })
 
   it('should construct a domain object given valid input but no visit confirmation as advance claim', function () {
     claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, VALID_DECISION_REJECTED, '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, '', VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
-    expect(claimDecision.decision).to.equal(VALID_DECISION_REJECTED)
-    expect(claimDecision.nomisCheck).to.equal(VALID_NOMIS_CHECK)
-    expect(claimDecision.dwpCheck).to.equal(VALID_DWP_CHECK)
-    expect(claimDecision.visitConfirmationCheck).to.equal('')
+    expect(claimDecision.decision).toBe(VALID_DECISION_REJECTED)
+    expect(claimDecision.nomisCheck).toBe(VALID_NOMIS_CHECK)
+    expect(claimDecision.dwpCheck).toBe(VALID_DWP_CHECK)
+    expect(claimDecision.visitConfirmationCheck).toBe('')
   })
 
   it('should return isRequired error for decision given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, '', '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
-      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
+      // should have thrown validation error
+      expect(false).toBe(true) //eslint-disable-line
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors.decision[0]).to.equal('Decision is required')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors.decision[0]).toBe('Decision is required')
     }
   })
 
@@ -62,8 +62,8 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['additional-info-reject'][0]).to.equal('More information needed')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['additional-info-reject'][0]).toBe('More information needed')
     }
   })
 
@@ -71,68 +71,76 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REQUESTED, '', '', '', VALID_NOMIS_CHECK, '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['additional-info-request'][0]).to.equal('More information needed')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['additional-info-request'][0]).toBe('More information needed')
     }
   })
 
   it('should return isRequired error for nomis-check given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
-      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
+      // should have thrown validation error
+      expect(false).toBe(true) //eslint-disable-line
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['nomis-check'][0]).to.equal('Decide on prisoner check')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['nomis-check'][0]).toBe('Decide on prisoner check')
     }
   })
 
   it('should return isRequired error for dwp-check given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
-      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
+      // should have thrown validation error
+      expect(false).toBe(true) //eslint-disable-line
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['dwp-check'][0]).to.equal('Decide if benefit check needed')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['dwp-check'][0]).toBe('Decide if benefit check needed')
     }
   })
 
   it('should return isRequired error for visit-confirmation-check given empty strings', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', '', VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
-      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
+      // should have thrown validation error
+      expect(false).toBe(true) //eslint-disable-line
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['visit-confirmation-check'][0]).to.equal('Decide on visit confirmation')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['visit-confirmation-check'][0]).toBe('Decide on visit confirmation')
     }
   })
 
   it('should return error for invalid claim expenses', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, INVALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
-      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
+      // should have thrown validation error
+      expect(false).toBe(true) //eslint-disable-line
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['approve-cost'][0]).to.equal('New approved cost must be greater than zero')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['approve-cost'][0]).toBe('New approved cost must be greater than zero')
     }
   })
 
   it('should return error if approving with all expenses rejected', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_APPROVED, '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
-      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
+      // should have thrown validation error
+      expect(false).toBe(true) //eslint-disable-line
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['claim-expenses'][0]).to.equal('At least one expense must not be rejected for the claim to be approved')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['claim-expenses'][0]).toBe('At least one expense must not be rejected for the claim to be approved')
     }
   })
 
   it('should return error if same caseworker as assisted digital caseworker', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_CASEWORKER, '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
-      expect(false, 'should have thrown validation error').to.be.true //eslint-disable-line
+      // should have thrown validation error
+      expect(false).toBe(true) //eslint-disable-line
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['assisted-digital-caseworker'][0]).to.equal('You cannot process this claim since you filled it in on behalf of a visitor')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['assisted-digital-caseworker'][0]).toBe(
+        'You cannot process this claim since you filled it in on behalf of a visitor'
+      )
     }
   })
 
@@ -140,8 +148,8 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', futureDay, futureMonth, futureYear)
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['additional-info-reject-manual'][0]).to.equal('More information needed')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['additional-info-reject-manual'][0]).toBe('More information needed')
     }
   })
 
@@ -149,8 +157,8 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', '', '', '')
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['benefit-expiry'][0]).to.equal('Please enter the Benefit Expiry date')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['benefit-expiry'][0]).toBe('Please enter the Benefit Expiry date')
     }
   })
 
@@ -158,8 +166,8 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', '', '', '', 'on', '', '', '')
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['release-date-section'][0]).to.equal('Please enter the release date')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['release-date-section'][0]).toBe('Please enter the release date')
     }
   })
 
@@ -167,8 +175,8 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', '22', '4', '2019', 'on', '22', '4', '2020')
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors['release-date-section'][0]).to.equal('Release Date must be in the future')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors['release-date-section'][0]).toBe('Release Date must be in the future')
     }
   })
 })

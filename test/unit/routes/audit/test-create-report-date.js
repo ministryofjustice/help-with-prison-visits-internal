@@ -1,7 +1,5 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 const VALID_DATA = {
@@ -19,6 +17,18 @@ let getClaimCountOverThresholdStub
 let getAuditConfigStub
 let addAuditSessionDataStub
 let getAuditSessionDataStub
+
+jest.mock('../../services/authorisation', () => authorisation);
+jest.mock('../../services/data/audit/get-claim-count', () => getClaimCountStub);
+
+jest.mock(
+  '../../services/data/audit/get-claim-count-over-threshold',
+  () => getClaimCountOverThresholdStub
+);
+
+jest.mock('../../services/data/audit/get-audit-config', () => getAuditConfigStub);
+jest.mock('../../services/add-audit-session-data', () => addAuditSessionDataStub);
+jest.mock('../../services/get-audit-session-data', () => getAuditSessionDataStub);
 
 describe('routes/audit/create-report-date', function () {
   let app
@@ -40,14 +50,7 @@ describe('routes/audit/create-report-date', function () {
       hasRoles: hasRolesStub
     }
 
-    const route = proxyquire('../../../../app/routes/audit/create-report-date', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/audit/get-claim-count': getClaimCountStub,
-      '../../services/data/audit/get-claim-count-over-threshold': getClaimCountOverThresholdStub,
-      '../../services/data/audit/get-audit-config': getAuditConfigStub,
-      '../../services/add-audit-session-data': addAuditSessionDataStub,
-      '../../services/get-audit-session-data': getAuditSessionDataStub
-    })
+    const route = require('../../../../app/routes/audit/create-report-date')
 
     app = routeHelper.buildApp(route)
   })
@@ -58,9 +61,9 @@ describe('routes/audit/create-report-date', function () {
         .get('/audit/create-report-date')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditConfigStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -70,11 +73,11 @@ describe('routes/audit/create-report-date', function () {
         .post('/audit/create-report-date')
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimCountStub.notCalled).to.be.true //eslint-disable-line
-          expect(getClaimCountOverThresholdStub.notCalled).to.be.true //eslint-disable-line
-          expect(addAuditSessionDataStub.notCalled).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getClaimCountStub.notCalled).toBe(true) //eslint-disable-line
+          expect(getClaimCountOverThresholdStub.notCalled).toBe(true) //eslint-disable-line
+          expect(addAuditSessionDataStub.notCalled).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 302 with valid input provided', function () {
@@ -84,11 +87,11 @@ describe('routes/audit/create-report-date', function () {
         .send(VALID_DATA)
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimCountStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimCountOverThresholdStub.calledOnce).to.be.true //eslint-disable-line
-          expect(addAuditSessionDataStub.callCount).to.equal(4); //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getClaimCountStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getClaimCountOverThresholdStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(addAuditSessionDataStub.callCount).toBe(4); //eslint-disable-line
+        });
     })
   })
 })

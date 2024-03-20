@@ -1,12 +1,13 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const sinon = require('sinon')
 
 let hasRolesStub
 let authorisation
 let getAuditDataStub
+
+jest.mock('../../services/authorisation', () => authorisation);
+jest.mock('../../services/data/audit/get-audit-data', () => getAuditDataStub);
 
 describe('routes/audit', function () {
   let app
@@ -18,10 +19,7 @@ describe('routes/audit', function () {
     }
     getAuditDataStub = sinon.stub().resolves([])
 
-    const route = proxyquire('../../../../app/routes/audit/audit', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/audit/get-audit-data': getAuditDataStub
-    })
+    const route = require('../../../../app/routes/audit/audit')
 
     app = routeHelper.buildApp(route)
   })
@@ -32,9 +30,9 @@ describe('routes/audit', function () {
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 200 when audit data with check status as Completed found', function () {
@@ -45,9 +43,9 @@ describe('routes/audit', function () {
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 200 when audit data with check status is not Completed found', function () {
@@ -58,9 +56,9 @@ describe('routes/audit', function () {
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
 
     it('should respond with a 200 when audit data with final status is Completed found', function () {
@@ -71,9 +69,9 @@ describe('routes/audit', function () {
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditDataStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(getAuditDataStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 
@@ -83,8 +81,8 @@ describe('routes/audit', function () {
         .post('/audit')
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-        })
+          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+        });
     })
   })
 })
