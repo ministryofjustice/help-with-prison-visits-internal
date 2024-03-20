@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const environmentVariables = require('../../../../config')
@@ -10,7 +9,7 @@ let claimId
 
 describe('services/data/update-assignment-of-claim', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       date = dateFormatter.now()
       return insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
@@ -30,16 +29,18 @@ describe('services/data/update-assignment-of-claim', function () {
           return db('Claim').first().where('ClaimId', claimId)
         })
         .then(function (claim) {
-          expect(claim.AssignedTo).to.equal(assignedTo)
-          expect(claim.AssignmentExpiry).to.be.within(twoMinutesAgoExpiry.toDate(), twoMinutesAheadExpiry.toDate())
-          expect(claim.LastUpdated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
-        })
+        expect(claim.AssignedTo).toBe(assignedTo)
+        expect(claim.AssignmentExpiry).toBeGreaterThanOrEqual(twoMinutesAgoExpiry.toDate());
+        expect(claim.AssignmentExpiry).toBeLessThanOrEqual(twoMinutesAheadExpiry.toDate())
+        expect(claim.LastUpdated).toBeGreaterThanOrEqual(twoMinutesAgo.toDate());
+        expect(claim.LastUpdated).toBeLessThanOrEqual(twoMinutesAhead.toDate())
+      })
         .catch(function (error) {
           throw error
-        })
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })

@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const getReportData = require('../../../../../app/services/data/audit/get-report-data')
 const dateFormatter = require('../../../../../app/services/date-formatter')
 const {
@@ -16,8 +15,8 @@ describe('services/data/audit/get-report-data', function () {
       const expectedResult = null
       return getReportData(1)
         .then(function (result) {
-          expect(result).to.equal(expectedResult)
-        })
+          expect(result).toBe(expectedResult)
+        });
     })
 
     it('should return the data for given reportId if it exist in ReportData', function () {
@@ -27,13 +26,13 @@ describe('services/data/audit/get-report-data', function () {
           const expectedResult = [{ ReportId: reportId, Reference: 'TEST', ClaimId: 1231, PaymentAmount: 50, Band5Username: null, Band5Validity: null, Band5Description: null, Band9Username: null, Band9Validity: null, Band9Description: null }]
           return getReportData(reportId)
             .then(function (reportData) {
-              expect(JSON.stringify(reportData)).to.equal(JSON.stringify(expectedResult))
-            })
+              expect(JSON.stringify(reportData)).toBe(JSON.stringify(expectedResult))
+            });
         })
       })
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })

@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../../app/services/date-formatter')
 const {
   insertClaim,
@@ -15,7 +14,7 @@ const yesterday = dateFormatter.now().subtract(1, 'days').toDate()
 
 describe('services/data/audit/delete-report', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       const promises = []
       promises.push(insertClaim(1231, 12311, reference, yesterday, claimStatusEnum.APPROVED.value, false, null, null, null, null, true))
       promises.push(insertClaim(1232, 12322, reference, yesterday, claimStatusEnum.APPROVED.value, false, null, null, null, null, true))
@@ -42,12 +41,12 @@ describe('services/data/audit/delete-report', function () {
         return db('AuditReport')
           .select('IsDeleted')
           .where('ReportId', 5).then(function (isDeleted) {
-            expect(isDeleted).to.be.false //eslint-disable-line
-          })
+            expect(isDeleted).toBe(false) //eslint-disable-line
+          });
       })
     })
 
-    after(function () {
+    afterAll(function () {
       deleteAll('ABC123')
       return deleteAll(reference)
     })

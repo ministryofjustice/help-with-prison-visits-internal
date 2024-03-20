@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../../app/services/date-formatter')
 const {
   insertClaim,
@@ -17,7 +16,7 @@ const fourMonthsAgo = dateFormatter.now().subtract(4, 'months').toDate()
 
 describe('services/data/audit/get-claim-count', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       const promises = []
       promises.push(insertClaim(1231, 12311, reference, yesterday, claimStatusEnum.APPROVED.value, false))
       promises.push(insertClaim(1232, 12322, reference, lastWeek, claimStatusEnum.APPROVED.value, false))
@@ -41,7 +40,7 @@ describe('services/data/audit/get-claim-count', function () {
       return getCount(twoMonthsAgo, dateFormatter.now(), 3)
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })
@@ -50,9 +49,9 @@ describe('services/data/audit/get-claim-count', function () {
 function getCount (startDate, endDate, expectedCount) {
   return getClaimCount(startDate, endDate)
     .then(function (result) {
-      expect(result[0].Count).to.equal(expectedCount)
+      expect(result[0].Count).toBe(expectedCount)
     })
     .catch(function (error) {
       throw error
-    })
+    });
 }

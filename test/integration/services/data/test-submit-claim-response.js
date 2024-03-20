@@ -21,7 +21,7 @@ const caseworker = 'adam@adams.gov'
 const rejectionReasonIdentifier = 1
 
 describe('services/data/submit-claim-response', function () {
-  before(function () {
+  beforeAll(function () {
     return insertTestData(reference, dateFormatter.now().toDate(), 'NEW').then(function (ids) {
       newIds = {
         claimId: ids.claimId,
@@ -54,8 +54,8 @@ describe('services/data/submit-claim-response', function () {
 
     return submitClaimResponse(claimId, claimResponse)
       .then(function () {
-        expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.calledWith(claimId, reference)).to.be.true //eslint-disable-line
-      })
+        expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.calledWith(claimId, reference)).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should update eligibility and claim then call to send notification', function () {
@@ -86,30 +86,34 @@ describe('services/data/submit-claim-response', function () {
           .first()
       })
       .then(function (result) {
-        expect(result.Caseworker).to.be.equal(caseworker)
-        expect(result.AssignedTo, 'should clear assignment').to.be.null //eslint-disable-line
-        expect(result.AssignmentExpiry, 'should clear assignment').to.be.null //eslint-disable-line
-        expect(result.Status[0]).to.be.equal(claimDecisionEnum.REJECTED)
-        expect(result.Status[1]).to.be.equal(claimDecisionEnum.REJECTED)
-        expect(result.Note).to.be.equal(claimResponse.note)
-        expect(result.NomisCheck).to.be.equal(claimDecisionEnum.REJECTED)
-        expect(result.DWPCheck).to.be.equal(claimDecisionEnum.REJECTED)
-        expect(result.LastUpdated).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
-        expect(result.DateReviewed).to.be.within(twoMinutesAgo.toDate(), twoMinutesAhead.toDate())
-        expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
-        expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).to.be.true //eslint-disable-line
-        expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).to.be.true //eslint-disable-line
-        expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).to.be.true //eslint-disable-line
+      expect(result.Caseworker).toBe(caseworker)
+      // should clear assignment
+      expect(result.AssignedTo).toBeNull() //eslint-disable-line
+      // should clear assignment
+      expect(result.AssignmentExpiry).toBeNull() //eslint-disable-line
+      expect(result.Status[0]).toBe(claimDecisionEnum.REJECTED)
+      expect(result.Status[1]).toBe(claimDecisionEnum.REJECTED)
+      expect(result.Note).toBe(claimResponse.note)
+      expect(result.NomisCheck).toBe(claimDecisionEnum.REJECTED)
+      expect(result.DWPCheck).toBe(claimDecisionEnum.REJECTED)
+      expect(result.LastUpdated).toBeGreaterThanOrEqual(twoMinutesAgo.toDate());
+      expect(result.LastUpdated).toBeLessThanOrEqual(twoMinutesAhead.toDate())
+      expect(result.DateReviewed).toBeGreaterThanOrEqual(twoMinutesAgo.toDate());
+      expect(result.DateReviewed).toBeLessThanOrEqual(twoMinutesAhead.toDate())
+      expect(result.RejectionReasonId).toBe(rejectionReasonIdentifier)
+      expect(stubInsertClaimEvent.calledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).toBe(true) //eslint-disable-line
+      expect(stubInsertTaskSendClaimNotification.calledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).toBe(true) //eslint-disable-line
+      expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).toBe(true) //eslint-disable-line
 
-        return db('ClaimExpense').where('ClaimId', newIds.claimId).select()
-      })
+      return db('ClaimExpense').where('ClaimId', newIds.claimId).select()
+    })
       .then(function (claimExpenses) {
-        expect(claimExpenses[0].Status).to.be.equal(claimDecisionEnum.REJECTED)
-        expect(claimExpenses[0].ApprovedCost).to.be.equal(10)
+        expect(claimExpenses[0].Status).toBe(claimDecisionEnum.REJECTED)
+        expect(claimExpenses[0].ApprovedCost).toBe(10)
 
-        expect(claimExpenses[1].Status).to.be.equal(claimDecisionEnum.REQUEST_INFORMATION)
-        expect(claimExpenses[1].ApprovedCost).to.be.equal(20)
-      })
+        expect(claimExpenses[1].Status).toBe(claimDecisionEnum.REQUEST_INFORMATION)
+        expect(claimExpenses[1].ApprovedCost).toBe(20)
+      });
   })
 
   it('should add a DateApproved if claim is approved', function () {
@@ -133,8 +137,8 @@ describe('services/data/submit-claim-response', function () {
           .first()
       })
       .then(function (result) {
-        expect(result.DateApproved).not.to.be.null //eslint-disable-line
-      })
+        expect(result.DateApproved).not.toBeNull() //eslint-disable-line
+      });
   })
 
   it('should set DateApproved to null if claim is rejected', function () {
@@ -159,9 +163,9 @@ describe('services/data/submit-claim-response', function () {
           .first()
       })
       .then(function (result) {
-        expect(result.DateApproved).to.be.null //eslint-disable-line
-        expect(result.RejectionReasonId).to.be.equal(rejectionReasonIdentifier)
-      })
+        expect(result.DateApproved).toBeNull() //eslint-disable-line
+        expect(result.RejectionReasonId).toBe(rejectionReasonIdentifier)
+      });
   })
 
   it('should set DateApproved to null if caseworker requests more information', function () {
@@ -185,8 +189,8 @@ describe('services/data/submit-claim-response', function () {
           .first()
       })
       .then(function (result) {
-        expect(result.DateApproved).to.be.null //eslint-disable-line
-      })
+        expect(result.DateApproved).toBeNull() //eslint-disable-line
+      });
   })
 
   it('should set the Release Date', function () {
@@ -212,9 +216,9 @@ describe('services/data/submit-claim-response', function () {
           .first()
       })
       .then(function (result) {
-        expect(result.ReleaseDateIsSet).to.be.equal(true)
-        expect(result.ReleaseDate).not.to.be.null //eslint-disable-line
-      })
+        expect(result.ReleaseDateIsSet).toBe(true)
+        expect(result.ReleaseDate).not.toBeNull() //eslint-disable-line
+      });
   })
 
   it('should not set the Release Date', function () {
@@ -240,9 +244,9 @@ describe('services/data/submit-claim-response', function () {
           .first()
       })
       .then(function (result) {
-        expect(result.ReleaseDateIsSet).to.be.equal(false)
-        expect(result.ReleaseDate).to.be.null //eslint-disable-line
-      })
+        expect(result.ReleaseDateIsSet).toBe(false)
+        expect(result.ReleaseDate).toBeNull() //eslint-disable-line
+      });
   })
 
   it('should set payment method to manually processed if all claim expenses have been manually processed', function () {
@@ -266,11 +270,11 @@ describe('services/data/submit-claim-response', function () {
         return db('Claim').where('ClaimId', claimId).first()
       })
       .then(function (claim) {
-        expect(claim.PaymentMethod).to.equal(paymentMethodEnum.MANUALLY_PROCESSED.value)
-      })
+        expect(claim.PaymentMethod).toBe(paymentMethodEnum.MANUALLY_PROCESSED.value)
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return deleteAll(reference)
   })
 

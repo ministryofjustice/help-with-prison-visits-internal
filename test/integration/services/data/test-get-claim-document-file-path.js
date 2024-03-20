@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
@@ -8,7 +7,7 @@ let date
 let claimDocumentId
 
 describe('services/data/get-claim-document-file-path', function () {
-  before(function () {
+  beforeAll(function () {
     date = dateFormatter.now()
     return insertTestData(reference, date.toDate(), 'TESTING')
       .then(function (ids) {
@@ -19,14 +18,14 @@ describe('services/data/get-claim-document-file-path', function () {
   it('should have expected file path', function () {
     return getClaimDocumentFilePath(claimDocumentId)
       .then(function (result) {
-        expect(result.Filepath).to.equal('/example/path/1')
+        expect(result.Filepath).toBe('/example/path/1')
       })
       .catch(function (error) {
         throw error
-      })
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return deleteAll(reference)
   })
 })

@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const FileUpload = require('../../../../app/services/domain/file-upload')
 const { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
@@ -11,7 +10,7 @@ describe('services/data/update-file-upload-details-for-claim', function () {
   let testData
   let testFileUpload
 
-  before(function () {
+  beforeAll(function () {
     testData = getTestData(REFERENCE, 'Test').ClaimDocument['visit-confirmation']
     date = dateFormatter.now().toDate()
     return insertTestData(REFERENCE, date, 'Test').then(function (ids) {
@@ -28,20 +27,20 @@ describe('services/data/update-file-upload-details-for-claim', function () {
           .where('ClaimDocumentId', '=', claimDocumentId)
       })
       .then(function (claimDocument) {
-        expect(claimDocument.Reference).to.equal(REFERENCE)
-        expect(claimDocument.DocumentStatus).to.equal(testData.DocumentStatus)
-        expect(claimDocument.Filepath).to.equal('testPath')
-        expect(claimDocument.Caseworker).to.equal(testData.Caseworker)
-      })
+        expect(claimDocument.Reference).toBe(REFERENCE)
+        expect(claimDocument.DocumentStatus).toBe(testData.DocumentStatus)
+        expect(claimDocument.Filepath).toBe('testPath')
+        expect(claimDocument.Caseworker).toBe(testData.Caseworker)
+      });
   })
 
   it('should throw an error if passed a non file upload object.', function () {
     return expect(function () {
       updateClaimDocument(claimDocumentId, {})
-    }).to.throw(Error)
+    }).toThrow(Error);
   })
 
-  after(function () {
+  afterAll(function () {
     return deleteAll(REFERENCE)
   })
 })

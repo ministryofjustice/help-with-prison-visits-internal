@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const getReportDates = require('../../../../../app/services/data/audit/get-report-dates')
 const dateFormatter = require('../../../../../app/services/date-formatter')
 const {
@@ -17,12 +16,12 @@ describe('services/data/audit/get-report-dates', function () {
         const expectedResult = [{ StartDate: yesterday, EndDate: yesterday }]
         return getReportDates(reportId)
           .then(function (reportDates) {
-            expect(JSON.stringify(reportDates)).to.equal(JSON.stringify(expectedResult))
-          })
+            expect(JSON.stringify(reportDates)).toBe(JSON.stringify(expectedResult))
+          });
       })
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })

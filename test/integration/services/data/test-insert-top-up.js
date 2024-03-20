@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
@@ -12,7 +11,7 @@ let claimId
 
 describe('services/data/insert-top-up', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       date = dateFormatter.now()
       return insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
@@ -29,22 +28,27 @@ describe('services/data/insert-top-up', function () {
           return db('TopUp').first().where('ClaimId', claimId)
         })
         .then(function (topUpReturned) {
-          expect(Number(topUpReturned.TopUpAmount).toFixed(2), 'Inserted TopUp TopUpAmount should equal ' + amount).to.equal(amount)
-          expect(topUpReturned.Reason, 'Inserted Top Up TopUpReason should equal ' + reason).to.equal(reason)
-          expect(topUpReturned.PaymentStatus, 'Inserted Top Up PaymentStatus should equal PENDING').to.equal(topUpStatusEnum.PENDING)
+          // 'Inserted TopUp TopUpAmount should equal ' + amount
+          expect(Number(topUpReturned.TopUpAmount).toFixed(2)).toBe(amount)
+          // 'Inserted Top Up TopUpReason should equal ' + reason
+          expect(topUpReturned.Reason).toBe(reason)
+          // Inserted Top Up PaymentStatus should equal PENDING
+          expect(topUpReturned.PaymentStatus).toBe(topUpStatusEnum.PENDING)
 
           return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('ClaimEventId', 'desc')
         })
         .then(function (claimEvent) {
-          expect(claimEvent.Event, 'ClaimEvent Event should equal ' + claimEventEnum.TOP_UP_SUBMITTED.value).to.equal(claimEventEnum.TOP_UP_SUBMITTED.value)
-          expect(claimEvent.Note, 'ClaimEvent Note should equal ' + reason).to.equal(reason)
+          // 'ClaimEvent Event should equal ' + claimEventEnum.TOP_UP_SUBMITTED.value
+          expect(claimEvent.Event).toBe(claimEventEnum.TOP_UP_SUBMITTED.value)
+          // 'ClaimEvent Note should equal ' + reason
+          expect(claimEvent.Note).toBe(reason)
         })
         .catch(function (error) {
           throw error
-        })
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })

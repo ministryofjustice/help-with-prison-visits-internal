@@ -1,6 +1,4 @@
-const expect = require('chai').expect
 const sinon = require('sinon')
-const proxyquire = require('proxyquire')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -8,10 +6,14 @@ const sandbox = sinon.createSandbox()
 const stubInsertClaimEvent = sandbox.stub().mockResolvedValue()
 const stubInsertTaskSendClaimNotification = sandbox.stub().mockResolvedValue()
 
-const updateVisitorContactDetails = proxyquire('../../../../app/services/data/update-visitor-contact-details', {
-  './insert-claim-event': stubInsertClaimEvent,
-  './insert-task-send-claim-notification': stubInsertTaskSendClaimNotification
-})
+jest.mock('./insert-claim-event', () => stubInsertClaimEvent);
+
+jest.mock(
+  './insert-task-send-claim-notification',
+  () => stubInsertTaskSendClaimNotification
+);
+
+const updateVisitorContactDetails = require('../../../../app/services/data/update-visitor-contact-details')
 
 const REFERENCE = 'UPDVISC'
 const NEW_EMAIL_ADDRESS = 'new@new.com'
@@ -28,7 +30,7 @@ describe('services/data/update-visitor-contact-details', function () {
     sandbox.reset()
   })
 
-  before(function () {
+  beforeAll(function () {
     return insertTestData(REFERENCE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
       eligibilityId = ids.eligibilityId
       claimId = ids.claimId
@@ -41,14 +43,14 @@ describe('services/data/update-visitor-contact-details', function () {
         return getVisitor(eligibilityId)
       })
       .then(function (visitor) {
-        expect(visitor.EmailAddress).to.equal(NEW_EMAIL_ADDRESS)
-        expect(visitor.PhoneNumber).to.equal(NEW_PHONE_NUMBER)
-        expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
-        expect(stubInsertTaskSendClaimNotification.calledTwice).to.be.true //eslint-disable-line
-      })
+        expect(visitor.EmailAddress).toBe(NEW_EMAIL_ADDRESS)
+        expect(visitor.PhoneNumber).toBe(NEW_PHONE_NUMBER)
+        expect(stubInsertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
+        expect(stubInsertTaskSendClaimNotification.calledTwice).toBe(true) //eslint-disable-line
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return deleteAll(REFERENCE)
   })
 })

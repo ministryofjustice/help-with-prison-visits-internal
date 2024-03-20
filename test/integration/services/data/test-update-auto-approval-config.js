@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const updateAutoApprovalConfig = require('../../../../app/services/data/update-auto-approval-config')
 const { db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
@@ -9,7 +8,7 @@ const insertedIds = []
 describe('services/data/update-auto-approval-config', function () {
   let existingAutoApprovalId
 
-  before(function () {
+  beforeAll(function () {
     return getCurrentAutoApprovalConfigId()
       .then(function (currentAutoApprovalConfigId) {
         if (currentAutoApprovalConfigId) {
@@ -45,12 +44,13 @@ describe('services/data/update-auto-approval-config', function () {
           .first()
       })
       .then(function (result) {
-        expect(result.Caseworker).to.equal('second-caseworker')
-        expect(result.AutoApprovalEnabled).to.equal(true)
-        expect(result.CostVariancePercentage).to.equal(null)
-        expect(result.RulesDisabled).to.equal('auto-approval-rule-1,auto-approval-rule-2')
-        expect(result.CostPerMile, 'should have set CostPerMile to default').to.equal(parseFloat(defaultsConfig.AUTO_APPROVAL_COST_PER_MILE))
-      })
+        expect(result.Caseworker).toBe('second-caseworker')
+        expect(result.AutoApprovalEnabled).toBe(true)
+        expect(result.CostVariancePercentage).toBeNull()
+        expect(result.RulesDisabled).toBe('auto-approval-rule-1,auto-approval-rule-2')
+        // should have set CostPerMile to default
+        expect(result.CostPerMile).toBe(parseFloat(defaultsConfig.AUTO_APPROVAL_COST_PER_MILE))
+      });
   })
 
   it('should disable the current Auto Approval config and insert the new one if rulesDisabled is null', function () {
@@ -74,14 +74,14 @@ describe('services/data/update-auto-approval-config', function () {
           .first()
       })
       .then(function (result) {
-        expect(result.Caseworker).to.equal('second-caseworker')
-        expect(result.AutoApprovalEnabled).to.equal(false)
-        expect(result.CostVariancePercentage).to.equal(null)
-        expect(result.RulesDisabled).to.equal(null)
-      })
+        expect(result.Caseworker).toBe('second-caseworker')
+        expect(result.AutoApprovalEnabled).toBe(false)
+        expect(result.CostVariancePercentage).toBeNull()
+        expect(result.RulesDisabled).toBeNull()
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return db('AutoApprovalConfig')
       .whereIn('AutoApprovalConfigId', insertedIds)
       .del()

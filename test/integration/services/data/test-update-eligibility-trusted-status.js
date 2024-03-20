@@ -1,15 +1,13 @@
-const expect = require('chai').expect
 const sinon = require('sinon')
-const proxyquire = require('proxyquire')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 const sandbox = sinon.createSandbox()
 const stubInsertClaimEvent = sandbox.stub().mockResolvedValue()
 
-const updateEligibilityTrustedStatus = proxyquire('../../../../app/services/data/update-eligibility-trusted-status', {
-  './insert-claim-event': stubInsertClaimEvent
-})
+jest.mock('./insert-claim-event', () => stubInsertClaimEvent);
+
+const updateEligibilityTrustedStatus = require('../../../../app/services/data/update-eligibility-trusted-status')
 
 const REFERENCE_ONE = 'REF12345'
 const REFERENCE_TWO = 'REF67891'
@@ -24,7 +22,7 @@ describe('services/data/update-eligibility-trusted-status', function () {
     sandbox.reset()
   })
 
-  before(function () {
+  beforeAll(function () {
     return insertTestData(REFERENCE_ONE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
       claimId1 = ids.claimId
       eligibilityId1 = ids.eligibilityId
@@ -49,11 +47,11 @@ describe('services/data/update-eligibility-trusted-status', function () {
         return getEligibility(eligibilityId1)
       })
       .then(function (eligibility) {
-        expect(eligibility.IsTrusted).to.equal(isTrusted)
-        expect(eligibility.UntrustedReason).to.equal(untrustedReason)
-        expect(eligibility.UntrustedDate).to.not.be.null //eslint-disable-line
-        expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
-      })
+        expect(eligibility.IsTrusted).toBe(isTrusted)
+        expect(eligibility.UntrustedReason).toBe(untrustedReason)
+        expect(eligibility.UntrustedDate).not.toBeNull() //eslint-disable-line
+        expect(stubInsertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should set the eligibility to trusted and create a claim event', function () {
@@ -68,11 +66,11 @@ describe('services/data/update-eligibility-trusted-status', function () {
         return getEligibility(eligibilityId1)
       })
       .then(function (eligibility) {
-        expect(eligibility.IsTrusted).to.equal(isTrusted)
-        expect(eligibility.UntrustedReason).to.be.null //eslint-disable-line
-        expect(eligibility.UntrustedDate).to.be.null //eslint-disable-line
-        expect(stubInsertClaimEvent.calledOnce).to.be.true //eslint-disable-line
-      })
+        expect(eligibility.IsTrusted).toBe(isTrusted)
+        expect(eligibility.UntrustedReason).toBeNull() //eslint-disable-line
+        expect(eligibility.UntrustedDate).toBeNull() //eslint-disable-line
+        expect(stubInsertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
+      });
   })
 
   it('should do nothing if current and new IsTrusted values are the same', function () {
@@ -84,12 +82,12 @@ describe('services/data/update-eligibility-trusted-status', function () {
         return getEligibility(eligibilityId2)
       })
       .then(function (eligibility) {
-        expect(eligibility.IsTrusted).to.equal(true)
-        expect(stubInsertClaimEvent.notCalled).to.be.true //eslint-disable-line
-      })
+        expect(eligibility.IsTrusted).toBe(true)
+        expect(stubInsertClaimEvent.notCalled).toBe(true) //eslint-disable-line
+      });
   })
 
-  after(function () {
+  afterAll(function () {
     return Promise.all([
       deleteAll(REFERENCE_ONE),
       deleteAll(REFERENCE_TWO)

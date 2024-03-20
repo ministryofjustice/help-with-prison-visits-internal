@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
@@ -12,7 +11,7 @@ let previousLastUpdated
 
 describe('services/data/payout-barcode-expired-claim', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       date = dateFormatter.now()
       return insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
@@ -28,28 +27,28 @@ describe('services/data/payout-barcode-expired-claim', function () {
           return db('Claim').first().where('ClaimId', claimId)
         })
         .then(function (claim) {
-          expect(claim.Status).to.equal(claimStatusEnum.APPROVED.value)
-          expect(claim.DateApproved).to.be.null //eslint-disable-line
-          expect(claim.PaymentStatus).to.be.null //eslint-disable-line
-          expect(claim.lastUpdated).to.not.equal(previousLastUpdated)
+          expect(claim.Status).toBe(claimStatusEnum.APPROVED.value)
+          expect(claim.DateApproved).toBeNull() //eslint-disable-line
+          expect(claim.PaymentStatus).toBeNull() //eslint-disable-line
+          expect(claim.lastUpdated).not.toBe(previousLastUpdated)
 
           return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')
         })
         .then(function (claimEvent) {
-          expect(claimEvent.Event).to.equal(claimEventEnum.PAYMENT_REISSUED.value)
-          expect(claimEvent.Note).to.equal(null)
+          expect(claimEvent.Event).toBe(claimEventEnum.PAYMENT_REISSUED.value)
+          expect(claimEvent.Note).toBeNull()
           return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc').limit(1).offset(1)
         })
         .then(function (claimEvent) {
-          expect(claimEvent.Event).to.equal(claimEventEnum.PAYOUT_BARCODE_EXPIRED.value)
-          expect(claimEvent.Note).to.equal(reason)
+          expect(claimEvent.Event).toBe(claimEventEnum.PAYOUT_BARCODE_EXPIRED.value)
+          expect(claimEvent.Note).toBe(reason)
         })
         .catch(function (error) {
           throw error
-        })
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })

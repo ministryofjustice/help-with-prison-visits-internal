@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const { db } = require('../../../helpers/database-setup-for-tests')
 const dateFormatter = require('../../../../app/services/date-formatter')
 
@@ -8,7 +7,7 @@ const getDirectPaymentFiles = require('../../../../app/services/data/get-direct-
 
 describe('services/data/get-direct-payment-files', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       const directPaymentFiles = []
       const getTestDirectPaymentFile = function (fileType, dateCreated) {
         return {
@@ -31,15 +30,15 @@ describe('services/data/get-direct-payment-files', function () {
     it('should return list of last 31 ACCESSPAY_FILE and ADI_JOURNAL_FILE records', function () {
       return getDirectPaymentFiles()
         .then(function (result) {
-          expect(result.accessPayFiles.length).to.equal(31)
-          expect(result.adiJournalFiles.length).to.equal(31)
+          expect(result.accessPayFiles.length).toBe(31)
+          expect(result.adiJournalFiles.length).toBe(31)
         })
         .catch(function (error) {
           throw error
-        })
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return db('DirectPaymentFile').where('Filepath', TEST_PATH).del()
     })
   })

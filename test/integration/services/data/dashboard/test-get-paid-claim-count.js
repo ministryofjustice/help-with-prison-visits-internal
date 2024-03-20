@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const moment = require('moment')
 const dateFormatter = require('../../../../../app/services/date-formatter')
 const { insertTestData, insertClaim, deleteAll } = require('../../../../helpers/database-setup-for-tests')
@@ -37,7 +36,7 @@ let fourMonthsAgoCount
 
 describe('services/data/dashboard/get-paid-claim-count', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       return getCountsBeforeTest()
         .then(function () {
           return insertTestData(reference, date, claimStatusEnum.AUTOAPPROVED.value)
@@ -116,7 +115,7 @@ describe('services/data/dashboard/get-paid-claim-count', function () {
       return checkCount(dashboardFilterEnum.FOUR_MONTHS_AGO, expectedResult)
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })
@@ -125,11 +124,11 @@ describe('services/data/dashboard/get-paid-claim-count', function () {
 function checkCount (filter, expectedCount) {
   return getPaidClaimCount(filter)
     .then(function (result) {
-      expect(result[0].Count).to.equal(expectedCount)
+      expect(result[0].Count).toBe(expectedCount)
     })
     .catch(function (error) {
       throw error
-    })
+    });
 }
 
 function getCountsBeforeTest () {

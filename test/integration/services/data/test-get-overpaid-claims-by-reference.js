@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, insertClaim, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
@@ -10,7 +9,7 @@ let claimId3
 
 describe('services/data/get-overpaid-claims-by-reference', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       const date = dateFormatter.now().toDate()
       const twoWeeksAgo = dateFormatter.now().subtract(14, 'days').toDate()
       let eligibilityId
@@ -31,15 +30,15 @@ describe('services/data/get-overpaid-claims-by-reference', function () {
     it('should return any previous claims marked as unpaid', function () {
       return getOverpaidClaimsByReference(reference, claimId1)
         .then(function (result) {
-          expect(result).to.have.lengthOf(1)
-          expect(result[0].ClaimId).to.equal(claimId2)
+          expect(result).toHaveLength(1)
+          expect(result[0].ClaimId).toBe(claimId2)
         })
         .catch(function (error) {
           throw error
-        })
+        });
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })
