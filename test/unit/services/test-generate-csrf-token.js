@@ -8,12 +8,12 @@ describe('services/generate-csrf-token', function () {
 
   beforeEach(function () {
     request = {
-      csrfToken: sinon.stub()
+      csrfToken: jest.fn()
     }
   })
 
   it('should return the value of the crsfToken attached to the request object', function () {
-    request.csrfToken.returns(CSRF_TOKENT)
+    request.csrfToken.mockReturnValueCSRF_TOKENT)
     const result = generateCsrfToken(request)
     expect(result).toBe(CSRF_TOKENT)
   })

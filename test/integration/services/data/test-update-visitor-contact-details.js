@@ -5,8 +5,8 @@ const { insertTestData, deleteAll, db } = require('../../../helpers/database-set
 const dateFormatter = require('../../../../app/services/date-formatter')
 
 const sandbox = sinon.createSandbox()
-const stubInsertClaimEvent = sandbox.stub().resolves()
-const stubInsertTaskSendClaimNotification = sandbox.stub().resolves()
+const stubInsertClaimEvent = sandbox.stub().mockResolvedValue()
+const stubInsertTaskSendClaimNotification = sandbox.stub().mockResolvedValue()
 
 const updateVisitorContactDetails = proxyquire('../../../../app/services/data/update-visitor-contact-details', {
   './insert-claim-event': stubInsertClaimEvent,

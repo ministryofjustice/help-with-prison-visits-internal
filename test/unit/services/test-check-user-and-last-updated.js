@@ -6,7 +6,7 @@ const sinon = require('sinon')
 const USER = 'test@test.com'
 const OTHER_USER = 'other@test.com'
 
-const checkUserAssignmentStub = sinon.stub()
+const checkUserAssignmentStub = jest.fn()
 
 jest.mock('./check-user-assignment', () => checkUserAssignmentStub);
 
@@ -46,12 +46,12 @@ describe('services/check-user-and-last-updated', function () {
       needAssignmentCheck = true
     })
     it('should resolve if all details are correct', function () {
-      checkUserAssignmentStub.returns(true)
+      checkUserAssignmentStub.mockReturnValuetrue)
       expect(checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)).toBeTruthy() //eslint-disable-line
     })
 
     it('should throw validation error for other user assigned', function () {
-      checkUserAssignmentStub.returns(false)
+      checkUserAssignmentStub.mockReturnValuefalse)
       lastUpdatedData.AssignedTo = OTHER_USER
       try {
         checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)
@@ -65,7 +65,7 @@ describe('services/check-user-and-last-updated', function () {
     })
 
     it('should throw validation error for user not assigned', function () {
-      checkUserAssignmentStub.returns(false)
+      checkUserAssignmentStub.mockReturnValuefalse)
       lastUpdatedData.AssignedTo = null
       try {
         checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)

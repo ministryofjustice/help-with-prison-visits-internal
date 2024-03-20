@@ -103,19 +103,19 @@ const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
 const CLAIM_CHILD_COUNT = [{ ClaimId: 1, Count: 1 }]
 
-jest.mock('../services/data/get-claim-escorts', () => getClaimEscortsStub);
-jest.mock('../services/data/get-claim-child-counts', () => getClaimChildCountsStub);
+jest.mock('../services/data/get-claim-escorts', () => getClaimEscortsStub)
+jest.mock('../services/data/get-claim-child-counts', () => getClaimChildCountsStub)
 
 jest.mock(
   '../services/data/get-claim-expenses-for-claims',
   () => getClaimExpensesForClaimsStub
-);
+)
 
 describe('services/transform-claim-data-for-export', function () {
   beforeEach(function () {
-    getClaimEscortsStub = sinon.stub().resolves(CLAIM_ESCORT)
-    getClaimChildCountsStub = sinon.stub().resolves(CLAIM_CHILD_COUNT)
-    getClaimExpensesForClaimsStub = sinon.stub().resolves(CLAIM_EXPENSES)
+    getClaimEscortsStub = jest.fn().mockResolvedValue(CLAIM_ESCORT)
+    getClaimChildCountsStub = jest.fn().mockResolvedValue(CLAIM_CHILD_COUNT)
+    getClaimExpensesForClaimsStub = jest.fn().mockResolvedValue(CLAIM_EXPENSES)
 
     transformClaimDataForExport = require('../../../app/services/transform-claim-data-for-export')
   })
@@ -143,7 +143,7 @@ describe('services/transform-claim-data-for-export', function () {
         expect(headers).toContain('Total amount paid')
         expect(headers).toContain('Payment Method')
         expect(headers).toContain('Rejection Reason')
-      });
+      })
   })
 
   it('should call all relevant functions', function () {
@@ -152,34 +152,34 @@ describe('services/transform-claim-data-for-export', function () {
         expect(getClaimEscortsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
         expect(getClaimExpensesForClaimsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
         expect(getClaimChildCountsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
-      });
+      })
   })
 
   it('should return the correct total amount paid for claims paid entirely by direct bank transfer', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_BANK)
       .then(function (result) {
         expect(result[0]['Total amount paid']).toBe(26.5)
-      });
+      })
   })
 
   it('should return the correct total amount paid for claims paid entirely by manual payments', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MANUAL)
       .then(function (result) {
         expect(result[0]['Total amount paid']).toBe(25.5)
-      });
+      })
   })
 
   it('should return the correct total amount paid for claims paid using a combination of direct bank payment and manual payments', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
         expect(result[0]['Total amount paid']).toBe(15)
-      });
+      })
   })
 
   it('should return the rejection reason for a rejected claim', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_REJECTED)
       .then(function (result) {
         expect(result[0]['Rejection Reason']).toBe(rejectionReason)
-      });
+      })
   })
 })

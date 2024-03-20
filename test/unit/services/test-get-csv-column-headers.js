@@ -13,7 +13,7 @@ describe('services/get-csv-column-headers', function () {
   beforeEach(function () {
     claimJSONInput = getCSVTestClaims()
     expectedCSVHeaders = getCSVTestHeaders()
-    getMaxNumberOfExpensesStub = sinon.stub().returns(14)
+    getMaxNumberOfExpensesStub = jest.fn().mockReturnValue14)
     getCSVColumnHeaders = require('../../../app/services/get-csv-column-headers')
   })
 

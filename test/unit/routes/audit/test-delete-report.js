@@ -1,26 +1,29 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const sinon = require('sinon')
 
-let hasRolesStub
+const mockHasRoles = jest.fn()
 let authorisation
-let deleteReportStub
-
-jest.mock('../../services/authorisation', () => authorisation);
-jest.mock('../../services/data/audit/delete-report', () => deleteReportStub);
+const mockDeleteReport = jest.fn()
 
 describe('routes/audit/delete-report', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
     authorisation = {
-      hasRoles: hasRolesStub
+      hasRoles: mockHasRoles
     }
-    deleteReportStub = sinon.stub().resolves()
+    mockDeleteReport.mockResolvedValue()
+
+    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/data/audit/delete-report', () => mockDeleteReport)
+
     const route = require('../../../../app/routes/audit/delete-report')
 
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('POST /audit/delete-report', function () {
@@ -32,8 +35,8 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
 
     it('should respond with a 200 when "yes" is selected', function () {
@@ -45,9 +48,9 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(deleteReportStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockDeleteReport).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
 
     it('should respond with a 302 when "no" is selected', function () {
@@ -59,8 +62,8 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
   })
 
@@ -73,8 +76,8 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
   })
 })

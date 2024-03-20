@@ -1,36 +1,36 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const sinon = require('sinon')
 
-let hasRolesStub
 let authorisation
-let getClaimDataStub
-let updateClaimDataStub
-let addAuditSessionDataStub
-let getAuditSessionDataStub
-
-jest.mock('../../services/authorisation', () => authorisation);
-jest.mock('../../services/data/audit/get-claim-data', () => getClaimDataStub);
-jest.mock('../../services/data/audit/update-claim-data', () => updateClaimDataStub);
-jest.mock('../../services/add-audit-session-data', () => addAuditSessionDataStub);
-jest.mock('../../services/get-audit-session-data', () => getAuditSessionDataStub);
+const mockHasRoles = jest.fn()
+const mockGetClaimData = jest.fn()
+const mockUpdateClaimData = jest.fn()
+const mockAddAuditSessionData = jest.fn()
+const mockGetAuditSessionData = jest.fn()
 
 describe('routes/audit/check-claim', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    getClaimDataStub = sinon.stub().resolves([{}])
-    updateClaimDataStub = sinon.stub().resolves()
-    addAuditSessionDataStub = sinon.stub()
-    getAuditSessionDataStub = sinon.stub()
+    mockGetClaimData.mockResolvedValue([{}])
+    mockUpdateClaimData.mockResolvedValue()
     authorisation = {
-      hasRoles: hasRolesStub
+      hasRoles: mockHasRoles
     }
 
     const route = require('../../../../app/routes/audit/check-claim')
 
+    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/data/audit/get-claim-data', () => mockGetClaimData)
+    jest.mock('../../../../app/services/data/audit/update-claim-data', () => mockUpdateClaimData)
+    jest.mock('../../../../app/services/add-audit-session-data', () => mockAddAuditSessionData)
+    jest.mock('../../../../app/services/get-audit-session-data', () => mockGetAuditSessionData)
+
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /audit/check-claim', function () {
@@ -39,10 +39,10 @@ describe('routes/audit/check-claim', function () {
         .get('/audit/check-claim/1/ABC123')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(getClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(addAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetClaimData).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
   })
 
@@ -52,9 +52,9 @@ describe('routes/audit/check-claim', function () {
         .post('/audit/check-claim/1/ABC123')
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(getAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
 
     it('should respond with a 400 when band 5 selects invalid but no description is provided', function () {
@@ -67,9 +67,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(getAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
 
     it('should respond with a 400 when band 9 selects invalid but no description is provided', function () {
@@ -82,9 +82,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(getAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
 
     it('should respond with a 302 when band 5 selects valid', function () {
@@ -97,9 +97,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(updateClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockUpdateClaimData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
     it('should respond with a 302 when band 5 selects Invalid with description', function () {
       return supertest(app)
@@ -112,9 +112,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(updateClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockUpdateClaimData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
 
     it('should respond with a 302 when band 9 selects valid', function () {
@@ -127,9 +127,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(updateClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockUpdateClaimData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
     it('should respond with a 302 when band 9 selects Invalid with description', function () {
       return supertest(app)
@@ -142,9 +142,9 @@ describe('routes/audit/check-claim', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(updateClaimDataStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockUpdateClaimData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
   })
 })

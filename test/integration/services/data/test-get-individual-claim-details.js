@@ -1,11 +1,8 @@
-const expect = require('chai').expect
-const sinon = require('sinon')
-const proxyquire = require('proxyquire')
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
 const stubOverpaidClaimsData = {}
-const stubGetOverpaidClaims = sinon.stub().resolves(stubOverpaidClaimsData)
+const stubGetOverpaidClaims = jest.fn().mockResolvedValue(stubOverpaidClaimsData)
 const getClaim = proxyquire('../../../../app/services/data/get-individual-claim-details', {
   './get-overpaid-claims-by-reference': stubGetOverpaidClaims
 })

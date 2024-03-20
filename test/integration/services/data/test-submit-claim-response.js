@@ -1,16 +1,13 @@
 /* eslint-env mocha */
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const claimDecisionEnum = require('../../../../app/constants/claim-decision-enum')
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const paymentMethodEnum = require('../../../../app/constants/payment-method-enum')
 
-const stubInsertClaimEvent = sinon.stub().resolves()
-const stubInsertTaskSendClaimNotification = sinon.stub().resolves()
-let stubUpdateRelatedClaimsRemainingOverpaymentAmount = sinon.stub().resolves()
+const stubInsertClaimEvent = jest.fn().mockResolvedValue()
+const stubInsertTaskSendClaimNotification = jest.fn().mockResolvedValue()
+let stubUpdateRelatedClaimsRemainingOverpaymentAmount = jest.fn().mockResolvedValue()
 
 const submitClaimResponse = proxyquire('../../../../app/services/data/submit-claim-response', {
   './insert-claim-event': stubInsertClaimEvent,
@@ -278,6 +275,6 @@ describe('services/data/submit-claim-response', function () {
   })
 
   afterEach(function () {
-    stubUpdateRelatedClaimsRemainingOverpaymentAmount = sinon.stub().resolves()
+    stubUpdateRelatedClaimsRemainingOverpaymentAmount = jest.fn().mockResolvedValue()
   })
 })

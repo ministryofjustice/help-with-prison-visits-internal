@@ -8,7 +8,7 @@ const sinon = require('sinon')
 let getClaimListForAdvancedSearch
 let displayHelperStub
 let authorisation
-let hasRolesStub
+let mockHasRoles
 let exportSearchResultsStub
 
 const draw = 1
@@ -154,12 +154,12 @@ describe('routes/index', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    authorisation = { hasRoles: hasRolesStub }
-    getClaimListForAdvancedSearch = sinon.stub()
+    mockHasRoles = jest.fn()
+    authorisation = { hasRoles: mockHasRoles }
+    getClaimListForAdvancedSearch = jest.fn()
     displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
-    displayHelperStub.getClaimTypeDisplayName.returns('First time')
-    exportSearchResultsStub = sinon.stub().resolves('')
+    displayHelperStub.getClaimTypeDisplayName.mockReturnValue'First time')
+    exportSearchResultsStub = jest.fn().mockResolvedValue('')
 
     const route = require('../../../app/routes/advanced-search')
 
@@ -183,7 +183,7 @@ describe('routes/index', function () {
         .get('/advanced-search-input')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
         });
     })
   })
@@ -194,7 +194,7 @@ describe('routes/index', function () {
         .get('/advanced-search')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
         });
     })
 
@@ -203,7 +203,7 @@ describe('routes/index', function () {
         .get('/advanced-search?Reference=V123456')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
         });
     })
 
@@ -220,13 +220,13 @@ describe('routes/index', function () {
 
   describe('POST /advanced-search-results', function () {
     it('should respond with a 200 and call data method', function () {
-      getClaimListForAdvancedSearch.resolves({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
+      getClaimListForAdvancedSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
       return supertest(app)
         .post('/advanced-search-results')
         .send({ start, length })
         .expect(200)
         .expect(function (response) {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           // expected data method to be called with empty search criteria
           expect(getClaimListForAdvancedSearch.calledWith({}, start, length)).toBe(true) //eslint-disable-line
           expect(response.body.recordsTotal).toBe(1)
@@ -235,7 +235,7 @@ describe('routes/index', function () {
     })
 
     it('should extract search criteria correctly', function () {
-      getClaimListForAdvancedSearch.resolves({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
+      getClaimListForAdvancedSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
 
       return supertest(app)
         .post('/advanced-search-results')
@@ -257,7 +257,7 @@ describe('routes/index', function () {
           res.status(500).render('includes/error')
         }
       })
-      getClaimListForAdvancedSearch.rejects()
+      getClaimListForAdvancedSearch.mockRejectedValue()
       return supertest(app)
         .post('/advanced-search-results')
         .expect(500)
@@ -270,8 +270,8 @@ describe('routes/index', function () {
         .get('/advanced-search-results/export?')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(exportSearchResultsStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(exportSearchResultsStub).toHaveBeenCalledTimes(1) //eslint-disable-line
         });
     })
   })

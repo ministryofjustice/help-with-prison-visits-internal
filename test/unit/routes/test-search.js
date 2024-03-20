@@ -5,7 +5,7 @@ const sinon = require('sinon')
 let getClaimListForSearch
 let displayHelperStub
 let authorisation
-let hasRolesStub
+let mockHasRoles
 
 const RETURNED_CLAIM = {
   Reference: 'SEARCH1',
@@ -26,11 +26,11 @@ describe('routes/index', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    authorisation = { hasRoles: hasRolesStub }
-    getClaimListForSearch = sinon.stub()
+    mockHasRoles = jest.fn()
+    authorisation = { hasRoles: mockHasRoles }
+    getClaimListForSearch = jest.fn()
     displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
-    displayHelperStub.getClaimTypeDisplayName.returns('First time')
+    displayHelperStub.getClaimTypeDisplayName.mockReturnValue'First time')
 
     const route = require('../../../app/routes/search')
 
@@ -43,7 +43,7 @@ describe('routes/index', function () {
         .get('/search')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
         });
     })
   })
@@ -55,12 +55,12 @@ describe('routes/index', function () {
 
     it('should respond with a 200 and pass query string to data object', function () {
       const searchQuery = 'Joe Bloggs'
-      getClaimListForSearch.resolves({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
+      getClaimListForSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
       return supertest(app)
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(getClaimListForSearch.calledWith(searchQuery, start, length)).toBe(true) //eslint-disable-line
           expect(response.body.recordsTotal).toBe(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
@@ -73,13 +73,13 @@ describe('routes/index', function () {
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
-          expect(getClaimListForSearch.notCalled).toBe(true) //eslint-disable-line
+          expect(getClaimListForSearch).not.toHaveBeenCalled() //eslint-disable-line
         });
     })
 
     it('should respond with a 500 promise rejects', function () {
       const searchQuery = 'Joe Bloggs'
-      getClaimListForSearch.rejects()
+      getClaimListForSearch.mockRejectedValue()
       return supertest(app)
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(500)

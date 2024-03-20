@@ -1,51 +1,48 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const sinon = require('sinon')
 
-let hasRolesStub
+const mockHasRoles = jest.fn()
 let authorisation
-let getAuditDataStub
-let getAllClaimsDataBelowThresholdStub
-let getAllClaimsDataOverThresholdStub
-let updateReportStub
-let addAuditSessionDataStub
-let getAuditSessionDataStub
-
-jest.mock('../../services/authorisation', () => authorisation);
-jest.mock('../../services/data/audit/get-audit-data', () => getAuditDataStub);
-
-jest.mock(
-  '../../services/data/audit/get-all-claims-data-below-threshold',
-  () => getAllClaimsDataBelowThresholdStub
-);
-
-jest.mock(
-  '../../services/data/audit/get-all-claims-data-over-threshold',
-  () => getAllClaimsDataOverThresholdStub
-);
-
-jest.mock('../../services/data/audit/update-report', () => updateReportStub);
-jest.mock('../../services/add-audit-session-data', () => addAuditSessionDataStub);
-jest.mock('../../services/get-audit-session-data', () => getAuditSessionDataStub);
+const mockGetAuditData = jest.fn()
+const mockGetAllClaimsDataBelowThreshold = jest.fn()
+const mockGetAllClaimsDataOverThreshold = jest.fn()
+const mockUpdateReport = jest.fn()
+const mockAddAuditSessionData = jest.fn()
+const mockGetAuditSessionData = jest.fn()
 
 describe('routes/audit/create-report', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
     authorisation = {
-      hasRoles: hasRolesStub
+      hasRoles: mockHasRoles
     }
-    getAuditDataStub = sinon.stub().resolves([])
-    getAllClaimsDataBelowThresholdStub = sinon.stub().resolves([])
-    getAllClaimsDataOverThresholdStub = sinon.stub().resolves([])
-    updateReportStub = sinon.stub().resolves(1)
-    addAuditSessionDataStub = sinon.stub()
-    getAuditSessionDataStub = sinon.stub()
+    mockGetAuditData.mockResolvedValue([])
+    mockGetAllClaimsDataBelowThreshold.mockResolvedValue([])
+    mockGetAllClaimsDataOverThreshold.mockResolvedValue([])
+    mockUpdateReport.mockResolvedValue(1)
+
+    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/data/audit/get-audit-data', () => mockGetAuditData)
+    jest.mock(
+      '../../../../app/services/data/audit/get-all-claims-data-below-threshold',
+      () => mockGetAllClaimsDataBelowThreshold
+    )
+    jest.mock(
+      '../../../../app/services/data/audit/get-all-claims-data-over-threshold',
+      () => mockGetAllClaimsDataOverThreshold
+    )
+    jest.mock('../../../../app/services/data/audit/update-report', () => mockUpdateReport)
+    jest.mock('../../../../app/services/add-audit-session-data', () => mockAddAuditSessionData)
+    jest.mock('../../../../app/services/get-audit-session-data', () => mockGetAuditSessionData)
 
     const route = require('../../../../app/routes/audit/create-report')
 
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /audit/create-report', function () {
@@ -54,24 +51,24 @@ describe('routes/audit/create-report', function () {
         .get('/audit/create-report')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(getAuditSessionDataStub.callCount).toBe(5) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(5) //eslint-disable-line
+        })
     })
   })
 
   describe('POST /audit/create-report', function () {
     it('should respond with a 200 when reportId already exist in session', function () {
-      getAuditSessionDataStub.resolves({
+      mockGetAuditSessionData.mockResolvedValue({
         reportId: 1
       })
       return supertest(app)
         .post('/audit/create-report')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(getAuditSessionDataStub.callCount).toBe(6) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(6) //eslint-disable-line
+        })
     })
 
     it('should respond with a 200 when reportId not exist in session', function () {
@@ -79,13 +76,13 @@ describe('routes/audit/create-report', function () {
         .post('/audit/create-report')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(getAuditSessionDataStub.callCount).toBe(6) //eslint-disable-line
-          expect(getAllClaimsDataBelowThresholdStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(getAllClaimsDataOverThresholdStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(updateReportStub.calledOnce).toBe(true) //eslint-disable-line
-          expect(addAuditSessionDataStub.calledOnce).toBe(true) //eslint-disable-line
-        });
+          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(6) //eslint-disable-line
+          expect(mockGetAllClaimsDataBelowThreshold).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetAllClaimsDataOverThreshold).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockUpdateReport).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(1) //eslint-disable-line
+        })
     })
   })
 })
