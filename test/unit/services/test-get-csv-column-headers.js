@@ -6,7 +6,7 @@ let expectedCSVHeaders
 let getCSVColumnHeaders
 let mockGetMaxNumberOfExpenses
 
-jest.mock('./get-max-number-of-expenses', () => mockGetMaxNumberOfExpenses)
+jest.mock('../../../app/services/get-max-number-of-expenses', () => mockGetMaxNumberOfExpenses)
 
 describe('services/get-csv-column-headers', function () {
   beforeEach(function () {

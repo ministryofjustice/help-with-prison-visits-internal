@@ -38,7 +38,7 @@ describe('routes/claim/file-upload', function () {
       }
     }
 
-    const awsHelperStub = {
+    const mockAwsHelper = {
       AWSHelper: mockAws
     }
 
@@ -56,7 +56,7 @@ describe('routes/claim/file-upload', function () {
       getFilenamePrefix: mockGetFilenamePrefix
     }))
     jest.mock(csurf, () => function () { return function () { } })
-    jest.mock('../../../../app/services/aws-helper', () => awsHelperStub)
+    jest.mock('../../../../app/services/aws-helper', () => mockAwsHelper)
 
     const route = require('../../../../app/routes/claim/file-upload')
     app = routeHelper.buildApp(route)

@@ -11,7 +11,7 @@ jest.mock(
   () => mockGetDashboardData
 )
 
-jest.mock('../services/authorisation', () => mockAuthorisation)
+jest.mock('../../app/services/authorisation', () => mockAuthorisation)
 
 describe('routes/index', function () {
   let app

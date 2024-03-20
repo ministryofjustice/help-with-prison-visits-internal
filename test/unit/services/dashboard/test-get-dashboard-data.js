@@ -6,32 +6,32 @@ const mockGetPendingClaimCount = jest.fn().mockResolvedValue([{ Count: 0 }])
 const mockGetRejectedClaimCount = jest.fn().mockResolvedValue([{ Count: 0 }])
 
 jest.mock(
-  '../../../services/data/dashboard/get-auto-approved-claim-count',
+  '../../../../app/services/data/dashboard/get-auto-approved-claim-count',
   () => mockGetAutoApprovedClaimCount
 )
 
 jest.mock(
-  '../../../services/data/dashboard/get-in-progress-claim-count',
+  '../../../app/services/data/dashboard/get-in-progress-claim-count',
   () => mockGetInProgressClaimCount
 )
 
 jest.mock(
-  '../../../services/data/dashboard/get-manually-approved-claim-count',
+  '../../../app/services/data/dashboard/get-manually-approved-claim-count',
   () => mockGetManuallyApprovedClaimCount
 )
 
 jest.mock(
-  '../../../services/data/dashboard/get-paid-claim-count',
+  '../../../app/services/data/dashboard/get-paid-claim-count',
   () => mockGetPaidClaimCount
 )
 
 jest.mock(
-  '../../../services/data/dashboard/get-pending-claim-count',
+  '../../../app/services/data/dashboard/get-pending-claim-count',
   () => mockGetPendingClaimCount
 )
 
 jest.mock(
-  '../../../services/data/dashboard/get-rejected-claim-count',
+  '../../../app/services/data/dashboard/get-rejected-claim-count',
   () => mockGetRejectedClaimCount
 )
 

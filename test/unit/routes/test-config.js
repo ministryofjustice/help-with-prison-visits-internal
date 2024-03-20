@@ -11,25 +11,25 @@ let mockUpdateAuditConfig
 let mockAutoApprovalConfig
 let mockAuditConfig
 
-jest.mock('../services/authorisation', () => ({
+jest.mock('../../../app/services/authorisation', () => ({
   mockHasRoles
 }))
 
 jest.mock(
-  '../services/data/get-auto-approval-config',
+  '../../../app/services/data/get-auto-approval-config',
   () => mockGetAutoApprovalConfig
 )
 
-jest.mock('../services/data/audit/get-audit-config', () => mockGetAuditConfig)
+jest.mock('../../../app/services/data/audit/get-audit-config', () => mockGetAuditConfig)
 
 jest.mock(
-  '../services/data/update-auto-approval-config',
+  '../../../app/services/data/update-auto-approval-config',
   () => mockUpdateAutoApprovalConfig
 )
 
-jest.mock('../services/data/audit/update-audit-config', () => mockUpdateAuditConfig)
-jest.mock('../services/domain/auto-approval-config', () => mockAutoApprovalConfig)
-jest.mock('../services/domain/audit-config', () => mockAuditConfig)
+jest.mock('../../../app/services/data/audit/update-audit-config', () => mockUpdateAuditConfig)
+jest.mock('../../../app/services/domain/auto-approval-config', () => mockAutoApprovalConfig)
+jest.mock('../../../app/services/domain/audit-config', () => mockAuditConfig)
 
 describe('routes/config', function () {
   let app

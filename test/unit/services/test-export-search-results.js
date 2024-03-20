@@ -3,12 +3,12 @@ let mockGetClaimListForAdvancedSearch
 let mockTransformClaimDataForExport
 
 jest.mock(
-  '../services/data/get-claim-list-for-advanced-search',
+  '../../../app/services/data/get-claim-list-for-advanced-search',
   () => mockGetClaimListForAdvancedSearch
 )
 
 jest.mock(
-  '../services/transform-claim-data-for-export',
+  '../../../app/services/transform-claim-data-for-export',
   () => mockTransformClaimDataForExport
 )
 

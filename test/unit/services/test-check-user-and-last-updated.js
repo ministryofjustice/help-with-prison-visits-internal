@@ -7,7 +7,7 @@ const OTHER_USER = 'other@test.com'
 
 const mockCheckUserAssignment = jest.fn()
 
-jest.mock('./check-user-assignment', () => mockCheckUserAssignment)
+jest.mock('../../../app/services/check-user-assignment', () => mockCheckUserAssignment)
 
 const checkUserAndLastUpdated = require('../../../app/services/check-user-and-last-updated')
 

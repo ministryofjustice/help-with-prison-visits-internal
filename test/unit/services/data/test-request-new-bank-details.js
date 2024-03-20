@@ -6,14 +6,14 @@ const mockInsertClaimEvent = jest.fn().mockResolvedValue()
 const mockUpdateClaimStatusRequestingBankDetails = jest.fn().mockResolvedValue()
 
 jest.mock(
-  './insert-task-send-claim-notification',
+  '../../../../app/services/data/insert-task-send-claim-notification',
   () => mockInsertTaskSendClaimNotification
 )
 
-jest.mock('./insert-claim-event', () => mockInsertClaimEvent)
+jest.mock('../../../../app/services/data/insert-claim-event', () => mockInsertClaimEvent)
 
 jest.mock(
-  './update-claim-status-requesting-bank-details',
+  '../../../../app/services/data/update-claim-status-requesting-bank-details',
   () => mockUpdateClaimStatusRequestingBankDetails
 )
 

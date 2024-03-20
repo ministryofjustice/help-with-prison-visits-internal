@@ -101,11 +101,11 @@ const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
 const CLAIM_CHILD_COUNT = [{ ClaimId: 1, Count: 1 }]
 
-jest.mock('../services/data/get-claim-escorts', () => mockGetClaimEscorts)
-jest.mock('../services/data/get-claim-child-counts', () => mockGetClaimChildCounts)
+jest.mock('../../../app/services/data/get-claim-escorts', () => mockGetClaimEscorts)
+jest.mock('../../../app/services/data/get-claim-child-counts', () => mockGetClaimChildCounts)
 
 jest.mock(
-  '../services/data/get-claim-expenses-for-claims',
+  '../../../app/services/data/get-claim-expenses-for-claims',
   () => mockGetClaimExpensesForClaims
 )
 
