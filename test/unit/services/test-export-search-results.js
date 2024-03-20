@@ -1,23 +1,23 @@
 let exportSearchResults
-let getClaimListForAdvancedSearchStub
-let transformClaimDataForExportStub
+let mockGetClaimListForAdvancedSearch
+let mockTransformClaimDataForExport
 
 jest.mock(
   '../services/data/get-claim-list-for-advanced-search',
-  () => getClaimListForAdvancedSearchStub
+  () => mockGetClaimListForAdvancedSearch
 )
 
 jest.mock(
   '../services/transform-claim-data-for-export',
-  () => transformClaimDataForExportStub
+  () => mockTransformClaimDataForExport
 )
 
 describe('services/export-search-results', function () {
   beforeAll(function () {
     const getClaimListForAdvancedSearchResult = { claims: [], total: 0 }
 
-    getClaimListForAdvancedSearchStub = jest.fn().mockResolvedValue(getClaimListForAdvancedSearchResult)
-    transformClaimDataForExportStub = jest.fn().mockResolvedValue([])
+    mockGetClaimListForAdvancedSearch = jest.fn().mockResolvedValue(getClaimListForAdvancedSearchResult)
+    mockTransformClaimDataForExport = jest.fn().mockResolvedValue([])
 
     exportSearchResults = require('../../../app/services/export-search-results')
   })
@@ -27,8 +27,8 @@ describe('services/export-search-results', function () {
 
     return exportSearchResults(searchCriteria)
       .then(function () {
-        expect(getClaimListForAdvancedSearchStub.calledWith(searchCriteria, 0, Number.MAX_SAFE_INTEGER)).toBe(true) //eslint-disable-line
-        expect(transformClaimDataForExportStub).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetClaimListForAdvancedSearch.calledWith(searchCriteria, 0, Number.MAX_SAFE_INTEGER)).toBe(true) //eslint-disable-line
+        expect(mockTransformClaimDataForExport).toHaveBeenCalledTimes(1) //eslint-disable-line
       })
   })
 })

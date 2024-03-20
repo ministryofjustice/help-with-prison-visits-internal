@@ -2,9 +2,9 @@ const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
 const sinon = require('sinon')
 
-let getClaimListForSearch
-let displayHelperStub
-let authorisation
+let mockGetClaimListForSearch
+let mockDisplayHelper
+let mockAuthorisation
 let mockHasRoles
 
 const RETURNED_CLAIM = {
@@ -18,19 +18,19 @@ const RETURNED_CLAIM = {
   Name: 'Joe Bloggs'
 }
 
-jest.mock('../services/authorisation', () => authorisation)
-jest.mock('../services/data/get-claim-list-for-search', () => getClaimListForSearch)
-jest.mock('../views/helpers/display-helper', () => displayHelperStub)
+jest.mock('../services/authorisation', () => mockAuthorisation)
+jest.mock('../services/data/get-claim-list-for-search', () => mockGetClaimListForSearch)
+jest.mock('../views/helpers/display-helper', () => mockDisplayHelper)
 
 describe('routes/index', function () {
   let app
 
   beforeEach(function () {
     mockHasRoles = jest.fn()
-    authorisation = { hasRoles: mockHasRoles }
-    getClaimListForSearch = jest.fn()
-    displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
-    displayHelperStub.getClaimTypeDisplayName.mockReturnValue('First time')
+    mockAuthorisation = { hasRoles: mockHasRoles }
+    mockGetClaimListForSearch = jest.fn()
+    mockDisplayHelper = sinon.stub({ getClaimTypeDisplayName: function () {} })
+    mockDisplayHelper.getClaimTypeDisplayName.mockReturnValue('First time')
 
     const route = require('../../../app/routes/search')
 
@@ -55,13 +55,13 @@ describe('routes/index', function () {
 
     it('should respond with a 200 and pass query string to data object', function () {
       const searchQuery = 'Joe Bloggs'
-      getClaimListForSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
+      mockGetClaimListForSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
       return supertest(app)
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(getClaimListForSearch.calledWith(searchQuery, start, length)).toBe(true) //eslint-disable-line
+          expect(mockGetClaimListForSearch.calledWith(searchQuery, start, length)).toBe(true) //eslint-disable-line
           expect(response.body.recordsTotal).toBe(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
         })
@@ -73,13 +73,13 @@ describe('routes/index', function () {
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
-          expect(getClaimListForSearch).not.toHaveBeenCalled() //eslint-disable-line
+          expect(mockGetClaimListForSearch).not.toHaveBeenCalled() //eslint-disable-line
         })
     })
 
     it('should respond with a 500 promise rejects', function () {
       const searchQuery = 'Joe Bloggs'
-      getClaimListForSearch.mockRejectedValue()
+      mockGetClaimListForSearch.mockRejectedValue()
       return supertest(app)
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(500)

@@ -3,23 +3,23 @@ const express = require('express')
 const mockViewEngine = require('./mock-view-engine')
 
 let mockHasRoles
-let getDashboardDataStub
-let authorisation
+let mockGetDashboardData
+let mockAuthorisation
 
 jest.mock(
   '../../app/services/data/dashboard/get-dashboard-data',
-  () => getDashboardDataStub
+  () => mockGetDashboardData
 )
 
-jest.mock('../services/authorisation', () => authorisation)
+jest.mock('../services/authorisation', () => mockAuthorisation)
 
 describe('routes/index', function () {
   let app
 
   beforeEach(function () {
-    getDashboardDataStub = jest.fn().mockResolvedValue({})
+    mockGetDashboardData = jest.fn().mockResolvedValue({})
     mockHasRoles = jest.fn()
-    authorisation = { hasRoles: mockHasRoles }
+    mockAuthorisation = { hasRoles: mockHasRoles }
 
     const route = require('../../../app/routes/dashboard')
 
@@ -35,7 +35,7 @@ describe('routes/index', function () {
         .expect(200)
         .expect(function () {
           expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(getDashboardDataStub).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetDashboardData).toHaveBeenCalledTimes(1) //eslint-disable-line
         })
     })
   })

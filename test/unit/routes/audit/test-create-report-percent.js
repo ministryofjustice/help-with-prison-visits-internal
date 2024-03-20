@@ -2,7 +2,7 @@ const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
 
 const mockHasRoles = jest.fn()
-let authorisation
+let mockAuthorisation
 const mockAddAuditSessionData = jest.fn()
 const mockGetAuditSessionData = jest.fn()
 
@@ -10,11 +10,11 @@ describe('routes/audit/create-report-percent', function () {
   let app
 
   beforeEach(function () {
-    authorisation = {
+    mockAuthorisation = {
       hasRoles: mockHasRoles
     }
 
-    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
     jest.mock('../../../../app/services/add-audit-session-data', () => mockAddAuditSessionData)
     jest.mock('../../../../app/services/get-audit-session-data', () => mockGetAuditSessionData)
 

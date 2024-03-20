@@ -66,7 +66,7 @@ const CLAIM_DOCUMENT = {
   Filepath: 'test/resources/testfile.txt'
 }
 
-let authorisation
+let mockAuthorisation
 const mockGetIndividualClaimDetails = jest.fn()
 const mockSubmitClaimResponse = jest.fn()
 const mockClaimDecision = jest.fn()
@@ -101,7 +101,7 @@ describe('routes/claim/view-claim', function () {
   let awsStub
 
   beforeEach(function () {
-    authorisation = { hasRoles: mockHasRoles }
+    mockAuthorisation = { hasRoles: mockHasRoles }
     mockGetClaimLastUpdated.mockResolvedValue({})
     mockRejectionReasonId.mockResolvedValue()
     mockRejectionReasons.mockResolvedValue()
@@ -114,11 +114,11 @@ describe('routes/claim/view-claim', function () {
       }
     }
 
-    const awsHelperStub = {
+    const mockAwsHelper = {
       AWSHelper: awsStub
     }
 
-    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
     jest.mock(
       '../../../../app/services/data/get-individual-claim-details',
       () => mockGetIndividualClaimDetails
@@ -184,7 +184,7 @@ describe('routes/claim/view-claim', function () {
       () => mockUpdateVisitorBenefirExpiryDate
     )
     jest.mock('../../../../app/services/domain/benefit-expiry-date', () => mockBenefitExpiryDate)
-    jest.mock('../../../../app/services/aws-helper', () => awsHelperStub)
+    jest.mock('../../../../app/services/aws-helper', () => mockAwsHelper)
 
     const route = require('../../../../app/routes/claim/view-claim')
     app = routeHelper.buildApp(route)
@@ -203,7 +203,7 @@ describe('routes/claim/view-claim', function () {
         .get('/claim/123')
         .expect(200)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
         })
     })
@@ -224,7 +224,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_APPROVE)
         .expect(302)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimExpenseResponses).toHaveBeenCalledTimes(1) //eslint-disable-line
@@ -261,7 +261,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_APPROVE)
         .expect(302)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimExpenseResponses).toHaveBeenCalledTimes(1) //eslint-disable-line
@@ -273,7 +273,7 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 400 when user and user and last updated check throws validation error', function () {
-      mockCheckUserAndLastUpdated.throws(new ValidationError({ reason: {} }))
+      mockCheckUserAndLastUpdated.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
 
       return supertest(app)
@@ -281,7 +281,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_APPROVE)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -289,7 +289,7 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 400 when invalid data entered', function () {
-      mockClaimDecision.throws(new ValidationError({ reason: {} }))
+      mockClaimDecision.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
       mockCheckUserAndLastUpdated.mockResolvedValue()
 
@@ -298,7 +298,7 @@ describe('routes/claim/view-claim', function () {
         .send(INCOMPLETE_DATA)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -324,7 +324,7 @@ describe('routes/claim/view-claim', function () {
 
       mockCheckUserAndLastUpdated.mockResolvedValue()
       mockGetClaimExpenseResponses.mockReturnValue([{}])
-      mockSubmitClaimResponse.throws(new ValidationError())
+      mockSubmitClaimResponse.mockImplementation(() => { throw new ValidationError() })
       mockGetIndividualClaimDetails.mockResolvedValue(claimDetails)
       mockMergeClaimExpensesWithSubmittedResponses.mockReturnValue()
 
@@ -362,7 +362,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('POST /claim/:claimId/add-deduction', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
-      mockCheckUserAndLastUpdated.throws(new ValidationError({ reason: {} }))
+      mockCheckUserAndLastUpdated.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
 
       return supertest(app)
@@ -370,7 +370,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -385,7 +385,7 @@ describe('routes/claim/view-claim', function () {
       mockCheckUserAndLastUpdated.mockResolvedValue()
       mockGetIndividualClaimDetails.mockResolvedValue(claimData)
       mockClaimDecision.mockReturnValue({})
-      mockInsertDeduction.throws(new ValidationError())
+      mockInsertDeduction.mockImplementation(() => { throw new ValidationError() })
       mockMergeClaimExpensesWithSubmittedResponses.mockReturnValue({})
 
       return supertest(app)
@@ -393,7 +393,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -434,7 +434,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('POST /claim/:claimId/remove-deduction', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
-      mockCheckUserAndLastUpdated.throws(new ValidationError({ reason: {} }))
+      mockCheckUserAndLastUpdated.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
 
       return supertest(app)
@@ -442,7 +442,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -480,7 +480,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('POST /claim/:claimId/assign-self', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
-      mockCheckUserAndLastUpdated.throws(new ValidationError({ reason: {} }))
+      mockCheckUserAndLastUpdated.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
 
       return supertest(app)
@@ -488,7 +488,7 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -526,7 +526,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('POST /claim/:claimId/unassign', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
-      mockCheckUserAndLastUpdated.throws(new ValidationError({ reason: {} }))
+      mockCheckUserAndLastUpdated.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
 
       return supertest(app)
@@ -534,7 +534,7 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -573,14 +573,14 @@ describe('routes/claim/view-claim', function () {
   describe('POST /claim/:claimId/update-overpayment-status', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
-      mockCheckUserAndLastUpdated.throws(new ValidationError({ reason: {} }))
+      mockCheckUserAndLastUpdated.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
 
       return supertest(app)
         .post('/claim/123/update-overpayment-status')
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -612,14 +612,14 @@ describe('routes/claim/view-claim', function () {
       mockGetIndividualClaimDetails.mockResolvedValue(claimData)
       mockOverpaymentResponse.mockReturnValue(overpaymentResponse)
       mockCheckUserAndLastUpdated.mockResolvedValue()
-      mockUpdateClaimOverpaymentStatus.throws(new ValidationError())
+      mockUpdateClaimOverpaymentStatus.mockImplementation(() => { throw new ValidationError() })
 
       return supertest(app)
         .post('/claim/123/update-overpayment-status')
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -643,14 +643,14 @@ describe('routes/claim/view-claim', function () {
   describe('POST /claim/:claimId/payout-barcode-expired', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
-      mockCheckUserAndLastUpdated.throws(new ValidationError({ reason: {} }))
+      mockCheckUserAndLastUpdated.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
 
       return supertest(app)
         .post('/claim/123/payout-barcode-expired')
         .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -673,7 +673,7 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 400 when marking claim as payout expired and a validation error occurs', function () {
-      mockPayoutBarcodeExpiredClaim.throws(new ValidationError())
+      mockPayoutBarcodeExpiredClaim.mockImplementation(() => { throw new ValidationError() })
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
       mockCheckUserAndLastUpdated.mockResolvedValue()
 
@@ -729,14 +729,14 @@ describe('routes/claim/view-claim', function () {
   describe('POST /claim/:claimId/close-advance-claim', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
-      mockCheckUserAndLastUpdated.throws(new ValidationError({ reason: {} }))
+      mockCheckUserAndLastUpdated.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
 
       return supertest(app)
         .post('/claim/123/close-advance-claim')
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
@@ -759,7 +759,7 @@ describe('routes/claim/view-claim', function () {
     })
 
     it('should respond with 400 when closing claim and a validation error occurs', function () {
-      mockCloseAdvanceClaim.throws(new ValidationError())
+      mockCloseAdvanceClaim.mockImplementation(() => { throw new ValidationError() })
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
       mockCheckUserAndLastUpdated.mockResolvedValue()
 
@@ -788,14 +788,14 @@ describe('routes/claim/view-claim', function () {
   describe('POST /claim/:claimId/request-new-payment-details', function () {
     it('should respond with 400 when user and last updated check throws validation error', function () {
       mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
-      mockCheckUserAndLastUpdated.throws(new ValidationError({ reason: {} }))
+      mockCheckUserAndLastUpdated.mockImplementation(() => { throw new ValidationError({ reason: {} }) })
 
       return supertest(app)
         .post('/claim/123/request-new-payment-details')
         .send(VALID_DATA_REQUEST_BANK_DETAILS)
         .expect(400)
         .expect(function () {
-          expect(authorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line

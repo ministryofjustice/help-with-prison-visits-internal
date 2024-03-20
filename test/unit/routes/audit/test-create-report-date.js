@@ -9,7 +9,7 @@ const VALID_DATA = {
   auditReportEndDateMonth: '01',
   auditReportEndDateYear: '2020'
 }
-let authorisation
+let mockAuthorisation
 const mockHasRoles = jest.fn()
 const mockGetClaimCount = jest.fn()
 const mockGetClaimCountOverThreshold = jest.fn()
@@ -24,11 +24,11 @@ describe('routes/audit/create-report-date', function () {
     mockGetClaimCount.mockResolvedValue([{ Count: 0 }])
     mockGetClaimCountOverThreshold.mockResolvedValue([{ Count: 0 }])
     mockGetAuditConfig.mockResolvedValue({ ThresholdAmount: 250 })
-    authorisation = {
+    mockAuthorisation = {
       hasRoles: mockHasRoles
     }
 
-    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
     jest.mock('../../../../app/services/data/audit/get-claim-count', () => mockGetClaimCount)
     jest.mock(
       '../../../../app/services/data/audit/get-claim-count-over-threshold',

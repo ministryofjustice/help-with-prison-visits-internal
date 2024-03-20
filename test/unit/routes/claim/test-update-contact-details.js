@@ -2,7 +2,7 @@ const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 
-let authorisation
+let mockAuthorisation
 const mockGetIndividualClaimDetails = jest.fn()
 const mockUpdateContactDetailsResponse = jest.fn()
 const mockUpdateVisitorContactDetails = jest.fn()
@@ -15,11 +15,11 @@ describe('routes/claim/update-contact-details', function () {
   const REDIRECT_URL = `/claim/${CLAIMID}`
 
   beforeEach(function () {
-    authorisation = { hasRoles: mockHasRoles }
+    mockAuthorisation = { hasRoles: mockHasRoles }
     mockGetIndividualClaimDetails.mockResolvedValue({ claim: {} })
     mockUpdateVisitorContactDetails.mockResolvedValue()
 
-    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
     jest.mock(
       '../../../../app/services/data/get-individual-claim-details',
       () => mockGetIndividualClaimDetails
@@ -67,14 +67,14 @@ describe('routes/claim/update-contact-details', function () {
     })
 
     it('should respond with a 400 if domain object validation fails.', function () {
-      mockUpdateContactDetailsResponse.throws(new ValidationError())
+      mockUpdateContactDetailsResponse.mockImplementation(() => { throw new ValidationError() })
       return supertest(app)
         .post(ROUTE)
         .expect(400)
     })
 
     it('should respond with a 500 if any non-validation error occurs.', function () {
-      mockUpdateContactDetailsResponse.throws(new Error())
+      mockUpdateContactDetailsResponse.mockImplementation(() => { throw new Error() })
       return supertest(app)
         .post(ROUTE)
         .expect(500)

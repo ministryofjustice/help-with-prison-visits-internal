@@ -1,7 +1,7 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
 
-let authorisation
+let mockAuthorisation
 const mockHasRoles = jest.fn()
 const mockGetClaimData = jest.fn()
 const mockUpdateClaimData = jest.fn()
@@ -14,13 +14,13 @@ describe('routes/audit/check-claim', function () {
   beforeEach(function () {
     mockGetClaimData.mockResolvedValue([{}])
     mockUpdateClaimData.mockResolvedValue()
-    authorisation = {
+    mockAuthorisation = {
       hasRoles: mockHasRoles
     }
 
     const route = require('../../../../app/routes/audit/check-claim')
 
-    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
     jest.mock('../../../../app/services/data/audit/get-claim-data', () => mockGetClaimData)
     jest.mock('../../../../app/services/data/audit/update-claim-data', () => mockUpdateClaimData)
     jest.mock('../../../../app/services/add-audit-session-data', () => mockAddAuditSessionData)

@@ -11,7 +11,7 @@ describe('routes/claim/file-upload', function () {
   const BASEROUTE = `/claim/file-upload/${REFERENCE}/${CLAIMID}/`
   const VALIDROUTE = `${BASEROUTE}VISIT_CONFIRMATION?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`
 
-  let authorisation
+  let mockAuthorisation
   const mockHasRoles = jest.fn()
   const mockFileUpload = jest.fn()
   const mockClaimDocumentUpdate = jest.fn()
@@ -22,27 +22,27 @@ describe('routes/claim/file-upload', function () {
   const mockGetUploadFilename = jest.fn()
   const mockGetFilenamePrefix = jest.fn()
   const mockUploadStub = jest.fn()
-  let awsStub
+  let mockAws
 
   beforeEach(function () {
     const uploadFilename = '1234.png'
     const filenamePrefix = '/test/path'
-    authorisation = { hasRoles: mockHasRoles }
+    mockAuthorisation = { hasRoles: mockHasRoles }
     mockGetFileUploadPath.mockReturnValue('/tmp/1234.png')
     mockGetUploadFilename.mockReturnValue(uploadFilename)
     mockGetFilenamePrefix.mockReturnValue(filenamePrefix)
 
-    awsStub = function () {
+    mockAws = function () {
       return {
         upload: mockUpload.mockResolvedValue(`${filenamePrefix}${uploadFilename}`)
       }
     }
 
     const awsHelperStub = {
-      AWSHelper: awsStub
+      AWSHelper: mockAws
     }
 
-    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
     jest.mock('../../../../app/services/upload', () => mockUploadStub)
     jest.mock('../../../../app/services/domain/file-upload', () => mockFileUpload)
     jest.mock(
@@ -73,7 +73,7 @@ describe('routes/claim/file-upload', function () {
         .get(VALIDROUTE)
         .expect(function () {
           mockGenerateCSRFToken.toHaveBeenCalledTimes(1)
-          authorisation.hasRoles.toHaveBeenCalledTimes(1)
+          mockAuthorisation.hasRoles.toHaveBeenCalledTimes(1)
         })
     })
 
@@ -87,7 +87,7 @@ describe('routes/claim/file-upload', function () {
       return supertest(app)
         .get(VALIDROUTE)
         .expect(function () {
-          authorisation.hasRoles.toHaveBeenCalledTimes(1)
+          mockAuthorisation.hasRoles.toHaveBeenCalledTimes(1)
         })
     })
 
@@ -115,7 +115,7 @@ describe('routes/claim/file-upload', function () {
 
     it('should catch a validation error', function () {
       mockUploadStub.callsArg(2).mockReturnValue({})
-      mockFileUpload.throws(new ValidationError())
+      mockFileUpload.mockImplementation(() => { throw new ValidationError() })
       return supertest(app)
         .post(VALIDROUTE)
         .expect(400)

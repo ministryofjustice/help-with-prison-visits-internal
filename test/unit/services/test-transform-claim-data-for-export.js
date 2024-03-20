@@ -5,9 +5,9 @@ const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const paymentMethodEnum = require('../../../app/constants/payment-method-enum')
 
 let transformClaimDataForExport
-let getClaimEscortsStub
-let getClaimChildCountsStub
-let getClaimExpensesForClaimsStub
+let mockGetClaimEscorts
+let mockGetClaimChildCounts
+let mockGetClaimExpensesForClaims
 
 const rejectionReason = 'Applicant is not sole visit/next of kin'
 
@@ -101,19 +101,19 @@ const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
 const CLAIM_CHILD_COUNT = [{ ClaimId: 1, Count: 1 }]
 
-jest.mock('../services/data/get-claim-escorts', () => getClaimEscortsStub)
-jest.mock('../services/data/get-claim-child-counts', () => getClaimChildCountsStub)
+jest.mock('../services/data/get-claim-escorts', () => mockGetClaimEscorts)
+jest.mock('../services/data/get-claim-child-counts', () => mockGetClaimChildCounts)
 
 jest.mock(
   '../services/data/get-claim-expenses-for-claims',
-  () => getClaimExpensesForClaimsStub
+  () => mockGetClaimExpensesForClaims
 )
 
 describe('services/transform-claim-data-for-export', function () {
   beforeEach(function () {
-    getClaimEscortsStub = jest.fn().mockResolvedValue(CLAIM_ESCORT)
-    getClaimChildCountsStub = jest.fn().mockResolvedValue(CLAIM_CHILD_COUNT)
-    getClaimExpensesForClaimsStub = jest.fn().mockResolvedValue(CLAIM_EXPENSES)
+    mockGetClaimEscorts = jest.fn().mockResolvedValue(CLAIM_ESCORT)
+    mockGetClaimChildCounts = jest.fn().mockResolvedValue(CLAIM_CHILD_COUNT)
+    mockGetClaimExpensesForClaims = jest.fn().mockResolvedValue(CLAIM_EXPENSES)
 
     transformClaimDataForExport = require('../../../app/services/transform-claim-data-for-export')
   })
@@ -147,9 +147,9 @@ describe('services/transform-claim-data-for-export', function () {
   it('should call all relevant functions', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function (result) {
-        expect(getClaimEscortsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
-        expect(getClaimExpensesForClaimsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
-        expect(getClaimChildCountsStub.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
+        expect(mockGetClaimEscorts.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
+        expect(mockGetClaimExpensesForClaims.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
+        expect(mockGetClaimChildCounts.calledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)).toBe(true) //eslint-disable-line
       })
   })
 

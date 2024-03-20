@@ -4,15 +4,15 @@ let claimJSONInput
 let expectedCSVHeaders
 
 let getCSVColumnHeaders
-let getMaxNumberOfExpensesStub
+let mockGetMaxNumberOfExpenses
 
-jest.mock('./get-max-number-of-expenses', () => getMaxNumberOfExpensesStub)
+jest.mock('./get-max-number-of-expenses', () => mockGetMaxNumberOfExpenses)
 
 describe('services/get-csv-column-headers', function () {
   beforeEach(function () {
     claimJSONInput = getCSVTestClaims()
     expectedCSVHeaders = getCSVTestHeaders()
-    getMaxNumberOfExpensesStub = jest.fn().mockReturnValue(14)
+    mockGetMaxNumberOfExpenses = jest.fn().mockReturnValue(14)
     getCSVColumnHeaders = require('../../../app/services/get-csv-column-headers')
   })
 

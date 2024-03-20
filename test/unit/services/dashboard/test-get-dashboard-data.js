@@ -1,38 +1,38 @@
-const getAutoApprovedClaimCountStub = jest.fn().mockResolvedValue([{ Count: 0 }])
-const getInProgressClaimCountStub = jest.fn().mockResolvedValue([{ Count: 0 }])
-const getManuallyApprovedClaimCountStub = jest.fn().mockResolvedValue([{ Count: 0 }])
-const getPaidClaimCountStub = jest.fn().mockResolvedValue([{ Count: 0 }])
-const getPendingClaimCountStub = jest.fn().mockResolvedValue([{ Count: 0 }])
-const getRejectedClaimCountStub = jest.fn().mockResolvedValue([{ Count: 0 }])
+const mockGetAutoApprovedClaimCount = jest.fn().mockResolvedValue([{ Count: 0 }])
+const mockGetInProgressClaimCount = jest.fn().mockResolvedValue([{ Count: 0 }])
+const mockGetManuallyApprovedClaimCount = jest.fn().mockResolvedValue([{ Count: 0 }])
+const mockGetPaidClaimCount = jest.fn().mockResolvedValue([{ Count: 0 }])
+const mockGetPendingClaimCount = jest.fn().mockResolvedValue([{ Count: 0 }])
+const mockGetRejectedClaimCount = jest.fn().mockResolvedValue([{ Count: 0 }])
 
 jest.mock(
   '../../../services/data/dashboard/get-auto-approved-claim-count',
-  () => getAutoApprovedClaimCountStub
+  () => mockGetAutoApprovedClaimCount
 )
 
 jest.mock(
   '../../../services/data/dashboard/get-in-progress-claim-count',
-  () => getInProgressClaimCountStub
+  () => mockGetInProgressClaimCount
 )
 
 jest.mock(
   '../../../services/data/dashboard/get-manually-approved-claim-count',
-  () => getManuallyApprovedClaimCountStub
+  () => mockGetManuallyApprovedClaimCount
 )
 
 jest.mock(
   '../../../services/data/dashboard/get-paid-claim-count',
-  () => getPaidClaimCountStub
+  () => mockGetPaidClaimCount
 )
 
 jest.mock(
   '../../../services/data/dashboard/get-pending-claim-count',
-  () => getPendingClaimCountStub
+  () => mockGetPendingClaimCount
 )
 
 jest.mock(
   '../../../services/data/dashboard/get-rejected-claim-count',
-  () => getRejectedClaimCountStub
+  () => mockGetRejectedClaimCount
 )
 
 const getDashboardData = require('../../../../app/services/data/dashboard/get-dashboard-data')
@@ -42,19 +42,19 @@ describe('services/data/dashboard/get-dashboard-data', function () {
     const testFilter = 'test filter'
     return getDashboardData(testFilter)
       .then(function (result) {
-        expect(getAutoApprovedClaimCountStub.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(getInProgressClaimCountStub.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(getManuallyApprovedClaimCountStub.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(getPaidClaimCountStub.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(getPendingClaimCountStub.calledWith(testFilter)).toBe(true) //eslint-disable-line
-        expect(getRejectedClaimCountStub.calledWith(testFilter)).toBe(true) //eslint-disable-line
+        expect(mockGetAutoApprovedClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
+        expect(mockGetInProgressClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
+        expect(mockGetManuallyApprovedClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
+        expect(mockGetPaidClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
+        expect(mockGetPendingClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
+        expect(mockGetRejectedClaimCount.calledWith(testFilter)).toBe(true) //eslint-disable-line
 
-        expect(getAutoApprovedClaimCountStub).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(getInProgressClaimCountStub).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(getManuallyApprovedClaimCountStub).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(getPaidClaimCountStub).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(getPendingClaimCountStub).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(getRejectedClaimCountStub).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetAutoApprovedClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetInProgressClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetManuallyApprovedClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetPaidClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetPendingClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetRejectedClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
       })
   })
 

@@ -1,20 +1,20 @@
 const tasksEnum = require('../../../../app/constants/tasks-enum')
 const claimEventEnum = require('../../../../app/constants/claim-event-enum')
 
-const insertTaskSendClaimNotificationStub = jest.fn().mockResolvedValue()
-const insertClaimEventStub = jest.fn().mockResolvedValue()
-const updateClaimStatusRequestingBankDetailsStub = jest.fn().mockResolvedValue()
+const mockInsertTaskSendClaimNotification = jest.fn().mockResolvedValue()
+const mockInsertClaimEvent = jest.fn().mockResolvedValue()
+const mockUpdateClaimStatusRequestingBankDetails = jest.fn().mockResolvedValue()
 
 jest.mock(
   './insert-task-send-claim-notification',
-  () => insertTaskSendClaimNotificationStub
+  () => mockInsertTaskSendClaimNotification
 )
 
-jest.mock('./insert-claim-event', () => insertClaimEventStub)
+jest.mock('./insert-claim-event', () => mockInsertClaimEvent)
 
 jest.mock(
   './update-claim-status-requesting-bank-details',
-  () => updateClaimStatusRequestingBankDetailsStub
+  () => mockUpdateClaimStatusRequestingBankDetails
 )
 
 const requestNewBankDetails = require('../../../../app/services/data/request-new-bank-details')
@@ -28,9 +28,9 @@ describe('services/data/request-new-bank-details', function () {
     const user = 'user'
     return requestNewBankDetails(reference, eligibilityId, claimId, additionalInformaiton, user)
       .then(function (result) {
-        expect(updateClaimStatusRequestingBankDetailsStub.calledWith(reference, claimId)).toBe(true) //eslint-disable-line
-        expect(insertClaimEventStub.calledWith(reference, eligibilityId, claimId, claimEventEnum.REQUEST_NEW_BANK_DETAILS.value, additionalInformaiton, '', user, false)).toBe(true) //eslint-disable-line
-        expect(insertTaskSendClaimNotificationStub.calledWith(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION, reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
+        expect(mockUpdateClaimStatusRequestingBankDetails.calledWith(reference, claimId)).toBe(true) //eslint-disable-line
+        expect(mockInsertClaimEvent.calledWith(reference, eligibilityId, claimId, claimEventEnum.REQUEST_NEW_BANK_DETAILS.value, additionalInformaiton, '', user, false)).toBe(true) //eslint-disable-line
+        expect(mockInsertTaskSendClaimNotification.calledWith(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION, reference, eligibilityId, claimId)).toBe(true) //eslint-disable-line
       })
   })
 })

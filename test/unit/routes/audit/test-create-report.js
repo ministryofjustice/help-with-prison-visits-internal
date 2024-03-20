@@ -2,7 +2,7 @@ const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
 
 const mockHasRoles = jest.fn()
-let authorisation
+let mockAuthorisation
 const mockGetAuditData = jest.fn()
 const mockGetAllClaimsDataBelowThreshold = jest.fn()
 const mockGetAllClaimsDataOverThreshold = jest.fn()
@@ -14,7 +14,7 @@ describe('routes/audit/create-report', function () {
   let app
 
   beforeEach(function () {
-    authorisation = {
+    mockAuthorisation = {
       hasRoles: mockHasRoles
     }
     mockGetAuditData.mockResolvedValue([])
@@ -22,7 +22,7 @@ describe('routes/audit/create-report', function () {
     mockGetAllClaimsDataOverThreshold.mockResolvedValue([])
     mockUpdateReport.mockResolvedValue(1)
 
-    jest.mock('../../../../app/services/authorisation', () => authorisation)
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
     jest.mock('../../../../app/services/data/audit/get-audit-data', () => mockGetAuditData)
     jest.mock(
       '../../../../app/services/data/audit/get-all-claims-data-below-threshold',
