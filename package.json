@@ -44,6 +44,9 @@
     "collectCoverageFrom": [
       "app/**/*.{ts,js,jsx,mjs}"
     ],
+    "testPathIgnorePatterns" : [
+      "<rootDir>/test/unit/routes/mock-view-engine.js" 
+    ],
     "testMatch": [
       "<rootDir>/test/unit/**/?(*.){ts,js,jsx,mjs}"
     ],

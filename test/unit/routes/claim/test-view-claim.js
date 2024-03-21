@@ -339,6 +339,7 @@ describe('routes/claim/view-claim', function () {
 
   describe('GET /claim/:claimId/download', function () {
     it('should respond with 200 if a valid file path is returned', function () {
+      mockGetIndividualClaimDetails.mockResolvedValue(CLAIM_RETURN)
       mockGetClaimDocumentFilePath.mockResolvedValue(CLAIM_DOCUMENT)
       return supertest(app)
         .get('/claim/123/download?claim-document-id=55')
@@ -711,7 +712,7 @@ describe('routes/claim/view-claim', function () {
         .expect(function () {
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockInsertNote).toHaveBeenCalledWith('123', 'This is a note') //eslint-disable-line
+          expect(mockInsertNote).toHaveBeenCalledWith('123', 'This is a note', 'test@test.com') //eslint-disable-line
         })
     })
 
@@ -754,7 +755,7 @@ describe('routes/claim/view-claim', function () {
         .expect(function () {
           expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
           expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCloseAdvanceClaim).toHaveBeenCalledWith('123', 'close advance claim reason') //eslint-disable-line
+          expect(mockCloseAdvanceClaim).toHaveBeenCalledWith('123', 'close advance claim reason', 'test@test.com') //eslint-disable-line
         })
     })
 

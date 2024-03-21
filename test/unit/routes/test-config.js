@@ -1,52 +1,52 @@
-const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
+const routeHelper = require('../../helpers/routes/route-helper')
 const ValidationError = require('../../../app/services/errors/validation-error')
 const autoApprovalRulesEnum = require('../../../app/constants/auto-approval-rules-enum')
 
-let mockHasRoles
-let mockGetAutoApprovalConfig
-let mockGetAuditConfig
-let mockUpdateAutoApprovalConfig
-let mockUpdateAuditConfig
-let mockAutoApprovalConfig
-let mockAuditConfig
-
-jest.mock('../../../app/services/authorisation', () => ({
-  mockHasRoles
-}))
-
-jest.mock(
-  '../../../app/services/data/get-auto-approval-config',
-  () => mockGetAutoApprovalConfig
-)
-
-jest.mock('../../../app/services/data/audit/get-audit-config', () => mockGetAuditConfig)
-
-jest.mock(
-  '../../../app/services/data/update-auto-approval-config',
-  () => mockUpdateAutoApprovalConfig
-)
-
-jest.mock('../../../app/services/data/audit/update-audit-config', () => mockUpdateAuditConfig)
-jest.mock('../../../app/services/domain/auto-approval-config', () => mockAutoApprovalConfig)
-jest.mock('../../../app/services/domain/audit-config', () => mockAuditConfig)
+let mockAuthorisation
+const mockHasRoles = jest.fn()
+const mockGetAutoApprovalConfig = jest.fn()
+const mockGetAuditConfig = jest.fn()
+const mockUpdateAutoApprovalConfig = jest.fn()
+const mockUpdateAuditConfig = jest.fn()
+const mockAutoApprovalConfig = jest.fn()
+const mockAuditConfig = jest.fn()
 
 describe('routes/config', function () {
   let app
 
   beforeEach(function () {
-    mockHasRoles = jest.fn()
-    mockGetAutoApprovalConfig = jest.fn().mockResolvedValue({ RulesDisabled: 'Test' })
-    mockGetAuditConfig = jest.fn().mockResolvedValue({})
-    mockUpdateAutoApprovalConfig = jest.fn().mockResolvedValue()
-    mockUpdateAuditConfig = jest.fn().mockResolvedValue()
-    mockAutoApprovalConfig = jest.fn().mockReturnValue({})
-    mockAuditConfig = jest.fn().mockReturnValue({})
+    mockAuthorisation = {
+      hasRoles: mockHasRoles
+    }
+    mockGetAutoApprovalConfig.mockResolvedValue({ RulesDisabled: 'Test' })
+    mockGetAuditConfig.mockResolvedValue({})
+    mockUpdateAutoApprovalConfig.mockResolvedValue()
+    mockUpdateAuditConfig.mockResolvedValue()
+    mockAutoApprovalConfig.mockReturnValue({})
+    mockAuditConfig.mockReturnValue({})
+
+    jest.mock('../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock(
+      '../../../app/services/data/get-auto-approval-config',
+      () => mockGetAutoApprovalConfig
+    )
+    jest.mock('../../../app/services/data/audit/get-audit-config', () => mockGetAuditConfig)
+    jest.mock(
+      '../../../app/services/data/update-auto-approval-config',
+      () => mockUpdateAutoApprovalConfig
+    )
+    jest.mock('../../../app/services/data/audit/update-audit-config', () => mockUpdateAuditConfig)
+    jest.mock('../../../app/services/domain/auto-approval-config', () => mockAutoApprovalConfig)
+    jest.mock('../../../app/services/domain/audit-config', () => mockAuditConfig)
 
     const route = require('../../../app/routes/config')
 
     app = routeHelper.buildApp(route)
-    route(app)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /config', function () {
@@ -118,11 +118,13 @@ describe('routes/config', function () {
       return supertest(app)
         .post('/config')
         .send({
-          rules: allRules
+          rulesEnabled: allRules
         })
         .expect(function () {
-          mockAutoApprovalConfig.toHaveBeenCalledWith(
+          expect(mockAutoApprovalConfig).toHaveBeenCalledWith(
             'test@test.com',
+            undefined,
+            undefined,
             undefined,
             undefined,
             undefined,
@@ -140,11 +142,13 @@ describe('routes/config', function () {
       return supertest(app)
         .post('/config')
         .send({
-          rules: []
+          rulesEnabled: []
         })
         .expect(function () {
-          mockAutoApprovalConfig.toHaveBeenCalledWith(
+          expect(mockAutoApprovalConfig).toHaveBeenCalledWith(
             'test@test.com',
+            undefined,
+            undefined,
             undefined,
             undefined,
             undefined,

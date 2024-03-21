@@ -35,7 +35,6 @@ describe('routes/claim/update-contact-details', function () {
 
     const route = require('../../../../app/routes/claim/update-contact-details')
     app = routeHelper.buildApp(route)
-    route(app)
   })
 
   afterEach(() => {
@@ -47,7 +46,7 @@ describe('routes/claim/update-contact-details', function () {
       return supertest(app)
         .get(ROUTE)
         .expect(function () {
-          mockGetIndividualClaimDetails.toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledTimes(1)
         })
         .expect(200)
     })
@@ -59,8 +58,8 @@ describe('routes/claim/update-contact-details', function () {
       return supertest(app)
         .post(ROUTE)
         .expect(function () {
-          mockUpdateContactDetailsResponse.toHaveBeenCalledTimes(1)
-          mockUpdateVisitorContactDetails.toHaveBeenCalledTimes(1)
+          expect(mockUpdateContactDetailsResponse).toHaveBeenCalledTimes(1)
+          expect(mockUpdateVisitorContactDetails).toHaveBeenCalledTimes(1)
         })
         .expect('location', REDIRECT_URL)
         .expect(302)

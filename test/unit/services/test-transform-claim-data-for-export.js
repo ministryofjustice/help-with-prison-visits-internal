@@ -5,9 +5,9 @@ const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const paymentMethodEnum = require('../../../app/constants/payment-method-enum')
 
 let transformClaimDataForExport
-let mockGetClaimEscorts
-let mockGetClaimChildCounts
-let mockGetClaimExpensesForClaims
+const mockGetClaimEscorts = jest.fn()
+const mockGetClaimChildCounts = jest.fn()
+const mockGetClaimExpensesForClaims = jest.fn()
 
 const rejectionReason = 'Applicant is not sole visit/next of kin'
 
@@ -101,19 +101,18 @@ const CLAIM_EXPENSES = []
 const CLAIM_ESCORT = [{}]
 const CLAIM_CHILD_COUNT = [{ ClaimId: 1, Count: 1 }]
 
-jest.mock('../../../app/services/data/get-claim-escorts', () => mockGetClaimEscorts)
-jest.mock('../../../app/services/data/get-claim-child-counts', () => mockGetClaimChildCounts)
-
-jest.mock(
-  '../../../app/services/data/get-claim-expenses-for-claims',
-  () => mockGetClaimExpensesForClaims
-)
-
 describe('services/transform-claim-data-for-export', function () {
   beforeEach(function () {
-    mockGetClaimEscorts = jest.fn().mockResolvedValue(CLAIM_ESCORT)
-    mockGetClaimChildCounts = jest.fn().mockResolvedValue(CLAIM_CHILD_COUNT)
-    mockGetClaimExpensesForClaims = jest.fn().mockResolvedValue(CLAIM_EXPENSES)
+    mockGetClaimEscorts.mockResolvedValue(CLAIM_ESCORT)
+    mockGetClaimChildCounts.mockResolvedValue(CLAIM_CHILD_COUNT)
+    mockGetClaimExpensesForClaims.mockResolvedValue(CLAIM_EXPENSES)
+
+    jest.mock('../../../app/services/data/get-claim-escorts', () => mockGetClaimEscorts)
+    jest.mock('../../../app/services/data/get-claim-child-counts', () => mockGetClaimChildCounts)
+    jest.mock(
+      '../../../app/services/data/get-claim-expenses-for-claims',
+      () => mockGetClaimExpensesForClaims
+    )
 
     transformClaimDataForExport = require('../../../app/services/transform-claim-data-for-export')
   })

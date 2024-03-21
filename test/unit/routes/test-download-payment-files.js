@@ -1,21 +1,24 @@
 const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
 
-const mockHasRoles = jest.fn()
-const mockGetDirectPaymentFiles = jest.fn()
-const mockDownload = jest.fn()
-
 const FILES = {
   accessPayFiles: [{ FilePath: 'accessPayFile1' }, { PaymentFileId: 1, Filepath: './test/resources/testfile.txt' }],
   adiJournalFiles: [{ FilePath: 'adiJournalFile1' }, { PaymentFileId: 2, Filepath: './test/resources/testfile.txt' }]
 }
 
+const mockHasRoles = jest.fn()
+const mockGetDirectPaymentFiles = jest.fn()
+const mockDownload = jest.fn()
+let mockAuthorisation
+let mockAws
+let mockAwsHelper
+
 describe('routes/download-payment-files', function () {
   let app
-  let mockAws
-  let mockAwsHelper
 
   beforeEach(function () {
+    mockAuthorisation = { hasRoles: mockHasRoles }
+
     mockAws = function () {
       return {
         download: mockDownload.mockResolvedValue()
@@ -26,13 +29,17 @@ describe('routes/download-payment-files', function () {
       AWSHelper: mockAws
     }
 
-    jest.mock('../../../app/services/authorisation', () => ({ mockHasRoles }))
+    jest.mock('../../../app/services/authorisation', () => mockAuthorisation)
     jest.mock('../../../app/services/data/get-direct-payment-files', () => mockGetDirectPaymentFiles)
     jest.mock('../../../app/services/aws-helper', () => mockAwsHelper)
 
     const route = require('../../../app/routes/download-payment-files')
 
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /download-payment-files', function () {
@@ -80,7 +87,8 @@ describe('routes/download-payment-files', function () {
   describe('GET /download-payment-files/download', function () {
     it('should respond with 200 if valid id entered', function () {
       mockGetDirectPaymentFiles.mockResolvedValue(FILES)
-
+      mockAuthorisation = { hasRoles: mockHasRoles }
+console.log(FILES.adiJournalFiles[1].Filepath)
       mockAws = function () {
         return {
           download: mockDownload.mockResolvedValue(FILES.adiJournalFiles[1].Filepath)
@@ -91,7 +99,7 @@ describe('routes/download-payment-files', function () {
         AWSHelper: mockAws
       }
 
-      jest.mock('../../../app/services/authorisation', () => ({ mockHasRoles }))
+      jest.mock('../../../app/services/authorisation', () => mockAuthorisation)
       jest.mock('../../../app/services/data/get-direct-payment-files', () => mockGetDirectPaymentFiles)
       jest.mock('../../../app/services/aws-helper', () => mockAwsHelper)
 
