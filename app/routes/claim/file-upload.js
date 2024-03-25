@@ -81,7 +81,7 @@ module.exports = function (router) {
         await aws.upload(targetFileName, originalUploadPath)
 
         ClaimDocumentUpdate(req.params.referenceId, fileUpload).then(function () {
-          res.redirect(`/claim/${req.params.claimId}`)
+          return res.redirect(`/claim/${req.params.claimId}`)
         }).catch(function (error) {
           next(error)
         })
