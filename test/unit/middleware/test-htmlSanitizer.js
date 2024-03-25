@@ -3,7 +3,7 @@ const express = require('express')
 const supertest = require('supertest')
 const httpMocks = require('node-mocks-http')
 
-describe.skip('middleware/htmlSanitizer', function () {
+describe('middleware/htmlSanitizer', function () {
   it('should sanitize string with <script> tag', function (done) {
     const mockRequest = httpMocks.createRequest({
       method: 'POST',
@@ -44,7 +44,7 @@ describe.skip('middleware/htmlSanitizer', function () {
     const app = express()
     app.use(express.json())
     app.use(htmlSanitizerMiddleware())
-    app.post('/', function (req, res, next) {
+    app.post('/', function (req, res) {
       res.send({ sanitized: req.body.propertyToSanitize })
     })
     const server = app.listen(3000)
