@@ -94,8 +94,8 @@ const mockRejectionReasons = jest.fn()
 const mockUpdateVisitorBenefirExpiryDate = jest.fn()
 const mockBenefitExpiryDate = jest.fn()
 const mockHasRoles = jest.fn()
-const mockDownload = jest.fn()
-const mockAwsView = jest.fn()
+const mockDownloadClaim = jest.fn()
+const mockAwsClaim = jest.fn()
 
 describe('routes/claim/view-claim', function () {
   let app
@@ -108,12 +108,12 @@ describe('routes/claim/view-claim', function () {
     mockInsertTopUp.mockResolvedValue()
     mockCancelTopUp.mockResolvedValue()
 
-    mockAwsView.mockReturnValue({
-      download: mockDownload.mockResolvedValue(CLAIM_DOCUMENT.Filepath)
+    mockAwsClaim.mockReturnValue({
+      download: mockDownloadClaim.mockResolvedValue(CLAIM_DOCUMENT.Filepath)
     })
 
     const mockAwsHelper = {
-      AWSHelper: mockAwsView
+      AWSHelper: mockAwsClaim
     }
 
     jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)

@@ -9,8 +9,8 @@ const FILES = {
 const mockHasRoles = jest.fn()
 const mockGetDirectPaymentFiles = jest.fn()
 const mockDownload = jest.fn()
+const mockAws = jest.fn()
 let mockAuthorisation
-let mockAws
 let mockAwsHelper
 
 describe('routes/download-payment-files', function () {
@@ -19,11 +19,9 @@ describe('routes/download-payment-files', function () {
   beforeEach(function () {
     mockAuthorisation = { hasRoles: mockHasRoles }
 
-    mockAws = function () {
-      return {
-        download: mockDownload.mockResolvedValue()
-      }
-    }
+    mockAws.mockReturnValue({
+      download: mockDownload.mockResolvedValue()
+    })
 
     mockAwsHelper = {
       AWSHelper: mockAws
@@ -88,12 +86,10 @@ describe('routes/download-payment-files', function () {
     it('should respond with 200 if valid id entered', function () {
       mockGetDirectPaymentFiles.mockResolvedValue(FILES)
       mockAuthorisation = { hasRoles: mockHasRoles }
-      console.log(FILES.adiJournalFiles[1].Filepath)
-      mockAws = function () {
-        return {
-          download: mockDownload.mockResolvedValue(FILES.adiJournalFiles[1].Filepath)
-        }
-      }
+
+      mockAws.mockReturnValue({
+        download: mockDownload.mockResolvedValue(FILES.adiJournalFiles[1].Filepath)
+      })
 
       mockAwsHelper = {
         AWSHelper: mockAws
