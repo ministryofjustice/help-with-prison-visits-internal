@@ -1,5 +1,5 @@
-const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
+const routeHelper = require('../../../helpers/routes/route-helper')
 
 const dateFormatter = require('../../../../app/services/date-formatter')
 const ValidationError = require('../../../../app/services/errors/validation-error')
@@ -95,10 +95,10 @@ const mockUpdateVisitorBenefirExpiryDate = jest.fn()
 const mockBenefitExpiryDate = jest.fn()
 const mockHasRoles = jest.fn()
 const mockDownload = jest.fn()
+const mockAwsView = jest.fn()
 
 describe('routes/claim/view-claim', function () {
   let app
-  let awsStub
 
   beforeEach(function () {
     mockAuthorisation = { hasRoles: mockHasRoles }
@@ -108,14 +108,12 @@ describe('routes/claim/view-claim', function () {
     mockInsertTopUp.mockResolvedValue()
     mockCancelTopUp.mockResolvedValue()
 
-    awsStub = function () {
-      return {
-        download: mockDownload.mockResolvedValue(CLAIM_DOCUMENT.Filepath)
-      }
-    }
+    mockAwsView.mockReturnValue({
+      download: mockDownload.mockResolvedValue(CLAIM_DOCUMENT.Filepath)
+    })
 
     const mockAwsHelper = {
-      AWSHelper: awsStub
+      AWSHelper: mockAwsView
     }
 
     jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
@@ -188,7 +186,6 @@ describe('routes/claim/view-claim', function () {
 
     const route = require('../../../../app/routes/claim/view-claim')
     app = routeHelper.buildApp(route)
-    route(app)
   })
 
   afterEach(() => {

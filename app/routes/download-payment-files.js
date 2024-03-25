@@ -66,9 +66,8 @@ module.exports = function (router) {
           if (!matchingFile) {
             throw new Error('Unable to find file')
           }
-          
+
           const awsDownload = await aws.download(matchingFile.Filepath, matchingFile.Filepath)
-          console.log(awsDownload)
 
           res.download(awsDownload, matchingFile.Filepath)
         })
