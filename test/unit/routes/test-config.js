@@ -55,9 +55,9 @@ describe('routes/config', function () {
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAutoApprovalConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAutoApprovalConfig).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -67,9 +67,9 @@ describe('routes/config', function () {
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAutoApprovalConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAutoApprovalConfig).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -87,11 +87,11 @@ describe('routes/config', function () {
         .post('/config')
         .expect(302)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockUpdateAutoApprovalConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockUpdateAuditConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockAutoApprovalConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockAuditConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockUpdateAutoApprovalConfig).toHaveBeenCalledTimes(1)
+          expect(mockUpdateAuditConfig).toHaveBeenCalledTimes(1)
+          expect(mockAutoApprovalConfig).toHaveBeenCalledTimes(1)
+          expect(mockAuditConfig).toHaveBeenCalledTimes(1)
         })
     })
 

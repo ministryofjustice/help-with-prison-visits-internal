@@ -44,7 +44,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
         return db('ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
       })
       .then(function (claimEvent) {
-        expect(claimAfter.IsOverpaid).toBe(true) //eslint-disable-line
+        expect(claimAfter.IsOverpaid).toBe(true)
         expect(claimAfter.OverpaymentAmount.toString()).toBe(amount)
         expect(claimAfter.OverpaymentReason).toBe(reason)
         expect(claimAfter.LastUpdated).not.toBe(previousLastUpdated)
@@ -83,7 +83,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
         return db('ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
       })
       .then(function (claimEvent) {
-        expect(claimAfter.IsOverpaid).toBe(true) //eslint-disable-line
+        expect(claimAfter.IsOverpaid).toBe(true)
         expect(claimAfter.RemainingOverpaymentAmount.toString()).toBe(remaining)
         expect(claimAfter.OverpaymentAmount).toBe(claimBefore.OverpaymentAmount)
         expect(claimAfter.OverpaymentReason).not.toBe(reason)
@@ -130,7 +130,7 @@ describe('services/data/test-update-claim-overpayment-status', function () {
         return db('ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
       })
       .then(function (claimEvent) {
-        expect(claimAfter.IsOverpaid).toBe(false) //eslint-disable-line
+        expect(claimAfter.IsOverpaid).toBe(false)
         expect(claimAfter.RemainingOverpaymentAmount.toString()).toBe(remaining)
         expect(claimAfter.OverpaymentAmount).toBe(claimBefore.OverpaymentAmount)
         expect(claimAfter.OverpaymentReason).not.toBe(reason)

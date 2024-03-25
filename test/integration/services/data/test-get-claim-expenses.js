@@ -23,8 +23,8 @@ describe('services/data/get-claim-expenses', function () {
         const claimExpense1Found = claimExpenseFound(claimExpenseId1, result)
         const claimExpense2Found = claimExpenseFound(claimExpenseId2, result)
 
-        expect(claimExpense1Found).toBe(true) //eslint-disable-line
-        expect(claimExpense2Found).toBe(true) //eslint-disable-line
+        expect(claimExpense1Found).toBe(true)
+        expect(claimExpense2Found).toBe(true)
         expect(result).toHaveLength(2)
       })
       .catch(function (error) {

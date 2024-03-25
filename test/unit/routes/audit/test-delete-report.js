@@ -35,7 +35,7 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(400)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -48,8 +48,8 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockDeleteReport).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockDeleteReport).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -62,7 +62,7 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -76,7 +76,7 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })

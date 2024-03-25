@@ -6,7 +6,7 @@ describe('services/add-audit-session-data', function () {
       session: {}
     }
     addAuditSessionData(req, 'test', 'value')
-    expect(req.session.audit.test).toBe('value') //eslint-disable-line
+    expect(req.session.audit.test).toBe('value')
   })
 
   it('should add given audit data to session when audit object already exist in session', function () {
@@ -16,6 +16,6 @@ describe('services/add-audit-session-data', function () {
       }
     }
     addAuditSessionData(req, 'test', 'value')
-    expect(req.session.audit.test).toBe('value') //eslint-disable-line
+    expect(req.session.audit.test).toBe('value')
   })
 })

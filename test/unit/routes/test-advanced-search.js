@@ -182,7 +182,7 @@ describe('routes/index', function () {
         .get('/advanced-search-input')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -193,7 +193,7 @@ describe('routes/index', function () {
         .get('/advanced-search')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -202,7 +202,7 @@ describe('routes/index', function () {
         .get('/advanced-search?Reference=V123456')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -225,9 +225,9 @@ describe('routes/index', function () {
         .send({ start, length })
         .expect(200)
         .expect(function (response) {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
           // expected data method to be called with empty search criteria
-          expect(mockGetClaimListForAdvancedSearch).toHaveBeenCalledWith({}, start, length) //eslint-disable-line
+          expect(mockGetClaimListForAdvancedSearch).toHaveBeenCalledWith({}, start, length)
           expect(response.body.recordsTotal).toBe(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
         })
@@ -267,8 +267,8 @@ describe('routes/index', function () {
         .get('/advanced-search-results/export?')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockExportSearchResults).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockExportSearchResults).toHaveBeenCalledTimes(1)
         })
     })
   })

@@ -55,12 +55,12 @@ describe('routes/audit/view-report', function () {
         .get('/audit/view-report/1')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetReportData).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetReportDates).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditConfig).not.toHaveBeenCalled() //eslint-disable-line
-          expect(mockUpdateAuditStatus).not.toHaveBeenCalled() //eslint-disable-line
-          expect(mockSetForVerification).not.toHaveBeenCalled() //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetReportData).toHaveBeenCalledTimes(1)
+          expect(mockGetReportDates).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditConfig).not.toHaveBeenCalled()
+          expect(mockUpdateAuditStatus).not.toHaveBeenCalled()
+          expect(mockSetForVerification).not.toHaveBeenCalled()
         })
     })
 
@@ -81,12 +81,12 @@ describe('routes/audit/view-report', function () {
         .get('/audit/view-report/1')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetReportData).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetReportDates).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockUpdateAuditStatus).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockSetForVerification).not.toHaveBeenCalled() //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetReportData).toHaveBeenCalledTimes(1)
+          expect(mockGetReportDates).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1)
+          expect(mockUpdateAuditStatus).toHaveBeenCalledTimes(1)
+          expect(mockSetForVerification).not.toHaveBeenCalled()
         })
     })
 
@@ -107,12 +107,12 @@ describe('routes/audit/view-report', function () {
         .get('/audit/view-report/1')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetReportData).toHaveBeenCalledTimes(2) //eslint-disable-line
-          expect(mockGetReportDates).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockUpdateAuditStatus).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockSetForVerification).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetReportData).toHaveBeenCalledTimes(2)
+          expect(mockGetReportDates).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1)
+          expect(mockUpdateAuditStatus).toHaveBeenCalledTimes(1)
+          expect(mockSetForVerification).toHaveBeenCalledTimes(1)
         })
     })
   })

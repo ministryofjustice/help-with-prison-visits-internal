@@ -51,8 +51,8 @@ describe('routes/audit/create-report', function () {
         .get('/audit/create-report')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(5) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(5)
         })
     })
   })
@@ -66,8 +66,8 @@ describe('routes/audit/create-report', function () {
         .post('/audit/create-report')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(6) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(6)
         })
     })
 
@@ -76,12 +76,12 @@ describe('routes/audit/create-report', function () {
         .post('/audit/create-report')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(6) //eslint-disable-line
-          expect(mockGetAllClaimsDataBelowThreshold).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAllClaimsDataOverThreshold).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockUpdateReport).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(6)
+          expect(mockGetAllClaimsDataBelowThreshold).toHaveBeenCalledTimes(1)
+          expect(mockGetAllClaimsDataOverThreshold).toHaveBeenCalledTimes(1)
+          expect(mockUpdateReport).toHaveBeenCalledTimes(1)
+          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(1)
         })
     })
   })

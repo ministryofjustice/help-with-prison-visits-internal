@@ -10,6 +10,6 @@ describe('services/add-audit-session-data', function () {
       }
     }
 
-    expect(getAuditSessionData(req, 'test')).toBe('value') //eslint-disable-line
+    expect(getAuditSessionData(req, 'test')).toBe('value')
   })
 })

@@ -44,8 +44,8 @@
 //       .then(function (visitor) {
 //         expect(visitor.EmailAddress).toBe(NEW_EMAIL_ADDRESS)
 //         expect(visitor.PhoneNumber).toBe(NEW_PHONE_NUMBER)
-//         expect(stubInsertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
-//         expect(stubInsertTaskSendClaimNotification.calledTwice).toBe(true) //eslint-disable-line
+//         expect(stubInsertClaimEvent.calledOnce).toBe(true)
+//         expect(stubInsertTaskSendClaimNotification.calledTwice).toBe(true)
 //       })
 //   })
 

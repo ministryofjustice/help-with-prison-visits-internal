@@ -21,7 +21,7 @@ describe('services/data/disable-deduction', function () {
           return db('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId[0].ClaimDeductionId)
         })
         .then(function (deduction) {
-          expect(deduction.IsEnabled).toBe(false) //eslint-disable-line
+          expect(deduction.IsEnabled).toBe(false)
         })
         .catch(function (error) {
           throw error

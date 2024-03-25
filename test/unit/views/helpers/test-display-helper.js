@@ -76,13 +76,13 @@ describe('views/helpers/display-helper', function () {
   })
 
   it('should return the correct closed value given a valid claim status', function () {
-    expect(displayHelper.getClaimStatusClosed(CLOSED_CLAIM_STATUS_VALUE)).toBe(true) //eslint-disable-line
-    expect(displayHelper.getClaimStatusClosed(NOT_CLOSED_CLAIM_STATUS_VALUE)).toBe(false) //eslint-disable-line
+    expect(displayHelper.getClaimStatusClosed(CLOSED_CLAIM_STATUS_VALUE)).toBe(true)
+    expect(displayHelper.getClaimStatusClosed(NOT_CLOSED_CLAIM_STATUS_VALUE)).toBe(false)
   })
 
   it('should return the correct closed value given a valid advance updated claim status and date of journey', function () {
-    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, DATE_OF_JOURNEY_PAST)).toBe(true) //eslint-disable-line
-    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, FUTURE_DATE_OF_JOURNEY)).toBe(false) //eslint-disable-line
+    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, DATE_OF_JOURNEY_PAST)).toBe(true)
+    expect(displayHelper.getClaimStatusClosed(ADVANCE_UPDATED_CLAIM_STATUS_VALUE, IS_ADVANCE_CLAIM, FUTURE_DATE_OF_JOURNEY)).toBe(false)
   })
 
   it('should return the correct value given a valid integer or decimal number', function () {

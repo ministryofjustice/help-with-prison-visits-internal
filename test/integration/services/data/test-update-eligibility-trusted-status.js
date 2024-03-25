@@ -48,8 +48,8 @@
 //       .then(function (eligibility) {
 //         expect(eligibility.IsTrusted).toBe(isTrusted)
 //         expect(eligibility.UntrustedReason).toBe(untrustedReason)
-//         expect(eligibility.UntrustedDate).not.toBeNull() //eslint-disable-line
-//         expect(stubInsertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
+//         expect(eligibility.UntrustedDate).not.toBeNull()
+//         expect(stubInsertClaimEvent.calledOnce).toBe(true)
 //       })
 //   })
 
@@ -66,9 +66,9 @@
 //       })
 //       .then(function (eligibility) {
 //         expect(eligibility.IsTrusted).toBe(isTrusted)
-//         expect(eligibility.UntrustedReason).toBeNull() //eslint-disable-line
-//         expect(eligibility.UntrustedDate).toBeNull() //eslint-disable-line
-//         expect(stubInsertClaimEvent.calledOnce).toBe(true) //eslint-disable-line
+//         expect(eligibility.UntrustedReason).toBeNull()
+//         expect(eligibility.UntrustedDate).toBeNull()
+//         expect(stubInsertClaimEvent.calledOnce).toBe(true)
 //       })
 //   })
 
@@ -82,7 +82,7 @@
 //       })
 //       .then(function (eligibility) {
 //         expect(eligibility.IsTrusted).toBe(true)
-//         expect(stubInsertClaimEvent.notCalled).toBe(true) //eslint-disable-line
+//         expect(stubInsertClaimEvent.notCalled).toBe(true)
 //       })
 //   })
 

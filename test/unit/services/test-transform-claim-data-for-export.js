@@ -146,9 +146,9 @@ describe('services/transform-claim-data-for-export', function () {
   it('should call all relevant functions', function () {
     return transformClaimDataForExport(TEST_CLAIM_DATA_MIXED)
       .then(function () {
-        expect(mockGetClaimEscorts).toHaveBeenCalledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS) //eslint-disable-line
-        expect(mockGetClaimExpensesForClaims).toHaveBeenCalledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS) //eslint-disable-line
-        expect(mockGetClaimChildCounts).toHaveBeenCalledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS) //eslint-disable-line
+        expect(mockGetClaimEscorts).toHaveBeenCalledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)
+        expect(mockGetClaimExpensesForClaims).toHaveBeenCalledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)
+        expect(mockGetClaimChildCounts).toHaveBeenCalledWith(TEST_CLAIM_DATA_MIXED_CLAIMIDS)
       })
   })
 

@@ -28,8 +28,8 @@ describe('services/data/payout-barcode-expired-claim', function () {
         })
         .then(function (claim) {
           expect(claim.Status).toBe(claimStatusEnum.APPROVED.value)
-          expect(claim.DateApproved).toBeNull() //eslint-disable-line
-          expect(claim.PaymentStatus).toBeNull() //eslint-disable-line
+          expect(claim.DateApproved).toBeNull()
+          expect(claim.PaymentStatus).toBeNull()
           expect(claim.lastUpdated).not.toBe(previousLastUpdated)
 
           return db('ClaimEvent').first().where('ClaimId', claimId).orderBy('DateAdded', 'desc')

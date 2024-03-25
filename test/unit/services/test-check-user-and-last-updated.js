@@ -17,7 +17,7 @@ describe('services/check-user-and-last-updated', function () {
     it('should resolve if all details are correct', function () {
       const lastUpdatedData = { LastUpdated: dateFormatter.now().toDate() }
       const previousLastUpdated = dateFormatter.now().toString()
-      expect(checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)).toBeTruthy() //eslint-disable-line
+      expect(checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)).toBeTruthy()
     })
 
     it('should throw validation error if lastUpdated is different', function () {
@@ -26,9 +26,9 @@ describe('services/check-user-and-last-updated', function () {
       try {
         checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
-        expect(error).not.toBeNull() //eslint-disable-line
+        expect(error).not.toBeNull()
         expect(error).toBeInstanceOf(ValidationError)
       }
     })
@@ -46,7 +46,7 @@ describe('services/check-user-and-last-updated', function () {
     })
     it('should resolve if all details are correct', function () {
       mockCheckUserAssignment.mockReturnValue(true)
-      expect(checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)).toBeTruthy() //eslint-disable-line
+      expect(checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)).toBeTruthy()
     })
 
     it('should throw validation error for other user assigned', function () {
@@ -55,9 +55,9 @@ describe('services/check-user-and-last-updated', function () {
       try {
         checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
-        expect(error).not.toBeNull() //eslint-disable-line
+        expect(error).not.toBeNull()
         expect(error).toBeInstanceOf(ValidationError)
         expect(error.validationErrors.UpdateConflict[0]).toBe(ValidationErrorMessages.getUserAssignmentConflict(OTHER_USER))
       }
@@ -69,9 +69,9 @@ describe('services/check-user-and-last-updated', function () {
       try {
         checkUserAndLastUpdated(lastUpdatedData, previousLastUpdated, needAssignmentCheck, USER)
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
-        expect(error).not.toBeNull() //eslint-disable-line
+        expect(error).not.toBeNull()
         expect(error).toBeInstanceOf(ValidationError)
         expect(error.validationErrors.UpdateConflict[0]).toBe(ValidationErrorMessages.getUserNotAssigned())
       }

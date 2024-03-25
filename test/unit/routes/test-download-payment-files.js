@@ -47,8 +47,8 @@ describe('routes/download-payment-files', function () {
         .get('/download-payment-files')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetDirectPaymentFiles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetDirectPaymentFiles).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -108,8 +108,8 @@ describe('routes/download-payment-files', function () {
         .expect(200)
         .expect(function (response) {
           expect(response.header['content-length']).toBe('4')
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetDirectPaymentFiles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetDirectPaymentFiles).toHaveBeenCalledTimes(1)
         })
     })
 

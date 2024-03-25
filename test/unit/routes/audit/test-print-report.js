@@ -39,9 +39,9 @@ describe('routes/audit/print-report', function () {
         .post('/audit/print-report')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetReportData).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetReportDates).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetReportData).toHaveBeenCalledTimes(1)
+          expect(mockGetReportDates).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -65,9 +65,9 @@ describe('routes/audit/print-report', function () {
         })
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetReportData).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetReportDates).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetReportData).toHaveBeenCalledTimes(1)
+          expect(mockGetReportDates).toHaveBeenCalledTimes(1)
         })
     })
   })

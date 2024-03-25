@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 const getClaimListForAdvancedSearch = require('../../../../app/services/data/get-claim-list-for-advanced-search')
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
@@ -696,23 +697,23 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       .then(function (result) {
         const claim = result.claims[0]
 
-        expect(claim.hasOwnProperty('FirstName')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('LastName')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('Benefit')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('Relationship')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('DateSubmitted')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('DateOfJourney')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('DateReviewed')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('ClaimType')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('AssistedDigitalCaseworker')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('Caseworker')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('IsAdvanceClaim')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('Status')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('PaymentAmount')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('ClaimId')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('IsTrusted')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('NameOfPrison')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('PaymentMethod')).toBe(true) //eslint-disable-line
+        expect(claim.hasOwnProperty('FirstName')).toBe(true)
+        expect(claim.hasOwnProperty('LastName')).toBe(true)
+        expect(claim.hasOwnProperty('Benefit')).toBe(true)
+        expect(claim.hasOwnProperty('Relationship')).toBe(true)
+        expect(claim.hasOwnProperty('DateSubmitted')).toBe(true)
+        expect(claim.hasOwnProperty('DateOfJourney')).toBe(true)
+        expect(claim.hasOwnProperty('DateReviewed')).toBe(true)
+        expect(claim.hasOwnProperty('ClaimType')).toBe(true)
+        expect(claim.hasOwnProperty('AssistedDigitalCaseworker')).toBe(true)
+        expect(claim.hasOwnProperty('Caseworker')).toBe(true)
+        expect(claim.hasOwnProperty('IsAdvanceClaim')).toBe(true)
+        expect(claim.hasOwnProperty('Status')).toBe(true)
+        expect(claim.hasOwnProperty('PaymentAmount')).toBe(true)
+        expect(claim.hasOwnProperty('ClaimId')).toBe(true)
+        expect(claim.hasOwnProperty('IsTrusted')).toBe(true)
+        expect(claim.hasOwnProperty('NameOfPrison')).toBe(true)
+        expect(claim.hasOwnProperty('PaymentMethod')).toBe(true)
       })
   })
 
@@ -725,13 +726,13 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       .then(function (result) {
         const claim = result.claims[0]
 
-        expect(claim.hasOwnProperty('Reference')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('FirstName')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('LastName')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('DateSubmitted')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('DateOfJourney')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('ClaimType')).toBe(true) //eslint-disable-line
-        expect(claim.hasOwnProperty('ClaimId')).toBe(true) //eslint-disable-line
+        expect(claim.hasOwnProperty('Reference')).toBe(true)
+        expect(claim.hasOwnProperty('FirstName')).toBe(true)
+        expect(claim.hasOwnProperty('LastName')).toBe(true)
+        expect(claim.hasOwnProperty('DateSubmitted')).toBe(true)
+        expect(claim.hasOwnProperty('DateOfJourney')).toBe(true)
+        expect(claim.hasOwnProperty('ClaimType')).toBe(true)
+        expect(claim.hasOwnProperty('ClaimId')).toBe(true)
       })
   })
 

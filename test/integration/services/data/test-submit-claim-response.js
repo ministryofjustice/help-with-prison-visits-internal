@@ -54,7 +54,7 @@
 
 //     return submitClaimResponse(claimId, claimResponse)
 //       .then(function () {
-//         expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.toHaveBeenCalledWith(claimId, reference)).toBe(true) //eslint-disable-line
+//         expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.toHaveBeenCalledWith(claimId, reference)).toBe(true)
 //       })
 //   })
 
@@ -88,9 +88,9 @@
 //       .then(function (result) {
 //         expect(result.Caseworker).toBe(caseworker)
 //         // should clear assignment
-//       expect(result.AssignedTo).toBeNull() //eslint-disable-line
+//       expect(result.AssignedTo).toBeNull()
 //         // should clear assignment
-//       expect(result.AssignmentExpiry).toBeNull() //eslint-disable-line
+//       expect(result.AssignmentExpiry).toBeNull()
 //         expect(result.Status[0]).toBe(claimDecisionEnum.REJECTED)
 //         expect(result.Status[1]).toBe(claimDecisionEnum.REJECTED)
 //         expect(result.Note).toBe(claimResponse.note)
@@ -101,9 +101,9 @@
 //         expect(result.DateReviewed).toBeGreaterThanOrEqual(twoMinutesAgo.toDate())
 //         expect(result.DateReviewed).toBeLessThanOrEqual(twoMinutesAhead.toDate())
 //         expect(result.RejectionReasonId).toBe(rejectionReasonIdentifier)
-//       expect(stubInsertClaimEvent.toHaveBeenCalledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).toBe(true) //eslint-disable-line
-//       expect(stubInsertTaskSendClaimNotification.toHaveBeenCalledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).toBe(true) //eslint-disable-line
-//       expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).toBe(true) //eslint-disable-line
+//       expect(stubInsertClaimEvent.toHaveBeenCalledWith(reference, newIds.eligibilityId, newIds.claimId, `CLAIM-${claimDecisionEnum.REJECTED}`, null, claimResponse.note, caseworker, false)).toBe(true)
+//       expect(stubInsertTaskSendClaimNotification.toHaveBeenCalledWith(tasksEnum.REJECT_CLAIM_NOTIFICATION, reference, newIds.eligibilityId, newIds.claimId)).toBe(true)
+//       expect(stubUpdateRelatedClaimsRemainingOverpaymentAmount.notCalled).toBe(true)
 
 //         return db('ClaimExpense').where('ClaimId', newIds.claimId).select()
 //       })
@@ -137,7 +137,7 @@
 //           .first()
 //       })
 //       .then(function (result) {
-//         expect(result.DateApproved).not.toBeNull() //eslint-disable-line
+//         expect(result.DateApproved).not.toBeNull()
 //       })
 //   })
 
@@ -163,7 +163,7 @@
 //           .first()
 //       })
 //       .then(function (result) {
-//         expect(result.DateApproved).toBeNull() //eslint-disable-line
+//         expect(result.DateApproved).toBeNull()
 //         expect(result.RejectionReasonId).toBe(rejectionReasonIdentifier)
 //       })
 //   })
@@ -189,7 +189,7 @@
 //           .first()
 //       })
 //       .then(function (result) {
-//         expect(result.DateApproved).toBeNull() //eslint-disable-line
+//         expect(result.DateApproved).toBeNull()
 //       })
 //   })
 
@@ -217,7 +217,7 @@
 //       })
 //       .then(function (result) {
 //         expect(result.ReleaseDateIsSet).toBe(true)
-//         expect(result.ReleaseDate).not.toBeNull() //eslint-disable-line
+//         expect(result.ReleaseDate).not.toBeNull()
 //       })
 //   })
 
@@ -245,7 +245,7 @@
 //       })
 //       .then(function (result) {
 //         expect(result.ReleaseDateIsSet).toBe(false)
-//         expect(result.ReleaseDate).toBeNull() //eslint-disable-line
+//         expect(result.ReleaseDate).toBeNull()
 //       })
 //   })
 

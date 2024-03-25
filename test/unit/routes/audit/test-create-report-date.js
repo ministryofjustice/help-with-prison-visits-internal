@@ -53,8 +53,8 @@ describe('routes/audit/create-report-date', function () {
         .get('/audit/create-report-date')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -65,10 +65,10 @@ describe('routes/audit/create-report-date', function () {
         .post('/audit/create-report-date')
         .expect(400)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimCount).not.toHaveBeenCalled() //eslint-disable-line
-          expect(mockGetClaimCountOverThreshold).not.toHaveBeenCalled() //eslint-disable-line
-          expect(mockAddAuditSessionData).not.toHaveBeenCalled() //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimCount).not.toHaveBeenCalled()
+          expect(mockGetClaimCountOverThreshold).not.toHaveBeenCalled()
+          expect(mockAddAuditSessionData).not.toHaveBeenCalled()
         })
     })
 
@@ -79,10 +79,10 @@ describe('routes/audit/create-report-date', function () {
         .send(VALID_DATA)
         .expect(302)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimCountOverThreshold).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(4); //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimCount).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimCountOverThreshold).toHaveBeenCalledTimes(1)
+          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(4)
         })
     })
   })

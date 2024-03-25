@@ -50,7 +50,7 @@
 //           expect(result.deductions[0].DeductionType).toBe(testData.ClaimDeduction.hc3.DeductionType)
 //           expect(result.deductions[1].DeductionType).toBe(testData.ClaimDeduction.overpayment.DeductionType)
 
-//           expect(stubGetOverpaidClaims.toHaveBeenCalledWith(reference)).toBe(true) //eslint-disable-line
+//           expect(stubGetOverpaidClaims.toHaveBeenCalledWith(reference)).toBe(true)
 //         })
 //         .catch(function (error) {
 //           throw error

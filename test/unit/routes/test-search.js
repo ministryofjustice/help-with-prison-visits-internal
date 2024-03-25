@@ -45,7 +45,7 @@ describe('routes/index', function () {
         .get('/search')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -62,8 +62,8 @@ describe('routes/index', function () {
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimListForSearch).toHaveBeenCalledWith(searchQuery, start, length) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimListForSearch).toHaveBeenCalledWith(searchQuery, start, length)
           expect(response.body.recordsTotal).toBe(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
         })
@@ -75,7 +75,7 @@ describe('routes/index', function () {
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
-          expect(mockGetClaimListForSearch).not.toHaveBeenCalled() //eslint-disable-line
+          expect(mockGetClaimListForSearch).not.toHaveBeenCalled()
         })
     })
 

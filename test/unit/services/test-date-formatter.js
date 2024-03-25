@@ -117,12 +117,12 @@ describe('services/date-formatter', function () {
 
     it('should return false if passed null', function () {
       const result = dateFormatter.buildFromDateString(null)
-      expect(result).toBe(false) //eslint-disable-line
+      expect(result).toBe(false)
     })
 
     it('should return false if passed undefined', function () {
       const result = dateFormatter.buildFromDateString(undefined)
-      expect(result).toBe(false) //eslint-disable-line
+      expect(result).toBe(false)
     })
 
     it('should return error if passed a non valid day value (1 - 31)', function () {

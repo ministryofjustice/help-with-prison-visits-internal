@@ -46,7 +46,7 @@ describe('routes/index', function () {
         .get('/')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -59,8 +59,8 @@ describe('routes/index', function () {
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith(['TEST'], false, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc') //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith(['TEST'], false, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc')
           expect(response.body.recordsTotal).toBe(0)
           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
         })
@@ -73,7 +73,7 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith([claimStatusEnum.NEW.value], true, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc') //eslint-disable-line
+          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith([claimStatusEnum.NEW.value], true, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc')
         })
     })
 
@@ -84,7 +84,7 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE-APPROVED?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith([claimStatusEnum.APPROVED.value], true, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc') //eslint-disable-line
+          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith([claimStatusEnum.APPROVED.value], true, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc')
         })
     })
 
@@ -95,7 +95,7 @@ describe('routes/index', function () {
         .get('/claims/ADVANCE-UPDATED?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith([claimStatusEnum.UPDATED.value], true, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc') //eslint-disable-line
+          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith([claimStatusEnum.UPDATED.value], true, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc')
         })
     })
 

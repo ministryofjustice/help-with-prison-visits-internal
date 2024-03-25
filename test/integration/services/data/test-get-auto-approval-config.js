@@ -28,7 +28,7 @@ describe('services/data/get-auto-approval-config', function () {
         expect(result.MaxDaysAfterAPVUVisit).toBe(parseInt(config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT))
         expect(result.MaxNumberOfClaimsPerYear).toBe(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR))
         expect(result.MaxNumberOfClaimsPerMonth).toBe(parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH))
-        expect(result.RulesDisabled).toBeNull() //eslint-disable-line
+        expect(result.RulesDisabled).toBeNull()
         expect(result.NumberOfConsecutiveAutoApprovals).toBe(parseInt(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS))
       })
   })

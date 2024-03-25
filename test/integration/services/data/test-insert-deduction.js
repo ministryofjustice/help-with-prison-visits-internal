@@ -38,7 +38,7 @@ describe('services/data/insert-deduction', function () {
           expect(updatedClaimDeduction.ClaimId).toBe(claim.ClaimId)
           expect(updatedClaimDeduction.Amount).toBe(claimDeductionAmount)
           expect(updatedClaimDeduction.DeductionType).toBe(claimDeductionType)
-          expect(updatedClaimDeduction.IsEnabled).toBe(true) //eslint-disable-line
+          expect(updatedClaimDeduction.IsEnabled).toBe(true)
         })
         .catch(function (error) {
           throw error

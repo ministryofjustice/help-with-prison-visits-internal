@@ -7,7 +7,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.isAuthenticated({})
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(401)
       }
@@ -22,7 +22,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({})
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(401)
       }
@@ -31,7 +31,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({ user: { roles: [applicationRoles.CLAIM_ENTRY_BAND_2, applicationRoles.CLAIM_PAYMENT_BAND_3, applicationRoles.CASEWORK_MANAGER_BAND_5, applicationRoles.HWPV_SSCL] } }, [applicationRoles.BAND_9])
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(403)
       }
@@ -46,7 +46,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({}, [applicationRoles.CLAIM_ENTRY_BAND_2, applicationRoles.CLAIM_PAYMENT_BAND_3, applicationRoles.CASEWORK_MANAGER_BAND_5, applicationRoles.BAND_9, applicationRoles.HWPV_SSCL])
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(401)
       }
@@ -55,7 +55,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({ user: { roles: [applicationRoles.CLAIM_ENTRY_BAND_2, applicationRoles.CLAIM_PAYMENT_BAND_3, applicationRoles.CASEWORK_MANAGER_BAND_5, applicationRoles.BAND_9] } }, [applicationRoles.HWPV_SSCL])
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(403)
       }
@@ -70,7 +70,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({}, [applicationRoles.CLAIM_ENTRY_BAND_2, applicationRoles.CLAIM_PAYMENT_BAND_3, applicationRoles.CASEWORK_MANAGER_BAND_5, applicationRoles.BAND_9, applicationRoles.HWPV_SSCL])
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(401)
       }
@@ -79,7 +79,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({ user: { roles: [applicationRoles.CLAIM_PAYMENT_BAND_3, applicationRoles.CASEWORK_MANAGER_BAND_5, applicationRoles.BAND_9, applicationRoles.HWPV_SSCL] } }, [applicationRoles.CLAIM_ENTRY_BAND_2])
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(403)
       }
@@ -94,7 +94,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({}, [applicationRoles.CLAIM_ENTRY_BAND_2, applicationRoles.CLAIM_PAYMENT_BAND_3, applicationRoles.CASEWORK_MANAGER_BAND_5, applicationRoles.BAND_9, applicationRoles.HWPV_SSCL])
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(401)
       }
@@ -103,7 +103,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({ user: { roles: [applicationRoles.CLAIM_ENTRY_BAND_2, applicationRoles.CASEWORK_MANAGER_BAND_5, applicationRoles.BAND_9, applicationRoles.HWPV_SSCL] } }, [applicationRoles.CLAIM_PAYMENT_BAND_3])
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(403)
       }
@@ -118,7 +118,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({}, [applicationRoles.CLAIM_ENTRY_BAND_2, applicationRoles.CLAIM_PAYMENT_BAND_3, applicationRoles.CASEWORK_MANAGER_BAND_5, applicationRoles.BAND_9, applicationRoles.HWPV_SSCL])
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(401)
       }
@@ -127,7 +127,7 @@ describe('services/authorisation', function () {
       try {
         authorisation.hasRoles({ user: { roles: [applicationRoles.CLAIM_ENTRY_BAND_2, applicationRoles.CLAIM_PAYMENT_BAND_3, applicationRoles.BAND_9, applicationRoles.HWPV_SSCL] } }, [applicationRoles.CASEWORK_MANAGER_BAND_5])
         // should have throw error
-        expect(false).toBe(true) //eslint-disable-line
+        expect(false).toBe(true)
       } catch (error) {
         expect(error.status).toBe(403)
       }

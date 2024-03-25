@@ -42,19 +42,19 @@ describe('services/data/dashboard/get-dashboard-data', function () {
     const testFilter = 'test filter'
     return getDashboardData(testFilter)
       .then(function (result) {
-        expect(mockGetAutoApprovedClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
-        expect(mockGetInProgressClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
-        expect(mockGetManuallyApprovedClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
-        expect(mockGetPaidClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
-        expect(mockGetPendingClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
-        expect(mockGetRejectedClaimCount).toHaveBeenCalledWith(testFilter) //eslint-disable-line
+        expect(mockGetAutoApprovedClaimCount).toHaveBeenCalledWith(testFilter)
+        expect(mockGetInProgressClaimCount).toHaveBeenCalledWith(testFilter)
+        expect(mockGetManuallyApprovedClaimCount).toHaveBeenCalledWith(testFilter)
+        expect(mockGetPaidClaimCount).toHaveBeenCalledWith(testFilter)
+        expect(mockGetPendingClaimCount).toHaveBeenCalledWith(testFilter)
+        expect(mockGetRejectedClaimCount).toHaveBeenCalledWith(testFilter)
 
-        expect(mockGetAutoApprovedClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(mockGetInProgressClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(mockGetManuallyApprovedClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(mockGetPaidClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(mockGetPendingClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
-        expect(mockGetRejectedClaimCount).toHaveBeenCalledTimes(1) //eslint-disable-line
+        expect(mockGetAutoApprovedClaimCount).toHaveBeenCalledTimes(1)
+        expect(mockGetInProgressClaimCount).toHaveBeenCalledTimes(1)
+        expect(mockGetManuallyApprovedClaimCount).toHaveBeenCalledTimes(1)
+        expect(mockGetPaidClaimCount).toHaveBeenCalledTimes(1)
+        expect(mockGetPendingClaimCount).toHaveBeenCalledTimes(1)
+        expect(mockGetRejectedClaimCount).toHaveBeenCalledTimes(1)
       })
   })
 
@@ -62,12 +62,12 @@ describe('services/data/dashboard/get-dashboard-data', function () {
     const testFilter = 'test filter'
     return getDashboardData(testFilter)
       .then(function (dashboardData) {
-        expect(dashboardData.autoApproved).toBeDefined() //eslint-disable-line
-        expect(dashboardData.inProgress).toBeDefined() //eslint-disable-line
-        expect(dashboardData.manuallyApproved).toBeDefined() //eslint-disable-line
-        expect(dashboardData.paid).toBeDefined() //eslint-disable-line
-        expect(dashboardData.pending).toBeDefined() //eslint-disable-line
-        expect(dashboardData.rejected).toBeDefined() //eslint-disable-line
+        expect(dashboardData.autoApproved).toBeDefined()
+        expect(dashboardData.inProgress).toBeDefined()
+        expect(dashboardData.manuallyApproved).toBeDefined()
+        expect(dashboardData.paid).toBeDefined()
+        expect(dashboardData.pending).toBeDefined()
+        expect(dashboardData.rejected).toBeDefined()
       })
   })
 })

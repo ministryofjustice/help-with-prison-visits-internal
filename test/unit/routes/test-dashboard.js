@@ -34,8 +34,8 @@ describe('routes/index', function () {
         .get('/dashboard')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetDashboardData).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetDashboardData).toHaveBeenCalledTimes(1)
         })
     })
   })

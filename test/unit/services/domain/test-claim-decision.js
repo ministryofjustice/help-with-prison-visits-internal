@@ -44,7 +44,7 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_ASSISTED_DIGITAL_CASEWORKER, '', '', '', VALID_NOTE_REJECTION, VALID_NOMIS_CHECK, VALID_DWP_CHECK, VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
       // should have thrown validation error
-      expect(false).toBe(true) //eslint-disable-line
+      expect(false).toBe(true)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
       expect(e.validationErrors.decision[0]).toBe('Decision is required')
@@ -73,7 +73,7 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
       // should have thrown validation error
-      expect(false).toBe(true) //eslint-disable-line
+      expect(false).toBe(true)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
       expect(e.validationErrors['nomis-check'][0]).toBe('Decide on prisoner check')
@@ -84,7 +84,7 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
       // should have thrown validation error
-      expect(false).toBe(true) //eslint-disable-line
+      expect(false).toBe(true)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
       expect(e.validationErrors['dwp-check'][0]).toBe('Decide if benefit check needed')
@@ -95,7 +95,7 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', '', VALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
       // should have thrown validation error
-      expect(false).toBe(true) //eslint-disable-line
+      expect(false).toBe(true)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
       expect(e.validationErrors['visit-confirmation-check'][0]).toBe('Decide on visit confirmation')
@@ -106,7 +106,7 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, INVALID_CLAIMEXPENSES, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
       // should have thrown validation error
-      expect(false).toBe(true) //eslint-disable-line
+      expect(false).toBe(true)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
       expect(e.validationErrors['approve-cost'][0]).toBe('New approved cost must be greater than zero')
@@ -117,7 +117,7 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_APPROVED, '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
       // should have thrown validation error
-      expect(false).toBe(true) //eslint-disable-line
+      expect(false).toBe(true)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
       expect(e.validationErrors['claim-expenses'][0]).toBe('At least one expense must not be rejected for the claim to be approved')
@@ -128,7 +128,7 @@ describe('services/domain/claim-decision', function () {
     try {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, VALID_CASEWORKER, '', '', '', '', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, null, null, futureDay, futureMonth, futureYear)
       // should have thrown validation error
-      expect(false).toBe(true) //eslint-disable-line
+      expect(false).toBe(true)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
       expect(e.validationErrors['assisted-digital-caseworker'][0]).toBe(

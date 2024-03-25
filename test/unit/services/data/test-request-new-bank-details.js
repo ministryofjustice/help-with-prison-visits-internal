@@ -28,9 +28,9 @@ describe('services/data/request-new-bank-details', function () {
     const user = 'user'
     return requestNewBankDetails(reference, eligibilityId, claimId, additionalInformaiton, user)
       .then(function (result) {
-        expect(mockUpdateClaimStatusRequestingBankDetails).toHaveBeenCalledWith(reference, claimId) //eslint-disable-line
-        expect(mockInsertClaimEvent).toHaveBeenCalledWith(reference, eligibilityId, claimId, claimEventEnum.REQUEST_NEW_BANK_DETAILS.value, additionalInformaiton, '', user, false) //eslint-disable-line
-        expect(mockInsertTaskSendClaimNotification).toHaveBeenCalledWith(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION, reference, eligibilityId, claimId) //eslint-disable-line
+        expect(mockUpdateClaimStatusRequestingBankDetails).toHaveBeenCalledWith(reference, claimId)
+        expect(mockInsertClaimEvent).toHaveBeenCalledWith(reference, eligibilityId, claimId, claimEventEnum.REQUEST_NEW_BANK_DETAILS.value, additionalInformaiton, '', user, false)
+        expect(mockInsertTaskSendClaimNotification).toHaveBeenCalledWith(tasksEnum.REQUEST_INFORMATION_CLAIM_NOTIFICATION, reference, eligibilityId, claimId)
       })
   })
 })

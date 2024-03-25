@@ -200,8 +200,8 @@ describe('routes/claim/view-claim', function () {
         .get('/claim/123')
         .expect(200)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
   })
@@ -221,13 +221,13 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_APPROVE)
         .expect(302)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimExpenseResponses).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockClaimDecision).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockSubmitClaimResponse).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimExpenseResponses).toHaveBeenCalledTimes(1)
+          expect(mockClaimDecision).toHaveBeenCalledTimes(1)
+          expect(mockSubmitClaimResponse).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -258,14 +258,14 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_APPROVE)
         .expect(302)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimExpenseResponses).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockClaimDecision).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockSubmitClaimResponse).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockUpdateEligibilityTrustedStatus).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimExpenseResponses).toHaveBeenCalledTimes(1)
+          expect(mockClaimDecision).toHaveBeenCalledTimes(1)
+          expect(mockSubmitClaimResponse).toHaveBeenCalledTimes(1)
+          expect(mockUpdateEligibilityTrustedStatus).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -278,10 +278,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_APPROVE)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -295,10 +295,10 @@ describe('routes/claim/view-claim', function () {
         .send(INCOMPLETE_DATA)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -329,7 +329,7 @@ describe('routes/claim/view-claim', function () {
         .post('/claim/123')
         .send(VALID_DATA_APPROVE)
         .expect(function () {
-          expect(mockMergeClaimExpensesWithSubmittedResponses).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockMergeClaimExpensesWithSubmittedResponses).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -368,10 +368,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -391,10 +391,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -415,7 +415,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(302)
         .expect(function () {
-          expect(mockInsertDeduction).toHaveBeenCalledWith('123', testClaimDecisionObject) //eslint-disable-line
+          expect(mockInsertDeduction).toHaveBeenCalledWith('123', testClaimDecisionObject)
         })
     })
 
@@ -440,10 +440,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_DEDUCTION)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -461,7 +461,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_DISABLE_DEDUCTION)
         .expect(302)
         .expect(function () {
-          expect(mockDisableDeduction).toHaveBeenCalledWith('1') //eslint-disable-line
+          expect(mockDisableDeduction).toHaveBeenCalledWith('1')
         })
     })
 
@@ -486,10 +486,10 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -507,7 +507,7 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(302)
         .expect(function () {
-          expect(mockUpdateAssignmentOfClaims).toHaveBeenCalledWith('123', 'test@test.com') //eslint-disable-line
+          expect(mockUpdateAssignmentOfClaims).toHaveBeenCalledWith('123', 'test@test.com')
         })
     })
 
@@ -532,10 +532,10 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -553,7 +553,7 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(302)
         .expect(function () {
-          expect(mockUpdateAssignmentOfClaims).toHaveBeenCalledWith('123', null) //eslint-disable-line
+          expect(mockUpdateAssignmentOfClaims).toHaveBeenCalledWith('123', null)
         })
     })
 
@@ -578,10 +578,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -598,9 +598,9 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(302)
         .expect(function () {
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockUpdateClaimOverpaymentStatus).toHaveBeenCalledWith(claimData.claim, overpaymentResponse) //eslint-disable-line
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockUpdateClaimOverpaymentStatus).toHaveBeenCalledWith(claimData.claim, overpaymentResponse)
         })
     })
 
@@ -617,11 +617,11 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_UPDATE_OVERPAYMENT_STATUS)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
-          expect(mockUpdateClaimOverpaymentStatus).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
+          expect(mockUpdateClaimOverpaymentStatus).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -648,10 +648,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -664,9 +664,9 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
         .expect(302)
         .expect(function () {
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockPayoutBarcodeExpiredClaim).toHaveBeenCalledWith('123', 'Expiry reason') //eslint-disable-line
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockPayoutBarcodeExpiredClaim).toHaveBeenCalledWith('123', 'Expiry reason')
         })
     })
 
@@ -679,9 +679,9 @@ describe('routes/claim/view-claim', function () {
         .post('/claim/123/payout-barcode-expired')
         .send(VALID_DATA_PAYOUT_BARCODE_EXPIRED_CLAIM)
         .expect(function () {
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -707,9 +707,9 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_INSERT_NOTE)
         .expect(302)
         .expect(function () {
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockInsertNote).toHaveBeenCalledWith('123', 'This is a note', 'test@test.com') //eslint-disable-line
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockInsertNote).toHaveBeenCalledWith('123', 'This is a note', 'test@test.com')
         })
     })
 
@@ -734,10 +734,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -750,9 +750,9 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(302)
         .expect(function () {
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCloseAdvanceClaim).toHaveBeenCalledWith('123', 'close advance claim reason', 'test@test.com') //eslint-disable-line
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCloseAdvanceClaim).toHaveBeenCalledWith('123', 'close advance claim reason', 'test@test.com')
         })
     })
 
@@ -765,9 +765,9 @@ describe('routes/claim/view-claim', function () {
         .post('/claim/123/close-advance-claim')
         .send(VALID_DATA_CLOSE_ADVANCE_CLAIM)
         .expect(function () {
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -793,10 +793,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_REQUEST_BANK_DETAILS)
         .expect(400)
         .expect(function () {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123') //eslint-disable-line
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockGetIndividualClaimDetails).toHaveBeenCalledWith('123')
         })
     })
 
@@ -818,9 +818,9 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_REQUEST_BANK_DETAILS)
         .expect(302)
         .expect(function () {
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockRequestNewBankDetails).toHaveBeenCalledWith('NEWBANK', '1', '123', '', 'test@test.com') //eslint-disable-line
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockRequestNewBankDetails).toHaveBeenCalledWith('NEWBANK', '1', '123', '', 'test@test.com')
         })
     })
 
@@ -858,7 +858,7 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_BENEFIT_EXPIRY_DATA)
         .expect(302)
         .expect(function () {
-          expect(mockUpdateVisitorBenefirExpiryDate).toHaveBeenCalledWith('123', benefitExpiryDate) //eslint-disable-line
+          expect(mockUpdateVisitorBenefirExpiryDate).toHaveBeenCalledWith('123', benefitExpiryDate)
         })
     })
   })
@@ -889,10 +889,10 @@ describe('routes/claim/view-claim', function () {
         .send(VALID_DATA_ADD_TOP_UP)
         .expect(302)
         .expect(function () {
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockInsertTopUp).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockInsertTopUp).toHaveBeenCalledWith({Reference: 'TOPUP', EligibilityId: '1', PaymentStatus: 'PROCESSED'}, topUpResponse, 'test@test.com') //eslint-disable-line
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockInsertTopUp).toHaveBeenCalledTimes(1)
+          expect(mockInsertTopUp).toHaveBeenCalledWith({ Reference: 'TOPUP', EligibilityId: '1', PaymentStatus: 'PROCESSED' }, topUpResponse, 'test@test.com')
         })
     })
   })
@@ -917,10 +917,10 @@ describe('routes/claim/view-claim', function () {
         .send()
         .expect(302)
         .expect(function () {
-          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCancelTopUp).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockCancelTopUp).toHaveBeenCalledWith({Reference: 'CANCEL', EligibilityId: '1', PaymentStatus: 'PROCESSED'}, 'test@test.com') //eslint-disable-line
+          expect(mockGetClaimLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCheckUserAndLastUpdated).toHaveBeenCalledTimes(1)
+          expect(mockCancelTopUp).toHaveBeenCalledTimes(1)
+          expect(mockCancelTopUp).toHaveBeenCalledWith({ Reference: 'CANCEL', EligibilityId: '1', PaymentStatus: 'PROCESSED' }, 'test@test.com')
         })
     })
   })

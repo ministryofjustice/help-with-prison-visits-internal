@@ -32,8 +32,8 @@ describe('routes/audit', function () {
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditData).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditData).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -45,8 +45,8 @@ describe('routes/audit', function () {
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditData).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditData).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -58,8 +58,8 @@ describe('routes/audit', function () {
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditData).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditData).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -71,8 +71,8 @@ describe('routes/audit', function () {
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditData).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditData).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -83,7 +83,7 @@ describe('routes/audit', function () {
         .post('/audit')
         .expect(302)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })

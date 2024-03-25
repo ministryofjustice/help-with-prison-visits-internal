@@ -33,8 +33,8 @@ describe('routes/audit/create-report-percent', function () {
         .get('/audit/create-report-percent')
         .expect(200)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(5); //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(5)
         })
     })
   })
@@ -45,8 +45,8 @@ describe('routes/audit/create-report-percent', function () {
         .post('/audit/create-report-percent')
         .expect(400)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(2); //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(2)
         })
     })
 
@@ -59,9 +59,9 @@ describe('routes/audit/create-report-percent', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(mockHasRoles).toHaveBeenCalledTimes(1) //eslint-disable-line
-          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(2); //eslint-disable-line
-          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(2); //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(2)
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(2)
         })
     })
   })

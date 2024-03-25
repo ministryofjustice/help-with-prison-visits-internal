@@ -41,7 +41,7 @@ describe('services/data/audit/delete-report', function () {
         return db('AuditReport')
           .select('IsDeleted')
           .where('ReportId', 5).then(function (isDeleted) {
-            expect(isDeleted).toBe(false) //eslint-disable-line
+            expect(isDeleted).toBe(false)
           })
       })
     })
