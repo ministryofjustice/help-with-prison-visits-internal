@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
@@ -9,7 +8,7 @@ let claimId
 
 describe('services/data/get-claim-last-updated', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       date = dateFormatter.now()
       return insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
@@ -19,14 +18,14 @@ describe('services/data/get-claim-last-updated', function () {
     it('should return list of claims and total', function () {
       return getClaimLastUpdated(claimId)
         .then(function (result) {
-          expect(result.Status).to.equal('TESTING')
+          expect(result.Status).toBe('TESTING')
         })
         .catch(function (error) {
           throw error
         })
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })

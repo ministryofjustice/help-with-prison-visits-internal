@@ -1,29 +1,29 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 
-let hasRolesStub
-let authorisation
-let getAuditDataStub
+let mockAuthorisation
+const mockHasRoles = jest.fn()
+const mockGetAuditData = jest.fn()
 
 describe('routes/audit', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    authorisation = {
-      hasRoles: hasRolesStub
+    mockAuthorisation = {
+      hasRoles: mockHasRoles
     }
-    getAuditDataStub = sinon.stub().resolves([])
+    mockGetAuditData.mockResolvedValue([])
 
-    const route = proxyquire('../../../../app/routes/audit/audit', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/audit/get-audit-data': getAuditDataStub
-    })
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock('../../../../app/services/data/audit/get-audit-data', () => mockGetAuditData)
+
+    const route = require('../../../../app/routes/audit/audit')
 
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /audit', function () {
@@ -32,47 +32,47 @@ describe('routes/audit', function () {
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditDataStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditData).toHaveBeenCalledTimes(1)
         })
     })
 
     it('should respond with a 200 when audit data with check status as Completed found', function () {
-      getAuditDataStub.resolves([{
+      mockGetAuditData.mockResolvedValue([{
         CheckStatus: 'Completed'
       }])
       return supertest(app)
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditDataStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditData).toHaveBeenCalledTimes(1)
         })
     })
 
     it('should respond with a 200 when audit data with check status is not Completed found', function () {
-      getAuditDataStub.resolves([{
+      mockGetAuditData.mockResolvedValue([{
         CheckStatus: ''
       }])
       return supertest(app)
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditDataStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditData).toHaveBeenCalledTimes(1)
         })
     })
 
     it('should respond with a 200 when audit data with final status is Completed found', function () {
-      getAuditDataStub.resolves([{
+      mockGetAuditData.mockResolvedValue([{
         FinalStatus: 'Completed'
       }])
       return supertest(app)
         .get('/audit')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditDataStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditData).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -83,7 +83,7 @@ describe('routes/audit', function () {
         .post('/audit')
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })

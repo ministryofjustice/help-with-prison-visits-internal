@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { getTestData, insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
@@ -8,7 +7,7 @@ let claimId
 let expectedValue
 
 describe('services/data/get-claim-child-count', function () {
-  before(function () {
+  beforeAll(function () {
     const testData = getTestData(reference, '')
     expectedValue = testData.ClaimChild.length
 
@@ -21,14 +20,14 @@ describe('services/data/get-claim-child-count', function () {
   it('should return the expected count of claim children', function () {
     return getClaimChildCounts(claimId)
       .then(function (result) {
-        expect(result[0].Count).to.equal(expectedValue)
+        expect(result[0].Count).toBe(expectedValue)
       })
       .catch(function (error) {
         throw error
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return deleteAll(reference)
   })
 })

@@ -1,6 +1,5 @@
 const ClaimDeduction = require('../../../../app/services/domain/claim-deduction')
 const ValidationError = require('../../../../app/services/errors/validation-error')
-const expect = require('chai').expect
 const deductionTypeEnum = require('../../../../app/constants/deduction-type-enum')
 let claimDeduction
 
@@ -10,16 +9,16 @@ describe('services/domain/claim-deduction', function () {
 
   it('should construct a domain object given valid input', function () {
     claimDeduction = new ClaimDeduction(VALID_DEDUCTION_TYPE, VALID_AMOUNT)
-    expect(claimDeduction.deductionType).to.equal(VALID_DEDUCTION_TYPE)
-    expect(claimDeduction.amount).to.equal(VALID_AMOUNT)
+    expect(claimDeduction.deductionType).toBe(VALID_DEDUCTION_TYPE)
+    expect(claimDeduction.amount).toBe(VALID_AMOUNT)
   })
 
   it('should return isRequired error for decision if deductionType is empty', function () {
     try {
       claimDeduction = new ClaimDeduction('', VALID_AMOUNT)
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors.deductionType[0]).to.equal('A deduction type is required')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors.deductionType[0]).toBe('A deduction type is required')
     }
   })
 
@@ -27,8 +26,8 @@ describe('services/domain/claim-deduction', function () {
     try {
       claimDeduction = new ClaimDeduction(VALID_DEDUCTION_TYPE, '')
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors.deductionAmount[0]).to.equal('A deduction amount is required')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors.deductionAmount[0]).toBe('A deduction amount is required')
     }
   })
 })

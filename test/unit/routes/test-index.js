@@ -1,14 +1,6 @@
 const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
-const sinon = require('sinon')
-
-let getClaimsListAndCount
-let displayHelperStub
-let authorisation
-let hasRolesStub
 
 const RETURNED_CLAIM = {
   Reference: 'A123456',
@@ -21,23 +13,31 @@ const RETURNED_CLAIM = {
   Name: 'Joe Bloggs'
 }
 
+const mockGetClaimsListAndCount = jest.fn()
+const mockGetClaimTypeDisplayName = jest.fn()
+const mockHasRoles = jest.fn()
+let mockDisplayHelper
+let mockAuthorisation
+
 describe('routes/index', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    authorisation = { hasRoles: hasRolesStub }
-    getClaimsListAndCount = sinon.stub()
-    displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
-    displayHelperStub.getClaimTypeDisplayName.returns('First time')
+    mockAuthorisation = { hasRoles: mockHasRoles }
+    mockDisplayHelper = { getClaimTypeDisplayName: mockGetClaimTypeDisplayName }
+    mockDisplayHelper.getClaimTypeDisplayName.mockReturnValue('First time')
 
-    const route = proxyquire('../../../app/routes/index', {
-      '../services/authorisation': authorisation,
-      '../services/data/get-claim-list-and-count': getClaimsListAndCount,
-      '../views/helpers/display-helper': displayHelperStub
-    })
+    jest.mock('../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock('../../../app/services/data/get-claim-list-and-count', () => mockGetClaimsListAndCount)
+    jest.mock('../../../app/views/helpers/display-helper', () => mockDisplayHelper)
+
+    const route = require('../../../app/routes/index')
 
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /', function () {
@@ -46,68 +46,64 @@ describe('routes/index', function () {
         .get('/')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })
 
   describe('GET /claims/:status', function () {
     it('should respond with a 200', function () {
-      getClaimsListAndCount.resolves({ claims: [RETURNED_CLAIM], total: { Count: 0 } })
+      mockGetClaimsListAndCount.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 0 } })
 
       return supertest(app)
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimsListAndCount.calledWith(['TEST'], false, 0, 10)).to.be.true //eslint-disable-line
-          expect(response.body.recordsTotal).to.equal(0)
-          expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith(['TEST'], false, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc')
+          expect(response.body.recordsTotal).toBe(0)
+          expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
         })
     })
 
     it('should call for advance claims when status is ADVANCE', function () {
-      getClaimsListAndCount.resolves({ claims: [RETURNED_CLAIM], total: { Count: 0 } })
+      mockGetClaimsListAndCount.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 0 } })
 
       return supertest(app)
         .get('/claims/ADVANCE?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith([claimStatusEnum.NEW.value], true, 0, 10)).to.be.true //eslint-disable-line
+          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith([claimStatusEnum.NEW.value], true, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc')
         })
     })
 
     it('should call for approved advance claims when status is ADVANCE-APPROVED', function () {
-      getClaimsListAndCount.resolves({ claims: [RETURNED_CLAIM], total: { Count: 0 } })
+      mockGetClaimsListAndCount.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 0 } })
 
       return supertest(app)
         .get('/claims/ADVANCE-APPROVED?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith([claimStatusEnum.APPROVED.value], true, 0, 10)).to.be.true //eslint-disable-line
+          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith([claimStatusEnum.APPROVED.value], true, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc')
         })
     })
 
     it('should call for updated advance claims when status is ADVANCE-UPDATED', function () {
-      getClaimsListAndCount.resolves({ claims: [RETURNED_CLAIM], total: { Count: 0 } })
+      mockGetClaimsListAndCount.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 0 } })
 
       return supertest(app)
         .get('/claims/ADVANCE-UPDATED?draw=1&start=0&length=10')
         .expect(200)
         .expect(function (response) {
-          expect(getClaimsListAndCount.calledWith([claimStatusEnum.UPDATED.value], true, 0, 10)).to.be.true //eslint-disable-line
+          expect(mockGetClaimsListAndCount).toHaveBeenCalledWith([claimStatusEnum.UPDATED.value], true, 0, 10, 'test@test.com', 'Claim.DateSubmitted', 'asc')
         })
     })
 
     it('should respond with a 500 promise rejects', function () {
-      getClaimsListAndCount.rejects()
+      mockGetClaimsListAndCount.mockRejectedValue()
       return supertest(app)
         .get('/claims/TEST?draw=1&start=0&length=10')
         .expect(500)
-    })
-
-    afterEach(function () {
-      getClaimsListAndCount.resetHistory()
     })
   })
 })

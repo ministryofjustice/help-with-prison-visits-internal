@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
@@ -8,7 +7,7 @@ let claimId
 let claimEscortId
 
 describe('services/data/get-claim-escort', function () {
-  before(function () {
+  beforeAll(function () {
     return insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')
       .then(function (ids) {
         claimId = [ids.claimId]
@@ -19,14 +18,14 @@ describe('services/data/get-claim-escort', function () {
   it('should return the expected claim escort', function () {
     return getClaimEscorts(claimId)
       .then(function (result) {
-        expect(result[0].ClaimEscortId).to.equal(claimEscortId)
+        expect(result[0].ClaimEscortId).toBe(claimEscortId)
       })
       .catch(function (error) {
         throw error
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return deleteAll(reference)
   })
 })

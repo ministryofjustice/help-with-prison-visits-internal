@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll } = require('../../../helpers/database-setup-for-tests')
 
@@ -9,7 +8,7 @@ let claimExpenseId1
 let claimExpenseId2
 
 describe('services/data/get-claim-expenses', function () {
-  before(function () {
+  beforeAll(function () {
     return insertTestData(reference, dateFormatter.now().toDate(), 'TESTING')
       .then(function (ids) {
         claimId = [ids.claimId]
@@ -24,9 +23,9 @@ describe('services/data/get-claim-expenses', function () {
         const claimExpense1Found = claimExpenseFound(claimExpenseId1, result)
         const claimExpense2Found = claimExpenseFound(claimExpenseId2, result)
 
-        expect(claimExpense1Found).to.be.true //eslint-disable-line
-        expect(claimExpense2Found).to.be.true //eslint-disable-line
-        expect(result).to.be.lengthOf(2)
+        expect(claimExpense1Found).toBe(true)
+        expect(claimExpense2Found).toBe(true)
+        expect(result).toHaveLength(2)
       })
       .catch(function (error) {
         throw error
@@ -38,16 +37,16 @@ describe('services/data/get-claim-expenses', function () {
       .then(function (result) {
         const fields = Object.keys(result[0])
 
-        expect(fields).to.contain('ClaimExpenseId')
-        expect(fields).to.contain('ExpenseType')
-        expect(fields).to.contain('ApprovedCost')
+        expect(fields).toContain('ClaimExpenseId')
+        expect(fields).toContain('ExpenseType')
+        expect(fields).toContain('ApprovedCost')
       })
       .catch(function (error) {
         throw error
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return deleteAll(reference)
   })
 })

@@ -1,17 +1,8 @@
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
 const express = require('express')
 const queryString = require('querystring')
 const dateFormatter = require('../../../app/services/date-formatter')
 const path = require('path')
-const sinon = require('sinon')
-
-let getClaimListForAdvancedSearch
-let displayHelperStub
-let authorisation
-let hasRolesStub
-let exportSearchResultsStub
 
 const draw = 1
 const start = 0
@@ -141,24 +132,31 @@ const RETURNED_CLAIM = {
 }
 
 let errorsReturnedToView = {}
+const mockGetClaimListForAdvancedSearch = jest.fn()
+let mockDisplayHelper
+let mockAuthorisation
+const mockHasRoles = jest.fn()
+const mockExportSearchResults = jest.fn()
+const mockGetClaimTypeDisplayName = jest.fn()
 
 describe('routes/index', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    authorisation = { hasRoles: hasRolesStub }
-    getClaimListForAdvancedSearch = sinon.stub()
-    displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
-    displayHelperStub.getClaimTypeDisplayName.returns('First time')
-    exportSearchResultsStub = sinon.stub().resolves('')
+    mockAuthorisation = { hasRoles: mockHasRoles }
+    mockDisplayHelper = { getClaimTypeDisplayName: mockGetClaimTypeDisplayName }
+    mockDisplayHelper.getClaimTypeDisplayName.mockReturnValue('First time')
+    mockExportSearchResults.mockResolvedValue('')
 
-    const route = proxyquire('../../../app/routes/advanced-search', {
-      '../services/authorisation': authorisation,
-      '../services/data/get-claim-list-for-advanced-search': getClaimListForAdvancedSearch,
-      '../views/helpers/display-helper': displayHelperStub,
-      '../services/export-search-results': exportSearchResultsStub
-    })
+    jest.mock('../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock(
+      '../../../app/services/data/get-claim-list-for-advanced-search',
+      () => mockGetClaimListForAdvancedSearch
+    )
+    jest.mock('../../../app/views/helpers/display-helper', () => mockDisplayHelper)
+    jest.mock('../../../app/services/export-search-results', () => mockExportSearchResults)
+
+    const route = require('../../../app/routes/advanced-search')
 
     app = express()
 
@@ -174,13 +172,17 @@ describe('routes/index', function () {
     route(app)
   })
 
+  afterEach(() => {
+    jest.resetAllMocks()
+  })
+
   describe('GET /advanced-search-input', function () {
     it('should respond with a 200', function () {
       return supertest(app)
         .get('/advanced-search-input')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -191,7 +193,7 @@ describe('routes/index', function () {
         .get('/advanced-search')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -200,7 +202,7 @@ describe('routes/index', function () {
         .get('/advanced-search?Reference=V123456')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -210,34 +212,36 @@ describe('routes/index', function () {
       return supertest(app)
         .get(`/advanced-search?${searchQueryString}&draw=${draw}&start=${start}&length=${length}`)
         .expect(function (response) {
-          expect(errorsReturnedToView).to.deep.equal(EXPECTED_VALIDATION_ERRORS)
+          expect(errorsReturnedToView).toEqual(EXPECTED_VALIDATION_ERRORS)
         })
     })
   })
 
   describe('POST /advanced-search-results', function () {
     it('should respond with a 200 and call data method', function () {
-      getClaimListForAdvancedSearch.resolves({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
+      mockGetClaimListForAdvancedSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
       return supertest(app)
         .post('/advanced-search-results')
         .send({ start, length })
         .expect(200)
         .expect(function (response) {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimListForAdvancedSearch.calledWith({}, start, length), 'expected data method to be called with empty search criteria').to.be.true //eslint-disable-line
-          expect(response.body.recordsTotal).to.equal(1)
-          expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          // expected data method to be called with empty search criteria
+          expect(mockGetClaimListForAdvancedSearch).toHaveBeenCalledWith({}, start, length)
+          expect(response.body.recordsTotal).toBe(1)
+          expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
         })
     })
 
     it('should extract search criteria correctly', function () {
-      getClaimListForAdvancedSearch.resolves({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
+      mockGetClaimListForAdvancedSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
 
       return supertest(app)
         .post('/advanced-search-results')
         .send(INPUT_SEARCH_CRITERIA)
         .expect(function (response) {
-          expect(getClaimListForAdvancedSearch.calledWith(sinon.match(PROCESSED_SEARCH_CRITERIA), start, length), 'expected data method to be called with processed search criteria').to.be.true //eslint-disable-line
+          // expected data method to be called with processed search criteria
+          expect(mockGetClaimListForAdvancedSearch).toHaveBeenCalledWith(expect.objectContaining(PROCESSED_SEARCH_CRITERIA), start, length)
         })
     })
 
@@ -250,7 +254,7 @@ describe('routes/index', function () {
           res.status(500).render('includes/error')
         }
       })
-      getClaimListForAdvancedSearch.rejects()
+      mockGetClaimListForAdvancedSearch.mockRejectedValue()
       return supertest(app)
         .post('/advanced-search-results')
         .expect(500)
@@ -263,8 +267,8 @@ describe('routes/index', function () {
         .get('/advanced-search-results/export?')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(exportSearchResultsStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockExportSearchResults).toHaveBeenCalledTimes(1)
         })
     })
   })

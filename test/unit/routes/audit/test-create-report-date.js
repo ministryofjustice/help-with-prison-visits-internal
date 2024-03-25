@@ -1,8 +1,5 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 
 const VALID_DATA = {
   auditReportStartDateDay: '01',
@@ -12,44 +9,42 @@ const VALID_DATA = {
   auditReportEndDateMonth: '01',
   auditReportEndDateYear: '2020'
 }
-let hasRolesStub
-let authorisation
-let getClaimCountStub
-let getClaimCountOverThresholdStub
-let getAuditConfigStub
-let addAuditSessionDataStub
-let getAuditSessionDataStub
+let mockAuthorisation
+const mockHasRoles = jest.fn()
+const mockGetClaimCount = jest.fn()
+const mockGetClaimCountOverThreshold = jest.fn()
+const mockGetAuditConfig = jest.fn()
+const mockAddAuditSessionData = jest.fn()
+const mockGetAuditSessionData = jest.fn()
 
 describe('routes/audit/create-report-date', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    getClaimCountStub = sinon.stub().resolves([{
-      Count: 0
-    }])
-    getClaimCountOverThresholdStub = sinon.stub().resolves([{
-      Count: 0
-    }])
-    getAuditConfigStub = sinon.stub().resolves({
-      ThresholdAmount: 250
-    })
-    addAuditSessionDataStub = sinon.stub()
-    getAuditSessionDataStub = sinon.stub()
-    authorisation = {
-      hasRoles: hasRolesStub
+    mockGetClaimCount.mockResolvedValue([{ Count: 0 }])
+    mockGetClaimCountOverThreshold.mockResolvedValue([{ Count: 0 }])
+    mockGetAuditConfig.mockResolvedValue({ ThresholdAmount: 250 })
+    mockAuthorisation = {
+      hasRoles: mockHasRoles
     }
 
-    const route = proxyquire('../../../../app/routes/audit/create-report-date', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/audit/get-claim-count': getClaimCountStub,
-      '../../services/data/audit/get-claim-count-over-threshold': getClaimCountOverThresholdStub,
-      '../../services/data/audit/get-audit-config': getAuditConfigStub,
-      '../../services/add-audit-session-data': addAuditSessionDataStub,
-      '../../services/get-audit-session-data': getAuditSessionDataStub
-    })
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock('../../../../app/services/data/audit/get-claim-count', () => mockGetClaimCount)
+    jest.mock(
+      '../../../../app/services/data/audit/get-claim-count-over-threshold',
+      () => mockGetClaimCountOverThreshold
+    )
+    jest.mock('../../../../app/services/data/audit/get-audit-config', () => mockGetAuditConfig)
+    jest.mock('../../../../app/services/add-audit-session-data', () => mockAddAuditSessionData)
+    jest.mock('../../../../app/services/get-audit-session-data', () => mockGetAuditSessionData)
+
+    const route = require('../../../../app/routes/audit/create-report-date')
 
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /audit/create-report-date', function () {
@@ -58,8 +53,8 @@ describe('routes/audit/create-report-date', function () {
         .get('/audit/create-report-date')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -70,10 +65,10 @@ describe('routes/audit/create-report-date', function () {
         .post('/audit/create-report-date')
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimCountStub.notCalled).to.be.true //eslint-disable-line
-          expect(getClaimCountOverThresholdStub.notCalled).to.be.true //eslint-disable-line
-          expect(addAuditSessionDataStub.notCalled).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimCount).not.toHaveBeenCalled()
+          expect(mockGetClaimCountOverThreshold).not.toHaveBeenCalled()
+          expect(mockAddAuditSessionData).not.toHaveBeenCalled()
         })
     })
 
@@ -84,10 +79,10 @@ describe('routes/audit/create-report-date', function () {
         .send(VALID_DATA)
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimCountStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimCountOverThresholdStub.calledOnce).to.be.true //eslint-disable-line
-          expect(addAuditSessionDataStub.callCount).to.equal(4); //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimCount).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimCountOverThreshold).toHaveBeenCalledTimes(1)
+          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(4)
         })
     })
   })

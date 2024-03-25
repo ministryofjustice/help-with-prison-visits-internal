@@ -1,5 +1,4 @@
 /* eslint-env mocha */
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
@@ -45,11 +44,11 @@ describe('services/data/test-update-claim-overpayment-status', function () {
         return db('ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
       })
       .then(function (claimEvent) {
-        expect(claimAfter.IsOverpaid).to.be.true //eslint-disable-line
-        expect(claimAfter.OverpaymentAmount.toString()).to.equal(amount)
-        expect(claimAfter.OverpaymentReason).to.equal(reason)
-        expect(claimAfter.LastUpdated).to.not.equal(previousLastUpdated)
-        expect(claimEvent.Event).to.equal(overpaymentActionEnum.OVERPAID)
+        expect(claimAfter.IsOverpaid).toBe(true)
+        expect(claimAfter.OverpaymentAmount.toString()).toBe(amount)
+        expect(claimAfter.OverpaymentReason).toBe(reason)
+        expect(claimAfter.LastUpdated).not.toBe(previousLastUpdated)
+        expect(claimEvent.Event).toBe(overpaymentActionEnum.OVERPAID)
       })
   })
 
@@ -84,15 +83,19 @@ describe('services/data/test-update-claim-overpayment-status', function () {
         return db('ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
       })
       .then(function (claimEvent) {
-        expect(claimAfter.IsOverpaid).to.be.true //eslint-disable-line
-        expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)
-        expect(claimAfter.OverpaymentAmount).to.be.equal(claimBefore.OverpaymentAmount)
-        expect(claimAfter.OverpaymentReason).to.not.equal(reason)
-        expect(claimAfter.LastUpdated).to.not.equal(previousLastUpdated)
-        expect(claimEvent.Note).to.contain(`Previous remaining amount: £${Number(claimBefore.RemainingOverpaymentAmount).toFixed(2)}`)
-        expect(claimEvent.Note).to.contain(`New remaining amount: £${Number(remaining).toFixed(2)}`)
-        expect(claimEvent.Note).to.contain(reason)
-        expect(claimEvent.Event).to.equal(overpaymentActionEnum.UPDATE)
+        expect(claimAfter.IsOverpaid).toBe(true)
+        expect(claimAfter.RemainingOverpaymentAmount.toString()).toBe(remaining)
+        expect(claimAfter.OverpaymentAmount).toBe(claimBefore.OverpaymentAmount)
+        expect(claimAfter.OverpaymentReason).not.toBe(reason)
+        expect(claimAfter.LastUpdated).not.toBe(previousLastUpdated)
+        expect(claimEvent.Note).toEqual(expect.arrayContaining([
+          `Previous remaining amount: £${Number(claimBefore.RemainingOverpaymentAmount).toFixed(2)}`
+        ]))
+        expect(claimEvent.Note).toEqual(
+          expect.arrayContaining([`New remaining amount: £${Number(remaining).toFixed(2)}`])
+        )
+        expect(claimEvent.Note).toEqual(expect.arrayContaining([reason]))
+        expect(claimEvent.Event).toBe(overpaymentActionEnum.UPDATE)
       })
   })
 
@@ -127,13 +130,13 @@ describe('services/data/test-update-claim-overpayment-status', function () {
         return db('ClaimEvent').orderBy('DateAdded', 'desc').first().where('ClaimId', claimId)
       })
       .then(function (claimEvent) {
-        expect(claimAfter.IsOverpaid).to.be.false //eslint-disable-line
-        expect(claimAfter.RemainingOverpaymentAmount.toString()).to.equal(remaining)
-        expect(claimAfter.OverpaymentAmount).to.be.equal(claimBefore.OverpaymentAmount)
-        expect(claimAfter.OverpaymentReason).to.not.equal(reason)
-        expect(claimAfter.LastUpdated).to.not.equal(previousLastUpdated)
-        expect(claimEvent.Note).to.contain(reason)
-        expect(claimEvent.Event).to.equal(overpaymentActionEnum.RESOLVE)
+        expect(claimAfter.IsOverpaid).toBe(false)
+        expect(claimAfter.RemainingOverpaymentAmount.toString()).toBe(remaining)
+        expect(claimAfter.OverpaymentAmount).toBe(claimBefore.OverpaymentAmount)
+        expect(claimAfter.OverpaymentReason).not.toBe(reason)
+        expect(claimAfter.LastUpdated).not.toBe(previousLastUpdated)
+        expect(claimEvent.Note).toEqual(expect.arrayContaining([reason]))
+        expect(claimEvent.Event).toBe(overpaymentActionEnum.RESOLVE)
       })
   })
 

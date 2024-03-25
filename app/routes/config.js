@@ -13,7 +13,7 @@ module.exports = function (router) {
   router.get('/config', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9])
 
-    getAutoApprovalConfig()
+    return getAutoApprovalConfig()
       .then(function (autoApprovalConfig) {
         getAuditConfig()
           .then(function (auditConfig) {

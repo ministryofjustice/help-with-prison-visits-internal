@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const getAuditConfig = require('../../../../../app/services/data/audit/get-audit-config')
 const {
   insertAuditConfig,
@@ -11,7 +10,7 @@ describe('services/data/audit/get-audit-config', function () {
       const expectedResult = { ThresholdAmount: '250', VerificationPercent: '20' }
       return getAuditConfig()
         .then(function (result) {
-          expect(JSON.stringify(result)).to.equal(JSON.stringify(expectedResult))
+          expect(JSON.stringify(result)).toBe(JSON.stringify(expectedResult))
         })
     })
 
@@ -23,11 +22,11 @@ describe('services/data/audit/get-audit-config', function () {
       const expectedResult = { ThresholdAmount: '200', VerificationPercent: '15' }
       return getAuditConfig()
         .then(function (result) {
-          expect(JSON.stringify(result)).to.equal(JSON.stringify(expectedResult))
+          expect(JSON.stringify(result)).toBe(JSON.stringify(expectedResult))
         })
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll('')
     })
   })

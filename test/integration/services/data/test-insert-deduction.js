@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
@@ -11,7 +10,7 @@ let claimId
 
 describe('services/data/insert-deduction', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       date = dateFormatter.now()
       return insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimId = ids.claimId
@@ -34,19 +33,19 @@ describe('services/data/insert-deduction', function () {
           return db('Claim').first().where('ClaimId', claimId)
         })
         .then(function (claim) {
-          expect(updatedClaimDeduction.EligibilityId).to.equal(claim.EligibilityId)
-          expect(updatedClaimDeduction.Reference).to.equal(claim.Reference)
-          expect(updatedClaimDeduction.ClaimId).to.equal(claim.ClaimId)
-          expect(updatedClaimDeduction.Amount).to.equal(claimDeductionAmount)
-          expect(updatedClaimDeduction.DeductionType).to.equal(claimDeductionType)
-          expect(updatedClaimDeduction.IsEnabled).to.be.true //eslint-disable-line
+          expect(updatedClaimDeduction.EligibilityId).toBe(claim.EligibilityId)
+          expect(updatedClaimDeduction.Reference).toBe(claim.Reference)
+          expect(updatedClaimDeduction.ClaimId).toBe(claim.ClaimId)
+          expect(updatedClaimDeduction.Amount).toBe(claimDeductionAmount)
+          expect(updatedClaimDeduction.DeductionType).toBe(claimDeductionType)
+          expect(updatedClaimDeduction.IsEnabled).toBe(true)
         })
         .catch(function (error) {
           throw error
         })
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })

@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
@@ -9,7 +8,7 @@ let claimDeductionId
 
 describe('services/data/disable-deduction', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       date = dateFormatter.now()
       return insertTestData(reference, date.toDate(), 'TESTING').then(function (ids) {
         claimDeductionId = ids.claimDeductionId1
@@ -22,14 +21,14 @@ describe('services/data/disable-deduction', function () {
           return db('ClaimDeduction').first().where('ClaimDeductionId', claimDeductionId[0].ClaimDeductionId)
         })
         .then(function (deduction) {
-          expect(deduction.IsEnabled).to.be.false //eslint-disable-line
+          expect(deduction.IsEnabled).toBe(false)
         })
         .catch(function (error) {
           throw error
         })
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })

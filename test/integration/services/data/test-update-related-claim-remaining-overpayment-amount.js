@@ -1,5 +1,4 @@
 /* eslint-env mocha */
-const expect = require('chai').expect
 const moment = require('moment')
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, insertClaimDeduction, insertClaim, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
@@ -172,7 +171,7 @@ describe('services/data/update-related-claim-remaining-overpayment-amount', func
 function checkClaimOverpaymentValues (claimId, remainingOverpaymentAmount, isOverpaid) {
   return db('Claim').where('ClaimId', claimId).first()
     .then(function (claim) {
-      expect(claim.RemainingOverpaymentAmount).to.equal(remainingOverpaymentAmount)
-      expect(claim.IsOverpaid).to.equal(isOverpaid)
+      expect(claim.RemainingOverpaymentAmount).toBe(remainingOverpaymentAmount)
+      expect(claim.IsOverpaid).toBe(isOverpaid)
     })
 }

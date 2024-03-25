@@ -1,6 +1,5 @@
 const UpdateContactDetailsResponse = require('../../../../app/services/domain/update-contact-details-response')
 const ValidationError = require('../../../../app/services/errors/validation-error')
-const expect = require('chai').expect
 let updateContactDetailsResponse
 
 describe('services/domain/update-contact-details-response', function () {
@@ -11,8 +10,8 @@ describe('services/domain/update-contact-details-response', function () {
 
   it('should construct a domain object given valid input', function () {
     updateContactDetailsResponse = new UpdateContactDetailsResponse(VALID_EMAIL_ADDRESS, VALID_PHONE_NUMBER)
-    expect(updateContactDetailsResponse.emailAddress).to.equal(VALID_EMAIL_ADDRESS)
-    expect(updateContactDetailsResponse.phoneNumber).to.equal(VALID_PHONE_NUMBER)
+    expect(updateContactDetailsResponse.emailAddress).toBe(VALID_EMAIL_ADDRESS)
+    expect(updateContactDetailsResponse.phoneNumber).toBe(VALID_PHONE_NUMBER)
   })
 
   it('should throw validation error if email address is invalid', function () {
@@ -20,8 +19,8 @@ describe('services/domain/update-contact-details-response', function () {
       updateContactDetailsResponse = new UpdateContactDetailsResponse(INVALID_EMAIL_ADDRESS, VALID_PHONE_NUMBER)
       expect.fail()
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors.EmailAddress).to.contain('Email address must have valid format')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors.EmailAddress).toContain('Email address must have valid format')
     }
   })
 
@@ -30,8 +29,8 @@ describe('services/domain/update-contact-details-response', function () {
       updateContactDetailsResponse = new UpdateContactDetailsResponse('', VALID_PHONE_NUMBER)
       expect.fail()
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors.EmailAddress).to.contain('Email address is required')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors.EmailAddress).toContain('Email address is required')
     }
   })
 
@@ -40,8 +39,8 @@ describe('services/domain/update-contact-details-response', function () {
       updateContactDetailsResponse = new UpdateContactDetailsResponse(VALID_EMAIL_ADDRESS, INVALID_PHONE_NUMBER)
       expect.fail()
     } catch (e) {
-      expect(e).to.be.instanceof(ValidationError)
-      expect(e.validationErrors.PhoneNumber).to.contain('Phone number must be 20 characters or shorter')
+      expect(e).toBeInstanceOf(ValidationError)
+      expect(e.validationErrors.PhoneNumber).toContain('Phone number must be 20 characters or shorter')
     }
   })
 })

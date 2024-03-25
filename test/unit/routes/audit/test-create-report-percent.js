@@ -1,32 +1,30 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 
-let hasRolesStub
-let authorisation
-let addAuditSessionDataStub
-let getAuditSessionDataStub
+const mockHasRoles = jest.fn()
+let mockAuthorisation
+const mockAddAuditSessionData = jest.fn()
+const mockGetAuditSessionData = jest.fn()
 
 describe('routes/audit/create-report-percent', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    addAuditSessionDataStub = sinon.stub()
-    getAuditSessionDataStub = sinon.stub()
-    authorisation = {
-      hasRoles: hasRolesStub
+    mockAuthorisation = {
+      hasRoles: mockHasRoles
     }
 
-    const route = proxyquire('../../../../app/routes/audit/create-report-percent', {
-      '../../services/authorisation': authorisation,
-      '../../services/add-audit-session-data': addAuditSessionDataStub,
-      '../../services/get-audit-session-data': getAuditSessionDataStub
-    })
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock('../../../../app/services/add-audit-session-data', () => mockAddAuditSessionData)
+    jest.mock('../../../../app/services/get-audit-session-data', () => mockGetAuditSessionData)
+
+    const route = require('../../../../app/routes/audit/create-report-percent')
 
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /audit/create-report-percent', function () {
@@ -35,8 +33,8 @@ describe('routes/audit/create-report-percent', function () {
         .get('/audit/create-report-percent')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditSessionDataStub.callCount).to.equal(5); //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(5)
         })
     })
   })
@@ -47,8 +45,8 @@ describe('routes/audit/create-report-percent', function () {
         .post('/audit/create-report-percent')
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditSessionDataStub.callCount).to.equal(2); //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(2)
         })
     })
 
@@ -61,9 +59,9 @@ describe('routes/audit/create-report-percent', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(addAuditSessionDataStub.callCount).to.equal(2); //eslint-disable-line
-          expect(getAuditSessionDataStub.callCount).to.equal(2); //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockAddAuditSessionData).toHaveBeenCalledTimes(2)
+          expect(mockGetAuditSessionData).toHaveBeenCalledTimes(2)
         })
     })
   })

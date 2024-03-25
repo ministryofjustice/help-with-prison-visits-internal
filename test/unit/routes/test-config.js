@@ -1,43 +1,52 @@
-const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
+const routeHelper = require('../../helpers/routes/route-helper')
 const ValidationError = require('../../../app/services/errors/validation-error')
 const autoApprovalRulesEnum = require('../../../app/constants/auto-approval-rules-enum')
 
-let hasRoles
-let getAutoApprovalConfigStub
-let getAuditConfigStub
-let updateAutoApprovalConfigStub
-let updateAuditConfigStub
-let AutoApprovalConfigStub
-let AuditConfigStub
+let mockAuthorisation
+const mockHasRoles = jest.fn()
+const mockGetAutoApprovalConfig = jest.fn()
+const mockGetAuditConfig = jest.fn()
+const mockUpdateAutoApprovalConfig = jest.fn()
+const mockUpdateAuditConfig = jest.fn()
+const mockAutoApprovalConfig = jest.fn()
+const mockAuditConfig = jest.fn()
 
 describe('routes/config', function () {
   let app
 
   beforeEach(function () {
-    hasRoles = sinon.stub()
-    getAutoApprovalConfigStub = sinon.stub().resolves({ RulesDisabled: 'Test' })
-    getAuditConfigStub = sinon.stub().resolves({})
-    updateAutoApprovalConfigStub = sinon.stub().resolves()
-    updateAuditConfigStub = sinon.stub().resolves()
-    AutoApprovalConfigStub = sinon.stub().returns({})
-    AuditConfigStub = sinon.stub().returns({})
+    mockAuthorisation = {
+      hasRoles: mockHasRoles
+    }
+    mockGetAutoApprovalConfig.mockResolvedValue({ RulesDisabled: 'Test' })
+    mockGetAuditConfig.mockResolvedValue({})
+    mockUpdateAutoApprovalConfig.mockResolvedValue()
+    mockUpdateAuditConfig.mockResolvedValue()
+    mockAutoApprovalConfig.mockReturnValue({})
+    mockAuditConfig.mockReturnValue({})
 
-    const route = proxyquire('../../../app/routes/config', {
-      '../services/authorisation': { hasRoles },
-      '../services/data/get-auto-approval-config': getAutoApprovalConfigStub,
-      '../services/data/audit/get-audit-config': getAuditConfigStub,
-      '../services/data/update-auto-approval-config': updateAutoApprovalConfigStub,
-      '../services/data/audit/update-audit-config': updateAuditConfigStub,
-      '../services/domain/auto-approval-config': AutoApprovalConfigStub,
-      '../services/domain/audit-config': AuditConfigStub
-    })
+    jest.mock('../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock(
+      '../../../app/services/data/get-auto-approval-config',
+      () => mockGetAutoApprovalConfig
+    )
+    jest.mock('../../../app/services/data/audit/get-audit-config', () => mockGetAuditConfig)
+    jest.mock(
+      '../../../app/services/data/update-auto-approval-config',
+      () => mockUpdateAutoApprovalConfig
+    )
+    jest.mock('../../../app/services/data/audit/update-audit-config', () => mockUpdateAuditConfig)
+    jest.mock('../../../app/services/domain/auto-approval-config', () => mockAutoApprovalConfig)
+    jest.mock('../../../app/services/domain/audit-config', () => mockAuditConfig)
+
+    const route = require('../../../app/routes/config')
 
     app = routeHelper.buildApp(route)
-    route(app)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /config', function () {
@@ -46,26 +55,26 @@ describe('routes/config', function () {
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAutoApprovalConfig).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1)
         })
     })
 
     it('should respond with a 200 for rules disabled not defined', function () {
-      getAutoApprovalConfigStub.resolves({})
+      mockGetAutoApprovalConfig.mockResolvedValue({})
       return supertest(app)
         .get('/config')
         .expect(200)
         .expect(function () {
-          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(getAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetAutoApprovalConfig).toHaveBeenCalledTimes(1)
+          expect(mockGetAuditConfig).toHaveBeenCalledTimes(1)
         })
     })
 
     it('should respond with a 500 promise rejects', function () {
-      getAutoApprovalConfigStub.rejects()
+      mockGetAutoApprovalConfig.mockRejectedValue()
       return supertest(app)
         .get('/config')
         .expect(500)
@@ -78,23 +87,23 @@ describe('routes/config', function () {
         .post('/config')
         .expect(302)
         .expect(function () {
-          expect(hasRoles.calledOnce).to.be.true //eslint-disable-line
-          expect(updateAutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(updateAuditConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(AutoApprovalConfigStub.calledOnce).to.be.true //eslint-disable-line
-          expect(AuditConfigStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockUpdateAutoApprovalConfig).toHaveBeenCalledTimes(1)
+          expect(mockUpdateAuditConfig).toHaveBeenCalledTimes(1)
+          expect(mockAutoApprovalConfig).toHaveBeenCalledTimes(1)
+          expect(mockAuditConfig).toHaveBeenCalledTimes(1)
         })
     })
 
     it('should respond with a 400 if there are validation errors', function () {
-      AutoApprovalConfigStub.throws(new ValidationError())
+      mockAutoApprovalConfig.mockImplementation(() => { throw new ValidationError() })
       return supertest(app)
         .post('/config')
         .expect(400)
     })
 
     it('should respond with a 500 if error other than validation thrown', function () {
-      updateAutoApprovalConfigStub.throws(new Error())
+      mockUpdateAutoApprovalConfig.mockImplementation(() => { throw new Error() })
       return supertest(app)
         .post('/config')
         .expect(500)
@@ -109,11 +118,13 @@ describe('routes/config', function () {
       return supertest(app)
         .post('/config')
         .send({
-          rules: allRules
+          rulesEnabled: allRules
         })
         .expect(function () {
-          AutoApprovalConfigStub.calledWith(
+          expect(mockAutoApprovalConfig).toHaveBeenCalledWith(
             'test@test.com',
+            undefined,
+            undefined,
             undefined,
             undefined,
             undefined,
@@ -131,11 +142,13 @@ describe('routes/config', function () {
       return supertest(app)
         .post('/config')
         .send({
-          rules: []
+          rulesEnabled: []
         })
         .expect(function () {
-          AutoApprovalConfigStub.calledWith(
+          expect(mockAutoApprovalConfig).toHaveBeenCalledWith(
             'test@test.com',
+            undefined,
+            undefined,
             undefined,
             undefined,
             undefined,
@@ -146,7 +159,7 @@ describe('routes/config', function () {
     })
 
     it('should respond with a 500 promise rejects and update fails', function () {
-      updateAutoApprovalConfigStub.rejects()
+      mockUpdateAutoApprovalConfig.mockRejectedValue()
       return supertest(app)
         .post('/config')
         .expect(500)

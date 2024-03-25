@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const ErrorHandler = require('../../../../app/services/validators/error-handler')
 
 describe('services/validators/error-handler', function () {
@@ -18,9 +17,8 @@ describe('services/validators/error-handler', function () {
     it('should return single result if one error is added', function (done) {
       this.errorHandler.add(FIELD_NAME_1, message, OPTIONS)
       const result = this.errorHandler.get()
-      expect(result).to.have.property(FIELD_NAME_1)
-        .that.is.an('array')
-        .that.has.length(1)
+      expect(result).toHaveProperty(FIELD_NAME_1)
+      expect(result[FIELD_NAME_1]).toHaveLength(1)
       done()
     })
 
@@ -29,9 +27,8 @@ describe('services/validators/error-handler', function () {
       this.errorHandler.add(FIELD_NAME_1, message, OPTIONS)
       this.errorHandler.add(FIELD_NAME_1, message, OPTIONS)
       const result = this.errorHandler.get()
-      expect(result).to.have.property(FIELD_NAME_1)
-        .that.is.an('array')
-        .that.has.length(3)
+      expect(result).toHaveProperty(FIELD_NAME_1)
+      expect(result[FIELD_NAME_1]).toHaveLength(3)
       done()
     })
 
@@ -39,12 +36,10 @@ describe('services/validators/error-handler', function () {
       this.errorHandler.add(FIELD_NAME_1, message, OPTIONS)
       this.errorHandler.add(FIELD_NAME_2, message, OPTIONS)
       const result = this.errorHandler.get()
-      expect(result).to.have.property(FIELD_NAME_1)
-        .that.is.an('array')
-        .that.has.length(1)
-      expect(result).to.have.property(FIELD_NAME_2)
-        .that.is.an('array')
-        .that.has.length(1)
+      expect(result).toHaveProperty(FIELD_NAME_1)
+      expect(result[FIELD_NAME_1]).toHaveLength(1)
+      expect(result).toHaveProperty(FIELD_NAME_2)
+      expect(result[FIELD_NAME_2]).toHaveLength(1)
       done()
     })
   })
@@ -52,7 +47,7 @@ describe('services/validators/error-handler', function () {
   describe('get', function () {
     it('should return false if no errors are added', function (done) {
       const result = this.errorHandler.get()
-      expect(result).to.equal(false)
+      expect(result).toBe(false)
       done()
     })
   })

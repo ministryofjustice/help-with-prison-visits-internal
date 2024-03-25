@@ -1,13 +1,5 @@
 const routeHelper = require('../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
-
-let getClaimListForSearch
-let displayHelperStub
-let authorisation
-let hasRolesStub
 
 const RETURNED_CLAIM = {
   Reference: 'SEARCH1',
@@ -20,23 +12,31 @@ const RETURNED_CLAIM = {
   Name: 'Joe Bloggs'
 }
 
+const mockGetClaimListForSearch = jest.fn()
+const mockHasRoles = jest.fn()
+const mockGetClaimTypeDisplayName = jest.fn()
+let mockDisplayHelper
+let mockAuthorisation
+
 describe('routes/index', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    authorisation = { hasRoles: hasRolesStub }
-    getClaimListForSearch = sinon.stub()
-    displayHelperStub = sinon.stub({ getClaimTypeDisplayName: function () {} })
-    displayHelperStub.getClaimTypeDisplayName.returns('First time')
+    mockAuthorisation = { hasRoles: mockHasRoles }
+    mockDisplayHelper = { getClaimTypeDisplayName: mockGetClaimTypeDisplayName }
+    mockDisplayHelper.getClaimTypeDisplayName.mockReturnValue('First time')
 
-    const route = proxyquire('../../../app/routes/search', {
-      '../services/authorisation': authorisation,
-      '../services/data/get-claim-list-for-search': getClaimListForSearch,
-      '../views/helpers/display-helper': displayHelperStub
-    })
+    jest.mock('../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock('../../../app/services/data/get-claim-list-for-search', () => mockGetClaimListForSearch)
+    jest.mock('../../../app/views/helpers/display-helper', () => mockDisplayHelper)
+
+    const route = require('../../../app/routes/search')
 
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('GET /search', function () {
@@ -45,7 +45,7 @@ describe('routes/index', function () {
         .get('/search')
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -57,15 +57,15 @@ describe('routes/index', function () {
 
     it('should respond with a 200 and pass query string to data object', function () {
       const searchQuery = 'Joe Bloggs'
-      getClaimListForSearch.resolves({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
+      mockGetClaimListForSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
       return supertest(app)
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(getClaimListForSearch.calledWith(searchQuery, start, length)).to.be.true //eslint-disable-line
-          expect(response.body.recordsTotal).to.equal(1)
-          expect(response.body.claims[0].ClaimTypeDisplayName).to.equal('First time')
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockGetClaimListForSearch).toHaveBeenCalledWith(searchQuery, start, length)
+          expect(response.body.recordsTotal).toBe(1)
+          expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
         })
     })
 
@@ -75,13 +75,13 @@ describe('routes/index', function () {
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(200)
         .expect(function (response) {
-          expect(getClaimListForSearch.notCalled).to.be.true //eslint-disable-line
+          expect(mockGetClaimListForSearch).not.toHaveBeenCalled()
         })
     })
 
     it('should respond with a 500 promise rejects', function () {
       const searchQuery = 'Joe Bloggs'
-      getClaimListForSearch.rejects()
+      mockGetClaimListForSearch.mockRejectedValue()
       return supertest(app)
         .get(`/search-results?q=${searchQuery}&draw=${draw}&start=${start}&length=${length}`)
         .expect(500)

@@ -1,7 +1,5 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 const ValidationError = require('../../../../app/services/errors/validation-error')
 
 describe('routes/claim/file-upload', function () {
@@ -12,55 +10,61 @@ describe('routes/claim/file-upload', function () {
   const BASEROUTE = `/claim/file-upload/${REFERENCE}/${CLAIMID}/`
   const VALIDROUTE = `${BASEROUTE}VISIT_CONFIRMATION?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`
 
-  let authorisation
-  let uploadStub
-  let fileUploadStub
-  let claimDocumentUpdateStub
-  let generateCSRFTokenStub
+  let mockAuthorisation
   let app
-  let getFileUploadPathStub
-  let getUploadFilenameStub
-  let getFilenamePrefixStub
-  let awsStub
+  const mockHasRoles = jest.fn()
+  const mockFileUpload = jest.fn()
+  const mockClaimDocumentUpdate = jest.fn()
+  const mockGenerateCSRFToken = jest.fn()
+  const mockUpload = jest.fn()
+  const mockGetFileUploadPath = jest.fn()
+  const mockGetUploadFilename = jest.fn()
+  const mockGetFilenamePrefix = jest.fn()
+  const mockUploadStub = jest.fn()
+  const mockAws = jest.fn()
+  const mockCsurf = jest.fn()
+  const mockCsurfResponse = jest.fn()
+  const mockCallback = jest.fn()
 
   beforeEach(function () {
     const uploadFilename = '1234.png'
     const filenamePrefix = '/test/path'
-    authorisation = { hasRoles: sinon.stub() }
-    uploadStub = sinon.stub()
-    fileUploadStub = sinon.stub()
-    claimDocumentUpdateStub = sinon.stub()
-    generateCSRFTokenStub = sinon.stub()
-    getFileUploadPathStub = sinon.stub().returns('/tmp/1234.png')
-    getUploadFilenameStub = sinon.stub().returns(uploadFilename)
-    getFilenamePrefixStub = sinon.stub().returns(filenamePrefix)
+    mockAuthorisation = { hasRoles: mockHasRoles }
+    mockGetFileUploadPath.mockReturnValue('/tmp/1234.png')
+    mockGetUploadFilename.mockReturnValue(uploadFilename)
+    mockGetFilenamePrefix.mockReturnValue(filenamePrefix)
+    mockCsurf.mockReturnValue(mockCsurfResponse)
 
-    awsStub = function () {
-      return {
-        upload: sinon.stub().resolves(`${filenamePrefix}${uploadFilename}`)
-      }
-    }
-
-    const awsHelperStub = {
-      AWSHelper: awsStub
-    }
-
-    const route = proxyquire('../../../../app/routes/claim/file-upload', {
-      '../../services/authorisation': authorisation,
-      '../../services/upload': uploadStub,
-      '../../services/domain/file-upload': fileUploadStub,
-      '../../services/data/update-file-upload-details-for-claim': claimDocumentUpdateStub,
-      '../../services/generate-csrf-token': generateCSRFTokenStub,
-      './file-upload-path-helper': {
-        getFileUploadPath: getFileUploadPathStub,
-        getUploadFilename: getUploadFilenameStub,
-        getFilenamePrefix: getFilenamePrefixStub
-      },
-      csurf: function () { return function () { } },
-      '../../services/aws-helper': awsHelperStub
+    mockAws.mockReturnValue({
+      upload: mockUpload.mockResolvedValue(`${filenamePrefix}${uploadFilename}`)
     })
+
+    const mockAwsHelper = {
+      AWSHelper: mockAws
+    }
+
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock('../../../../app/services/upload', () => mockUploadStub)
+    jest.mock('../../../../app/services/domain/file-upload', () => mockFileUpload)
+    jest.mock(
+      '../../../../app/services/data/update-file-upload-details-for-claim',
+      () => mockClaimDocumentUpdate
+    )
+    jest.mock('../../../../app/services/generate-csrf-token', () => mockGenerateCSRFToken)
+    jest.mock('../../../../app/routes/claim/file-upload-path-helper', () => ({
+      getFileUploadPath: mockGetFileUploadPath,
+      getUploadFilename: mockGetUploadFilename,
+      getFilenamePrefix: mockGetFilenamePrefix
+    }))
+    jest.mock('csurf', () => mockCsurf)
+    jest.mock('../../../../app/services/aws-helper', () => mockAwsHelper)
+
+    const route = require('../../../../app/routes/claim/file-upload')
     app = routeHelper.buildApp(route)
-    route(app)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe(`GET ${BASEROUTE}`, function () {
@@ -68,8 +72,8 @@ describe('routes/claim/file-upload', function () {
       return supertest(app)
         .get(VALIDROUTE)
         .expect(function () {
-          sinon.assert.calledOnce(generateCSRFTokenStub)
-          sinon.assert.calledOnce(authorisation.hasRoles)
+          expect(mockGenerateCSRFToken).toHaveBeenCalledTimes(1)
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -83,7 +87,7 @@ describe('routes/claim/file-upload', function () {
       return supertest(app)
         .get(VALIDROUTE)
         .expect(function () {
-          sinon.assert.calledOnce(authorisation.hasRoles)
+          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -96,29 +100,32 @@ describe('routes/claim/file-upload', function () {
 
   describe(`POST ${BASEROUTE}`, function () {
     it('should create a file upload object, insert it to DB and give 302', function () {
-      uploadStub.callsArg(2).returns({})
-      claimDocumentUpdateStub.resolves()
+      mockCallback.mockResolvedValue({})
+      mockUploadStub.mockImplementation((...args) => args[2]())
+      mockClaimDocumentUpdate.mockResolvedValue()
 
       return supertest(app)
         .post(VALIDROUTE)
         .expect(function () {
-          sinon.assert.calledOnce(uploadStub)
-          sinon.assert.calledOnce(fileUploadStub)
-          sinon.assert.calledOnce(claimDocumentUpdateStub)
+          expect(mockUpload).toHaveBeenCalledTimes(1)
+          expect(mockFileUpload).toHaveBeenCalledTimes(1)
+          expect(mockClaimDocumentUpdate).toHaveBeenCalledTimes(1)
         })
         .expect(302)
     })
 
     it('should catch a validation error', function () {
-      uploadStub.callsArg(2).returns({})
-      fileUploadStub.throws(new ValidationError())
+      mockCallback.mockResolvedValue({})
+      mockUploadStub.mockImplementation((...args) => args[2]())
+      mockFileUpload.mockImplementation(() => { throw new ValidationError() })
       return supertest(app)
         .post(VALIDROUTE)
         .expect(400)
     })
 
     it('should respond with a 500 if passed invalid document type', function () {
-      uploadStub.callsArg(2).returns({})
+      mockCallback.mockResolvedValue({})
+      mockUploadStub.mockImplementation((...args) => args[2]())
       return supertest(app)
         .post(`${BASEROUTE}TEST/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
         .expect(500)

@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 
@@ -15,7 +14,7 @@ let eligibilityId
 let claimId
 
 describe('services/data/insert-claim-event', function () {
-  before(function () {
+  beforeAll(function () {
     return insertTestData(REFERENCE, dateFormatter.now().toDate(), 'Test').then(function (ids) {
       claimId = ids.claimId
       eligibilityId = ids.eligibilityId
@@ -30,19 +29,20 @@ describe('services/data/insert-claim-event', function () {
           .orderBy('DateAdded', 'desc')
       })
       .then(function (claimEvent) {
-        expect(claimEvent.EligibilityId).to.equal(eligibilityId)
-        expect(claimEvent.Reference).to.equal(REFERENCE)
-        expect(claimEvent.ClaimId).to.equal(claimId)
-        expect(claimEvent.DateAdded).to.be.within(dateFormatter.now().add(-2, 'minutes').toDate(), dateFormatter.now().add(2, 'minutes').toDate())
-        expect(claimEvent.Event).to.equal(EVENT)
-        expect(claimEvent.AdditionalData).to.equal(ADDITIONAL_DATA)
-        expect(claimEvent.Note).to.equal(NOTE)
-        expect(claimEvent.Caseworker).to.equal(CASEWORKER)
-        expect(claimEvent.IsInternal).to.equal(IS_INTERNAL)
+        expect(claimEvent.EligibilityId).toBe(eligibilityId)
+        expect(claimEvent.Reference).toBe(REFERENCE)
+        expect(claimEvent.ClaimId).toBe(claimId)
+        expect(claimEvent.DateAdded).toBeGreaterThanOrEqual(dateFormatter.now().add(-2, 'minutes').toDate())
+        expect(claimEvent.DateAdded).toBeLessThanOrEqual(dateFormatter.now().add(2, 'minutes').toDate())
+        expect(claimEvent.Event).toBe(EVENT)
+        expect(claimEvent.AdditionalData).toBe(ADDITIONAL_DATA)
+        expect(claimEvent.Note).toBe(NOTE)
+        expect(claimEvent.Caseworker).toBe(CASEWORKER)
+        expect(claimEvent.IsInternal).toBe(IS_INTERNAL)
       })
   })
 
-  after(function () {
+  afterAll(function () {
     return deleteAll(REFERENCE)
   })
 })

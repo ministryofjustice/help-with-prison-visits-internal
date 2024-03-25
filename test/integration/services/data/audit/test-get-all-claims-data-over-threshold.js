@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const dateFormatter = require('../../../../../app/services/date-formatter')
 const {
   insertClaim,
@@ -17,7 +16,7 @@ const fourMonthsAgo = dateFormatter.now().subtract(4, 'months').toDate()
 
 describe('services/data/audit/get-all-claims-data-over-threshold', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       const promises = []
       promises.push(insertClaim(1231, 12311, reference, yesterday, claimStatusEnum.APPROVED.value, false, null, null, null, null, false, 149))
       promises.push(insertClaim(1232, 12322, reference, lastWeek, claimStatusEnum.APPROVED.value, false, null, null, null, null, false, 100))
@@ -40,7 +39,7 @@ describe('services/data/audit/get-all-claims-data-over-threshold', function () {
       return getClaimData(twoMonthsAgo, dateFormatter.now(), 100, 100, expectedResult)
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })
@@ -49,7 +48,7 @@ describe('services/data/audit/get-all-claims-data-over-threshold', function () {
 function getClaimData (startDate, endDate, percent, threshold, expectedResult) {
   return getClaimsDataAboveThreshold(startDate, endDate, percent, threshold)
     .then(function (result) {
-      expect(JSON.stringify(result)).to.equal(JSON.stringify(expectedResult))
+      expect(JSON.stringify(result)).toBe(JSON.stringify(expectedResult))
     })
     .catch(function (error) {
       throw error

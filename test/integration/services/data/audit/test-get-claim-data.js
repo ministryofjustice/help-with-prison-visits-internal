@@ -1,4 +1,3 @@
-const expect = require('chai').expect
 const getClaimData = require('../../../../../app/services/data/audit/get-claim-data')
 const {
   insertReportData,
@@ -9,7 +8,7 @@ const reference = 'TEST'
 
 describe('services/data/audit/get-claim-data', function () {
   describe('module', function () {
-    before(function () {
+    beforeAll(function () {
       const promises = []
       promises.push(insertReportData(4, 1231, reference, 50))
       promises.push(insertReportData(5, 1232, reference, 80))
@@ -27,7 +26,7 @@ describe('services/data/audit/get-claim-data', function () {
       getData(reference, 5, expectResult)
     })
 
-    after(function () {
+    afterAll(function () {
       return deleteAll(reference)
     })
   })
@@ -36,7 +35,7 @@ describe('services/data/audit/get-claim-data', function () {
 function getData (reference, reportId, expectedResult) {
   return getClaimData(reference, reportId)
     .then(function (result) {
-      expect(result[0]).to.equal(expectedResult)
+      expect(result[0]).toBe(expectedResult)
     })
     .catch(function (error) {
       throw error

@@ -1,28 +1,29 @@
 const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
-const expect = require('chai').expect
-const proxyquire = require('proxyquire')
-const sinon = require('sinon')
 
-let hasRolesStub
-let authorisation
-let deleteReportStub
+const mockHasRoles = jest.fn()
+let mockAuthorisation
+const mockDeleteReport = jest.fn()
 
 describe('routes/audit/delete-report', function () {
   let app
 
   beforeEach(function () {
-    hasRolesStub = sinon.stub()
-    authorisation = {
-      hasRoles: hasRolesStub
+    mockAuthorisation = {
+      hasRoles: mockHasRoles
     }
-    deleteReportStub = sinon.stub().resolves()
-    const route = proxyquire('../../../../app/routes/audit/delete-report', {
-      '../../services/authorisation': authorisation,
-      '../../services/data/audit/delete-report': deleteReportStub
-    })
+    mockDeleteReport.mockResolvedValue()
+
+    jest.mock('../../../../app/services/authorisation', () => mockAuthorisation)
+    jest.mock('../../../../app/services/data/audit/delete-report', () => mockDeleteReport)
+
+    const route = require('../../../../app/routes/audit/delete-report')
 
     app = routeHelper.buildApp(route)
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   describe('POST /audit/delete-report', function () {
@@ -34,7 +35,7 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(400)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -47,8 +48,8 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
-          expect(deleteReportStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
+          expect(mockDeleteReport).toHaveBeenCalledTimes(1)
         })
     })
 
@@ -61,7 +62,7 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(302)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })
@@ -75,7 +76,7 @@ describe('routes/audit/delete-report', function () {
         })
         .expect(200)
         .expect(function () {
-          expect(hasRolesStub.calledOnce).to.be.true //eslint-disable-line
+          expect(mockHasRoles).toHaveBeenCalledTimes(1)
         })
     })
   })
