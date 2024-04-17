@@ -12,12 +12,48 @@ Help With Prison Visits internal, staff facing web application. This app sits be
 ## Run
 
 ### Locally
-The application uses `dotenv` to pick up a local file containing settings for environment variables called `.env`. This file will not be checked into Git. Speak to a member of the PVB dev team (#prison-visit-booking-dev on Slack) to populate.
+The application uses `dotenv` to pick up a local file containing settings for environment variables called `.env`. This file will not be checked into Git. Speak to a member of the PVB dev team (#prison-visit-booking-dev on Slack) to populate or use the following credentials from the dev namespace:
+
+```bash
+DEVELOPMENT=true
+
+# Local database
+# APVS_DATABASE_SERVER='localhost'
+# APVS_DATABASE='hwpv-local'
+# APVS_INT_WEB_USERNAME='IntWebUsername'
+# APVS_INT_WEB_PASSWORD='IntWebUsername'
+
+# Dev database
+APVS_DATABASE_SERVER='localhost'
+APVS_DATABASE='hwpv-dev'
+APVS_INT_WEB_USERNAME='IntWebUsername'
+APVS_INT_WEB_PASSWORD='IntWebPassword'
+
+APVS_MOJ_SSO_AUTHENTICATION_ENABLED='true'
+
+APVS_MOJ_SSO_AUTHORIZE_PATH='/oauth/authorize'
+APVS_MOJ_SSO_CLIENT_ID='help-with-prison-visits-3'
+APVS_MOJ_SSO_CLIENT_SECRET='clientsecret'
+APVS_MOJ_SSO_LOGOUT_PATH="/logout"
+APVS_MOJ_SSO_REDIRECT_URI="http://localhost:3001/login/callback"
+APVS_MOJ_SSO_SESSION_SECRET="test-secret"
+APVS_MOJ_SSO_TOKEN_HOST='https://sign-in-dev.hmpps.service.justice.gov.uk/auth'
+APVS_MOJ_SSO_TOKEN_PATH='/oauth/token'
+
+MANAGE_USERS_API_URL='https://manage-users-api-dev.hmpps.service.justice.gov.uk'
+MANAGE_USERS_API_PATH_PREFIX='/users'
+MANAGE_USERS_API_USER_DETAILS_PATH='/me'
+MANAGE_USERS_API_USER_EMAIL_PATH='/email'
+MANAGE_USERS_API_USER_ROLES_PATH='/me/roles'
+
+REDIS_HOST='localhost'
+REDIS_PORT=6379
+```
 
 #### Database
-It is possible to use the dev instance of the database which can then be used to set some of the above environment variables. This can be achieved by setting up a port-forwarding pod in Kubernetes so that the dev database can be forwarded to a local port. i.e. `kubectl run port-forward-pod --image=ministryofjustice/port-forward  --port=1433 --env="REMOTE_HOST=<RDS_DB>" --env="LOCAL_PORT=1433" --env="REMOTE_PORT=1433"` followed by setting up the port forward itself `kubectl port-forward pod/port-forward-pod 1433:1433`
+It is possible to use the dev instance of the database which can then be used to set some of the above environment variables. This can be achieved by setting up a port-forwarding pod in Kubernetes so that the dev database can be forwarded to a local port. i.e. `kubectl -n <NAMESPACEHERE> run port-forward-pod --image=ministryofjustice/port-forward  --port=1433 --env="REMOTE_HOST=<RDS_DB>" --env="LOCAL_PORT=1433" --env="REMOTE_PORT=1433"` followed by setting up the port forward itself `kubectl -n <NAMESPACEHERE> port-forward pod/port-forward-pod 1433:1433`
 
-Then install dependencies and run on port 3000.
+Then install dependencies and run on port 3001.
 
 ```
 npm install
