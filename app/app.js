@@ -13,6 +13,7 @@ const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
+const { nameSerialiser } = require('./views/helpers/nameSerialiserFile')
 
 const app = express()
 
@@ -99,6 +100,7 @@ app.use(function (req, res, next) {
   res.locals.serviceName = serviceName
   res.locals.organisationName = organisationName
   res.locals.releaseVersion = 'v' + releaseVersion
+  res.locals.serialisedName = nameSerialiser(res.locals.user.name)
   next()
 })
 
