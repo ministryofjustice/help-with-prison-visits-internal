@@ -13,7 +13,7 @@ const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
-const { nameSerialiser } = require('./views/helpers/nameSerialiserFile')
+const { nameSerialiser } = require('./views/helpers/username-serialiser')
 
 const app = express()
 
