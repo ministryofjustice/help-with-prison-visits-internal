@@ -1,5 +1,10 @@
 $govuk-global-styles: true;
+
 @import '../../../node_modules/govuk-frontend/govuk/all';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/objects/all';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/settings/measurements';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/header/header';
+
 
 // Path to assets for use with the file-url function
 // in the govuk frontend toolkit's url-helpers partial

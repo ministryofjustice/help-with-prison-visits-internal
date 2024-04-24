@@ -7,11 +7,13 @@ const log = require('./services/log')
 
 const app = express()
 const serviceName = 'Help with Prison Visits'
+const organisationName = 'HMPPS'
 const developmentMode = app.get('env') === 'development'
 
 const appViews = [
   path.join(__dirname, '../node_modules/govuk_template_jinja/'),
   path.join(__dirname, '../node_modules/govuk-frontend/'),
+  path.join(__dirname, '../node_modules/@ministryofjustice/frontend/'),
   path.join(__dirname, 'views')
 ]
 
@@ -48,6 +50,7 @@ app.use(favicon(path.join(__dirname, '../node_modules/govuk_template_jinja/asset
 app.use(function (req, res, next) {
   res.locals.asset_path = '/public/'
   res.locals.serviceName = serviceName
+  res.locals.organisationName = organisationName
   next()
 })
 

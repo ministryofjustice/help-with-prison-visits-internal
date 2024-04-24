@@ -1,15 +1,34 @@
-{% extends "views/layouts/govuk_template.html" %}
+
+{% extends "govuk/template.njk" %}
+
+{%- from "moj/components/header/macro.njk" import mojHeader -%}
 
 {% block head %}
   {% include "includes/head.html" %}
 {% endblock %}
 
-{% block proposition_header %}
-  {% include "includes/propositional_navigation.html" %}
-{% endblock %}
-
-{% block header_class %}
-  with-proposition
+{% block header %}
+{{ mojHeader({
+  organisationLabel: {
+    text: organisationName,
+    href: '/'
+  },
+  serviceLabel: {
+    text: serviceName ,
+    href: '/'
+  },
+  navigation: {
+    label: 'Account navigation',
+    items: [{
+      text: user.name,
+      href: '/',
+      active: true
+    }, {
+      text: 'Sign out',
+      href: '/logout'
+    }]
+  }
+}) }}
 {% endblock %}
 
 {% block body_end %}

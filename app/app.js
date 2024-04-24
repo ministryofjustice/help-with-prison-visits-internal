@@ -46,10 +46,12 @@ const packageJson = require('../package.json')
 const developmentMode = app.get('env') === 'development'
 const releaseVersion = packageJson.version
 const serviceName = 'Help with Prison Visits'
+const organisationName = 'HMPPS'
 
 const appViews = [
   path.join(__dirname, '../node_modules/govuk_template_jinja/'),
   path.join(__dirname, '../node_modules/govuk-frontend/'),
+  path.join(__dirname, '../node_modules/@ministryofjustice/frontend/'),
   path.join(__dirname, 'views')
 ]
 
@@ -95,6 +97,7 @@ app.use(function (req, res, next) {
 // Add variables that are available in all views.
 app.use(function (req, res, next) {
   res.locals.serviceName = serviceName
+  res.locals.organisationName = organisationName
   res.locals.releaseVersion = 'v' + releaseVersion
   next()
 })
