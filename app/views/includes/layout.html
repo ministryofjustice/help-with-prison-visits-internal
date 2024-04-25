@@ -1,4 +1,3 @@
-
 {% extends "govuk/template.njk" %}
 
 {%- from "moj/components/header/macro.njk" import mojHeader -%}
@@ -28,8 +27,10 @@
     }]
   }
 }) }}
+ {% include 'partials/navigation.html' %}
 {% endblock %}
 
-{% block body_end %}
+{% block bodyEnd %}
   {% include "includes/scripts.html" %}
+
 {% endblock %}
