@@ -4,15 +4,13 @@
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
+{% set activeMainNav = 'claims' %}
+
 {% block content %}
 
 <main id="content" role="main">
 
   {% include "includes/phase_banner_beta.html" %}
-
-
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('/')}}
 
   <div class="column-one-half search">
     <form action="/search">
@@ -129,6 +127,6 @@
 
 {% endblock %}
 
-{% block body_end %}
+{% block bodyEnd %}
   {% include "includes/index-scripts.html" %}
 {% endblock %}
