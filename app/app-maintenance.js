@@ -1,5 +1,5 @@
 const express = require('express')
-const nunjucks = require('nunjucks')
+const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
 const favicon = require('serve-favicon')
 const onFinished = require('on-finished')
@@ -10,23 +10,12 @@ const serviceName = 'Help with Prison Visits'
 const organisationName = 'HMPPS'
 const developmentMode = app.get('env') === 'development'
 
-const appViews = [
-  path.join(__dirname, '../node_modules/govuk_template_jinja/'),
-  path.join(__dirname, '../node_modules/govuk-frontend/'),
-  path.join(__dirname, '../node_modules/@ministryofjustice/frontend/'),
-  path.join(__dirname, 'views')
-]
+const applicationRoles = require('./constants/application-roles-enum')
+const { nameSerialiser } = require('./views/helpers/username-serialiser')
 
-// View Engine Configuration
-app.set('view engine', 'html')
-nunjucks.configure(appViews, {
-  express: app,
-  autoescape: true,
-  watch: false,
-  noCache: false
-})
+nunjucksSetup(app, developmentMode)
 
-const publicFolders = ['public', 'assets', '../node_modules/govuk_template_jinja/assets', '../node_modules/govuk_frontend_toolkit']
+const publicFolders = ['public', 'assets', '../node_modules/govuk_template_jinja/assets', '../node_modules/govuk_frontend_toolkit', '../node_modules/@ministryofjustice/frontend/moj/components/header']
 
 publicFolders.forEach(dir => {
   app.use('/public', express.static(path.join(__dirname, dir)))
@@ -51,6 +40,8 @@ app.use(function (req, res, next) {
   res.locals.asset_path = '/public/'
   res.locals.serviceName = serviceName
   res.locals.organisationName = organisationName
+  res.locals.serialisedName = nameSerialiser(res.locals.user.name)
+  res.locals.applicationRoles = applicationRoles
   next()
 })
 

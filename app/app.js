@@ -1,6 +1,6 @@
 const config = require('../config')
 const express = require('express')
-const nunjucks = require('nunjucks')
+const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
 const favicon = require('serve-favicon')
 const helmet = require('helmet')
@@ -13,6 +13,7 @@ const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
+const applicationRoles = require('./constants/application-roles-enum')
 const { nameSerialiser } = require('./views/helpers/username-serialiser')
 
 const app = express()
@@ -49,21 +50,7 @@ const releaseVersion = packageJson.version
 const serviceName = 'Help with Prison Visits'
 const organisationName = 'HMPPS'
 
-const appViews = [
-  path.join(__dirname, '../node_modules/govuk_template_jinja/'),
-  path.join(__dirname, '../node_modules/govuk-frontend/'),
-  path.join(__dirname, '../node_modules/@ministryofjustice/frontend/'),
-  path.join(__dirname, 'views')
-]
-
-// View Engine Configuration
-app.set('view engine', 'html')
-nunjucks.configure(appViews, {
-  express: app,
-  autoescape: true,
-  watch: developmentMode,
-  noCache: developmentMode
-})
+nunjucksSetup(app, developmentMode)
 
 const publicFolders = ['public', 'assets', '../node_modules/govuk_template_jinja/assets', '../node_modules/govuk_frontend_toolkit']
 
@@ -101,6 +88,7 @@ app.use(function (req, res, next) {
   res.locals.organisationName = organisationName
   res.locals.releaseVersion = 'v' + releaseVersion
   res.locals.serialisedName = nameSerialiser(res.locals.user.name)
+  res.locals.applicationRoles = applicationRoles
   next()
 })
 
