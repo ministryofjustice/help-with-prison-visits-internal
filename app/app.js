@@ -6,6 +6,7 @@ const favicon = require('serve-favicon')
 const helmet = require('helmet')
 const compression = require('compression')
 const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
+const roleCheckingMiddleware = require('./middleware/roleChecking')
 const routes = require('./routes/routes')
 const log = require('./services/log')
 const onFinished = require('on-finished')
@@ -132,6 +133,10 @@ app.use(function (req, res, next) {
   }
   next()
 })
+
+// Add middleware to check roles for navigation 
+app.use(roleCheckingMiddleware())
+
 
 // Build the router to route all HTTP requests and pass to the routes file for route configuration.
 const router = express.Router()

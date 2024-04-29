@@ -4,9 +4,8 @@
 
   {% set primaryNavigationItems = [] %}
 
-
   {# Conditional checks for displaying nav items #}
-  {% if user.roles.includes( applicationRoles.CLAIM_ENTRY_BAND_2 ) or user.roles.includes( applicationRoles.CLAIM_PAYMENT_BAND_3 ) or user.roles.includes( applicationRoles.CASEWORK_MANAGER_BAND_5 ) or user.roles.includes( applicationRoles.BAND_9 ) %}
+  {% if UserNavigationOptions.dashboard == true %}
   {% set primaryNavigationItems = primaryNavigationItems | concat([{
     text: 'Dashboard',
     href: '/dashboard',
@@ -15,18 +14,16 @@
     
   {% endif %}
 
-  
-
-  {% if user.roles.includes( applicationRoles.CLAIM_ENTRY_BAND_2 ) or user.roles.includes( applicationRoles.CLAIM_PAYMENT_BAND_3 ) or user.roles.includes( applicationRoles.CASEWORK_MANAGER_BAND_5 ) or user.roles.includes( applicationRoles.BAND_9 ) %}
+  {% if UserNavigationOptions.claims == true %}
   {% set primaryNavigationItems = primaryNavigationItems | concat([{
     text: 'Claims',
     href: '/',
     active: activeMainNav === 'claims'
   }]) %}
 
-{% endif %}
+  {% endif %}
 
-{% if user.roles.includes( applicationRoles.CASEWORK_MANAGER_BAND_5 ) or user.roles.includes( applicationRoles.BAND_9 ) %}
+{% if UserNavigationOptions.audit == true %}
   {% set primaryNavigationItems = primaryNavigationItems | concat([{
     text: 'Audit',
     href: '/audit',
@@ -34,7 +31,7 @@
   }]) %}
 {% endif %}
 
-{% if user.roles.includes( applicationRoles.HWPV_SSCL ) %}
+{% if UserNavigationOptions.download == true %}
   {% set primaryNavigationItems = primaryNavigationItems | concat([{
     text: 'Download payment files',
     href: '/download-payment-files',
@@ -42,8 +39,7 @@
   }]) %}
  {% endif %}
 
- {# TODO: Check for HWPV Application Developer role  #}
- {% if user.roles.includes( applicationRoles.BAND_9 ) %}
+ {% if UserNavigationOptions.config == true %}
   {% set primaryNavigationItems = primaryNavigationItems | concat([{
     text: 'Settings',
     href: '/config',
