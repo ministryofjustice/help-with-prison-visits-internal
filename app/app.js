@@ -134,9 +134,8 @@ app.use(function (req, res, next) {
   next()
 })
 
-// Add middleware to check roles for navigation 
+// Add middleware to check roles for navigation
 app.use(roleCheckingMiddleware())
-
 
 // Build the router to route all HTTP requests and pass to the routes file for route configuration.
 const router = express.Router()

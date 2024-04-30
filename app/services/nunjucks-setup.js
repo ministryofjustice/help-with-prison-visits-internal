@@ -40,7 +40,7 @@ module.exports = function (app, developmentMode) {
     return null
   })
 
-  njkEnv.addFilter('concat', function(arr1, arr2) {
-    return arr1.concat(arr2);
-  });
+  njkEnv.addFilter('concat', function (arr1, arr2) {
+    return arr1.concat(arr2)
+  })
 }

@@ -15,7 +15,7 @@ const { nameSerialiser } = require('./views/helpers/username-serialiser')
 
 nunjucksSetup(app, developmentMode)
 
-const publicFolders = ['public', 'assets', '../node_modules/govuk_template_jinja/assets', '../node_modules/govuk_frontend_toolkit', '../node_modules/@ministryofjustice/frontend/moj/components/header']
+const publicFolders = ['public', 'assets', '../node_modules/govuk_template_jinja/assets', '../node_modules/govuk_frontend_toolkit']
 
 publicFolders.forEach(dir => {
   app.use('/public', express.static(path.join(__dirname, dir)))

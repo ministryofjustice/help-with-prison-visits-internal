@@ -20,7 +20,9 @@
     "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
     "test-e2e": "KNEX_CONFIG=testing cypress run --config video=false",
     "test-e2e-ui": "KNEX_CONFIG=testing cypress open",
-    "css-build": "./build-css"
+    "css-build": "./build-css",
+    "lint": "standard --env jest",
+    "lint-fix": "standard --env jest --fix"
   },
   "standard": {
     "ignore": [
