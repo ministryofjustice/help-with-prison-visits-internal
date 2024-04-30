@@ -107,7 +107,7 @@ workflows:
           env: "dev"
           context: hmpps-common-vars
           requires:
-            - dev_preview_approval
+            - request_dev_preview_approval
       - request_preprod_approval_branch:
           <<: *feature_branch
           type: approval
