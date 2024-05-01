@@ -88,8 +88,17 @@ app.use(function (req, res, next) {
   res.locals.serviceName = serviceName
   res.locals.organisationName = organisationName
   res.locals.releaseVersion = 'v' + releaseVersion
-  res.locals.serialisedName = nameSerialiser(res.locals.user.name)
   res.locals.applicationRoles = applicationRoles
+  next()
+})
+
+// Username handling.
+app.use(function (req, res, next) {
+ if (!res.locals.user || !res.locals.user.name) {
+  res.locals.serialisedName = ''
+ } else {
+  res.locals.serialisedName = nameSerialiser(res.locals.user.name)
+ }
   next()
 })
 

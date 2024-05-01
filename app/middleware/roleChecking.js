@@ -1,3 +1,4 @@
+const { CLAIM_ENTRY_BAND_2, CLAIM_PAYMENT_BAND_3, CASEWORK_MANAGER_BAND_5, HWPV_SSCL, BAND_9 } = require('../constants/application-roles-enum')
 const applicationRoles = require('../constants/application-roles-enum')
 
 const userNavigationOptions = {
@@ -8,27 +9,29 @@ const userNavigationOptions = {
   config: false
 }
 
-for (const role of Object.keys(applicationRoles)) {
-  const value = applicationRoles[role]
-  if (value === applicationRoles.CLAIM_ENTRY_BAND_2 || value === applicationRoles.CLAIM_PAYMENT_BAND_3) {
-    userNavigationOptions.dashboard = true
-    userNavigationOptions.claims = true
-  } else if (value === applicationRoles.CASEWORK_MANAGER_BAND_5) {
-    userNavigationOptions.dashboard = true
-    userNavigationOptions.claims = true
-    userNavigationOptions.audit = true
-  } else if (value === applicationRoles.HWPV_SSCL) {
-    userNavigationOptions.download = true
-  } else if (value === applicationRoles.BAND_9) {
-    userNavigationOptions.dashboard = true
-    userNavigationOptions.claims = true
-    userNavigationOptions.audit = true
-    userNavigationOptions.config = true
+const setNavigationOptions = (role, options) => {
+  if (role === CLAIM_ENTRY_BAND_2 || role === CLAIM_PAYMENT_BAND_3) {
+    options.dashboard = true
+    options.claims = true
+  } else if (role === CASEWORK_MANAGER_BAND_5) {
+    options.dashboard = true
+    options.claims = true
+    options.audit = true
+  } else if (role === HWPV_SSCL) {
+    options.download = true
+  } else if (role === BAND_9) {
+    options.dashboard = true
+    options.claims = true
+    options.audit = true
+    options.config = true
   }
 }
 
 module.exports = () => {
   return (req, res, next) => {
+    Object.keys(applicationRoles).forEach(role => {
+      setNavigationOptions(applicationRoles[role], userNavigationOptions)
+    })
     res.locals.userNavigationOptions = userNavigationOptions
     next()
   }
