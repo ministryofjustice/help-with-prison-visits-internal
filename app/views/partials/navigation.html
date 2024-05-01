@@ -1,54 +1,10 @@
-{%- from "moj/components/primary-navigation/macro.njk" import mojPrimaryNavigation -%}
-
-{% if user %}
-
-  {% set primaryNavigationItems = [] %}
-
-  {# Conditional checks for displaying nav items #}
-  {% if userNavigationOptions.dashboard == true %}
-  {% set primaryNavigationItems = primaryNavigationItems | concat([{
-    text: 'Dashboard',
-    href: '/dashboard',
-    active: activeMainNav === 'dashboard'
-  }]) %}
-    
-  {% endif %}
-
-  {% if userNavigationOptions.claims == true %}
-  {% set primaryNavigationItems = primaryNavigationItems | concat([{
-    text: 'Claims',
-    href: '/',
-    active: activeMainNav === 'claims'
-  }]) %}
-
-  {% endif %}
-
-{% if userNavigationOptions.audit == true %}
-  {% set primaryNavigationItems = primaryNavigationItems | concat([{
-    text: 'Audit',
-    href: '/audit',
-    active: activeMainNav === 'audit'
-  }]) %}
-{% endif %}
-
-{% if userNavigationOptions.download == true %}
-  {% set primaryNavigationItems = primaryNavigationItems | concat([{
-    text: 'Download payment files',
-    href: '/download-payment-files',
-    active: activeMainNav === 'download'
-  }]) %}
- {% endif %}
-
- {% if userNavigationOptions.config == true %}
-  {% set primaryNavigationItems = primaryNavigationItems | concat([{
-    text: 'Settings',
-    href: '/config',
-    active: activeMainNav === 'config'
-  }]) %}
-  {% endif %}
- 
-  {{ mojPrimaryNavigation({
-    label: 'Primary navigation',
-    items: primaryNavigationItems
-  }) }}
-{% endif %}
+{% macro active(activePage = '') %}
+    <ul id="sub-nav">
+        <li>
+            <a class="{%if activePage == 'dashboard' %}active {% endif%}" href="/dashboard">Dashboard</a>
+        </li>
+        <li>
+            <a class="{%if activePage == '/' %}active {% endif%}" href="/">Claims</a>
+        </li>
+    </ul>
+{% endmacro %}

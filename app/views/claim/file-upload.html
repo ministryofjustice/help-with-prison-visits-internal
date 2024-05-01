@@ -4,11 +4,12 @@
   {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
-{% set activeMainNav = 'claims' %}
-
 {% block content %}
 
 <main id="content" role="main">
+
+  {% import 'partials/navigation.html' as nav %}
+    {{nav.active('/')}}
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -66,6 +67,6 @@
 </main>
 {% endblock %}
 
-{% block bodyEnd %}
+{% block body_end %}
   {% include "includes/upload-scripts.html" %}
 {% endblock %}

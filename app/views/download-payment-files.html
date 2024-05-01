@@ -4,11 +4,12 @@
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
-{% set activeMainNav = 'download' %}
-
 {% block content %}
 
 <main id="content" role="main">
+
+  {% import 'partials/navigation.html' as nav %}
+    {{nav.active('dashboard')}}
 
 <h1 class="heading-large">Download payment files</h1>
 

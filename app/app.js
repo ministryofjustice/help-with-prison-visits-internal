@@ -94,11 +94,11 @@ app.use(function (req, res, next) {
 
 // Username handling.
 app.use(function (req, res, next) {
- if (!res.locals.user || !res.locals.user.name) {
-  res.locals.serialisedName = ''
- } else {
-  res.locals.serialisedName = nameSerialiser(res.locals.user.name)
- }
+  if (!res.locals.user || !res.locals.user.name) {
+    res.locals.serialisedName = ''
+  } else {
+    res.locals.serialisedName = nameSerialiser(res.locals.user.name)
+  }
   next()
 })
 

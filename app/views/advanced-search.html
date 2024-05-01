@@ -4,11 +4,12 @@
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
-{% set activeMainNav = 'claims' %}
-
 {% block content %}
 
 <main id="content" role="main">
+
+  {% import 'partials/navigation.html' as nav %}
+    {{nav.active('')}}
 
   {% include "includes/validation-error-messages.html" %}
 
@@ -512,6 +513,6 @@
 
 {% endblock %}
 
-{% block bodyEnd %}
+{% block body_end %}
   {% include "includes/advanced-search-scripts.html" %}
 {% endblock %}
