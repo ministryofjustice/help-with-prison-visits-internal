@@ -10,8 +10,6 @@
 
 <main id="content" role="main">
 
-  {% include "includes/phase_banner_beta.html" %}
-
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
     {% include "partials/csrf-hidden-input.html" %}
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
