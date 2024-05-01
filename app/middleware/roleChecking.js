@@ -1,4 +1,4 @@
-const { CLAIM_ENTRY_BAND_2, CLAIM_PAYMENT_BAND_3, CASEWORK_MANAGER_BAND_5, HWPV_SSCL, BAND_9 } = require('../constants/application-roles-enum')
+const { CLAIM_ENTRY_BAND_2, CLAIM_PAYMENT_BAND_3, CASEWORK_MANAGER_BAND_5, HWPV_SSCL, BAND_9, HWPV_APPLICATION_DEVELOPER } = require('../constants/application-roles-enum')
 const applicationRoles = require('../constants/application-roles-enum')
 
 const userNavigationOptions = {
@@ -23,6 +23,11 @@ const setNavigationOptions = (role, options) => {
     options.dashboard = true
     options.claims = true
     options.audit = true
+  } else if (role === HWPV_APPLICATION_DEVELOPER) {
+    options.dashboard = true
+    options.claims = true
+    options.audit = true
+    options.download = true
     options.config = true
   }
 }
