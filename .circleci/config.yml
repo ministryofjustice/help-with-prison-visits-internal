@@ -94,7 +94,7 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
-      - request_dev_preview_approval: 
+      - request_dev_preview_approval:
           <<: *feature_branch
           type: approval
           requires:
