@@ -94,15 +94,20 @@ workflows:
           name: helm_lint
       - hmpps/build_docker:
           name: build_docker
+      - request_dev_preview_approval:
+          <<: *feature_branch
+          type: approval
+          requires:
+            - helm_lint
+            - unit_test
+            - build_docker
       - hmpps/deploy_env:
           <<: *feature_branch
           name: deploy_dev_preview
           env: "dev"
           context: hmpps-common-vars
           requires:
-            - helm_lint
-            - unit_test
-            - build_docker
+            - request_dev_preview_approval
       - request_preprod_approval_branch:
           <<: *feature_branch
           type: approval

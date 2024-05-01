@@ -20,7 +20,9 @@
     "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
     "test-e2e": "KNEX_CONFIG=testing cypress run --config video=false",
     "test-e2e-ui": "KNEX_CONFIG=testing cypress open",
-    "css-build": "./build-css"
+    "css-build": "./build-css",
+    "lint": "standard --env jest",
+    "lint-fix": "standard --env jest --fix"
   },
   "standard": {
     "ignore": [
@@ -44,8 +46,8 @@
     "collectCoverageFrom": [
       "app/**/*.{ts,js,jsx,mjs}"
     ],
-    "testPathIgnorePatterns" : [
-      "<rootDir>/test/unit/routes/mock-view-engine.js" 
+    "testPathIgnorePatterns": [
+      "<rootDir>/test/unit/routes/mock-view-engine.js"
     ],
     "testMatch": [
       "<rootDir>/test/unit/**/?(*.){ts,js,jsx,mjs}"
@@ -76,6 +78,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.556.0",
+    "@ministryofjustice/frontend": "^2.1.2",
     "applicationinsights": "^2.9.5",
     "axios": "^1.6.8",
     "bluebird": "^3.7.2",
