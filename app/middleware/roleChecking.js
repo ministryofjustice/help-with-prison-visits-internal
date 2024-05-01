@@ -24,7 +24,7 @@ const setNavigationOptions = (role, options) => {
     options.claims = true
     options.audit = true
     options.config = true
-  } 
+  }
 }
 
 module.exports = () => {
