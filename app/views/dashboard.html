@@ -1,69 +1,109 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
-{% block page_title %}
-{% if serviceName %} {{ serviceName }} {% endif %}
-{% endblock %}
+{% set activeMainNav = 'dashboard' %}
 
 {% block content %}
+{{ govukBackLink({
+  text: "Back",
+  href: "/"
+}) }}
 
-<main id="content" role="main">
+<form action='/dashboard' method="GET">
+  {{ govukSelect({
+    id: "filter",
+    name: "filter",
+    label: {
+      text: "Filter by"
+    },
+    items: [
+      {
+        value: "TODAY",
+        text: "Today",
+        selected: activeFilter === 'TODAY'
+      },
+      {
+        value: "YESTERDAY",
+        text: "Yesterday",
+        selected: activeFilter === 'YESTERDAY'
+      },
+      {
+        value: "LAST_7_DAYS",
+        text: "Last 7 days",
+        selected: activeFilter === 'LAST_7_DAYS'
+      },
+      {
+        value: "ONE_MONTH_AGO",
+        text: filterMonths.oneMonthAgo,
+        selected: activeFilter === 'ONE_MONTH_AGO'
+      },
+      {
+        value: "TWO_MONTHS_AGO",
+        text: filterMonths.twoMonthsAgo,
+        selected: activeFilter === 'TWO_MONTHS_AGO'
+      },
+      {
+        value: "THREE_MONTHS_AGO",
+        text: filterMonths.threeMonthsAgo,
+        selected: activeFilter === 'THREE_MONTHS_AGO'
+      },
+      {
+        value: "FOUR_MONTHS_AGO",
+        text: filterMonths.fourMonthsAgo,
+        selected: activeFilter === 'FOUR_MONTHS_AGO'
+      }
+    ]
+  }) }}
+</form>
 
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('dashboard')}}
-
-  <div class="grid-row">
+<div class="grid-row">
+  <article class="moj-ticket-panel" aria-label="Sub navigation 1">
     <div class="column-one-third">
-      <form action='/dashboard' method="GET">
-        <label class="form-label-bold">Filter by</label>
-        <select class="form-control full" id="filter" name="filter">
-          <option value="TODAY" {% if activeFilter == 'TODAY' or activeFilter == null %}selected=""{% endif %}>Today</option>
-          <option value="YESTERDAY" {% if activeFilter == 'YESTERDAY' %}selected=""{% endif %}>Yesterday</option>
-          <option value="LAST_7_DAYS" {% if activeFilter == 'LAST_7_DAYS' %}selected=""{% endif %}>Last 7 days</option>
-          <option value="ONE_MONTH_AGO" {% if activeFilter == 'ONE_MONTH_AGO' %}selected=""{% endif %}>{{ filterMonths.oneMonthAgo }}</option>
-          <option value="TWO_MONTHS_AGO" {% if activeFilter == 'TWO_MONTHS_AGO' %}selected=""{% endif %}>{{ filterMonths.twoMonthsAgo }}</option>
-          <option value="THREE_MONTHS_AGO" {% if activeFilter == 'THREE_MONTHS_AGO' %}selected=""{% endif %}>{{ filterMonths.threeMonthsAgo }}</option>
-          <option value="FOUR_MONTHS_AGO" {% if activeFilter == 'FOUR_MONTHS_AGO' %}selected=""{% endif %}>{{ filterMonths.fourMonthsAgo }}</option>
-        </select>
-      </form>
-    </div>
-  </div>
-
-  <div id="dashboard" class="grid-row">
-    <div class="column-one-third">
-        <h2 class="heading-medium">Pending</h2>
-        <span class="number">{{ pendingCount }}</span>
+      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Pending</h2>
+        <p class="govuk-body">{{ pendingCount }}</p>
+      </section>
     </div>
 
     <div class="column-one-third">
-        <h2 class="heading-medium">In Progress</h2>
-        <span class="number">{{ inProgressCount }}</span>
+      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">In Progress</h2>
+        <p class="govuk-body">{{ inProgressCount }}</p>
+      </section>
     </div>
 
     <div class="column-one-third">
-        <h2 class="heading-medium">Paid</h2>
-        <span class="number">{{ paidCount }}</span>
+      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Paid</h2>
+        <p class="govuk-body">{{ paidCount }}</p>
+      </section>
     </div>
 
     <div class="column-one-third">
-        <h2 class="heading-medium">Auto approved</h2>
-        <span class="number">{{ autoApprovedCount }}</span>
+      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Auto approved</h2>
+        <p class="govuk-body">{{ autoApprovedCount }}</p>
+      </section>
     </div>
 
     <div class="column-one-third">
-        <h2 class="heading-medium">Manually approved</h2>
-        <span class="number">{{ manuallyApprovedCount }}</span>
+      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Manually approved</h2>
+        <p class="govuk-body">{{ manuallyApprovedCount }}</p>
+      </section>
     </div>
 
     <div class="column-one-third">
-        <h2 class="heading-medium">Rejected</h2>
-        <span class="number">{{ rejectedCount }}</span>
+      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Rejected</h2>
+        <p class="govuk-body">{{ rejectedCount }}</p>
+      </section>
     </div>
-  </div>
-
-</main>
-
+  </article>
+</div>
 {% endblock %}
 
-{% block body_end %}
+{% block bodyEnd %}
   {% include "includes/dashboard-scripts.html" %}
 {% endblock %}

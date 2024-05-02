@@ -10,6 +10,7 @@ $govuk-global-styles: true;
 @import '../../../node_modules/@ministryofjustice/frontend/moj/settings/measurements';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/header/header';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/primary-navigation/primary-navigation';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/ticket-panel/_ticket-panel';
 
 // Path to assets for use with the file-url function
 // in the govuk frontend toolkit's url-helpers partial
