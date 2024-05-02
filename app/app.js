@@ -6,6 +6,7 @@ const favicon = require('serve-favicon')
 const helmet = require('helmet')
 const compression = require('compression')
 const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
+const roleCheckingMiddleware = require('./middleware/roleChecking')
 const routes = require('./routes/routes')
 const log = require('./services/log')
 const onFinished = require('on-finished')
@@ -13,6 +14,8 @@ const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
+const applicationRoles = require('./constants/application-roles-enum')
+const { nameSerialiser } = require('./views/helpers/username-serialiser')
 
 const app = express()
 
@@ -46,6 +49,7 @@ const packageJson = require('../package.json')
 const developmentMode = app.get('env') === 'development'
 const releaseVersion = packageJson.version
 const serviceName = 'Help with Prison Visits'
+const organisationName = 'HMPPS'
 
 nunjucksSetup(app, developmentMode)
 
@@ -82,7 +86,19 @@ app.use(function (req, res, next) {
 // Add variables that are available in all views.
 app.use(function (req, res, next) {
   res.locals.serviceName = serviceName
+  res.locals.organisationName = organisationName
   res.locals.releaseVersion = 'v' + releaseVersion
+  res.locals.applicationRoles = applicationRoles
+  next()
+})
+
+// Username handling.
+app.use(function (req, res, next) {
+  if (!res.locals.user || !res.locals.user.name) {
+    res.locals.serialisedName = ''
+  } else {
+    res.locals.serialisedName = nameSerialiser(res.locals.user.name)
+  }
   next()
 })
 
@@ -126,6 +142,9 @@ app.use(function (req, res, next) {
   }
   next()
 })
+
+// Add middleware to check roles for navigation
+app.use(roleCheckingMiddleware())
 
 // Build the router to route all HTTP requests and pass to the routes file for route configuration.
 const router = express.Router()

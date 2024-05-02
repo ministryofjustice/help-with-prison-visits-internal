@@ -9,7 +9,7 @@
 <main id="content" role="main">
 
   {% import 'partials/navigation.html' as nav %}
-      {{nav.active('/')}}
+    {{nav.active('/')}}
 
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
     {% include "partials/csrf-hidden-input.html" %}

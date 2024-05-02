@@ -1,5 +1,5 @@
 const express = require('express')
-const nunjucks = require('nunjucks')
+const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
 const favicon = require('serve-favicon')
 const onFinished = require('on-finished')
@@ -7,22 +7,11 @@ const log = require('./services/log')
 
 const app = express()
 const serviceName = 'Help with Prison Visits'
+const organisationName = 'HMPPS'
 const developmentMode = app.get('env') === 'development'
+const { nameSerialiser } = require('./views/helpers/username-serialiser')
 
-const appViews = [
-  path.join(__dirname, '../node_modules/govuk_template_jinja/'),
-  path.join(__dirname, '../node_modules/govuk-frontend/'),
-  path.join(__dirname, 'views')
-]
-
-// View Engine Configuration
-app.set('view engine', 'html')
-nunjucks.configure(appViews, {
-  express: app,
-  autoescape: true,
-  watch: false,
-  noCache: false
-})
+nunjucksSetup(app, developmentMode)
 
 const publicFolders = ['public', 'assets', '../node_modules/govuk_template_jinja/assets', '../node_modules/govuk_frontend_toolkit']
 
@@ -48,6 +37,17 @@ app.use(favicon(path.join(__dirname, '../node_modules/govuk_template_jinja/asset
 app.use(function (req, res, next) {
   res.locals.asset_path = '/public/'
   res.locals.serviceName = serviceName
+  res.locals.organisationName = organisationName
+  next()
+})
+
+// Username handling.
+app.use(function (req, res, next) {
+  if (!res.locals.user || !res.locals.user.name) {
+    res.locals.serialisedName = ''
+  } else {
+    res.locals.serialisedName = nameSerialiser(res.locals.user.name)
+  }
   next()
 })
 
