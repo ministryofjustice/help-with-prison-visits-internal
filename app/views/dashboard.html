@@ -4,13 +4,6 @@
 
 {% set activeMainNav = 'dashboard' %}
 
-{% block beforeContent %}
-{{ govukBackLink({
-  text: "Back",
-  href: "/"
-}) }}
-{% endblock %}
-
 {% block content %}
 <form action='/dashboard' method="GET">
   {{ govukSelect({
@@ -63,43 +56,43 @@
   <article class="moj-ticket-panel" aria-label="Sub navigation 1">
     <div class="column-one-third">
       <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Pending</h2>
-        <p class="govuk-body">{{ pendingCount }}</p>
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ pendingCount }}</h2>
+        <p class="govuk-body">Pending</p>
       </section>
     </div>
 
     <div class="column-one-third">
       <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">In Progress</h2>
-        <p class="govuk-body">{{ inProgressCount }}</p>
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ inProgressCount }}</h2>
+        <p class="govuk-body">In Progress</p>
       </section>
     </div>
 
     <div class="column-one-third">
       <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Paid</h2>
-        <p class="govuk-body">{{ paidCount }}</p>
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ paidCount }}</h2>
+        <p class="govuk-body">Paid</p>
       </section>
     </div>
 
     <div class="column-one-third">
       <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Auto approved</h2>
-        <p class="govuk-body">{{ autoApprovedCount }}</p>
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ autoApprovedCount }}</h2>
+        <p class="govuk-body">Auto approved</p>
       </section>
     </div>
 
     <div class="column-one-third">
       <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Manually approved</h2>
-        <p class="govuk-body">{{ manuallyApprovedCount }}</p>
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ manuallyApprovedCount }}</h2>
+        <p class="govuk-body">Manually Approved</p>
       </section>
     </div>
 
     <div class="column-one-third">
       <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-2">Rejected</h2>
-        <p class="govuk-body">{{ rejectedCount }}</p>
+        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ rejectedCount }}</h2>
+        <p class="govuk-body">Rejected</p>
       </section>
     </div>
   </article>
