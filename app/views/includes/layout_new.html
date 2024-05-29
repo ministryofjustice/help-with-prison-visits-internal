@@ -6,6 +6,9 @@
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
+{% block bodyStart %}
+{% endblock %}
+
 {% block head %}
   {% include "includes/head.html" %}
 {% endblock %}
@@ -31,7 +34,8 @@
     }]
   }
 }) }}
- {% include 'partials/navigation.html' %}
+ {% include 'partials/navigation_new.html' %}
+ {% endblock %}
 
 {% block bodyEnd %}
   {% include "includes/scripts.html" %}
