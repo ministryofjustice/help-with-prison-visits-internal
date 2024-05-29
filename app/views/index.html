@@ -1,131 +1,85 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
 
-{% block page_title %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "moj/components/badge/macro.njk" import mojBadge %}
+{% from "govuk/components/pagination/macro.njk" import govukPagination %}
+{% from "moj/components/notification-badge/macro.njk" import mojNotificationBadge %}
+{% from "moj/components/search/macro.njk" import mojSearch %}
+
+{% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
 {% block content %}
-
-<main id="content" role="main">
-
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('/')}}
-
-  <div class="column-one-half search">
-    <form action="/search">
-      <label for="input-search-query">
-        <input type="text" name="q" class="form-control" id="input-search-query">
-      </label>
-      <input type="submit" class="button" value="Search" id="search">
-      <a id="advanced-search" href="/advanced-search-input" class="link margin-left">Advanced search</a>
-    </form>
-    <br>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <div class="govuk-heading-l">Claims</div>
   </div>
-
-  <div>
-    {% if active == undefined %}
-      <br><a href="/?status=NEW/updated" class="link margin-left margin-right">Order By Last Updated</a>
-      <a href="/?status=NEW/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'UPDATED' %}
-      <br><a href="/?status=UPDATED/updated" class="link margin-left margin-right">Order By Last Updated</a>
-      <a href="/?status=UPDATED/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'PENDING' %}
-      <br><a href="/?status=PENDING/updated" class="link margin-left margin-right">Order By Last Updated</a>
-      <a href="/?status=PENDING/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'ADVANCE'%}
-      <br><a href="/?status=ADVANCE/updated" class="link margin-left margin-right">Order By Last Updated</a>
-      <a href="/?status=ADVANCE/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'ADVANCE-APPROVED' %}
-      <br><a href="/?status=ADVANCE-APPROVED/updated" class="link margin-left margin-right">Order By Last Updated</a>
-      <a href="/?status=ADVANCE-APPROVED/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'ADVANCE-UPDATED' %}
-      <br><a href="/?status=ADVANCE-UPDATED/updated" class="link margin-left margin-right">Order By Last Updated</a>
-      <a href="/?status=ADVANCE-UPDATED/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'ADVANCE-PENDING-INFORMATION' %}
-      <br><a href="/?status=ADVANCE-PENDING-INFORMATION/updated" class="link margin-left margin-right">Order By Last Updated</a>
-      <a href="/?status=ADVANCE-PENDING-INFORMATION/visit" class="link margin-left">Order By Visit Date</a>
-
-    {% elif active == 'NEW/updated' %}
-      <br><a href="/" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=NEW/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'UPDATED/updated' %}
-      <br><a href="/?status=UPDATED" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=UPDATED/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'PENDING/updated' %}
-      <br><a href="/?status=PENDING" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=PENDING/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'ADVANCE/updated'%}
-      <br><a href="/?status=ADVANCE" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'ADVANCE-APPROVED/updated' %}
-      <br><a href="/?status=ADVANCE-APPROVED" class="link margin-left">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE-APPROVED/visit" class="link margin-left margin-right">Order By Visit Date</a>
-    {% elif active == 'ADVANCE-UPDATED/updated' %}
-      <br><a href="/?status=ADVANCE-UPDATED" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE-UPDATED/visit" class="link margin-left">Order By Visit Date</a>
-    {% elif active == 'ADVANCE-PENDING-INFORMATION/updated' %}
-      <br><a href="/?status=ADVANCE-PENDING-INFORMATION" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE-PENDING-INFORMATION/visit" class="link margin-left">Order By Visit Date</a>
-
-    {% elif active == 'NEW/visit' %}
-      <br><a href="/" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=NEW/updated" class="link margin-left">Order By Last Updated</a>
-    {% elif active == 'UPDATED/visit' %}
-      <br><a href="/?status=UPDATED" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=UPDATED/updated" class="link margin-left">Order By Last Updated</a>
-    {% elif active == 'PENDING/visit' %}
-      <br><a href="/?status=PENDING" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=PENDING/updated" class="link margin-left">Order By Last Updated</a>
-    {% elif active == 'ADVANCE/visit'%}
-      <br><a href="/?status=ADVANCE" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE/updated" class="link margin-left">Order By Last Updated</a>
-    {% elif active == 'ADVANCE-APPROVED/visit' %}
-      <br><a href="/?status=ADVANCE-APPROVED" class="link margin-left">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE-APPROVED/updated" class="link margin-left margin-right">Order By Last Updated</a>
-    {% elif active == 'ADVANCE-UPDATED/visit' %}
-      <br><a href="/?status=ADVANCE-UPDATED" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE-UPDATED/updated" class="link margin-left">Order By Last Updated</a>
-    {% elif active == 'ADVANCE-PENDING-INFORMATION/visit' %}
-      <br><a href="/?status=ADVANCE-PENDING-INFORMATION" class="link margin-left margin-right">Order By Date Submitted</a>
-      <a href="/?status=ADVANCE-PENDING-INFORMATION/updated" class="link margin-left">Order By Last Updated</a>
-    {% endif %}
+  {# TODO: SEARCH DOES NOT RUN WHEN NAVIGATING BACK FROM PREVIOUS SEARCH #}
+  <div class="govuk-grid-column-one-half search">
+    {{ mojSearch({
+    action: '/search',
+    method: 'get',
+    classes: 'govuk-!-width-two-thirds',
+    input: {
+    id: 'input-search-query',
+    name: 'q'
+    },
+    button: {
+    text: 'Search'
+    }
+    }) }}
+    <a id="advanced-search" href="/advanced-search-input" class=" margin-left govuk-!-width-one-third">Advanced
+      search</a>
   </div>
+</div>
 
-  <ul class="sub-tabs">
-    <li><a href="/" {% if active == undefined or active == 'NEW/updated' or active == 'NEW/visit' %} class="active">New <span class="badge"></span>{% else %}>New{% endif %}</a></li>
-    <li><a href="/?status=UPDATED"{% if active == 'UPDATED' or active == 'UPDATED/updated' or active == 'UPDATED/visit' %} class="active">Updated <span class="badge"></span>{% else %}>Updated{% endif %}</a></li>
-    <li><a href="/?status=PENDING"{% if active == 'PENDING' or active == 'PENDING/updated' or active == 'PENDING/visit' %} class="active">Pending <span class="badge"></span>{% else %}>Pending{% endif %}</a></li>
-    <li><a href="/?status=ADVANCE"{% if active == 'ADVANCE' or active == 'ADVANCE/updated' or active == 'ADVANCE/visit' %} class="active">Advance <span class="badge"></span>{% else %}>Advance{% endif %}</a></li>
-    <li><a href="/?status=ADVANCE-APPROVED"{% if active == 'ADVANCE-APPROVED' or active == 'ADVANCE-APPROVED/updated' or active == 'ADVANCE-APPROVED/visit' %} class="active">Advance pending<span class="badge"></span>{% else %}>Advance pending{% endif %}</a></li>
-    <li><a href="/?status=ADVANCE-UPDATED"{% if active == 'ADVANCE-UPDATED' or active == 'ADVANCE-UPDATED/updated' or active == 'ADVANCE-UPDATED/visit' %} class="active">Advance updated<span class="badge"></span>{% else %}>Advance updated{% endif %}</a></li>
-    <li><a href="/?status=ADVANCE-PENDING-INFORMATION"{% if active == 'ADVANCE-PENDING-INFORMATION' or active == 'ADVANCE-PENDING-INFORMATION/updated' or active == 'ADVANCE-PENDING-INFORMATION/visit' %} class="active">Advance awaiting information<span class="badge"></span>{% else %}>Advance awaiting information{% endif %}</a></li>
+<div class="govuk-tabs" data-module="govuk-tabs">
+  <ul class="govuk-tabs__list">
+    <li {% if active==undefined or active=='NEW/updated' or active=='NEW/visit' %}
+      class="govuk-tabs__list-item govuk-tabs__list-item--selected">{% else %} class="govuk-tabs__list-item">{% endif
+      %}<a href="/" {% if active==undefined or active=='NEW/updated' or active=='NEW/visit' %}
+        class="active govuk-tabs__tab">New<span class="moj-notification-badge margin-left"></span>{% else %}>New{% endif
+        %}</a></li>
+    <li class="govuk-tabs__list-item"><a href="/?status=PENDING" {% if active=='PENDING' or active=='PENDING/updated' or
+        active=='PENDING/visit' %} class="active govuk-tabs__tab">Pending<span
+          class="moj-notification-badge margin-left"></span>{% else %}>Pending{% endif %}</a></li>
+    <li class="govuk-tabs__list-item"><a href="/?status=UPDATED" {% if active=='UPDATED' or active=='UPDATED/updated' or
+        active=='UPDATED/visit' %} class="active govuk-tabs__tab">Updated<span
+          class="moj-notification-badge margin-left"></span>{% else %}>Updated{% endif %}</a></li>
+    <li class="govuk-tabs__list-item"><a href="/?status=ADVANCE" {% if active=='ADVANCE' or active=='ADVANCE/updated' or
+        active=='ADVANCE/visit' %} class="active govuk-tabs__tab">Advance<span
+          class="moj-notification-badge margin-left"></span>{% else %}>Advance{% endif %}</a></li>
+    <li class="govuk-tabs__list-item"><a href="/?status=ADVANCE-APPROVED" {% if active=='ADVANCE-APPROVED' or
+        active=='ADVANCE-APPROVED/updated' or active=='ADVANCE-APPROVED/visit' %} class="active govuk-tabs__tab">Advance
+        pending<span class="moj-notification-badge margin-left"></span>{% else %}>Advance pending{% endif %}</a></li>
+    <li class="govuk-tabs__list-item"><a href="/?status=ADVANCE-UPDATED" {% if active=='ADVANCE-UPDATED' or
+        active=='ADVANCE-UPDATED/updated' or active=='ADVANCE-UPDATED/visit' %} class="active govuk-tabs__tab">Advance
+        updated<span class="moj-notification-badge margin-left"></span>{% else %}>Advance updated{% endif %}</a></li>
+    <li class="govuk-tabs__list-item"><a href="/?status=ADVANCE-PENDING-INFORMATION" {% if
+        active=='ADVANCE-PENDING-INFORMATION' or active=='ADVANCE-PENDING-INFORMATION/updated' or
+        active=='ADVANCE-PENDING-INFORMATION/visit' %} class="active govuk-tabs__tab">Advance awaiting information<span
+          class="moj-notification-badge margin-left"></span>{% else %}>Advance awaiting information{% endif %}</a></li>
   </ul>
+  <div class="govuk-tabs__panel">
+    <h2 class="govuk-heading-m">{{ active | tableTitle | removeDashes | capitalize }}</h2>
+    {{ govukTable({
+    attributes: {
+    'data-module': 'moj-sortable-table',
+    'id': 'claims' }
+    }) }}
+  </div>
+</div>
 
-  <table id="claims" class="table">
-  	<thead>
-	  <tr>
-		<th>Ref no.</th>
-		<th>Name</th>
-    <th>Submitted</th>
-    <th>Visit Date</th>
-    <th>Updated Date</th>
-    <th>Status</th>
-		<th>Claim type</th>
-		<th></th>
-	  </tr>
-  	</thead>
-  </table>
-
-  {% if user %}
-  <p>
-    <a href="{{ user.assistedDigitalUrl }}">Submit a claim on behalf of a claimant</a>
-  </p>
-  {% endif %}
-
-</main>
+{% if user %}
+<p>
+  <a href="{{ user.assistedDigitalUrl }}">Submit a claim on behalf of a claimant</a>
+</p>
+{% endif %}
 
 {% endblock %}
 
-{% block body_end %}
-  {% include "includes/index-scripts.html" %}
+{% block bodyEnd %}
+{% include "includes/index-scripts.html" %}
 {% endblock %}
