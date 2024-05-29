@@ -37,6 +37,7 @@ app.use(helmet.contentSecurityPolicy({
       "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
       "'sha256-G29/qSW/JHHANtFhlrZVDZW1HOkCDRc78ggbqwwIJ2g='",
       "'sha256-l1eTVSK8DTnK8+yloud7wZUqFrI0atVo6VlC6PJvYaQ='", // govuk-frontend - initAll() inline script
+      "'sha256-ZepNJjrq0cs0n+8q0jzU8KJFy2oJqi6D8D+QOFwTZqM='", // moj-frontend 
       'www.google-analytics.com'],
     connectSrc: ["'self'", 'www.google-analytics.com'],
     styleSrc: ["'self'"],
