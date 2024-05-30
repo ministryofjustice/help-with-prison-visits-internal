@@ -724,3 +724,8 @@ ul.sub-tabs li a.active span.badge {
 .config-description {
     color: $govuk-secondary-text-colour
 }
+
+.govuk-input__prefix {
+    height: 40px;
+    font-size: 19px;
+}
