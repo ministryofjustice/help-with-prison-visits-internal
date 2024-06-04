@@ -39,6 +39,7 @@ module.exports = {
   // File upload/download
   FILE_TMP_DIR: process.env.APVS_FILE_TMP_DIR || '/tmp',
   FILE_UPLOAD_MAXSIZE: process.env.FILE_UPLOAD_MAXSIZE || '5242880', // 5MB in Bytes.
+  FILE_ALLOWED_TYPES: process.env.FILE_UPLOAD_TYPES || ['image/png', 'image/jpeg', 'application/pdf'],
 
   // S3
   AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,

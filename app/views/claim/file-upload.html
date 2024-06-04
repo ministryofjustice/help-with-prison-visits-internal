@@ -1,72 +1,111 @@
-{% extends "includes/layout.html" %}
+{# TODO: Accepted file types are already set in the config. But we can restrict file types directly here.
+  If so, do we want to change the guidance to advise this as users won't get to see the wrong file format error.
+  Wrong files can be dragged in however. Error will then be displayed. #}
 
-{% block page_title %}
+{# TODO: Also, instructions here say to take with smartphone, but we do not allow HEIC files, which is the default iPhone file format.
+  Can we accept those too? Also add instructions to say you can drag onto 'choose file'?  #}
+
+{# TODO: If you drag in a file that's not accepted, then submit, accept attribute is removed...  #}
+
+{% extends "includes/layout_new.html" %}
+
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block pageTitle %}
   {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
+        
+{% set activeMainNav = 'claims' %}
 
 {% block content %}
-
-<main id="content" role="main">
-
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('/')}}
-
   <div class="grid-row">
     <div class="column-two-thirds">
+      {% include "includes/validation-error-messages.html" %}
 
-    {% include "includes/validation-error-messages.html" %}
+      <div id="file-upload"> 
+        <h2 class="govuk-heading-xl govuk-!-margin-bottom-3">
+          {{ fileUploadGuidingText[document].title }}
+        </h2>
 
-      <h2 class="heading-large">
-      {{ fileUploadGuidingText[document].title }}
-      </h2>
-      <p>{{ fileUploadGuidingText[document].guidingText }}</p>
+        <form action="{{ URL }}" method="post" class="form" enctype="multipart/form-data">
+          {% include "partials/csrf-hidden-input.html" %}
 
-      <h3 id="upload" class="heading-medium">Upload now</h3>
+          {{ govukFileUpload({
+            id: "document",
+            classes: 'test',
+            name: "document",
+            label: {
+              id: 'govuk-label--xl'
+            },
+            errorMessage: { text: errors.upload[0] } if errors.upload,
+            hint: {
+              text: fileUploadGuidingText[document].guidingText 
+            },
+            attributes: {
+              accept: acceptedFiles
+            }
+          }) }}
 
-      <form action="{{ URL }}" method="post" class="form" enctype="multipart/form-data">
+          {% set helpDetails %}
+            <ul class="list list-number">
+              <li>Take a photo using your smartphone, tablet or camera, or scan the document</li>
+              <li>Transfer the image to your computer or the device you’re using to make the claim</li>
+              <li>Go to ‘choose file’ above and find the image</li>
+            </ul>
+          {% endset %}
 
-      {% include "partials/csrf-hidden-input.html" %}
-
-        <div>
-          <div>
-            <p id='document-name' class="column-two-quarter"></p>
-            <a id="remove-file-upload" class="link pull-right remove-upload" href="{{ URL }}">remove</a>
-          </div>
-          <div>
-            <label id="label" class="custom-file-upload">
-              <input id="document" type="file" name="document" />
-              <div id='choose-file'>Choose file</div>
-            </label>
-          </div>
-
+          {{ govukDetails({
+            summaryText: "Help with upload",
+            html: helpDetails
+          }) }}
         </div>
-
-        <div class="form-group">
-          <details role="group">
-            <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Help with upload</span></summary>
-            <div class="panel panel-border-narrow" id="details-content-0" aria-hidden="false">
-              <ul class="list list-number">
-                <li>Take a photo using your smartphone, tablet or camera, or scan the document</li>
-                <li>Transfer the image to your computer or the device you’re using to make the claim</li>
-                <li>Go to ‘choose file’ above and find the image</li>
-              </ul>
-            </div>
-          </details>
-        </div>
-
-        <div class="form-group">
-          <input id="file-upload-submit"
-                 type="submit"
-                 name="commit"
-                 value="Continue"
-                 class="button">
-        </div>
-      </form>
+      </div>
     </div>
-  </div>
-</main>
+
+    {{ govukButton({ type: 'submit', id: 'continue-to-preview', text: 'Continue' }) }}
+
+    <div id="upload-preview"> 
+      <h1 class="govuk-heading-xl">Check receipt</h1>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <img src="{{ '' }}" id="image-preview" alt="uploaded receipt" width="100%">
+        </div>
+      </div>
+      <p class="govuk-body govuk-!-margin-top-2" id='image-preview-text'></p>
+      
+      {{ govukRadios({
+        idPrefix: "correct",
+        name: "correct",
+        fieldset: {
+          legend: {
+            text: "Is this file correct?",
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        items: [
+          {
+            value: "yes",
+            text: "Yes, add this file",
+            classes: 'yes-option'
+          },
+          {
+            value: "no",
+            text: "No, I want to choose a different file"
+          }
+        ]
+      }) }}
+    </div>
+
+    <div class="form-group">
+      {{ govukButton({ id: 'file-upload-submit', type: 'submit', name: "commit", value: "Continue", text: 'Continue' }) }}
+    </div>
+  </form>
+</div>
 {% endblock %}
 
-{% block body_end %}
+{% block bodyEnd %}
   {% include "includes/upload-scripts.html" %}
 {% endblock %}

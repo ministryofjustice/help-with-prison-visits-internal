@@ -3,6 +3,7 @@ const DocumentTypeEnum = require('../../constants/document-type-enum')
 const Upload = require('../../services/upload')
 const ValidationError = require('../../services/errors/validation-error')
 const ERROR_MESSAGES = require('../../services/validators/validation-error-messages')
+const config = require('../../../config')
 const FileUpload = require('../../services/domain/file-upload')
 const ClaimDocumentUpdate = require('../../services/data/update-file-upload-details-for-claim')
 const csrfProtection = require('csurf')({ cookie: true })
@@ -11,6 +12,7 @@ const applicationRoles = require('../../constants/application-roles-enum')
 const { AWSHelper } = require('../../services/aws-helper')
 const { getFileUploadPath, getUploadFilename, getFilenamePrefix } = require('./file-upload-path-helper')
 const aws = new AWSHelper()
+const acceptedFiles = config.FILE_ALLOWED_TYPES
 
 let csrfToken
 const allowedRoles = [
@@ -29,6 +31,7 @@ module.exports = function (router) {
         claimType: req.params.claimType,
         document: req.params.documentType,
         fileUploadGuidingText: DocumentTypeEnum,
+        acceptedFiles,
         URL: req.url
       })
     }
