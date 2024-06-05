@@ -1,15 +1,14 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
 
-{% block page_title %}
+{% block pageTitle %}
   {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
+
+{% set activeMainNav = 'claims' %}
 
 {% block content %}
 
 <main id="content" role="main">
-
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('/')}}
 
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
     {% include "partials/csrf-hidden-input.html" %}

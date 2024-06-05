@@ -1,15 +1,14 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
 
-{% block page_title %}
+{% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
+
+{% set activeMainNav = 'claims' %}
 
 {% block content %}
 
 <main id="content" role="main">
-
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('')}}
 
   {% include "includes/validation-error-messages.html" %}
 
@@ -513,6 +512,6 @@
 
 {% endblock %}
 
-{% block body_end %}
+{% block bodyEnd %}
   {% include "includes/advanced-search-scripts.html" %}
 {% endblock %}
