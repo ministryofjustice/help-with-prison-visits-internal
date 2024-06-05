@@ -1,13 +1,16 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
-{% block page_title %}
+
+{% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
+
+{% set activeMainNav = 'audit' %}
+
 {% block content %}
-<div class="govuk-width-container">
+    <main id="content" role="main">
     <a href="#" id="backBtn" class="govuk-back-link">Back</a>
-    <main class="govuk-main-wrapper">
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 {% include "includes/validation-error-messages.html" %}
@@ -202,5 +205,4 @@
             </div>
         </div>
     </main>
-</div>
 {% endblock %}
