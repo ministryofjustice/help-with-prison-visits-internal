@@ -8,8 +8,6 @@
 
 {% block content %}
 
-<main id="content" role="main">
-
   {% include "includes/validation-error-messages.html" %}
 
   <form action="/claim/{{ Claim['ClaimId'] }}/update-contact-details" method="post" class="form">
@@ -70,7 +68,5 @@
     </div>
 
   </form>
-
-</main>
 
 {% endblock %}

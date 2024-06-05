@@ -8,8 +8,6 @@
 
 {% block content %}
 
-<main id="content" role="main">
-
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
     {% include "partials/csrf-hidden-input.html" %}
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
@@ -191,7 +189,6 @@
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
     {% include "partials/view-claim/payout-barcode-expired.html" %}
   </form>
-</main>
 
 {% endblock %}
 
