@@ -1,15 +1,13 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
 
-{% block page_title %}
+{% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
 {% block content %}
 
-<main id="content" role="main">
+{% set activeMainNav = 'download' %}
 
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('')}}
 
 <h1 class="heading-large">Download payment files</h1>
 
@@ -91,7 +89,5 @@
 
     </div>
   </div>
-
-</main>
 
 {% endblock %}
