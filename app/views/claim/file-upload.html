@@ -1,12 +1,3 @@
-{# TODO: Accepted file types are already set in the config. But we can restrict file types directly here.
-  If so, do we want to change the guidance to advise this as users won't get to see the wrong file format error.
-  Wrong files can be dragged in however. Error will then be displayed. #}
-
-{# TODO: Also, instructions here say to take with smartphone, but we do not allow HEIC files, which is the default iPhone file format.
-  Can we accept those too? Also add instructions to say you can drag onto 'choose file'?  #}
-
-{# TODO: If you drag in a file that's not accepted, then submit, accept attribute is removed...  #}
-
 {% extends "includes/layout_new.html" %}
 
 {% from "govuk/components/button/macro.njk" import govukButton %}
@@ -17,8 +8,6 @@
 {% block pageTitle %}
   {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
-        
-{% set activeMainNav = 'claims' %}
 
 {% set activeMainNav = 'claims' %}
 
@@ -34,7 +23,6 @@
 
         <form action="{{ URL }}" method="post" class="form" enctype="multipart/form-data">
           {% include "partials/csrf-hidden-input.html" %}
-
           {{ govukFileUpload({
             id: "document",
             classes: 'test',
@@ -50,62 +38,49 @@
               accept: acceptedFiles
             }
           }) }}
-
-          {% set helpDetails %}
-            <ul class="list list-number">
-              <li>Take a photo using your smartphone, tablet or camera, or scan the document</li>
-              <li>Transfer the image to your computer or the device you’re using to make the claim</li>
-              <li>Go to ‘choose file’ above and find the image</li>
-            </ul>
-          {% endset %}
-
-          {{ govukDetails({
-            summaryText: "Help with upload",
-            html: helpDetails
-          }) }}
-        </div>
+          <div id="error-container"></div> 
+        </form>
       </div>
-    </div>
 
-    {{ govukButton({ type: 'submit', id: 'continue-to-preview', text: 'Continue' }) }}
+      {{ govukButton({ type: 'submit', id: 'continue-to-preview', text: 'Continue' }) }}
 
-    <div id="upload-preview"> 
-      <h1 class="govuk-heading-xl">Check receipt</h1>
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          <img src="{{ '' }}" id="image-preview" alt="uploaded receipt" width="100%">
+      <div id="upload-preview"> 
+        <h1 class="govuk-heading-xl">Check receipt</h1>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds">
+            <img src="" id="image-preview" alt="uploaded receipt" width="100%">
+          </div>
         </div>
-      </div>
-      <p class="govuk-body govuk-!-margin-top-2" id='image-preview-text'></p>
-      
-      {{ govukRadios({
-        idPrefix: "correct",
-        name: "correct",
-        fieldset: {
-          legend: {
-            text: "Is this file correct?",
-            classes: "govuk-fieldset__legend--m"
-          }
-        },
-        items: [
-          {
-            value: "yes",
-            text: "Yes, add this file",
-            classes: 'yes-option'
+        <p class="govuk-body govuk-!-margin-top-2" id='image-preview-text'></p>
+        
+        {{ govukRadios({
+          idPrefix: "correct",
+          name: "correct",
+          fieldset: {
+            legend: {
+              text: "Is this file correct?",
+              classes: "govuk-fieldset__legend--m"
+            }
           },
-          {
-            value: "no",
-            text: "No, I want to choose a different file"
-          }
-        ]
-      }) }}
-    </div>
+          items: [
+            {
+              value: "yes",
+              text: "Yes, add this file",
+              classes: 'yes-option'
+            },
+            {
+              value: "no",
+              text: "No, I want to choose a different file"
+            }
+          ]
+        }) }}
+      </div>
 
-    <div class="form-group">
-      {{ govukButton({ id: 'file-upload-submit', type: 'submit', name: "commit", value: "Continue", text: 'Continue' }) }}
+      <div class="form-group">
+        {{ govukButton({ id: 'file-upload-submit', type: 'submit', name: "commit", value: "Continue", text: 'Continue' }) }}
+      </div>
     </div>
-  </form>
-</div>
+  </div>
 {% endblock %}
 
 {% block bodyEnd %}

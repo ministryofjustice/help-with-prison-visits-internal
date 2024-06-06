@@ -14,10 +14,10 @@ const readableFileSize = (attachmentSize) => {
 
 document.addEventListener('DOMContentLoaded', function() {
   const documentInput = document.getElementById('document');
-
   const fileInputWrapper = document.getElementById('file-upload');
   const continueToPreview = document.getElementById('continue-to-preview');
   const continueToUpload = document.getElementById('file-upload-submit');
+  const errorContainer = document.getElementById('error-container');
 
   const form = document.querySelector('.form');
   const radios = document.getElementsByName('correct');
@@ -26,29 +26,32 @@ document.addEventListener('DOMContentLoaded', function() {
   const imagePreview = document.getElementById('image-preview');
   const imagePreviewText = document.getElementById('image-preview-text');
 
-
   continueToUpload.style.display = 'none';
-  continueToUpload.disabled = true;
-  continueToPreview.disabled = true
 
   continueToPreview.addEventListener('click', function(e) {
     e.preventDefault();
-    fileInputWrapper.style.display = 'none';
-    continueToPreview.style.display = 'none';
-    uploadPreview.style.display = 'block';
-    continueToUpload.style.display = 'block';
+    try {
+      if(!documentInput.files.length) {
+      //TODO: DO SOMETHING HERE? 
+      } else {
+        fileInputWrapper.style.display = 'none';
+        continueToPreview.style.display = 'none';
+        uploadPreview.style.display = 'block';
+        continueToUpload.style.display = 'block';
+      }
+    } catch (error) {
+      throw new Error('No document selected');
+    }
   });
 
   radios.forEach(function(radio) {
     radio.addEventListener('change', function() {
-      continueToUpload.disabled = false
     });
   });
 
   documentInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file && file.type.startsWith('image/')) {
-      continueToPreview.disabled = false;
       const reader = new FileReader();
       reader.onload = function() {
         imagePreview.src = window.URL.createObjectURL(file);
