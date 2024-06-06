@@ -1,15 +1,12 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
 
-{% block page_title %}
+{% block pageTitle %}
   Update contact details - {{ serviceName }}
 {% endblock %}
 
+{% set activeMainNav = 'claims' %}
+
 {% block content %}
-
-<main id="content" role="main">
-
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('/')}}
 
   {% include "includes/validation-error-messages.html" %}
 
@@ -71,7 +68,5 @@
     </div>
 
   </form>
-
-</main>
 
 {% endblock %}
