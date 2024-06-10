@@ -68,8 +68,12 @@ module.exports = function (router) {
         })
     } catch (error) {
       if (error instanceof ValidationError) {
+        const autoApprovalConfig = {
+          ...req.body,
+          AutoApprovalEnabled: req.body.AutoApprovalEnabled === 'true'
+        }
         res.status(400).render('config', {
-          autoApprovalConfig: req.body,
+          autoApprovalConfig,
           auditConfig: req.body,
           autoApprovalRulesEnum,
           rulesDisabled,

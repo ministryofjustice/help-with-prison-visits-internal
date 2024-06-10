@@ -13,7 +13,7 @@
 
 {% include "includes/validation-error-messages.html" %}
 
-{# TODO: Why when errors does autoapproval setting uncheck? #}
+{# AUTO APPROVAL #}
 
 <form action="/config" method="post">
   <div class="form-group">
@@ -32,8 +32,8 @@
             name: "AutoApprovalEnabled",
             label: { text: "Whether claims that meet the rules below will be automatically approved", classes: "govuk-visually-hidden" },
             items: [
-              { value: "true", text: "On", checked: autoApprovalConfig.AutoApprovalEnabled === true },
-              { value: "false", text: "Off", checked: autoApprovalConfig.AutoApprovalEnabled === false }
+              { name:"AutoApprovalEnabled", value: "true", text: "On", checked: autoApprovalConfig.AutoApprovalEnabled },
+              { name:"AutoApprovalEnabled", value: "false", text: "Off", checked: not autoApprovalConfig.AutoApprovalEnabled }
             ],
             errorMessage: { text: '' } if errors['auto-approval-enabled']
           }) }
@@ -156,6 +156,8 @@
 
   </br>
 
+  {# AUDIT REPORT #}
+
   <div class="form-group">
     {{ govukTable({
       captionClasses: "govuk-table__caption--m",
@@ -203,5 +205,3 @@
 
 </form>
 {% endblock %}
-
-
