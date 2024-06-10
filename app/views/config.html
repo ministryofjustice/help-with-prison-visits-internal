@@ -16,7 +16,6 @@
 {# AUTO APPROVAL #}
 
 <form action="/config" method="post">
-  <div class="form-group">
     {{ govukTable({
       captionClasses: "govuk-table__caption--m",
       caption: "Auto approval",
@@ -152,13 +151,9 @@
       rows: rows
     }) }}
 
-  </div>
-
   </br>
 
   {# AUDIT REPORT #}
-
-  <div class="form-group">
     {{ govukTable({
       captionClasses: "govuk-table__caption--m",
       caption: "Audit report",
@@ -172,7 +167,7 @@
             label: { text: "The minimum claim amount that will be included in audit report ", classes: "govuk-visually-hidden govuk-!-margin-bottom-0" },
             formGroup: { classes: 'govuk-!-margin-0 ' },
             id: "audit-threshold",
-            name: "AuditThreshold",
+            name: "ThresholdAmount",
             value: auditConfig.ThresholdAmount,
             prefix: { text: "£" },
             spellcheck: false,
@@ -186,7 +181,7 @@
             label: { text: "Controls the percentage of claims to be verified", classes: "govuk-visually-hidden" },
             formGroup: { classes: 'govuk-!-margin-0' },
             id: "audit-verification-percentage",
-            name: "AuditVerificationPercentage",
+            name: "VerificationPercentage",
             value: auditConfig.VerificationPercent,
             prefix: { text: "%" },
             spellcheck: false,

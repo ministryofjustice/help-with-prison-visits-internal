@@ -50,7 +50,7 @@ module.exports = function (router) {
 
       const auditConfig = new AuditConfig(
         req.body.AuditThreshold,
-        req.body.AuditVerificationPercentage
+        req.body.VerificationPercentage
       )
 
       updateAutoApprovalConfig(autoApprovalConfig)
@@ -72,12 +72,17 @@ module.exports = function (router) {
           ...req.body,
           AutoApprovalEnabled: req.body.AutoApprovalEnabled === 'true'
         }
+        const auditConfig = {
+          ThresholdAmount: req.body.ThresholdAmount,
+          VerificationPercent: req.body.VerificationPercentage
+        }
+        const errors = error.validationErrors
         res.status(400).render('config', {
           autoApprovalConfig,
-          auditConfig: req.body,
+          auditConfig,
           autoApprovalRulesEnum,
           rulesDisabled,
-          errors: error.validationErrors
+          errors
         })
       } else {
         next(error)
