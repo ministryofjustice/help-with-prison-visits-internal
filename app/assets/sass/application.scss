@@ -735,7 +735,13 @@ ul.sub-tabs li a.active span.badge {
 }
 
 .config-description {
-    color: $govuk-secondary-text-colour
+    color: $govuk-secondary-text-colour;
+    width: 53%
+}
+
+.config-rule-checkbox {
+    display: flex;
+    justify-content: center;
 }
 
 .govuk-input__prefix {

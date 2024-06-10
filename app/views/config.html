@@ -136,6 +136,7 @@
         { html: govukCheckboxes({
           formGroup: { classes: 'govuk-!-margin-0' },
           name: "rulesEnabled",
+          classes: "config-rule-checkbox",
           items: [
             { value: rule.value, text: " ", checked: rule.value not in rulesDisabled }
           ]
@@ -161,7 +162,7 @@
       head: [],
       rows: [
         [
-          { text: "Audit limit" },
+          { text: "Audit limit", classes: "govuk-!-width-one-quarter" },
           { text: "The minimum claim amount that will be included in audit report ", classes: "config-description" },
           { html: govukInput({
             label: { text: "The minimum claim amount that will be included in audit report ", classes: "govuk-visually-hidden govuk-!-margin-bottom-0" },
@@ -175,7 +176,7 @@
           }) }
         ],
         [
-          { text: "Audit verification percentage" },
+          { text: "Audit verification percentage", classes: "govuk-!-width-one-quarter"  },
           { text: "Controls the percentage of claims to be verified", classes: "config-description" },
           { html: govukInput({
             label: { text: "Controls the percentage of claims to be verified", classes: "govuk-visually-hidden" },
