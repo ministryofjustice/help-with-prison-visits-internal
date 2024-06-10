@@ -1,12 +1,10 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
 
-{% block page_title %}
+{% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
 {% block content %}
-
-<main id="content" role="main">
 
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -16,7 +14,5 @@
 
     </div>
   </div>
-
-</main>
 
 {% endblock %}

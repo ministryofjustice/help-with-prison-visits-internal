@@ -21,6 +21,16 @@ $path: "/public/images/";
 // This includes entire govuk-elements from _govuk-elements.scss
 @import 'govuk-elements';
 
+// override default navigation anchor tags 
+.moj-header__navigation-item:first-of-type {
+    pointer-events: none;
+    cursor: default;
+}
+
+.moj-header__link--service-name:hover {
+    text-decoration: underline;
+}
+
 // override datatable styles
 
 table.dataTable thead th {
@@ -228,6 +238,9 @@ span.bold {
 }
 .display-none {
   display: none;
+}
+.js-hidden {
+    display: none;
 }
 
 .form-control.action-select{

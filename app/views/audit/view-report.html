@@ -1,11 +1,13 @@
-{% extends "includes/layout.html" %}
-{% block page_title %}
+{% extends "includes/layout_new.html" %}
+
+{% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
+
+{% set activeMainNav = 'audit' %}
+
 {% block content %}
-<div class="govuk-width-container">
-    <a href="#" id="backBtn" class="govuk-back-link">Back</a>
-    <main class="govuk-main-wrapper">
+       <a href="#" id="backBtn" class="govuk-back-link">Back</a>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
                 {% include "includes/validation-error-messages.html" %}
@@ -68,6 +70,4 @@
                 {% endif %}
             </div>
         </div>
-    </main>
-</div>
 {% endblock %}
