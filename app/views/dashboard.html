@@ -1,5 +1,6 @@
 {% extends "includes/layout_new.html" %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{%- from "moj/components/ticket-panel/macro.njk" import mojTicketPanel -%}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% block pageTitle %}
@@ -58,50 +59,79 @@
 </form>
 
 <div class="grid-row">
-  <article class="moj-ticket-panel" aria-label="Sub navigation 1">
-    <div class="column-one-third">
-      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ pendingCount }}</h2>
-        <p class="govuk-body">Pending</p>
-      </section>
-    </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Pending'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + pendingCount + '</h2>
+    <p class="govuk-body">Pending</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ inProgressCount }}</h2>
-        <p class="govuk-body">In Progress</p>
-      </section>
-    </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'In Progress'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + inProgressCount + '</h2>
+    <p class="govuk-body">In Progress</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ paidCount }}</h2>
-        <p class="govuk-body">Paid</p>
-      </section>
-    </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Paid Count'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + paidCount + '</h2>
+    <p class="govuk-body">Paid</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ autoApprovedCount }}</h2>
-        <p class="govuk-body">Auto approved</p>
-      </section>
-    </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Auto Approved'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + autoApprovedCount + '</h2>
+    <p class="govuk-body">Auto Approved</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ manuallyApprovedCount }}</h2>
-        <p class="govuk-body">Manually Approved</p>
-      </section>
-    </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Manually Approved'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + manuallyApprovedCount + '</h2>
+    <p class="govuk-body">Manually Approved</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-      <section class="moj-ticket-panel__content moj-ticket-panel__content--blue" aria-label="Section 1">
-        <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ rejectedCount }}</h2>
-        <p class="govuk-body">Rejected</p>
-      </section>
-    </div>
-  </article>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Rejected'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + rejectedCount + '</h2>
+    <p class="govuk-body">Rejected</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 </div>
+
 {% endblock %}
 
 {% block bodyEnd %}
