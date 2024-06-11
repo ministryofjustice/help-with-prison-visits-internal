@@ -733,3 +733,18 @@ ul.sub-tabs li a.active span.badge {
 .govuk-error-message {
     font-size: 19px;
 }
+
+.config-description {
+    color: $govuk-secondary-text-colour;
+    width: 53%
+}
+
+.config-rule-checkbox {
+    display: flex;
+    justify-content: center;
+}
+
+.govuk-input__prefix {
+    height: 40px;
+    font-size: 19px;
+}
