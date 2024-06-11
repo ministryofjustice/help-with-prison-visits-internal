@@ -2,9 +2,14 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 
+{% block pageTitle %}
+{% if serviceName %} {{ serviceName }} {% endif %}
+{% endblock %}
+
 {% set activeMainNav = 'dashboard' %}
 
 {% block content %}
+
 <form action='/dashboard' method="GET">
   {{ govukSelect({
     id: "filter",

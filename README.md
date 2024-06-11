@@ -117,11 +117,3 @@ Redis is used as a session store so the app works correctly across multiple k8s 
 ## Maintenance page
 
 You can start the application in maintenance mode, this requires the `APVS_MAINTENANCE_MODE` setting to true and starting the node app normally. This will then display the maintenance page at `/app/views/includes/maintenance.html`
-
-## Notes
-
-### Localisation
-
-As a GOV.UK service this application should support Welsh.
-
-Localisation is provided via the [i18n node module](https://www.npmjs.com/package/i18n) which populates localisation strings for the supported locales into `app/locales`. Near the end of the Beta the localisation files will be sent for translation and populated.

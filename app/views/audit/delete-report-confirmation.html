@@ -1,9 +1,12 @@
-{% extends "includes/layout.html" %}
-{% block page_title %}
+{% extends "includes/layout_new.html" %}
+
+{% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
+
+{% set activeMainNav = 'audit' %}
+
 {% block content %}
-<main id="content" role="main">
     <a href="#" id="backBtn" class="govuk-back-link">Back</a>
     <h1 class="govuk-heading-xl">Do you want to delete this audit report?</h1>
     {% include "includes/validation-error-messages.html" %}
@@ -34,5 +37,4 @@
         <input type="submit" class="button" value="Continue">
     </form>
     </br>
-</main>
 {% endblock %}
