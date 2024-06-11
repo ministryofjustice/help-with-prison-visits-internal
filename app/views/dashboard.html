@@ -1,4 +1,6 @@
 {% extends "includes/layout_new.html" %}
+{% from "moj/components/ticket-panel/macro.njk" import mojTicketPanel %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -8,54 +10,126 @@
 
 {% block content %}
 
-  <div class="grid-row">
-    <div class="column-one-third">
-      <form action='/dashboard' method="GET">
-        <label class="form-label-bold">Filter by</label>
-        <select class="form-control full" id="filter" name="filter">
-          <option value="TODAY" {% if activeFilter == 'TODAY' or activeFilter == null %}selected=""{% endif %}>Today</option>
-          <option value="YESTERDAY" {% if activeFilter == 'YESTERDAY' %}selected=""{% endif %}>Yesterday</option>
-          <option value="LAST_7_DAYS" {% if activeFilter == 'LAST_7_DAYS' %}selected=""{% endif %}>Last 7 days</option>
-          <option value="ONE_MONTH_AGO" {% if activeFilter == 'ONE_MONTH_AGO' %}selected=""{% endif %}>{{ filterMonths.oneMonthAgo }}</option>
-          <option value="TWO_MONTHS_AGO" {% if activeFilter == 'TWO_MONTHS_AGO' %}selected=""{% endif %}>{{ filterMonths.twoMonthsAgo }}</option>
-          <option value="THREE_MONTHS_AGO" {% if activeFilter == 'THREE_MONTHS_AGO' %}selected=""{% endif %}>{{ filterMonths.threeMonthsAgo }}</option>
-          <option value="FOUR_MONTHS_AGO" {% if activeFilter == 'FOUR_MONTHS_AGO' %}selected=""{% endif %}>{{ filterMonths.fourMonthsAgo }}</option>
-        </select>
-      </form>
-    </div>
-  </div>
+<form action='/dashboard' method="GET">
+  {{ govukSelect({
+    id: "filter",
+    name: "filter",
+    label: {
+      text: "Filter by"
+    },
+    items: [
+      {
+        value: "TODAY",
+        text: "Today",
+        selected: activeFilter === 'TODAY'
+      },
+      {
+        value: "YESTERDAY",
+        text: "Yesterday",
+        selected: activeFilter === 'YESTERDAY'
+      },
+      {
+        value: "LAST_7_DAYS",
+        text: "Last 7 days",
+        selected: activeFilter === 'LAST_7_DAYS'
+      },
+      {
+        value: "ONE_MONTH_AGO",
+        text: filterMonths.oneMonthAgo,
+        selected: activeFilter === 'ONE_MONTH_AGO'
+      },
+      {
+        value: "TWO_MONTHS_AGO",
+        text: filterMonths.twoMonthsAgo,
+        selected: activeFilter === 'TWO_MONTHS_AGO'
+      },
+      {
+        value: "THREE_MONTHS_AGO",
+        text: filterMonths.threeMonthsAgo,
+        selected: activeFilter === 'THREE_MONTHS_AGO'
+      },
+      {
+        value: "FOUR_MONTHS_AGO",
+        text: filterMonths.fourMonthsAgo,
+        selected: activeFilter === 'FOUR_MONTHS_AGO'
+      }
+    ]
+  }) }}
+</form>
 
-  <div id="dashboard" class="grid-row">
-    <div class="column-one-third">
-        <h2 class="heading-medium">Pending</h2>
-        <span class="number">{{ pendingCount }}</span>
-    </div>
+<div class="grid-row">
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Pending'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + pendingCount + '</h2>
+    <p class="govuk-body">Pending</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-        <h2 class="heading-medium">In Progress</h2>
-        <span class="number">{{ inProgressCount }}</span>
-    </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'In Progress'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + inProgressCount + '</h2>
+    <p class="govuk-body">In Progress</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-        <h2 class="heading-medium">Paid</h2>
-        <span class="number">{{ paidCount }}</span>
-    </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Paid Count'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + paidCount + '</h2>
+    <p class="govuk-body">Paid</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-        <h2 class="heading-medium">Auto approved</h2>
-        <span class="number">{{ autoApprovedCount }}</span>
-    </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Auto Approved'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + autoApprovedCount + '</h2>
+    <p class="govuk-body">Auto Approved</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-        <h2 class="heading-medium">Manually approved</h2>
-        <span class="number">{{ manuallyApprovedCount }}</span>
-    </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Manually Approved'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + manuallyApprovedCount + '</h2>
+    <p class="govuk-body">Manually Approved</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
 
-    <div class="column-one-third">
-        <h2 class="heading-medium">Rejected</h2>
-        <span class="number">{{ rejectedCount }}</span>
-    </div>
-  </div>
+{{ mojTicketPanel({
+  attributes: {
+    'aria-label': 'Rejected'
+  },
+  classes: 'column-one-third',
+  items: [{
+    html: '<h2 class="govuk-heading-l govuk-!-margin-bottom-2">' + rejectedCount + '</h2>
+    <p class="govuk-body">Rejected</p>',
+    classes: 'moj-ticket-panel__content--blue'
+  }]
+}) }}
+</div>
 
 {% endblock %}
 
