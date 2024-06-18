@@ -1,36 +1,64 @@
-{% if ClaimEligibleChild.length > 0 %}
-  <table class="col-2 no-pad-right">
-  {% for eligibleChild in ClaimEligibleChild %}
-    <tr>
-      <td>Eligible child name</td>
-      <td>{{ eligibleChild.FirstName }} {{ eligibleChild.LastName }}</td>
-    </tr>
 
-    <tr>
-      <td>Date of birth</td>
-      <td>{{ getDateFormatted.shortDate(eligibleChild.DateOfBirth) }}</td>
-    </tr>
 
-    <tr>
-      <td>Prisoner Relationship</td>
-      <td>{{ eligibleChild.ChildRelationship }}</td>
-    </tr>
+{% set eligibleChildData = [] %}
+{% for eligibleChild in ClaimEligibleChild %}
+  {% set eligibleChildRow = [
+    [
+    {
+      text: 'Eligible child name',
+      classes: "claim-table-width-one-third"
+    },
+    {
+      html: eligibleChild.FirstName + ' ' + eligibleChild.LastName,
+      classes: "govuk-!-width-two-thirds"
+    }
+  ],
+  [
+    {
+      text: 'Date of Birth',
+      classes: "claim-table-width-one-third"
+    },
+    {
+      html: getDateFormatted.shortDate(eligibleChild.DateOfBirth),
+      classes: "govuk-!-width-two-thirds"
+    }
+  ],
+  [
+    {
+      text: 'Prisoner Relationship',
+      classes: "claim-table-width-one-third"
+    },
+    {
+      html: eligibleChild.ChildRelationship,
+      classes: "govuk-!-width-two-thirds"
+    }
+  ],
+  [
+  {
+    text: 'Parent',
+    classes: "claim-table-width-one-third"
+  },
+  {
+    html: eligibleChild.ParentFirstName + ' ' + eligibleChild.ParentLastName,
+    classes: "govuk-!-width-two-thirds"
+  }
+],
+[
+  {
+    html: '<br><br>Address<br><br><br>',
+    classes: "claim-table-width-one-third"
+  },
+  {
+    html: eligibleChild.HouseNumberAndStreet + '<br>' + eligibleChild.Town  + '<br>' + eligibleChild.County  + '<br>' + eligibleChild.PostCode + '<br>' + eligibleChild.Country ,
+    classes: "govuk-!-width-two-thirds"
+  }
+]
+  ] %}
+  {% set eligibleChildData = eligibleChildData | concat([eligibleChildRow]) %}
+{% endfor %}
 
-    <tr>
-      <td>Parent</td>
-      <td>{{ eligibleChild.ParentFirstName }} {{ eligibleChild.ParentLastName }}</td>
-    </tr>
-
-    <tr>
-      <td>Address</td>
-      <td>
-        {{ eligibleChild.HouseNumberAndStreet }}</br> 
-        {{ eligibleChild.Town }}</br> 
-        {{ eligibleChild.County }}</br> 
-        {{ eligibleChild.PostCode }}</br> 
-        {{ eligibleChild.Country }}</br>
-      </td>
-    </tr>
-  {% endfor %}
-  </table>
-{% endif %}
+{{ govukTable({
+  firstCellIsHeader: true,
+  classes: 'govuk-!-margin-bottom-0',
+  rows: eligibleChildData
+}) }}

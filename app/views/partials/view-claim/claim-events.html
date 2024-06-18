@@ -1,31 +1,49 @@
+{%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
+
 {% if claimEvents.length > 0 %}
-<h1 class="heading-medium">Claim history</h1>
-<ul class="claim-dialog">
-  {% for claimEvent in claimEvents %}
-    {% if claimEvent.IsInternal %}<li class="internal">
-      <h2>{{ displayHelper.getClaimEventDisplayName(claimEvent.Event) }}</h2>
+  {% set timelineEvents = [] %}
 
-    {% elif claimEvent.Caseworker %}<li class="caseworker">
-      <h2>{{ claimEvent.Caseworker }}</h2>
-      <h2>{{ displayHelper.getClaimEventDisplayName(claimEvent.Event) }}</h2>
+  {% set carrot %}
+ 
+  {% endset %}
 
-    {% else %}<li class="claimant">
-      <h2>{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</h2>
+  {% set reversedClaimEvents = claimEvents | reverse %}
 
+  {% for claimEvent in reversedClaimEvents %}
+    {% set label = { text: displayHelper.getClaimEventDisplayName(claimEvent.Event) } %}
+
+    {% if claimEvent.Caseworker %}
+      {% set byline = { text: claimEvent.Caseworker } %}
+    {% else %}
+      {% set byline = { text: Claim['FirstName'] + ' ' + Claim['LastName'] } %}
     {% endif %}
-    <p>{{ claimEvent.AdditionalData }}</p>
+
+    {% set additionalData = claimEvent.AdditionalData %}
 
     {% if claimEvent.IsInternal %}
-      <p>{{ claimEvent.Note|safe }}</p>
-      {% if claimEvent['ClaimDocumentId'] %}
-        <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ claimEvent['ClaimDocumentId'] }}">View document</a>
+      {% set html = claimEvent.Note | safe %}
+      {% if claimEvent.ClaimDocumentId %}
+        {% set html = html + '<a href="/claim/' + Claim['ClaimId'] + '/download?claim-document-id=' + claimEvent.ClaimDocumentId + '">View document</a>' %}
       {% endif %}
     {% else %}
-      <p>{{ claimEvent.Note }}</p>
+      {% set html = claimEvent.Note %}
     {% endif %}
 
-    <p class="time">{{ getDateFormatted.shortDateAndTime(claimEvent.DateAdded) }}</p>
-  </li>
+    {% set datetime = { timestamp: claimEvent.DateAdded, type: 'datetime' } %}
+    
+    {% set event = { 
+      label: label,
+      text: additionalData, 
+      html: html, 
+      byline: byline, 
+      datetime: datetime } %}
+    {% set timelineEvents = timelineEvents.concat([event]) %}
   {% endfor %}
-</ul>
+
+  <h1 class="govuk-table__caption--l govuk-!-margin-bottom-6">Claim history</h1>
+  {{ mojTimeline({
+    items: timelineEvents
+  }) }}
 {% endif %}
+
+

@@ -45,6 +45,37 @@ const aws = new AWSHelper()
 let claimExpenses
 let claimDeductions
 
+const test = {
+  "ClaimEligibleChild": [
+    {
+      "FirstName": "Alice",
+      "LastName": "Smith",
+      "DateOfBirth": "2010-03-15",
+      "ChildRelationship": "Daughter",
+      "ParentFirstName": "John",
+      "ParentLastName": "Smith",
+      "HouseNumberAndStreet": "123 Main St",
+      "Town": "Anytown",
+      "County": "Someshire",
+      "PostCode": "A1B 2C3",
+      "Country": "United Kingdom"
+    },
+    {
+      "FirstName": "Bob",
+      "LastName": "Johnson",
+      "DateOfBirth": "2012-07-22",
+      "ChildRelationship": "Son",
+      "ParentFirstName": "Michael",
+      "ParentLastName": "Johnson",
+      "HouseNumberAndStreet": "456 Elm St",
+      "Town": "Smallville",
+      "County": "Countyshire",
+      "PostCode": "X9Y 8Z7",
+      "Country": "United States"
+    }
+  ]
+}
+
 module.exports = function (router) {
   // GET
   router.get('/claim/:claimId', function (req, res, next) {
