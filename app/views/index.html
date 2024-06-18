@@ -1,15 +1,12 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
 
-{% block page_title %}
+{% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
+{% set activeMainNav = 'claims' %}
+
 {% block content %}
-
-<main id="content" role="main">
-
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('/')}}
 
   <div class="column-one-half search">
     <form action="/search">
@@ -122,10 +119,8 @@
   </p>
   {% endif %}
 
-</main>
-
 {% endblock %}
 
-{% block body_end %}
+{% block bodyEnd %}
   {% include "includes/index-scripts.html" %}
 {% endblock %}

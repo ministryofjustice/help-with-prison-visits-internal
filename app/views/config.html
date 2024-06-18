@@ -1,216 +1,203 @@
-{% extends "includes/layout.html" %}
+{% extends "includes/layout_new.html" %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block page_title %}
-{% if serviceName %} {{ serviceName }} {% endif %}
-{% endblock %}
+{% set activeMainNav = 'config' %}
 
 {% block content %}
 
-<main id="content" role="main">
+<div class="govuk-heading-l">Settings</div>
 
-  {% include "includes/validation-error-messages.html" %}
+{% include "includes/validation-error-messages.html" %}
 
-  {% import 'partials/navigation.html' as nav %}
-    {{nav.active('')}}
+{# AUTO APPROVAL #}
 
-  <form action="/config" method="post">
-  <h1 class="table-heading">Auto Approval Configuration</h1>
-    <div class="form-group">
-      <table class="table">
-        <tbody>
-          <tr {% if errors['auto-approval-enabled'][0] %} class="warning" {% endif %}>
-            <td width="22%">
-              Auto approval enabled
-            </td>
-            <td>
-              Controls whether claims that meet the rules below will be automatically approved
-            </td>
-            <td width="20%">
-              <div class="pull-right">
-                <div class="multiple-choice">
-                  <input id="auto-approval-on" type="radio" name="AutoApprovalEnabled" value="true" {% if autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
-                  <label for="auto-approval-on" class="block-label inline"><span>On</span></label>
-                </div>
-                <div class="multiple-choice">
-                  <input id="auto-approval-off" type="radio" name="AutoApprovalEnabled" value="false" {% if not autoApprovalConfig.AutoApprovalEnabled %} checked {% endif %}>
-                  <label for="auto-approval-off" class="block-label inline no-right-padding"><span>Off</span></label>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <br>
-      <table class="table">
-        <thead>
-          <tr>
-          <th>Value</th>
-          <th>Description</th>
-          <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr {% if errors['cost-variance-percentage'][0] %} class="warning" {% endif %}>
-            <td>
-              Auto approval cost variance
-            </td>
-            <td>
-              Controls the cost variance percentage used for auto approval (e.g. 10)
-            </td>
-            <td width="20%" class="percentage-wrapper">
-              <span>%</span>
-              <input id="cost-variance-percentage" type="text" name="CostVariancePercentage" class="form-control" value="{{ autoApprovalConfig.CostVariancePercentage }}">
-            </td>
-          </tr>
+<form action="/config" method="post">
+    {{ govukTable({
+      captionClasses: "govuk-table__caption--m",
+      caption: "Auto approval",
+      firstCellIsHeader: true,
+      head: [],
+      rows: [
+        [
+          { text: "Auto approval enabled", classes: "govuk-!-width-one-quarter" },
+          { text: "Whether claims that meet the rules below will be automatically approved", classes: "config-description" },
+          { html: govukRadios({
+            classes: "govuk-radios--inline",
+            formGroup: { classes: 'govuk-!-margin-0' },
+            name: "AutoApprovalEnabled",
+            label: { text: "Whether claims that meet the rules below will be automatically approved", classes: "govuk-visually-hidden" },
+            items: [
+              { name:"AutoApprovalEnabled", value: "true", text: "On", checked: autoApprovalConfig.AutoApprovalEnabled },
+              { name:"AutoApprovalEnabled", value: "false", text: "Off", checked: not autoApprovalConfig.AutoApprovalEnabled }
+            ],
+            errorMessage: { text: '' } if errors['auto-approval-enabled']
+          }) }
+        ],
+        [
+          { text: "Auto approval cost variance" },
+          { text: "The cost variance percentage used for auto approval (e.g. 10)", classes: "config-description" },
+          { html: govukInput({
+            label: { text: "The cost variance percentage used for auto approval (e.g. 10)", classes: "govuk-visually-hidden govuk-!-margin-bottom-0" },
+            formGroup: { classes: 'govuk-!-margin-0 test' },
+            id: "cost-variance-percentage",
+            name: "CostVariancePercentage",
+            value: autoApprovalConfig.CostVariancePercentage,
+            prefix: { text: "%" },
+            spellcheck: false,
+            errorMessage: { text: '' } if errors['cost-variance-percentage']
+          }) }
+        ],
+        [
+          { text: "Max claim total" },
+          { text: "The maximum claim total that can be auto-approved (e.g. 250)", classes: "config-description" },
+          { html: govukInput({
+            label: { text: "The maximum claim total that can be auto-approved (e.g. 250)", classes: "govuk-visually-hidden" },
+            formGroup: { classes: 'govuk-!-margin-0' },
+            id: "max-claim-total",
+            name: "MaxClaimTotal",
+            value: autoApprovalConfig.MaxClaimTotal,
+            prefix: { text: "£" },
+            spellcheck: false,
+            errorMessage: { text: '' } if errors['max-claim-total']
+          }) }
+        ],
+        [
+          { text: "Max days after APVU visit" },
+          { text: "The number of days after a visit that a claim can be auto-approved (e.g. 28)", classes: "config-description" },
+          { html: govukInput({
+            label: { text: "The number of days after a visit that a claim can be auto-approved (e.g. 28)", classes: "govuk-visually-hidden" },
+            formGroup: { classes: 'govuk-!-margin-0' },
+            id: "max-days-after-apvu-visit",
+            name: "MaxDaysAfterAPVUVisit",
+            value: autoApprovalConfig.MaxDaysAfterAPVUVisit,
+            suffix: { text: "days" },
+            spellcheck: false,
+            errorMessage: { text: '' } if errors['max-days-after-apvu-visit']
+          }) }
+        ],
+        [
+          { text: "Max number of claims per year" },
+          { text: "The maximum number of claims that can be auto-approved per year (e.g. 26)", classes: "config-description" },
+          { html: govukInput({
+            label: { text: "The maximum number of claims that can be auto-approved per year (e.g. 26)", classes: "govuk-visually-hidden" },
+            formGroup: { classes: 'govuk-!-margin-0' },
+            id: "max-number-of-claims-per-year",
+            name: "MaxNumberOfClaimsPerYear",
+            value: autoApprovalConfig.MaxNumberOfClaimsPerYear,
+            suffix: { text: "claims" },
+            spellcheck: false,
+            errorMessage: { text: '' } if errors['max-number-of-claims-per-year']
+          }) }
+        ],
+        [
+          { text: "Max number of claims per month" },
+          { text: "The maximum number of claims that can be auto-approved per month (e.g. 4)", classes: "config-description" },
+          { html: govukInput({
+            label: { text: "The maximum number of claims that can be auto-approved per month (e.g. 4)", classes: "govuk-visually-hidden" },
+            formGroup: { classes: 'govuk-!-margin-0' },
+            id: "max-number-of-claims-per-month",
+            name: "MaxNumberOfClaimsPerMonth",
+            value: autoApprovalConfig.MaxNumberOfClaimsPerMonth,
+            suffix: { text: "claims" },
+            spellcheck: false,
+            errorMessage: { text: '' } if errors['max-number-of-claims-per-month']
+          }) }
+        ],
+        [
+          { text: "Number of consecutive auto approvals" },
+          { text: "Controls the maximum number of consecutive auto approvals before a claim is forced to be manual (e.g. 4)", classes: "config-description" },
+          { html: govukInput({
+            label: { text: "Controls the maximum number of consecutive auto approvals before a claim is forced to be manual (e.g. 4)", classes: "govuk-visually-hidden" },
+            formGroup: { classes: 'govuk-!-margin-0' },
+            id: "number-of-consecutive-auto-approvals",
+            name: "NumberOfConsecutiveAutoApprovals",
+            value: autoApprovalConfig.NumberOfConsecutiveAutoApprovals,
+            suffix: { text: "approvals" },
+            spellcheck: false,
+            errorMessage: { text: '' } if errors['number-of-consecutive-auto-approvalss']
+          }) }
+        ]
+      ]
+    }) }}
 
-          <tr {% if errors['max-claim-total'][0] %} class="warning" {% endif %}>
-            <td>
-              Max claim total
-            </td>
-            <td>
-              Controls the maximum claim total that can be auto-approved (e.g. 250)
-            </td>
-            <td class="pound-wrapper">
-              <span class="pound-symbol">£</span>
-              <input id="max-claim-total" type="text" name="MaxClaimTotal" class="form-control" value="{{ autoApprovalConfig.MaxClaimTotal }}">
-            </td>
-          </tr>
+    </br>
 
-          <tr {% if errors['max-days-after-apvu-visit'][0] %} class="warning" {% endif %}>
-            <td>
-              Max days after APVU visit
-            </td>
-            <td>
-              Controls the number of days after a visit that a claim can be auto-approved (e.g. 28)
-            </td>
-            <td>
-              <input id="max-days-after-apvu-visit" type="text" name="MaxDaysAfterAPVUVisit" class="form-control" value="{{ autoApprovalConfig.MaxDaysAfterAPVUVisit }}">
-              <label>days</label>
-            </td>
-          </tr>
+    {# AUTO APPROVAL CHECKS #}
 
-          <tr {% if errors['max-number-of-claims-per-year'][0] %} class="warning" {% endif %}>
-            <td>
-              Max number of claims per year
-            </td>
-            <td>
-              Controls the maximum number of claims that can be auto-approved per year (e.g. 26)
-            </td>
-            <td>
-              <input id="max-number-of-claims-per-year" type="text" name="MaxNumberOfClaimsPerYear" class="form-control" value="{{ autoApprovalConfig.MaxNumberOfClaimsPerYear }}">
-              <label>claims</label>
-            </td>
-          </tr>
+    {% set rows = [] %}
+    {% for key, rule in autoApprovalRulesEnum %}
+      {% set row = [
+        { text: rule.displayName, classes: "govuk-!-width-one-quarter" },
+        { text: rule.description, classes: "config-description "},
+        { html: govukCheckboxes({
+          formGroup: { classes: 'govuk-!-margin-0' },
+          name: "rulesEnabled",
+          classes: "config-rule-checkbox",
+          items: [
+            { value: rule.value, text: " ", checked: rule.value not in rulesDisabled }
+          ]
+        }) }
+      ] %}
+      {% set rows = rows.concat([row]) %}
+    {% endfor %}
 
-          <tr {% if errors['max-number-of-claims-per-month'][0] %} class="warning" {% endif %}>
-            <td>
-              Max number of claims per month
-            </td>
-            <td>
-              Controls the maximum number of claims that can be auto-approved per month (e.g. 4)
-            </td>
-            <td>
-              <input id="max-number-of-claims-per-month" type="text" name="MaxNumberOfClaimsPerMonth" class="form-control" value="{{ autoApprovalConfig.MaxNumberOfClaimsPerMonth }}">
-              <label>claims</label>
-            </td>
-          </tr>
+    {{ govukTable({
+      caption: "Auto approval checks",
+      captionClasses: "govuk-table__caption--m",
+      firstCellIsHeader: true,
+      rows: rows
+    }) }}
 
-          <tr {% if errors['number-of-consecutive-auto-approvals'][0] %} class="warning" {% endif %}>
-            <td>
-              Number of consecutive auto approvals
-            </td>
-            <td>
-              Controls the maximum number of consecutive auto approvals before a claim is forced to be manual (e.g. 4)
-            </td>
-            <td>
-              <input id="number-of-consecutive-auto-approvals" type="text" name="NumberOfConsecutiveAutoApprovals" class="form-control" value="{{ autoApprovalConfig.NumberOfConsecutiveAutoApprovals }}">
-              <label>approvals</label>
-            </td>
-          </tr>
-        </thead>
-        </tbody>
-      </table>
-    </div>
+  </br>
 
-    <!-- Rules -->
-    <div class="form-group">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Check</th>
-            <th>Description</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for key, rule in autoApprovalRulesEnum %}
-          <tr>
-            <td>
-              {{ rule.displayName }}
-            </td>
-            <td>
-              {{ rule.description }}
-            </td>
-            <td>
-              <div class="multiple-choice">
-                <input type="checkbox" id="check-{{ rule.value }}" name="rulesEnabled" value="{{ rule.value }}" {% if rule.value not in rulesDisabled %} checked {% endif %}>
-                <label for="check-{{ rule.value }}" class="block-label"></label>
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+  {# AUDIT REPORT #}
+    {{ govukTable({
+      captionClasses: "govuk-table__caption--m",
+      caption: "Audit report",
+      firstCellIsHeader: true,
+      head: [],
+      rows: [
+        [
+          { text: "Audit limit", classes: "govuk-!-width-one-quarter" },
+          { text: "The minimum claim amount that will be included in audit report ", classes: "config-description" },
+          { html: govukInput({
+            label: { text: "The minimum claim amount that will be included in audit report ", classes: "govuk-visually-hidden govuk-!-margin-bottom-0" },
+            formGroup: { classes: 'govuk-!-margin-0 ' },
+            id: "audit-threshold",
+            name: "ThresholdAmount",
+            value: auditConfig.ThresholdAmount,
+            prefix: { text: "£" },
+            spellcheck: false,
+            errorMessage: { text: '' } if errors['audit-threshold']
+          }) }
+        ],
+        [
+          { text: "Audit verification percentage", classes: "govuk-!-width-one-quarter"  },
+          { text: "Controls the percentage of claims to be verified", classes: "config-description" },
+          { html: govukInput({
+            label: { text: "Controls the percentage of claims to be verified", classes: "govuk-visually-hidden" },
+            formGroup: { classes: 'govuk-!-margin-0' },
+            id: "audit-verification-percentage",
+            name: "VerificationPercentage",
+            value: auditConfig.VerificationPercent,
+            prefix: { text: "%" },
+            spellcheck: false,
+            errorMessage: { text: '' } if errors['audit-verification-percentage']
+          }) }
+        ]
+      ]
+    }) }}
 
-    <!-- Audit -->
-    <div class="form-group">
-      <h2 class="govuk-heading-l">Audit report configuration</h2>
-      <table class="table">
-        <thead>
-        <tr>
-          <th>Check</th>
-          <th>Description</th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr {% if errors['audit-threshold'][0] %} class="warning" {% endif %}>
-          <td>
-            Audit limit
-          </td>
-          <td>
-            Controls the minimum claim amount that will be included in audit report
-          </td>
-          <td class="pound-wrapper">
-            <span class="pound-symbol">£</span>
-            <input id="audit-threshold" type="text" name="AuditThreshold" class="form-control" value="{{ auditConfig.ThresholdAmount }}">
-          </td>
-        </tr>
-        <tr {% if errors['audit-verification-percentage'][0] %} class="warning" {% endif %}>
-          <td>
-            Audit verification percentage
-          </td>
-          <td>
-            Controls the percentage of claims to be verified
-          </td>
-          <td width="20%" class="percentage-wrapper">
-            <span>%</span>
-            <input id="audit-verification-percentage" type="text" name="AuditVerificationPercentage" class="form-control" value="{{ auditConfig.VerificationPercent }}">
-          </td>
-        </tr>
+  {% include "partials/csrf-hidden-input.html" %}
 
-        </tbody>
-      </table>
-    </div>
+  {{ govukButton({
+    text: "Save",
+    type: 'submit'
+  }) }}
 
-    {% include "partials/csrf-hidden-input.html" %}
-
-    <input type="submit" class="button" value="Save">
-  </form>
-  <br>
-  <a href="/" class="link">Cancel</a>
-  </form>
-</main>
-
+</form>
 {% endblock %}

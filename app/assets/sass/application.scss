@@ -5,11 +5,15 @@
 
 $govuk-global-styles: true;
 
+$moj-page-width: 1170px;
+$govuk-page-width: $moj-page-width;
+
 @import '../../../node_modules/govuk-frontend/govuk/all';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/objects/all';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/settings/measurements';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/header/header';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/primary-navigation/primary-navigation';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/ticket-panel/_ticket-panel';
 
 // Path to assets for use with the file-url function
 // in the govuk frontend toolkit's url-helpers partial
@@ -17,6 +21,16 @@ $path: "/public/images/";
 
 // This includes entire govuk-elements from _govuk-elements.scss
 @import 'govuk-elements';
+
+// override default navigation anchor tags 
+.moj-header__navigation-item:first-of-type {
+    pointer-events: none;
+    cursor: default;
+}
+
+.moj-header__link--service-name:hover {
+    text-decoration: underline;
+}
 
 // override datatable styles
 
@@ -225,6 +239,9 @@ span.bold {
 }
 .display-none {
   display: none;
+}
+.js-hidden {
+    display: none;
 }
 
 .form-control.action-select{
@@ -715,5 +732,20 @@ ul.sub-tabs li a.active span.badge {
 }
 
 .govuk-error-message {
+    font-size: 19px;
+}
+
+.config-description {
+    color: $govuk-secondary-text-colour;
+    width: 53%
+}
+
+.config-rule-checkbox {
+    display: flex;
+    justify-content: center;
+}
+
+.govuk-input__prefix {
+    height: 40px;
     font-size: 19px;
 }
