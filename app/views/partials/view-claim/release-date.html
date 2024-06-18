@@ -1,47 +1,79 @@
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+
+{% set releaseDate %}
 {% if unlock %}
-<div class="form-group">
-  <div class="multiple-choice">
-    <input type="checkbox" name='release-date-is-set' id='release-date-is-set' {% if Claim['ReleaseDateIsSet'] === true %} checked {% endif %} />
-    <label for='release-date-is-set' class="block-label" data-target="release-date-section"><span>Release Date is set?</span></label>
-  </div>
-</div>
-
-<div id="release-date-section" name="release-date-section" class="form-date form-group {% if not Claim['ReleaseDateIsSet'] %} js-hidden {% endif %} {% if errors['release-date-section'][0] %} form-group-error warning {% endif %}">
-  <fieldset>
-    <div class="form-group form-group-day">
-      <label id="release-day" for="release-day-input">Day</label>
-      <input id="release-day-input" type="number" name="release-day" autocomplete="off" 
-            value="{{ Claim['releaseDay'] }}" class="form-control{% if errors['release-date-section'][0] %} form-control-error {% endif %}">
-    </div>
-
-    <div class="form-group form-group-month">
-      <label id="release-month" for="release-month-input">Month</label>
-      <input id="release-month-input" type="number" name="release-month" autocomplete="off"
-            value="{{ Claim['releaseMonth'] }}" class="form-control{% if errors['release-date-section'][0] %} form-control-error {% endif %}">
-    </div>
-
-    <div class="form-group form-group-year">
-      <label id="release-year" for="release-year-input">Year</label>
-      <input id="release-year-input" type="number" name="release-year" autocomplete="off"
-            value="{{ Claim['releaseYear'] }}" class="form-control{% if errors['release-date-section'][0] %} form-control-error {% endif %}">
-    </div>
-  </fieldset>
-</div>
-
+<fieldset>
+{{ govukDateInput({
+  id: "release-date-section",
+  namePrefix: "release-date-section",
+  errorMessage: errors['release-date-section'][0],
+  formGroup: {
+    classes: 'govuk-!-margin-bottom-0'
+  },
+  items: [
+    {
+      name: "day",
+      id: "release-day-input",
+      classes: "govuk-input--width-2",
+      value: Claim['releaseDay']
+    },
+    {
+      name: "month",
+      id: "release-month-input",
+      classes: "govuk-input--width-2",
+      value: Claim['releaseMonth']
+    },
+    {
+      name: "year",
+      id: "release-year-input",
+      classes: "govuk-input--width-4",
+      value: Claim['releaseYear']
+    }
+  ]
+}) }}
+</fieldset>
 {% else %}
-
-<table class="col-2 no-pad-right">
-
-  <tr>
-    <td>Release Date</td>
     {% if Claim['ReleaseDate'] %}
-      <td>{{ getDateFormatted.shortDate(Claim['ReleaseDate']) }}</td>
+      {{ getDateFormatted.shortDate(Claim['ReleaseDate']) }}
     {% else %}
-      <td><span class="text-pending">Pending</span></td>
+      <span class="text-pending">
+        Pending
+      </span>
     {% endif %}
-  </tr>
-
-</table>
-
 
 {% endif %}
+{% endset %}
+
+{% set saveButton %}
+{{ govukButton({
+  text: "Save release date",
+  type: "submit",
+  formaction: "/claim/28948/update-benefit-expiry-date",
+  classes: "govuk-button--secondary pull-right"
+}) }}
+{% endset %}
+
+{{ govukTable({
+  caption: 'Release Information',
+  captionClasses: "govuk-table__caption--l",
+  firstCellIsHeader: true,
+  rows: [
+    [
+      {
+        text: 'Release Date',
+        classes: "claim-table-width-one-third",
+        id: 'benefit-owner-name'
+      },
+      {
+        html: releaseDate,
+        classes: "govuk-!-width-one-third"
+      },
+      {
+        html:  saveButton  ,
+        classes: "govuk-!-width-one-third "
+      }
+    ]
+  ]
+}) }}

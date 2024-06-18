@@ -4,9 +4,7 @@
 // $govuk-compatibility-govukfrontendtoolkit: true;
 
 $govuk-global-styles: true;
-
-$moj-page-width: 1170px;
-$govuk-page-width: $moj-page-width;
+$moj-images-path: "../../../node_modules/@ministryofjustice/frontend/moj/assets/images/";
 
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
@@ -15,7 +13,7 @@ $govuk-page-width: $moj-page-width;
 @import 'moj/all';
 
 // Path to assets for use with the file-url function
-// in the govuk frontend toolkit's url-helpers partial
+// in the govuk frontend toolkit's url-helpers partial:
 $path: "/public/images/";
 
 // This includes entire govuk-elements from _govuk-elements.scss
@@ -70,7 +68,22 @@ table.no-pad-right td {
 
 .dataTable {
     border-bottom: none!important;;
-    margin-bottom: 1em!important
+    margin-bottom: 1em!important;
+}
+.table-no-border-bottom {
+    border-bottom: none
+}
+
+.table-row-flex {
+    display: flex;
+}
+
+.claim-table-width-one-third {
+width: 33%!important
+}
+
+.search {
+    padding: 15px 0 0 0;
 }
 
 .table-short-column {
@@ -261,6 +274,11 @@ span.bold {
     float:right;
 }
 
+.select-for-form{
+    float:right;
+    margin: 0px
+}
+
 .change {
     float:right;
     font-weight: bold;
@@ -349,14 +367,12 @@ tr.warning td:first-child{
 }
 
 .text-pending {
-    color:#d2841c;
-    padding-top:6px;
-    display:inline-block;
+    color: govuk-colour("orange")
 }
 
 .text-pending:before {
-    background-color: #d2841c;
-    color:#d2841c;
+    background-color: govuk-colour("orange");
+    color: govuk-colour("orange");
 }
 
 .text-pending:before {
@@ -378,14 +394,12 @@ tr.warning td:first-child{
 }
 
 .text-warning {
-    color:#b10e1e;
-    padding-top:6px;
-    display:inline-block;
+    color: $govuk-error-colour;
 }
 
 .text-warning:before {
-    background-color: #b10e1e;
-    color:#b10e1e;
+    background-color: $govuk-error-colour;
+    color:$govuk-error-colour;
 }
 
 .text-warning:before {
@@ -407,14 +421,12 @@ tr.warning td:first-child{
 }
 
 .text-success {
-    color:#00823b;
-    padding-top:2px;
-    display:inline-block;
+    color: $govuk-success-colour
 }
 
 .text-success:before {
-    background-color: #00823b;
-    color:#00823b;
+    background-color:  $govuk-success-colour;
+    color: $govuk-success-colour
 }
 .text-success:before {
     -webkit-border-radius: 50%;
@@ -770,4 +782,13 @@ ul.sub-tabs li a.active span.badge {
 .govuk-input__prefix {
     height: 40px;
     font-size: 19px;
+}
+
+.view-claim-display-helper{
+    display: flex;
+    align-items: center;
+} 
+
+.justify-content-end {
+    justify-content: end;
 }
