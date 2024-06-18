@@ -92,8 +92,8 @@ module.exports = function (router) {
 }
 
 const generateRulesDisabled = (rulesEnabled) => {
-  const rules = Object.values(autoApprovalRulesEnum).map(rule => rule.value);
-  const rulesDisabled = rules.filter(rule => !rulesEnabled.includes(rule));
+  const rules = Object.values(autoApprovalRulesEnum).map(rule => rule.value)
+  const rulesDisabled = rules.filter(rule => !rulesEnabled.includes(rule))
 
   return rulesDisabled
 }
