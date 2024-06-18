@@ -138,7 +138,12 @@
           name: "rulesEnabled",
           classes: "config-rule-checkbox",
           items: [
-            { value: rule.value, text: " ", checked: rule.value not in rulesDisabled }
+            { label: {
+              attributes: { 
+                for: rule.displayName
+              }
+            }
+          , value: rule.value, text: " ", checked: rule.value not in rulesDisabled }
           ]
         }) }
       ] %}
