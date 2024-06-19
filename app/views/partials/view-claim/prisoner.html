@@ -1,114 +1,115 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set approvedCheck %}
-{% if Claim['NomisCheck'] != 'APPROVED' %}
-<span class="text-warning">{% if displayHelper.getPrisonRegion(Claim['NameOfPrison']) != 'NI' %}
-  NOMIS check required
+  {% if Claim.NomisCheck != 'APPROVED' %}
+    <span class="text-warning">
+      {% if displayHelper.getPrisonRegion(Claim.NameOfPrison) != 'NI' %}
+        NOMIS check required
+      {% else %}
+        NI prisoner check required
+      {% endif %}
+    </span>
   {% else %}
-  NI prisoner check required
+    <span class="text-success">
+      {% if displayHelper.getPrisonRegion(Claim.NameOfPrison) != 'NI' %}
+        NOMIS check confirmed
+      {% else %}
+        NI prisoner check confirmed
+      {% endif %}
+    </span>
   {% endif %}
-</span>
-{% else %}
-<span class="text-success">
-  {% if displayHelper.getPrisonRegion(Claim['NameOfPrison']) != 'NI' %}
-  NOMIS check confirmed
-  {% else %}
-  NI prisoner check confirmed
-  {% endif %}
-</span>
-{% endif %}
 
-{% if unlock %}
-{{ govukSelect({
-  id: "nomis-check",
-  name: "nomisCheck",
-  classes: 'action-select',
-  errorMessage: errors['nomis-check'][0],
-  formGroup: {
-    classes: 'select-for-form'
-  },
-  items: [
-  {
-    value: "",
-    text: "Select",
-    selected: ''
-  },
-    {
-      value: "APPROVED",
-      text: "Approve",
-      selected: Claim.NomisCheck === 'APPROVED'
-    },
-    {
-      value: "REQUEST-INFORMATION",
-      text: "Request information",
-      selected: Claim.NomisCheck === 'REQUEST-INFORMATION'
-    },
-    {
-      value: "REJECTED",
-      text: "Reject",
-      selected: Claim.NomisCheck === 'REJECTED'
-    }
-  ]
-}) }}
-{% endif %}
+  {% if unlock %}
+    {{ govukSelect({
+      id: "nomis-check",
+      name: "nomisCheck",
+      classes: "action-select",
+      errorMessage: errors.nomis-check[0],
+      formGroup: {
+        classes: "select-for-form"
+      },
+      items: [
+        {
+          value: "",
+          text: "Select",
+          selected: ""
+        },
+        {
+          value: "APPROVED",
+          text: "Approve",
+          selected: Claim.NomisCheck === 'APPROVED'
+        },
+        {
+          value: "REQUEST-INFORMATION",
+          text: "Request information",
+          selected: Claim.NomisCheck === 'REQUEST-INFORMATION'
+        },
+        {
+          value: "REJECTED",
+          text: "Reject",
+          selected: Claim.NomisCheck === 'REJECTED'
+        }
+      ]
+    }) }}
+  {% endif %}
 {% endset %}
 
-
 {{ govukTable({
-  caption: 'Prisoner',
+  caption: "Prisoner",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
   rows: [
     [
       {
-        text: 'Name',
+        text: "Name",
         classes: "claim-table-width-one-third",
-        id: 'benefit-owner-name'
+        id: "benefit-owner-name"
       },
       {
-        text: Claim['PrisonerFirstName'] + ' ' + Claim['PrisonerLastName'],
+        text: Claim.PrisonerFirstName + " " + Claim.PrisonerLastName,
         classes: "govuk-!-width-two-thirds"
       }
     ],
     [
       {
-        text: 'Date of birth',
+        text: "Date of birth",
         classes: "claim-table-width-one-third"
       },
       {
-        text: getDateFormatted.shortDate(Claim['PrisonerDateOfBirth']) ,
+        text: getDateFormatted.shortDate(Claim.PrisonerDateOfBirth),
         classes: "govuk-!-width-two-thirds"
       }
     ],
     [
       {
-        text: 'Prisoner number',
+        text: "Prisoner number",
         classes: "claim-table-width-one-third"
       },
       {
-        text: Claim['PrisonNumber'],
+        text: Claim.PrisonNumber,
         classes: "govuk-!-width-two-thirds"
       }
     ],
     [
-    {
-      text: 'Prison',
-      classes: "claim-table-width-one-third"
-    },
-    {
-      text: displayHelper.getPrisonDisplayName(Claim['NameOfPrison']),
-      classes: "govuk-!-width-two-thirds"
-    }
-  ],
-  [
-    {
-      text: 'Eligible for visitation?',
-      classes: "claim-table-width-one-third table-no-border-bottom"
-    },
-    {
-      html: approvedCheck,
-      classes: "govuk-!-width-two-thirds table-no-border-bottom"
-    }
-  ]
+      {
+        text: "Prison",
+        classes: "claim-table-width-one-third"
+      },
+      {
+        text: displayHelper.getPrisonDisplayName(Claim.NameOfPrison),
+        classes: "govuk-!-width-two-thirds"
+      }
+    ],
+    [
+      {
+        text: "Eligible for visitation?",
+        classes: "claim-table-width-one-third table-no-border-bottom"
+      },
+      {
+        html: approvedCheck,
+        classes: "govuk-!-width-two-thirds table-no-border-bottom"
+      }
+    ]
   ]
 }) }}
