@@ -34,7 +34,7 @@
               { name:"AutoApprovalEnabled", value: "true", text: "On", checked: autoApprovalConfig.AutoApprovalEnabled },
               { name:"AutoApprovalEnabled", value: "false", text: "Off", checked: not autoApprovalConfig.AutoApprovalEnabled }
             ],
-            errorMessage: { text: '' } if errors['auto-approval-enabled']
+            errorMessage: errors['auto-approval-enabled']
           }) }
         ],
         [
@@ -48,7 +48,7 @@
             value: autoApprovalConfig.CostVariancePercentage,
             prefix: { text: "%" },
             spellcheck: false,
-            errorMessage: { text: '' } if errors['cost-variance-percentage']
+            errorMessage: errors['cost-variance-percentage']
           }) }
         ],
         [
@@ -62,7 +62,7 @@
             value: autoApprovalConfig.MaxClaimTotal,
             prefix: { text: "£" },
             spellcheck: false,
-            errorMessage: { text: '' } if errors['max-claim-total']
+            errorMessage: errors['max-claim-total']
           }) }
         ],
         [
@@ -76,7 +76,7 @@
             value: autoApprovalConfig.MaxDaysAfterAPVUVisit,
             suffix: { text: "days" },
             spellcheck: false,
-            errorMessage: { text: '' } if errors['max-days-after-apvu-visit']
+            errorMessage: errors['max-days-after-apvu-visit']
           }) }
         ],
         [
@@ -90,7 +90,7 @@
             value: autoApprovalConfig.MaxNumberOfClaimsPerYear,
             suffix: { text: "claims" },
             spellcheck: false,
-            errorMessage: { text: '' } if errors['max-number-of-claims-per-year']
+            errorMessage: errors['max-number-of-claims-per-year']
           }) }
         ],
         [
@@ -104,7 +104,7 @@
             value: autoApprovalConfig.MaxNumberOfClaimsPerMonth,
             suffix: { text: "claims" },
             spellcheck: false,
-            errorMessage: { text: '' } if errors['max-number-of-claims-per-month']
+            errorMessage: errors['max-number-of-claims-per-month']
           }) }
         ],
         [
@@ -118,7 +118,7 @@
             value: autoApprovalConfig.NumberOfConsecutiveAutoApprovals,
             suffix: { text: "approvals" },
             spellcheck: false,
-            errorMessage: { text: '' } if errors['number-of-consecutive-auto-approvalss']
+            errorMessage: errors['number-of-consecutive-auto-approvals']
           }) }
         ]
       ]
@@ -132,13 +132,18 @@
     {% for key, rule in autoApprovalRulesEnum %}
       {% set row = [
         { text: rule.displayName, classes: "govuk-!-width-one-quarter" },
-        { text: rule.description, classes: "config-description "},
+        { text: rule.description, classes: "config-description"},
         { html: govukCheckboxes({
           formGroup: { classes: 'govuk-!-margin-0' },
           name: "rulesEnabled",
           classes: "config-rule-checkbox",
           items: [
-            { value: rule.value, text: " ", checked: rule.value not in rulesDisabled }
+            { label: {
+              attributes: { 
+                for: rule.displayName
+              }
+            }
+          , value: rule.value, text: " ", checked: rule.value not in rulesDisabled }
           ]
         }) }
       ] %}
@@ -168,11 +173,10 @@
             label: { text: "The minimum claim amount that will be included in audit report ", classes: "govuk-visually-hidden govuk-!-margin-bottom-0" },
             formGroup: { classes: 'govuk-!-margin-0 ' },
             id: "audit-threshold",
-            name: "ThresholdAmount",
+            name: "AuditThreshold",
             value: auditConfig.ThresholdAmount,
             prefix: { text: "£" },
-            spellcheck: false,
-            errorMessage: { text: '' } if errors['audit-threshold']
+            errorMessage: errors['audit-threshold']
           }) }
         ],
         [
@@ -185,8 +189,7 @@
             name: "VerificationPercentage",
             value: auditConfig.VerificationPercent,
             prefix: { text: "%" },
-            spellcheck: false,
-            errorMessage: { text: '' } if errors['audit-verification-percentage']
+            errorMessage: errors['audit-verification-percentage']
           }) }
         ]
       ]

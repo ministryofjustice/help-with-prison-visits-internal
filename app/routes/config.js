@@ -91,19 +91,9 @@ module.exports = function (router) {
   })
 }
 
-const generateRulesDisabled = function (rulesEnabled) {
-  const rules = []
-
-  for (const rule in autoApprovalRulesEnum) {
-    rules.push(autoApprovalRulesEnum[rule].value)
-  }
-  const rulesDisabled = []
-
-  rules.forEach(function (rule) {
-    if (rulesEnabled.indexOf(rule) === -1) {
-      rulesDisabled.push(rule)
-    }
-  })
+const generateRulesDisabled = (rulesEnabled) => {
+  const rules = Object.values(autoApprovalRulesEnum).map(rule => rule.value)
+  const rulesDisabled = rules.filter(rule => !rulesEnabled.includes(rule))
 
   return rulesDisabled
 }
