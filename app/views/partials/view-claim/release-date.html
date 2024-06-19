@@ -1,78 +1,74 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-
 {% set releaseDate %}
-{% if unlock %}
-<fieldset>
-{{ govukDateInput({
-  id: "release-date-section",
-  namePrefix: "release-date-section",
-  errorMessage: errors['release-date-section'][0],
-  formGroup: {
-    classes: 'govuk-!-margin-bottom-0'
-  },
-  items: [
-    {
-      name: "day",
-      id: "release-day-input",
-      classes: "govuk-input--width-2",
-      value: Claim['releaseDay']
-    },
-    {
-      name: "month",
-      id: "release-month-input",
-      classes: "govuk-input--width-2",
-      value: Claim['releaseMonth']
-    },
-    {
-      name: "year",
-      id: "release-year-input",
-      classes: "govuk-input--width-4",
-      value: Claim['releaseYear']
-    }
-  ]
-}) }}
-</fieldset>
-{% else %}
-    {% if Claim['ReleaseDate'] %}
-      {{ getDateFormatted.shortDate(Claim['ReleaseDate']) }}
+  {% if unlock %}
+    <fieldset>
+      {{ govukDateInput({
+        id: "release-date-section",
+        namePrefix: "release-date-section",
+        errorMessage: errors.release-date-section[0],
+        formGroup: {
+          classes: "govuk-!-margin-bottom-0"
+        },
+        items: [
+          {
+            name: "day",
+            id: "release-day-input",
+            classes: "govuk-input--width-2",
+            value: Claim.releaseDay
+          },
+          {
+            name: "month",
+            id: "release-month-input",
+            classes: "govuk-input--width-2",
+            value: Claim.releaseMonth
+          },
+          {
+            name: "year",
+            id: "release-year-input",
+            classes: "govuk-input--width-4",
+            value: Claim.releaseYear
+          }
+        ]
+      }) }}
+    </fieldset>
+  {% else %}
+    {% if Claim.ReleaseDate %}
+      {{ getDateFormatted.shortDate(Claim.ReleaseDate) }}
     {% else %}
-      <span class="text-pending">
-        Pending
-      </span>
+      <span class="text-pending">Pending</span>
     {% endif %}
-
-{% endif %}
+  {% endif %}
 {% endset %}
 
 {% set saveButton %}
-{{ govukButton({
-  text: "Save release date",
-  type: "submit",
-  formaction: "/claim/28948/update-benefit-expiry-date",
-  classes: "govuk-button--secondary pull-right"
-}) }}
+  {{ govukButton({
+    text: "Save release date",
+    type: "submit",
+    formaction: "/claim/28948/update-benefit-expiry-date",
+    classes: "govuk-button--secondary pull-right govuk-!-margin-bottom-0"
+  }) }}
 {% endset %}
 
 {{ govukTable({
-  caption: 'Release Information',
+  caption: "Release Information",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
   rows: [
     [
       {
-        text: 'Release Date',
-        classes: "claim-table-width-one-third",
-        id: 'benefit-owner-name'
+        text: "Release Date",
+        classes: "claim-table-width-one-third vertical-align-middle",
+        id: "benefit-owner-name"
       },
       {
         html: releaseDate,
         classes: "govuk-!-width-one-third"
       },
       {
-        html:  saveButton  ,
-        classes: "govuk-!-width-one-third "
+        html: saveButton,
+        classes: "govuk-!-width-one-third vertical-align-middle "
       }
     ]
   ]
