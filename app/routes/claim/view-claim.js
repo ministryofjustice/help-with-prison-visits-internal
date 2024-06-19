@@ -45,37 +45,6 @@ const aws = new AWSHelper()
 let claimExpenses
 let claimDeductions
 
-const test = {
-  "ClaimEligibleChild": [
-    {
-      "FirstName": "Alice",
-      "LastName": "Smith",
-      "DateOfBirth": "2010-03-15",
-      "ChildRelationship": "Daughter",
-      "ParentFirstName": "John",
-      "ParentLastName": "Smith",
-      "HouseNumberAndStreet": "123 Main St",
-      "Town": "Anytown",
-      "County": "Someshire",
-      "PostCode": "A1B 2C3",
-      "Country": "United Kingdom"
-    },
-    {
-      "FirstName": "Bob",
-      "LastName": "Johnson",
-      "DateOfBirth": "2012-07-22",
-      "ChildRelationship": "Son",
-      "ParentFirstName": "Michael",
-      "ParentLastName": "Johnson",
-      "HouseNumberAndStreet": "456 Elm St",
-      "Town": "Smallville",
-      "County": "Countyshire",
-      "PostCode": "X9Y 8Z7",
-      "Country": "United States"
-    }
-  ]
-}
-
 module.exports = function (router) {
   // GET
   router.get('/claim/:claimId', function (req, res, next) {
@@ -178,7 +147,7 @@ module.exports = function (router) {
       applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      const benefitExpiryDate = new BenefitExpiryDate(req.body['expiry-day'], req.body['expiry-month'], req.body['expiry-year'])
+      const benefitExpiryDate = new BenefitExpiryDate(req.body['expiry-date-section-day'], req.body['expiry-date-section-month'], req.body['expiry-date-section-year'])
       return updateVisitorBenefitExpiryDate(req.params.claimId, benefitExpiryDate)
         .then(function () {
           return false

@@ -22,11 +22,10 @@ module.exports = function (app, developmentMode) {
     return arr1.concat(arr2)
   })
 
-   const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
-   
-   const mojFilters = getMojFilters()
-   Object.keys(mojFilters).forEach(filterName => {
-     njkEnv.addFilter(filterName, mojFilters[filterName])
-   })
- 
+  const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
+
+  const mojFilters = getMojFilters()
+  Object.keys(mojFilters).forEach(filterName => {
+    njkEnv.addFilter(filterName, mojFilters[filterName])
+  })
 }
