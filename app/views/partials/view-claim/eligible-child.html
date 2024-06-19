@@ -1,21 +1,21 @@
-
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set eligibleChildData = [] %}
 {% for eligibleChild in ClaimEligibleChild %}
   {% set eligibleChildRow = [
-    [
+  [
     {
-      text: 'Eligible child name',
+      text: "Eligible child name",
       classes: "claim-table-width-one-third"
     },
     {
-      html: eligibleChild.FirstName + ' ' + eligibleChild.LastName,
+      html: eligibleChild.FirstName + " " + eligibleChild.LastName,
       classes: "govuk-!-width-two-thirds"
     }
   ],
   [
     {
-      text: 'Date of Birth',
+      text: "Date of Birth",
       classes: "claim-table-width-one-third"
     },
     {
@@ -25,7 +25,7 @@
   ],
   [
     {
-      text: 'Prisoner Relationship',
+      text: "Prisoner Relationship",
       classes: "claim-table-width-one-third"
     },
     {
@@ -34,31 +34,31 @@
     }
   ],
   [
-  {
-    text: 'Parent',
-    classes: "claim-table-width-one-third"
-  },
-  {
-    html: eligibleChild.ParentFirstName + ' ' + eligibleChild.ParentLastName,
-    classes: "govuk-!-width-two-thirds"
-  }
-],
-[
-  {
-    html: '<br><br>Address<br><br><br>',
-    classes: "claim-table-width-one-third"
-  },
-  {
-    html: eligibleChild.HouseNumberAndStreet + '<br>' + eligibleChild.Town  + '<br>' + eligibleChild.County  + '<br>' + eligibleChild.PostCode + '<br>' + eligibleChild.Country ,
-    classes: "govuk-!-width-two-thirds"
-  }
-]
-  ] %}
+    {
+      text: "Parent",
+      classes: "claim-table-width-one-third"
+    },
+    {
+      html: eligibleChild.ParentFirstName + " " + eligibleChild.ParentLastName,
+      classes: "govuk-!-width-two-thirds"
+    }
+  ],
+  [
+    {
+      html: "<br><br>Address<br><br><br>",
+      classes: "claim-table-width-one-third"
+    },
+    {
+      html: eligibleChild.HouseNumberAndStreet + "<br>" + eligibleChild.Town  + "<br>" + eligibleChild.County  + "<br>" + eligibleChild.PostCode + "<br>" + eligibleChild.Country,
+      classes: "govuk-!-width-two-thirds"
+    }
+  ]
+] %}
   {% set eligibleChildData = eligibleChildData | concat([eligibleChildRow]) %}
 {% endfor %}
 
 {{ govukTable({
   firstCellIsHeader: true,
-  classes: 'govuk-!-margin-bottom-0',
+  classes: "govuk-!-margin-bottom-0",
   rows: eligibleChildData
 }) }}
