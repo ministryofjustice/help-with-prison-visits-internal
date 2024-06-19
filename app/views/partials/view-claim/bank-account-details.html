@@ -2,29 +2,29 @@
 
 {% if Claim.AccountNumber %}
 {{ govukTable({
-  caption: 'Bank Account Details',
+  caption: "Bank Account Details",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
   rows: [
     [
       {
-        text: 'Name on Account',
+        text: "Name on Account",
         classes: "claim-table-width-one-third",
-        id: 'benefit-owner-name'
+        id: "claim-account-name"
       },
       {
-        text: Claim['NameOnAccount'] ,
+        text: Claim.NameOnAccount,
         classes: "govuk-!-width-two-thirds"
       }
     ],
     [
       {
-        text: 'Account Number',
+        text: "Account Number",
         classes: "claim-table-width-one-third",
-        id: 'benefit-owner-name'
+        id: "claim-account-number"
       },
       {
-        text: displayHelper.maskString(Claim['AccountNumber'],4),
+        text: displayHelper.maskString(Claim.AccountNumber,4),
         classes: "govuk-!-width-two-thirds"
       }
     ]
