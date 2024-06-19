@@ -78,8 +78,8 @@ table.no-pad-right td {
     display: flex;
 }
 
-.claim-table-width-one-third {
-width: 33%!important
+.claim-table-email-text {
+    word-break: break-all;
 }
 
 .search {
@@ -269,20 +269,15 @@ span.bold {
     display: none;
 }
 
-.form-control.action-select{
+.form-control.action-select {
     width:200px;
     float:right;
 }
 
-.select-for-form{
+.select-for-form {
     float:right;
-    margin: 0px
-}
-
-.change {
-    float:right;
-    font-weight: bold;
-    padding-right: 0;
+    margin: 0px;
+    margin-top: 1.5px;
 }
 
 .form-control.full{
@@ -309,6 +304,11 @@ span.bold {
 
 .button.red {
     background:#f40b0c;
+}
+
+.edit-claim-button {
+    display: flex;
+    width: fit-content;
 }
 
 .vertical-align-middle {

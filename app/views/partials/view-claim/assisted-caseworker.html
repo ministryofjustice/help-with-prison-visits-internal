@@ -1,6 +1,6 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
-{% if Claim['AssistedDigitalCaseworker'] %}
+{% if Claim.AssistedDigitalCaseworker %}
 {{ govukTable({
   classes: 'govuk-!-margin-bottom-2',
   firstCellIsHeader: true,
@@ -8,10 +8,10 @@
     [
       {
         text: "Assisted digital",
-        classes: "claim-table-width-one-thirdover table-no-border-bottom"
+        classes: "govuk-!-width-one-third table-no-border-bottom"
       },
       {
-        text: Claim['AssistedDigitalCaseworker'] ,
+        text: Claim.AssistedDigitalCaseworker,
         classes: "govuk-!-width-two-thirds table-no-border-bottom"
       }
     ]

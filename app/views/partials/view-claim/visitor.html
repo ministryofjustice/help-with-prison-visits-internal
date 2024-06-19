@@ -1,6 +1,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 
 {% if Children[0] %}
@@ -17,22 +18,54 @@
 
 {% set contactDetails %}
   <a href="mailto:{{ Claim.EmailAddress }}">{{ Claim.EmailAddress }}</a>
-  {% if unlock %}
-    <a href="/claim/{{ Claim.ClaimId }}/update-contact-details" class="change">Change</a>
+{% endset %}
+
+{% set changeContactDetails %}
+{% if unlock %}
+    <a class="pull-right" href="/claim/{{ Claim.ClaimId }}/update-contact-details">Update contact details</a>
   {% endif %}
 {% endset %}
 
-{% set benefit %}
-  {{ displayHelper.getBenefitDisplayName(Claim.Benefit) }}
-  {% if unlock %}
+
+{% set benefitInformation %}
+<span class=""> {{ displayHelper.getBenefitDisplayName(Claim.Benefit) }}</span>
+<br>
+  {% if displayHelper.getBenefitRequireUpload(Claim.Benefit) or Claim.benefitDocument.length > 0 %}
+    {% for document in Claim.benefitDocument %}
+      {% if document.DocumentStatus == 'uploaded' %}
+      <a href="/claim/{{ Claim.ClaimId }}/download?claim-document-id={{ document.ClaimDocumentId }}">View evidence</a>
+      {% elif document.DocumentStatus == 'upload-later' %}
+        <span class="text-pending">To be uploaded later</span>
+      {% elif document.DocumentStatus == 'post-later' %}
+        <span class="text-pending">To be posted later</span>
+      {% else %}
+        <span class="text-warning">Benefit required</span>
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    {% if Claim.DWPBenefitCheckerResult == 'YES' %}
+      <span class="text-success">DWP - Eligible</span>
+    {% elif Claim.DWPBenefitCheckerResult == 'NO' %}
+      <span class="text-warning">DWP - Not eligible</span>
+    {% elif Claim.Benefit == 'YCS' %}
+      <span class="text-success">DWP - Not applicable</span>
+    {% else %}
+      <span class="text-warning">DWP - No information</span>
+    {% endif %}
+  {% endif %}
+{% endset %}
+
+
+{% set benefitInformationButtons %}
+{% if unlock %}
   {{ govukSelect({
     formGroup: {
-      classes: 'select-for-form'
+      classes: "select-for-form"
     },
     id: "dwp-status",
     name: "dwpCheck",
-    classes: 'action-select',
-    errorMessage: errors['dwp-check'][0],
+    classes: "action-select select-for-form govuk-!-margin-left-4 govuk-!-margin-top-1 govuk-!-margin-bottom-2",
+    errorMessage: errors.dwp-check[0],
     items: [
       {
         value: "APPROVED",
@@ -51,48 +84,24 @@
       }
     ]
   }) }}
+  {% if document.DocumentStatus == 'upload-later' or 'post-later' %}
+  {{ govukButton({
+    text: "Add",
+    id: "add-benefit-documentation-upload-later",
+    href: "/claim/file-upload/"+ Claim.Reference + "/" + Claim.ClaimId + "/" + Claim.Benefit + "?eligibilityId=" + Claim.EligibilityId + "&claimDocumentId=" + document.ClaimDocumentId,
+    classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-1 edit-claim-button govuk-button--secondary pull-right"
+  }) }}        
   {% endif %}
-  <br/>
-
-
-  {% if displayHelper.getBenefitRequireUpload(Claim.Benefit) or Claim.benefitDocument.length > 0 %}
-    {% for document in Claim.benefitDocument %}
-      {% if document.DocumentStatus == 'uploade' %}
-        <a href="/claim/{{ Claim.ClaimId }}/download?claim-document-id={{ document.ClaimDocumentId }}">View evidence</a>
-      {% elif document.DocumentStatus == 'upload-later' %}
-        <span class="text-pending">To be uploaded later</span>
-        {% if unlock %}
-          <a href="/claim/file-upload/{{ Claim.Reference }}/{{ Claim.ClaimId }}/{{ Claim.Benefit }}?eligibilityId={{ Claim.EligibilityId }}&claimDocumentId={{ document.ClaimDocumentId }}" id="add-benefit-documentation-upload-later" class="button grey pull-right">Add</a>
-        {% endif %}
-      {% elif document.DocumentStatus == 'uploaded' %}
-        <span class="text-pending">To be posted later</span>
-        {% if unlock %}
-          <a href="/claim/file-upload/{{ Claim.Reference }}/{{ Claim.ClaimId }}/{{ Claim.Benefit }}?eligibilityId={{ Claim.EligibilityId }}&claimDocumentId={{ document.ClaimDocumentId }}" id="add-benefit-documentation-post-later" class="button grey pull-right">Add</a>
-        {% endif %}
-      {% else %}
-        <span class="text-warning">Benefit required</span>
-      {% endif %}
-    {% endfor %}
-  {% else %}
-    {% if Claim.DWPBenefitCheckerResult == 'YES' %}
-      <span class="text-success">DWP - Eligible</span>
-    {% elif Claim.DWPBenefitCheckerResult == 'NO' %}
-      <span class="text-warning">DWP - Not eligible</span>
-    {% elif Claim.Benefit == 'YCS' %}
-      <span class="text-success">DWP - Not applicable</span>
-    {% else %}
-      <span class="text-warning">DWP - No information</span>
-    {% endif %}
   {% endif %}
-{% endset %}
+  {% endset %}
+
 
 {% set expiryDate %}
   {% if unlock %}
-    
     {{ govukDateInput({
       id: "expiry-date-section",
       namePrefix: "expiry-date-section",
-      errorMessage: errors['benefit-expiry'][0] ,
+      errorMessage: errors.benefit-expiry[0] ,
       formGroup: {
         classes: 'govuk-!-margin-bottom-0'
       },
@@ -105,7 +114,7 @@
           value: Claim.expiryDay
         },
         {
-          name: "Month",
+          name: "month",
           id: "expiry-month-input",
           type: "number",
           classes: "govuk-input--width-2",
@@ -120,8 +129,6 @@
         }
       ]
     }) }}
-
-    <input type="submit" formaction="/claim/{{ Claim.ClaimId }}/update-benefit-expiry-date" class="button pull-right grey" name="update-benefit-expiry-date" id="update-benefit-expiry-date" value="Save benefit expiry date">
   {% else %}
     {% if Claim.BenefitExpiryDate %}
       <div id="benefit-expiry-date">{{ getDateFormatted.shortDate(Claim.BenefitExpiryDate) }}</div>
@@ -131,13 +138,30 @@
   {% endif %}
 {% endset %}
 
+
+{% set expiryDateButton %}
+{% if unlock %}
+{{ govukButton({
+  text: "Save benefit expiry date",
+  type: "submit",
+  name: "update-benefit-expiry-date",
+  id: "update-benefit-expiry-date",
+  attributes: {
+  formaction: "/claim/" + Claim.ClaimId + "/update-benefit-expiry-date"
+  },
+  classes: "govuk-button--secondary govuk-!-margin-bottom-0 pull-right"
+}) }}
+{% endif %}
+{% endset %}
+
+
 {% set childData = [] %}
 {% for child in Children %}
-  {% set childInfo = '<span>' + child['FirstName'] + ' ' + child['LastName'] + '<br>' + getDateFormatted.shortDate(child['DateOfBirth']) + '<br>' + getChildFormatted(child['Relationship']) + '</span>' %}
+  {% set childInfo = "<span>" + child.FirstName + " " + child.LastName + "<br>" + getDateFormatted.shortDate(child.DateOfBirth) + "<br>" + getChildFormatted(child.Relationship) + "</span>" %}
   {% set childRow = [
     {
-      html: '<br>Child ' + loop.index + '<br>',
-      classes: "claim-table-width-one-third"
+      html: "<br>Child " + loop.index + "<br>",
+      classes: "govuk-!-width-one-third"
     },
     {
       html: childInfo,
@@ -147,109 +171,127 @@
   {% set childData = childData | concat([childRow]) %}
 {% endfor %}
 
+
 {% if Escort %}
   {% set escort = [
+    [
     {
-      html: 'Escort',
-      classes: "claim-table-width-one-third"
+      text: "Escort",
+      classes: "govuk-!-width-one-third"
     },
     {
-      html: Escort['FirstName'] + ' ' + Escort['LastName'] + '<br>' + getDateFormatted.shortDate(Escort['DateOfBirth']),
+      html: Escort.FirstName + " " + Escort.LastName + "<br>" + getDateFormatted.shortDate(Escort.DateOfBirth),
       classes: "govuk-!-width-two-thirds"
     }
+  ]
   ] %}
 {% endif %}
-
 
 
 {{ govukTable({
   caption: tableCaption | safe,
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
-  classes: 'govuk-!-margin-bottom-0',
+  classes: "govuk-!-margin-bottom-0",
   rows: [
     [
       {
         text: visitorType | safe,
-        classes: "claim-table-width-one-third"
+        classes: "govuk-!-width-one-third"
       },
       {
-        text: Claim['FirstName'] + ' ' + Claim['LastName'],
-        classes: "govuk-!-width-two-thirds"
+        text: Claim.FirstName + " " + Claim.LastName,
+        classes: "govuk-!-width-one-third"
+      },
+      {
+        text: "",
+        classes: "govuk-!-width-one-third"
       }
     ],
     [
       {
-        text: 'Date of birth',
-        classes: "claim-table-width-one-third"
+        text: "Date of birth",
+        classes: "govuk-!-width-one-third"
       },
       {
-        text: getDateFormatted.shortDate(Claim['DateOfBirth']),
-        classes: "govuk-!-width-two-thirds"
+        text: getDateFormatted.shortDate(Claim.DateOfBirth),
+        classes: "govuk-!-width-one-third"
+      },
+      {
+        text: "",
+        classes: "govuk-!-width-one-third"
       }
     ],
     [
       {
-        text: 'National Insurance number',
-        classes: "claim-table-width-one-third"
+        text: "National Insurance number",
+        classes: "govuk-!-width-one-third"
       },
       {
-        text: Claim['NationalInsuranceNumber'],
-        classes: "govuk-!-width-two-thirds"
+        text: Claim.NationalInsuranceNumber,
+        classes: "govuk-!-width-one-third"
+      },
+      {
+        text: "",
+        classes: "govuk-!-width-one-third"
       }
     ],
     [
       {
-        html: '<br><br>Home address<br><br><br>',
-        classes: "claim-table-width-one-third"
+        html: "Home address",
+        classes: "govuk-!-width-one-third vertical-align-middle "
       },
       {
-        html: Claim['HouseNumberAndStreet'] + '<br>' + Claim['Town'] + '<br>' + Claim['County'] + '<br>' + Claim['PostCode'] + '<br>' + Claim['Country'],
-        classes: "govuk-!-width-two-thirds"
+        html: Claim.HouseNumberAndStreet + "<br>" + Claim.Town + "<br>" + Claim.County + "<br>" + Claim.PostCode + "<br>" + Claim.Country,
+        classes: "govuk-!-width-one-third"
+      },
+      {
+        text: "",
+        classes: "govuk-!-width-one-third"
       }
     ],
     [
       {
-        text: 'Contact details',
-        classes: "claim-table-width-one-third"
+        text: "Contact details",
+        classes: "govuk-!-width-one-third"
       },
       {
         html: contactDetails | safe,
-        classes: "govuk-!-width-two-thirds"
-      }
-    ],
-    [
-      {
-        text: 'Prisoner relationship',
-        classes: "claim-table-width-one-third"
+        classes: "govuk-!-width-one-third claim-table-email-text"
       },
       {
-        html: prisonerRelationshipsEnum[Claim['Relationship']].displayName,
-        classes: "govuk-!-width-two-thirds"
+        html: changeContactDetails,
+        classes: "govuk-!-width-one-third"
       }
     ],
     [
       {
-        html: 'Benefit Information <br><br>',
-        classes: "claim-table-width-one-third",
-        errorMessage: errors['dwp-check'][0],
+        text: "Prisoner relationship",
+        classes: "govuk-!-width-one-third"
+      },
+      {
+        html: prisonerRelationshipsEnum[Claim.Relationship].displayName,
+        classes: "govuk-!-width-one-third"
+      },
+      {
+        text: "",
+        classes: "govuk-!-width-one-third"
+      }
+    ],
+    [
+      {
+        html: "Benefit Information",
+        classes: "govuk-!-width-one-third vertical-align-middle",
+        errorMessage: errors.dwp-check[0],
         id: "benefit-expiry"
       },
       {
-        html: benefit + '<br>',
-        classes: "govuk-!-width-two-thirds"
-      }
-    ],
-    [
-      {
-        text: 'Benefit Expiry',
-        classes: "claim-table-width-one-third",
-        errorMessage: errors['benefit-expiry'][0],
-        id: "dwp-check"
+        html: benefitInformation,
+        classes: "govuk-!-width-one-third"
       },
       {
-        html: expiryDate,
-        classes: "govuk-!-width-two-thirds"
+        html: benefitInformationButtons,
+        classes: "govuk-!-width-one-third vertical-align-middle"
       }
     ]
   ]
@@ -257,15 +299,38 @@
 
 {{ govukTable({
   firstCellIsHeader: true,
-  classes: 'govuk-!-margin-bottom-0',
+  classes: "govuk-!-margin-bottom-0",
+  rows: 
+[[
+      {
+        text: "Benefit Expiry",
+        classes: "govuk-!-width-one-third vertical-align-middle",
+        errorMessage: errors.benefit-expiry[0],
+        id: "dwp-check"
+      },
+      {
+        html: expiryDate,
+        classes: "govuk-!-width-one-third"
+      },
+      {
+        html: expiryDateButton,
+        classes: "govuk-!-width-one-third vertical-align-middle"
+      }
+    ]
+    ]
+}) }}
+
+{{ govukTable({
+  firstCellIsHeader: true,
+  classes: "govuk-!-margin-bottom-0",
   rows: childData
 }) }}
 
 {% if escort %}
   {{ govukTable({
     firstCellIsHeader: true,
-    classes: 'govuk-!-margin-bottom-0',
-    rows: [escort]
+    classes: "govuk-!-margin-bottom-0",
+    rows: escort
   }) }}
 {% endif %}
 
@@ -274,15 +339,17 @@
   rows: [
     [
       {
-        text: 'Payment method',
-        classes: "claim-table-width-one-third table-no-border-bottom"
+        text: "Payment method",
+        classes: "govuk-!-width-one-third table-no-border-bottom"
       },
       {
-        html: displayHelper.getPaymentMethodDisplayName(Claim['PaymentMethod']),
-        classes: "govuk-!-width-two-thirds table-no-border-bottom"
+        html: displayHelper.getPaymentMethodDisplayName(Claim.PaymentMethod),
+        classes: "govuk-!-width-one-third table-no-border-bottom"
+      },
+      {
+        text: '',
+        classes: "govuk-!-width-one-third table-no-border-bottom "
       }
     ]
   ]
 }) }}
-
-
