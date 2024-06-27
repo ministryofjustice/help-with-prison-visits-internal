@@ -12,18 +12,18 @@ $(function () {
     const id = $(this).attr('data-id')
     const value = $(this).val()
     if (value === 'APPROVED-DIFF-AMOUNT') {
-      $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-hidden').addClass('visibility-visible')
+      $(`#change-approved-cost`).removeClass('js-hidden')
       $(this).next('input').on('input').addClass('approved-amount')
       $(this).parent().parent().find('td.cost').removeClass('approved-amount')
       $('input.approved-amount').on('input', function () {
         totalApproved()
       })
     } else if (value === 'APPROVED') {
-      $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
+      $(`#change-approved-cost`).addClass('js-hidden')
       $(this).parent().parent().find('td.cost').addClass('approved-amount')
       $(this).next('input').on('input').removeClass('approved-amount')
     } else {
-      $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
+      $(`#change-approved-cost`).addClass('js-hidden')
       $(this).parent().parent().find('td.cost').removeClass('approved-amount')
       $(this).next('input').on('input').removeClass('approved-amount')
     } totalApproved()

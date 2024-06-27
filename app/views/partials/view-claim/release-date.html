@@ -1,6 +1,8 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+{# TODO: LOGIC NEEDED FOR SETTING NEW RELEASE DATE AS release-date-is-set IS NEEEDED IN THE POST#}
+
 {% set releaseDate %}
   {% if unlock %}
     <fieldset>
@@ -14,25 +16,28 @@
         items: [
           {
             name: "day",
-            id: "release-day-input",
+            id: "release-day",
             classes: "govuk-input--width-2",
             value: Claim.releaseDay
           },
           {
             name: "month",
-            id: "release-month-input",
+            id: "release-month",
             classes: "govuk-input--width-2",
             value: Claim.releaseMonth
           },
           {
             name: "year",
-            id: "release-year-input",
+            id: "release-year",
             classes: "govuk-input--width-4",
             value: Claim.releaseYear
           }
         ]
       }) }}
     </fieldset>
+    {% set saveButton %}
+ {# TODO: BUTTON HERE IN DESIGN #}
+{% endset %}
   {% else %}
     {% if Claim.ReleaseDate %}
       {{ getDateFormatted.shortDate(Claim.ReleaseDate) }}
@@ -40,15 +45,6 @@
       <span class="text-pending">Pending</span>
     {% endif %}
   {% endif %}
-{% endset %}
-
-{% set saveButton %}
-  {{ govukButton({
-    text: "Save release date",
-    type: "submit",
-    formaction: "/claim/28948/update-benefit-expiry-date",
-    classes: "govuk-button--secondary pull-right govuk-!-margin-bottom-0"
-  }) }}
 {% endset %}
 
 {{ govukTable({

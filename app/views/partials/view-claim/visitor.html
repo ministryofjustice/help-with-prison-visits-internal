@@ -65,8 +65,13 @@
     id: "dwp-status",
     name: "dwpCheck",
     classes: "action-select select-for-form govuk-!-margin-left-4 govuk-!-margin-top-1 govuk-!-margin-bottom-2",
-    errorMessage: errors.dwp-check[0],
+    errorMessage: errors['dwp-check'][0],
     items: [
+      {
+        value: "",
+        text: "Selected",
+        selected: ""
+      },
       {
         value: "APPROVED",
         text: "Approve",
@@ -84,7 +89,7 @@
       }
     ]
   }) }}
-  {% if document.DocumentStatus == 'upload-later' or 'post-later' %}
+  {% if document.DocumentStatus == 'upload-later' or document.DocumentStatus == 'post-later' %}
   {{ govukButton({
     text: "Add",
     id: "add-benefit-documentation-upload-later",
@@ -101,7 +106,7 @@
     {{ govukDateInput({
       id: "expiry-date-section",
       namePrefix: "expiry-date-section",
-      errorMessage: errors.benefit-expiry[0] ,
+      errorMessage: errors['benefit-expiry'][0] ,
       formGroup: {
         classes: 'govuk-!-margin-bottom-0'
       },
@@ -282,7 +287,7 @@
       {
         html: "Benefit Information",
         classes: "govuk-!-width-one-third vertical-align-middle",
-        errorMessage: errors.dwp-check[0],
+        errorMessage: errors['dwp-check'][0],
         id: "benefit-expiry"
       },
       {
@@ -305,7 +310,7 @@
       {
         text: "Benefit Expiry",
         classes: "govuk-!-width-one-third vertical-align-middle",
-        errorMessage: errors.benefit-expiry[0],
+        errorMessage: errors['benefit-expiry'][0],
         id: "dwp-check"
       },
       {

@@ -1,115 +1,219 @@
-{% if errors['claim-expense'][0] %}
-  <span class="error-message" id="error-message-status-request">{{ errors['claim-expense'][0] }}</span>
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% if errors.claim-expense[0] %}
+  <span class="error-message" id="error-message-status-request">{{ errors.claim-expense[0] }}</span>
 {% endif %}
 
-{% if errors['approve-cost'][0] %}
-  <span class="error-message" id="error-message-cost-request">{{ errors['approve-cost'][0] }}</span>
+{% if errors.approve-cost[0] %}
+  <span class="error-message" id="error-message-cost-request">{{ errors.approve-cost[0] }}</span>
 {% endif %}
 
-{% if errors['claim-expenses'][0] %}
-  <span class="error-message" id="claim-expenses">{{ errors['claim-expenses'][0] }}</span>
+{% if errors.claim-expenses[0] %}
+  <span class="error-message" id="claim-expenses">{{ errors.claim-expenses[0] }}</span>
 {% endif %}
 
-{% if errors['total-approved-cost'][0] %}
-<span class="error-message" id="total-approved-cost">{{ errors['total-approved-cost'][0] }}</span>
+{% if errors.total-approved-cost[0] %}
+<span class="error-message" id="total-approved-cost">{{ errors.total-approved-cost[0] }}</span>
 {% endif %}
 
-<table class="no-pad-right claim-expense">
-  <tbody>
-    {% for expense in Expenses %}
+{% set expenseData = [] %}
 
-      <tr class="form-group{% if expense['Status'] == 'Select' or expense['Error'] %} warning form-group-error {% endif %}">
-        <td><span class="bold">{{ getDisplayFieldName[expense['ExpenseType']] }} </span>
-          <br>
-          {# car expenses have styling for distance calculation and their data is not entered directly by users so is safe #}
-          {% if expense['ExpenseType'] == 'car' %}{{ getClaimExpenseDetailFormatted(expense) | safe }}{% else %}{{ getClaimExpenseDetailFormatted(expense) }}{% endif %}
-          <input id="claim-expense-{{ expense.ClaimExpenseId }}-cost" name="claim-expense-{{ expense.ClaimExpenseId }}-cost" type="hidden" value="{{ expense['Cost'] }}">
-        </td>
+{% for expense in Expenses %}
 
-        <td class="cost">£{{ displayHelper.toDecimal(expense['Cost']) }}</td>
+{% set expenseSelectItems = [
+  {
+    value: undefined,
+    text: "Select",
+    selected: expense.Status == undefined
+  }
+] %}
 
-        <td>
-          {% if receiptAndProcessedManuallyEnum[expense.ExpenseType].receiptRequired %}
-            {% if expense.DocumentStatus == 'uploaded' %}
-              <a href="/claim/{{ Claim['ClaimId'] }}/download?claim-document-id={{ expense['ClaimDocumentId'] }}">View receipt</a>
+{% if expense.Cost > 0 %}
+  {% set expenseSelectItems = expenseSelectItems | concat([{
+    value: claimDecisionEnum.APPROVED,
+    text: "Approve",
+    selected: expense.Status == claimDecisionEnum.APPROVED
+  }]) %}
+{% endif %}
 
-            {% elif expense.DocumentStatus == 'upload-later' %}
-              <span class="text-pending">To be uploaded later</span>
-              {% if unlock %}
-              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
-              {% endif %}
+{% if not Claim.IsAdvanceClaim or not receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
+  {% set expenseSelectItems = expenseSelectItems | concat([{
+    value: claimDecisionEnum.APPROVED_DIFF_AMOUNT,
+    text: "Approve different amount",
+    selected: expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT
+  }]) %}
+{% endif %}
 
-            {% elif expense.DocumentStatus == 'post-later' %}
-              <span class="text-pending">To be posted later</span>
-              {% if unlock %}
-              <a href="/claim/file-upload/{{ Claim['Reference'] }}/{{ Claim['ClaimId'] }}/RECEIPT?eligibilityId={{ Claim['EligibilityId'] }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}" class="button grey pull-right">Add</a>
-              {% endif %}
+{% set expenseSelectItems = expenseSelectItems | concat([{
+  value: "REQUEST-INFORMATION",
+  text: "Request information",
+  selected: expense.Status == claimDecisionEnum.REQUEST_INFORMATION
+}]) %}
 
-            {% elif Claim.IsAdvanceClaim %}
-              <span class="text-pending">Receipt to be uploaded after visit</span>
+{% if Claim.IsAdvanceClaim and receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
+  {% set expenseSelectItems = expenseSelectItems | concat([{
+    value: "MANUALLY_PROCESSED",
+    text: "Booked tickets using Redfern",
+    selected: expense.Status == claimDecisionEnum.MANUALLY_PROCESSED
+  }]) %}
+{% endif %}
 
-            {% else %}
-              <span class="text-warning">Receipt required</span>
+{% set expenseSelectItems = expenseSelectItems | concat([{
+  value: "REJECTED",
+  text: "Reject item",
+  selected: expense.Status == claimDecisionEnum.REJECTED 
+}]) %}
 
-            {% endif %}
-          {% endif %}
-        </td>
+{% set expenseOverview %}
+<span> {{ getDisplayFieldName[expense.ExpenseType] }} </span>
+<p class="govuk-body govuk-!-margin-bottom-0">{% if expense.ExpenseType == 'car' %}{{ getClaimExpenseDetailFormatted(expense) | safe }}{% else %}{{ getClaimExpenseDetailFormatted(expense) }}{% endif %}</p>
+{% endset %}
 
-        <td class="claim-expense-response">
-        {% if unlock %}
-          <select id="claim-expense-{{ expense.ClaimExpenseId }}-status" data-id="{{ expense.ClaimExpenseId }}" name="claim-expense-{{ expense.ClaimExpenseId }}-status"
-            class="form-control action-select claim-expense-status{% if expense['Status'] == 'Select' or expense['Error'] %} form-control-error {% endif %}">
-            <option {% if expense['Status'] == undefined %} selected {% endif %}>Select</option>
-            {% if expense['Cost'] > 0 %}
-            <option {% if expense['Status'] == claimDecisionEnum.APPROVED %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED }}">Approve</option>
-            {% endif %}
-            {% if not Claim['IsAdvanceClaim'] or not receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
-            <option {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} selected {% endif %} value="{{ claimDecisionEnum.APPROVED_DIFF_AMOUNT }}" >Approve different amount</option>
-            {% endif %}
-            <option {% if expense['Status'] == claimDecisionEnum.REQUEST_INFORMATION %} selected {% endif %} value="{{ claimDecisionEnum.REQUEST_INFORMATION }}">Request information</option>
-            {% if Claim['IsAdvanceClaim'] and receiptAndProcessedManuallyEnum[expense.ExpenseType].processedManually %}
-            <option {% if expense['Status'] == claimDecisionEnum.MANUALLY_PROCESSED %} selected {% endif %} value="{{ claimDecisionEnum.MANUALLY_PROCESSED }}">Booked tickets using Redfern</option>
-            {% endif %}
-            <option {% if expense['Status'] == claimDecisionEnum.REJECTED %} selected {% endif %} value="{{ claimDecisionEnum.REJECTED }}">Reject item</option>
-          </select>
-          <input id="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" type="text"
-            name="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ displayHelper.toDecimal(expense['ApprovedCost']) }}"
-            class="form-control cost
-              {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %}
-                visibility-visible
-              {% else %}
-                visibility-hidden
-              {% endif %}">
-        {% else %}
-          {% if expense['ApprovedCost'] %} £{{ displayHelper.toDecimal(expense['ApprovedCost']) }} {% endif %}
-          <input id="claim-expense-hidden-{{ expense.ClaimExpenseId }}-approvedcost" type="hidden"
-            name="claim-expense-hidden-{{ expense.ClaimExpenseId }}-approvedcost" value="{{ displayHelper.toDecimal(expense['ApprovedCost']) }}"
-            class="form-control approved-cost">
-        {% endif %}
-        </td>
-      </tr>
+{% set expenseButtons %}
+{% if unlock %}
+  {{ govukSelect({
+    formGroup: {
+      classes: "select-for-form"
+    },
+    id:"claim-expense-" + expense.ClaimExpenseId + "-status",
+    name: "claim-expense-" + expense.ClaimExpenseId + "-status",
+    classes: "action-select select-for-form govuk-!-margin-left-4 govuk-!-margin-top-1 govuk-!-margin-bottom-2 claim-expense-status",
+    errorMessage: expense.Status == 'Select' or expense.Error,
+    items: expenseSelectItems
+  }) }}
 
-    {% endfor %}
+  {{ govukInput({
+    classes: "govuk-input--width-4 govuk-!-margin-top-1 js-hidden approved-cost cost approved-amount",
+    value: displayHelper.toDecimal(expense.ApprovedCost) ,
+    id: "change-approved-cost",
+    name: "change-approved-cost",
+    inputmode: "numeric",
+    spellcheck: false
+  }) }}
 
-    {% for deduction in deductions %}
-    <tr>
-      <td>
-        <span class="bold">{{ displayHelper.getDeductionTypeDisplayName(deduction.DeductionType) }}</span>
-        <br>
-        Deduction
-      </td>
-      <td class="deduction">-£{{ displayHelper.toDecimal(deduction['Amount']) }}</td>
-      <td></td>
-      <td>{% if unlock %}<input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/remove-deduction" name='remove-deduction-{{ deduction.ClaimDeductionId }}' class='button pull-right grey remove-deduction-button' value='Remove'>{% endif %}</td>
-    </tr>
-    {% endfor %}
+  {% if expense.DocumentStatus == 'upload-later' or expense.DocumentStatus == 'post-later'%}
+  {{ govukButton({
+    text: "Add",
+    id: "add-benefit-documentation-upload-later",
+    href: "/claim/file-upload/{{ Claim.Reference }}/{{ Claim.ClaimId }}/RECEIPT?eligibilityId={{ Claim.EligibilityId }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}",
+    classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-1 edit-claim-button govuk-button--secondary pull-right"
+  }) }}        
+  {% endif %}
 
-    <tr {% if errors['total-approved-cost'] %} class="warning" {% else %} class="no-border total-approved-cost"{% endif %}>
-      <td class="text-left"><h3 class="heading-small space-right">Total approved cost:</h3></td>
-      <td><h3 class="heading-small claim-expense-approvedCostText">£0.00</h3></td>
-      <td></td>
-      <td></td>
-    </tr>
+{% endif %}
+{% endset %}
 
-  </tbody>
-</table>
+{% set expenseDocumentStatus %}
+<span class="govuk-!-margin-right-4"> {{ displayHelper.toDecimal(expense.Cost)}} </span>
+{% if receiptAndProcessedManuallyEnum[expense.ExpenseType].receiptRequired %}
+{% if expense.DocumentStatus == 'uploaded' %}
+  <a href="/claim/{{ Claim.ClaimId }}/download?claim-document-id={{ expense.ClaimDocumentId }}">View receipt</a>
+
+{% elif expense.DocumentStatus == 'upload-later' %}
+  <span class="text-pending">To be uploaded later</span>
+
+{% elif expense.DocumentStatus == 'post-later' %}
+  <span class="text-pending">To be posted later</span>
+
+{% elif Claim.IsAdvanceClaim %}
+  <span class="text-pending">Receipt to be uploaded after visit</span>
+
+{% else %}
+  <span class="text-warning">Receipt required</span>
+
+{% endif %}
+{% endif %}
+{% endset %}
+
+{% set expenseRow = [
+  {
+    html: expenseOverview,
+    classes: "claim-table-width-one-third"
+  },
+  {
+    html: expenseDocumentStatus,
+    classes: "govuk-!-width-one-third vertical-align-middle"
+  },
+  {
+    html: expenseButtons,
+    classes: "govuk-!-width-one-third vertical-align-bottom"
+  }
+] %}
+
+{% set expenseData = expenseData | concat([expenseRow]) %}
+{% endfor %}
+
+{{ govukTable({
+  caption: "Claim",
+  captionClasses: "govuk-table__caption--l",
+  firstCellIsHeader: true,
+  classes: "govuk-!-margin-bottom-0",
+  rows: expenseData
+}) }}
+
+{% set deductionData = [] %}
+{% for deduction in deductions %}
+
+{% set deductionOverview %}
+<span> {{ displayHelper.getDeductionTypeDisplayName(deduction.DeductionType) }} </span>
+<p class="govuk-body govuk-!-margin-bottom-0">Deduction</p>
+{% endset %}
+
+{% set deductionButton %}
+{{ govukButton({
+  text: "Remove",
+  type: "submit",
+  name: "remove-deduction-" + deduction.ClaimDeductionId + " ", 
+  id: "remove-deduction-" + deduction.ClaimDeductionId + " ",
+  attributes: {
+    formaction: "/claim/" + Claim.ClaimId + "/remove-deduction"
+  },
+  classes: "govuk-button--secondary govuk-!-margin-bottom-0 pull-right"
+}) }}
+{% endset %}
+
+{% set deductionRow = [
+  {
+    html: deductionOverview,
+    classes: "govuk-!-width-one-third cost "
+  },
+  {
+    html: "- £" + displayHelper.toDecimal(deduction.Amount),
+    classes: "govuk-!-width-one-third vertical-align-middle deduction"
+  },
+  {
+    html: deductionButton,
+    classes: "govuk-!-width-two-thirds vertical-align-middle"
+  }
+] %}
+{% set deductionData = deductionData | concat([deductionRow]) %}
+{% endfor %}
+
+{{ govukTable({
+  firstCellIsHeader: true,
+  classes: "govuk-!-margin-bottom-0",
+  rows: deductionData
+}) }}
+
+
+{{ govukTable({
+  firstCellIsHeader: true,
+  classes: "govuk-!-margin-bottom-0 total-approved-cost table-no-border-bottom",
+  errorMessage: errors.total-approved-cost,
+  rows: [[
+  {
+    text: "Total approved cost:",
+    classes: "claim-table-width-one-third"
+  },
+  {
+    html: "£0.00",
+    classes: "govuk-!-width-one-third govuk-!-font-weight-bold claim-expense-approvedCostText"
+  },
+  {
+    html: '',
+    classes: "govuk-!-width-one-third "
+  }
+  ]]
+}) }}
