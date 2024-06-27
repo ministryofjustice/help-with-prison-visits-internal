@@ -12,21 +12,22 @@ $(function () {
     const id = $(this).attr('data-id')
     const value = $(this).val()
     if (value === 'APPROVED-DIFF-AMOUNT') {
-      $(`#change-approved-cost`).removeClass('js-hidden')
-      $(this).next('input').on('input').addClass('approved-amount')
-      $(this).parent().parent().find('td.cost').removeClass('approved-amount')
+      $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-hidden').addClass('visibility-visible')
+      $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
+      $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
       $('input.approved-amount').on('input', function () {
         totalApproved()
       })
     } else if (value === 'APPROVED') {
-      $(`#change-approved-cost`).addClass('js-hidden')
-      $(this).parent().parent().find('td.cost').addClass('approved-amount')
-      $(this).next('input').on('input').removeClass('approved-amount')
+      $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
+      $(`#claim-expense-${id}-claimedcost`).addClass('approved-amount')
+      $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
     } else {
-      $(`#change-approved-cost`).addClass('js-hidden')
-      $(this).parent().parent().find('td.cost').removeClass('approved-amount')
-      $(this).next('input').on('input').removeClass('approved-amount')
-    } totalApproved()
+      $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
+      $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
+      $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
+    }
+    totalApproved()
   })
 
   $('input[value="Remove"]').parent().parent().find('td.deduction').addClass('approved-amount')
@@ -36,14 +37,14 @@ $(function () {
 
   $('.claim-expense-status').each(function () {
     const value = this[this.selectedIndex].value
+    const id = $(this).attr('data-id')
     if (value === 'APPROVED') {
-      $(this).parent().parent().find('td.cost').addClass('approved-amount')
-      $(this).next('input').removeClass('approved-amount')
+      $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
     } else if (value === 'APPROVED-DIFF-AMOUNT') {
-      $(this).next('input').addClass('approved-amount')
-      $(this).parent().parent().find('td.cost').removeClass('approved-amount')
+      $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
+      $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
     } else {
-      $(this).parent().parent().find('td.cost').removeClass('approved-amount')
+      $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
     }
   })
 
@@ -78,29 +79,31 @@ $(function () {
 function totalApproved () {
   let approvedCost = 0
   let manuallyProcessed = 0
-
   if ($('#unassign').length) {
-    $('input.approved-amount').each(function () {
+    $('.approved-amount').each(function () {
       if (!isNaN(this.value) && this.value.length !== 0 && this.value.indexOf('e') === -1 && this.value.indexOf('E') === -1) {
         manuallyProcessed += parseFloat(this.value)
       }
-    })
-
-    $('td.approved-amount').each(function () {
       approvedCost += +$(this).text().replace('£', '')
+    })
+    $('.deduction').each(function () {
+      approvedCost += +$(this).text().replace(' £', '')
     })
   } else { // use hidden approved cost for unassigned claims
-    $('input.approved-cost').each(function () {
-      if (!isNaN(this.value) && this.value.length !== 0) {
-        approvedCost += parseFloat(this.value)
+    $('.approved-cost').each(function () {
+      const parsedCost = parseFloat(+$(this).text().replace('£', ''))
+      if (!isNaN(parsedCost) && parsedCost !== 0) {
+        approvedCost += parsedCost
       }
     })
-    $('td.deduction').each(function () {
-      approvedCost += +$(this).text().replace('£', '')
+    $('.deduction').each(function () {
+      approvedCost += +$(this).text().replace(' £', '')
     })
   }
 
-  $('.claim-expense-approvedCostText').text('£' + (approvedCost + manuallyProcessed).toFixed(2))
+  const totalCost = approvedCost + manuallyProcessed
+  const formattedCost = totalCost < 0 ? '- £' + Math.abs(totalCost).toFixed(2) : '£' + totalCost.toFixed(2)
+  $('.claim-expense-approvedCostText').text(formattedCost)
 }
 
 function showClosedClaimActionSection (id) {
