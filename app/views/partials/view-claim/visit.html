@@ -4,14 +4,14 @@
 {% set dateOfVisit %}
   {{ getDateFormatted.shortDate(Claim.DateOfJourney) }}
 
-  {% if Claim.visitConfirmation['DocumentStatus'] == 'uploaded' %}
+  {% if Claim.visitConfirmation.DocumentStatus == 'uploaded' %}
     <a class="govuk-!-margin-4" href="/claim/{{ Claim.ClaimId }}/download?claim-document-id={{ Claim.visitConfirmation.ClaimDocumentId }}">View confirmation</a>
   {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
     <span class="text-pending govuk-!-margin-4">To be uploaded later</span>
     {% if unlock %}
       <a href="/claim/file-upload/{{ Claim.Reference }}/{{ Claim.ClaimId }}/VISIT_CONFIRMATION?eligibilityId={{ Claim.EligibilityId }}&claimDocumentId={{ Claim.visitConfirmation.ClaimDocumentId }}" id="add-visit-confirmation-upload-later" class="button grey pull-right">Add</a>
     {% endif %}
-  {% elif Claim.visitConfirmation['DocumentStatus'] == 'post-later' %}
+  {% elif Claim.visitConfirmation.DocumentStatus == 'post-later' %}
     <span class="text-pending govuk-!-margin-4">To be posted later</span>
     {% if unlock %}
       <a href="/claim/file-upload/{{ Claim.Reference }}/{{ Claim.ClaimId }}/VISIT_CONFIRMATION?eligibilityId={{ Claim.EligibilityId }}&claimDocumentId={{ Claim.visitConfirmation.ClaimDocumentId }}" id="add-visit-confirmation-post-later" class="button grey pull-right">Add</a>
