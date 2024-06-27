@@ -28,8 +28,7 @@
 
 
 {% set benefitInformation %}
-<span class=""> {{ displayHelper.getBenefitDisplayName(Claim.Benefit) }}</span>
-<br>
+<span class="govuk-!-margin-right-2"> {{ displayHelper.getBenefitDisplayName(Claim.Benefit) }}</span>
   {% if displayHelper.getBenefitRequireUpload(Claim.Benefit) or Claim.benefitDocument.length > 0 %}
     {% for document in Claim.benefitDocument %}
       {% if document.DocumentStatus == 'uploaded' %}
@@ -95,7 +94,7 @@
   {{ govukButton({
     text: "Add",
     id: "add-benefit-documentation-upload-later",
-    href: "/claim/file-upload/"+ Claim.Reference + "/" + Claim.ClaimId + "/" + Claim.Benefit + "?eligibilityId=" + Claim.EligibilityId + "&claimDocumentId=" + document.ClaimDocumentId,
+    href: "/claim/file-upload/" + Claim.Reference + "/" + Claim.ClaimId + "/" + Claim.Benefit + "?eligibilityId=" + Claim.EligibilityId + "&claimDocumentId=" + document.ClaimDocumentId,
     classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-1 edit-claim-button govuk-button--secondary pull-right"
   }) }}        
 {% endif %}
@@ -185,11 +184,11 @@
     [
     {
       text: "Escort",
-      classes: "govuk-!-width-one-third"
+      classes: "govuk-!-width-one-third vertical-align-middle"
     },
     {
       html: Escort.FirstName + " " + Escort.LastName + "<br>" + getDateFormatted.shortDate(Escort.DateOfBirth),
-      classes: "govuk-!-width-two-thirds"
+      classes: "govuk-!-width-two-thirds "
     }
   ]
   ] %}
@@ -295,7 +294,7 @@
       },
       {
         html: benefitInformation,
-        classes: "govuk-!-width-one-third"
+        classes: "govuk-!-width-one-third vertical-align-middle"
       },
       {
         html: benefitInformationButtons,
@@ -348,7 +347,7 @@
     [
       {
         text: "Payment method",
-        classes: "govuk-!-width-one-third table-no-border-bottom"
+        classes: "govuk-!-width-one-third table-no-border-bottom "
       },
       {
         html: displayHelper.getPaymentMethodDisplayName(Claim.PaymentMethod),

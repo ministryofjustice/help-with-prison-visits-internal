@@ -1,6 +1,7 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% if errors.claim-expense[0] %}
   <span class="error-message" id="error-message-status-request">{{ errors.claim-expense[0] }}</span>
@@ -91,7 +92,8 @@
           text: "Change approved cost for " + getDisplayFieldName[expense.ExpenseType],
           classes: "govuk-visually-hidden"
         },
-        classes: inputVisibility + " govuk-input--width-4 claim-expense-input-height approved-cost",
+        errorMessage: '',
+        classes: inputVisibility + " govuk-input--width-4 claim-expense-input-height approved-cost govuk-!-margin-left-2",
         value: displayHelper.toDecimal(expense.Cost),
         id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
         name: expense.ClaimExpenseId,
@@ -103,15 +105,15 @@
         {{ govukButton({
           text: "Add",
           id: "add-benefit-documentation-upload-later",
-          href: "/claim/file-upload/{{ Claim.Reference }}/{{ Claim.ClaimId }}/RECEIPT?eligibilityId={{ Claim.EligibilityId }}&claimExpenseId={{ expense.ClaimExpenseId }}&claimDocumentId={{ expense.ClaimDocumentId }}",
-          classes: "edit-claim-button govuk-button--secondary pull-right"
+          href: "/claim/file-upload/" + Claim.Reference + "/" + Claim.ClaimId + "/RECEIPT?eligibilityId=" + Claim.EligibilityId + "&claimExpenseId=" + expense.ClaimExpenseId + "&claimDocumentId=" + expense.ClaimDocumentId ,
+          classes: "edit-claim-button govuk-button--secondary pull-right govuk-!-margin-bottom-0 "
         }) }}
       {% endif %}
     {% endif %}
   {% endset %}
 
   {% set expenseDocumentStatus %}
-    <span class="govuk-!-margin-right-4 cost{% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} approved-cost{% endif %}" id="claim-expense-{{expense.ClaimExpenseId}}-claimedcost">£{{ displayHelper.toDecimal(expense.Cost) }}</span>
+    <span class="govuk-!-margin-right-2 cost{% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} approved-cost{% endif %}" id="claim-expense-{{expense.ClaimExpenseId}}-claimedcost">£{{ displayHelper.toDecimal(expense.Cost) }}</span>
     {% if receiptAndProcessedManuallyEnum[expense.ExpenseType].receiptRequired %}
       {% if expense.DocumentStatus == 'uploaded' %}
         <a href="/claim/{{ Claim.ClaimId }}/download?claim-document-id={{ expense.ClaimDocumentId }}">View receipt</a>

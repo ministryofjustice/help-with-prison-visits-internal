@@ -1,3 +1,9 @@
+{# PAGE IS WIP #}
+
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
 {% if unlock %}
 <h1 class="table-heading">Deduction</h1>
 <table>
@@ -20,3 +26,83 @@
   </tbody>
 </table>
 {% endif %}
+
+{% set deductionSelect %}
+<p>Type</p>
+{{ govukSelect({
+  id: "deductionType",
+  name: "deductionType",
+  classes: "govuk-!-margin-bottom-0 govuk-!-margin-left-1",
+  errorMessage: errors['deductionType'][0],
+  items: [
+    {
+      value: "",
+      text: "Select",
+      selected: true
+    },
+    {
+      value: "hc3",
+      text: displayHelper.getDeductionTypeDisplayName('hc3'),
+      selected: ''
+    },
+    {
+      value: "overpayment",
+      text: displayHelper.getDeductionTypeDisplayName('overpayment'),
+      selected: ''
+    }
+  ]
+}) }}
+{% endset %}
+
+{% set deductionAmount %}
+{{ govukInput({
+  label: {
+    text: "Deduction amount",
+    classes: "govuk-visually-hidden"
+  },
+  errorMessage: errors['deductionAmount'][0],
+  formGroup: {
+    classes: "govuk-!-margin-bottom-0 govuk-!-margin-left-1"
+  },
+  classes: " govuk-input--width-4",
+  value: '',
+  id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
+  name: expense.ClaimExpenseId,
+  inputmode: "numeric",
+  spellcheck: false
+}) }}
+{% endset %}
+
+{% set deductionButton %}
+{{ govukButton({
+  text: "Add",
+  id: "add-deduction",
+  name: "add-deduction",
+  attributes: {
+    formaction: "/claim/" +  Claim['ClaimId'] + "/add-deduction"
+  },
+  classes: "govuk-!-margin-bottom-0 edit-claim-button govuk-button--secondary pull-right"
+}) }}      
+{% endset %}
+
+{{ govukTable({
+  caption: "Deduction",
+  captionClasses: "govuk-table__caption--l",
+  errorMessage: '',
+  rows: [
+    [
+      {
+        html: deductionSelect,
+        classes: "claim-table-width-one-third vertical-align-middle"
+      },
+      {
+        html:  deductionAmount,
+        classes: "govuk-!-width-one-third vertical-align-middle "
+      },
+      {
+        html: deductionButton,
+        classes: "govuk-!-width-one-third vertical-align-middle"
+      }
+    ]
+  ]
+}) }}

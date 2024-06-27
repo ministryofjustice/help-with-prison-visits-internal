@@ -1,32 +1,31 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set dateOfVisit %}
-  {{ getDateFormatted.shortDate(Claim.DateOfJourney) }}
-
+  <span class="govuk-!-margin-right-2">{{ getDateFormatted.shortDate(Claim.DateOfJourney) }}</span>
   {% if Claim.visitConfirmation.DocumentStatus == 'uploaded' %}
-    <a class="govuk-!-margin-4" href="/claim/{{ Claim.ClaimId }}/download?claim-document-id={{ Claim.visitConfirmation.ClaimDocumentId }}">View confirmation</a>
+    <a class="" href="/claim/{{ Claim.ClaimId }}/download?claim-document-id={{ Claim.visitConfirmation.ClaimDocumentId }}">View confirmation</a>
   {% elif Claim.visitConfirmation['DocumentStatus'] == 'upload-later' %}
-    <span class="text-pending govuk-!-margin-4">To be uploaded later</span>
-    {% if unlock %}
-      <a href="/claim/file-upload/{{ Claim.Reference }}/{{ Claim.ClaimId }}/VISIT_CONFIRMATION?eligibilityId={{ Claim.EligibilityId }}&claimDocumentId={{ Claim.visitConfirmation.ClaimDocumentId }}" id="add-visit-confirmation-upload-later" class="button grey pull-right">Add</a>
-    {% endif %}
+    <span class="text-pending">To be uploaded later</span>
   {% elif Claim.visitConfirmation.DocumentStatus == 'post-later' %}
-    <span class="text-pending govuk-!-margin-4">To be posted later</span>
-    {% if unlock %}
-      <a href="/claim/file-upload/{{ Claim.Reference }}/{{ Claim.ClaimId }}/VISIT_CONFIRMATION?eligibilityId={{ Claim.EligibilityId }}&claimDocumentId={{ Claim.visitConfirmation.ClaimDocumentId }}" id="add-visit-confirmation-post-later" class="button grey pull-right">Add</a>
-    {% endif %}
+    <span class="text-pending">To be posted later</span>
   {% elif Claim.IsAdvanceClaim %}
-    <span class="text-pending govuk-!-margin-4">Visit confirmation to be uploaded after visit</span>
+    <span class="text-pending">Visit confirmation to be uploaded after visit</span>
   {% else %}
-    <span class="text-warning govuk-!-margin-4">Visit confirmation required</span>
+    <span class="text-warning">Visit confirmation required</span>
   {% endif %}
+{% endset %}
 
+{% set dateOfVisitButtons %}
   {% if not Claim.IsAdvanceClaim and unlock %}
     {{ govukSelect({
+      formGroup: {
+        classes: "select-for-form"
+      },
       id: "visit-confirmation-check",
       name: "visitConfirmationCheck",
-      classes: "action-select",
+      classes: "action-select select-for-form govuk-!-margin-left-4 govuk-!-margin-top-1 govuk-!-margin-bottom-2",
       errorMessage: errors.visit-confirmation-check[0],
       formGroup: {
         classes: "select-for-form"
@@ -54,10 +53,19 @@
         }
       ]
     }) }}
+    {% if Claim.visitConfirmation.DocumentStatus == 'upload-later' or Claim.visitConfirmation.DocumentStatus == 'post-later' %}
+    {{ govukButton({
+      text: "Add",
+      id: "add-visit-confirmation-upload-later",
+      href: "/claim/file-upload/" + Claim.Reference + "/" + Claim.ClaimId + "/VISIT_CONFIRMATION?eligibilityId=" + Claim.EligibilityId + "&claimDocumentId=" + Claim.visitConfirmation.ClaimDocumentId ,
+      classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-1 edit-claim-button govuk-button--secondary pull-right"
+    }) }}
+    {% endif %}
   {% else %}
     <input type="hidden" name="isAdvanceClaim" value="{{ Claim.IsAdvanceClaim }}">
   {% endif %}
 {% endset %}
+
 
 {{ govukTable({
   caption: "Visit",
@@ -68,11 +76,15 @@
     [
       {
         text: "Date of visit",
-        classes: "claim-table-width-one-third"
+        classes: "claim-table-width-one-third vertical-align-middle"
       },
       {
         html: dateOfVisit,
-        classes: "govuk-!-width-two-thirds"
+        classes: "govuk-!-width-one-third vertical-align-middle"
+      },
+      {
+        html: dateOfVisitButtons,
+        classes: "govuk-!-width-one-third vertical-align-middle"
       }
     ]
   ]

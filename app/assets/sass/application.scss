@@ -258,9 +258,11 @@ span.bold {
 
 .visibility-visible {
   visibility: visible;
+  display: block;
 }
 .visibility-hidden {
   visibility: hidden;
+  display: none;
 }
 .display-none {
   display: none;
