@@ -29,6 +29,7 @@
 
 {% set benefitInformation %}
 <span class="govuk-!-margin-right-2"> {{ displayHelper.getBenefitDisplayName(Claim.Benefit) }}</span>
+<br>
   {% if displayHelper.getBenefitRequireUpload(Claim.Benefit) or Claim.benefitDocument.length > 0 %}
     {% for document in Claim.benefitDocument %}
       {% if document.DocumentStatus == 'uploaded' %}

@@ -1,108 +1,91 @@
-{# PAGE IS WIP #}
-
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% if unlock %}
-<h1 class="table-heading">Deduction</h1>
-<table>
-  <tbody>
-    <tr class="form-group{% if errors['deductionType'][0] or errors['deductionAmount'][0] %} form-group-error warning {% endif %}">
-      <td>
-        Type: <select id="deductionType" name="deductionType" class="form-control{% if errors['deductionType'][0] %} form-control-error {% endif %}">
-          <option selected>Select</option>
-          <option value="hc3">{{ displayHelper.getDeductionTypeDisplayName('hc3') }}</option>
-          <option value="overpayment">{{ displayHelper.getDeductionTypeDisplayName('overpayment') }}</option>
-        </select>
-      </td>
-      <td>
-        Amount: <input id="deductionAmount" name="deductionAmount" type="text" class="form-control{% if errors['deductionAmount'][0] %} form-control-error {% endif %}">
-      </td>
-      <td>
-        <input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/add-deduction" class="button pull-right grey" name="add-deduction" id="add-deduction" value="Add">
-      </td>
-    </tr>
-  </tbody>
-</table>
+    {% set deductionSelect %}
+        <span class="select-for-deduction govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Type</span>
+        {{ govukSelect({
+          id: "deductionType",
+          name: "deductionType",
+          classes: "govuk-!-margin-bottom-0 ",
+          formGroup: {
+            classes: "govuk-!-margin-top-1 select-for-deduction"
+          },
+          errorMessage: errors['deductionType'][0],
+          items: [
+            {
+              value: "",
+              text: "Select",
+              selected: true
+            },
+            {
+              value: "hc3",
+              text: displayHelper.getDeductionTypeDisplayName('hc3')
+            },
+            {
+              value: "overpayment",
+              text: displayHelper.getDeductionTypeDisplayName('overpayment')
+            }
+          ]
+        }) }}
+    {% endset %}
+
+    {% set deductionAmount %}
+        <span class="select-for-deduction govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Amount</span>
+        {{ govukInput({
+          label: {
+            text: "Deduction amount",
+            classes: "govuk-visually-hidden"
+          },
+          errorMessage: errors['deductionAmount'][0],
+          formGroup: {
+            classes: "govuk-!-margin-bottom-0 select-for-deduction"
+          },
+          classes: " govuk-input--width-4 ",
+          prefix: {
+            text: "£"
+          },
+          value: '',
+          id: "deductionAmount",
+          name: "deductionAmount",
+          inputmode: "numeric",
+          spellcheck: false
+        }) }}
+    {% endset %}
+
+    {% set deductionButton %}
+        {{ govukButton({
+          text: "Add",
+          id: "add-deduction",
+          type: "submit",
+          name: "add-deduction",
+          attributes: {
+            formaction: "/claim/" +  Claim['ClaimId'] + "/add-deduction"
+          },
+          classes: "govuk-!-margin-bottom-0 edit-claim-button govuk-button--secondary pull-right"
+        }) }}      
+    {% endset %}
+
+    {{ govukTable({
+      caption: "Deduction",
+      captionClasses: "govuk-table__caption--l",
+      errorMessage: '',
+      rows: [
+        [
+          {
+            html: deductionSelect,
+            classes: "claim-table-width-one-third vertical-align-middle "
+          },
+          {
+            html: deductionAmount,
+            classes: "govuk-!-width-one-third vertical-align-middle "
+          },
+          {
+            html: deductionButton,
+            classes: "govuk-!-width-one-third vertical-align-middle"
+          }
+        ]
+      ]
+    }) }}
 {% endif %}
-
-{% set deductionSelect %}
-<p>Type</p>
-{{ govukSelect({
-  id: "deductionType",
-  name: "deductionType",
-  classes: "govuk-!-margin-bottom-0 govuk-!-margin-left-1",
-  errorMessage: errors['deductionType'][0],
-  items: [
-    {
-      value: "",
-      text: "Select",
-      selected: true
-    },
-    {
-      value: "hc3",
-      text: displayHelper.getDeductionTypeDisplayName('hc3'),
-      selected: ''
-    },
-    {
-      value: "overpayment",
-      text: displayHelper.getDeductionTypeDisplayName('overpayment'),
-      selected: ''
-    }
-  ]
-}) }}
-{% endset %}
-
-{% set deductionAmount %}
-{{ govukInput({
-  label: {
-    text: "Deduction amount",
-    classes: "govuk-visually-hidden"
-  },
-  errorMessage: errors['deductionAmount'][0],
-  formGroup: {
-    classes: "govuk-!-margin-bottom-0 govuk-!-margin-left-1"
-  },
-  classes: " govuk-input--width-4",
-  value: '',
-  id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
-  name: expense.ClaimExpenseId,
-  inputmode: "numeric",
-  spellcheck: false
-}) }}
-{% endset %}
-
-{% set deductionButton %}
-{{ govukButton({
-  text: "Add",
-  id: "add-deduction",
-  name: "add-deduction",
-  attributes: {
-    formaction: "/claim/" +  Claim['ClaimId'] + "/add-deduction"
-  },
-  classes: "govuk-!-margin-bottom-0 edit-claim-button govuk-button--secondary pull-right"
-}) }}      
-{% endset %}
-
-{{ govukTable({
-  caption: "Deduction",
-  captionClasses: "govuk-table__caption--l",
-  errorMessage: '',
-  rows: [
-    [
-      {
-        html: deductionSelect,
-        classes: "claim-table-width-one-third vertical-align-middle"
-      },
-      {
-        html:  deductionAmount,
-        classes: "govuk-!-width-one-third vertical-align-middle "
-      },
-      {
-        html: deductionButton,
-        classes: "govuk-!-width-one-third vertical-align-middle"
-      }
-    ]
-  ]
-}) }}
