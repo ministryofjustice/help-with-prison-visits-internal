@@ -87,13 +87,16 @@
       {% endset %}
 
       {{ govukInput({
-        formGroup: { classes: "select-for-form" },
+        formGroup: { classes: "claim-expense-input-height select-for-form govuk-!-margin-left-2" + inputVisibility + "claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
         label: {
-          text: "Change approved cost for " + getDisplayFieldName[expense.ExpenseType],
+          text: "Change approved cost for" + getDisplayFieldName[expense.ExpenseType],
           classes: "govuk-visually-hidden"
         },
+        prefix: {
+          text: "£"
+        },
         errorMessage: '',
-        classes: inputVisibility + " govuk-input--width-4 claim-expense-input-height approved-cost govuk-!-margin-left-2",
+        classes: " govuk-input--width-4 approved-cost",
         value: displayHelper.toDecimal(expense.Cost),
         id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
         name: expense.ClaimExpenseId,
@@ -182,11 +185,11 @@
 
 {{ govukTable({
   firstCellIsHeader: true,
-  classes: "govuk-!-margin-bottom-0 total-approved-cost ",
+  classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-1 total-approved-cost",
   errorMessage: errors.total-approved-cost,
   rows: [[
     { text: "Total approved cost:", classes: " claim-table-width-one-third table-no-border-bottom" },
-    { html: '', classes: "govuk-!-width-one-third table-no-border-bottom govuk-!-font-size-24 govuk-!-font-weight-bold  claim-expense-approvedCostText" },
+    { html: '', classes: "govuk-!-width-one-third table-no-border-bottom govuk-!-font-size-24 govuk-!-font-weight-bold claim-expense-approvedCostText" },
     { html: '', classes: "govuk-!-width-one-third table-no-border-bottom" }
   ]]
 }) }}

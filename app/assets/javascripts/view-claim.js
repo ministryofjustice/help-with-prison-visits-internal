@@ -12,18 +12,18 @@ $(function () {
     const id = $(this).attr('data-id')
     const value = $(this).val()
     if (value === 'APPROVED-DIFF-AMOUNT') {
-      $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-hidden').addClass('visibility-visible')
+      $(`.claim-expense-${id}-approvedcost`).removeClass('visibility-hidden').addClass('visibility-visible')
       $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
       $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
       $('input.approved-amount').on('input', function () {
         totalApproved()
       })
     } else if (value === 'APPROVED') {
-      $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
+      $(`.claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
       $(`#claim-expense-${id}-claimedcost`).addClass('approved-amount')
       $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
     } else {
-      $(`#claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
+      $(`.claim-expense-${id}-approvedcost`).removeClass('visibility-visible').addClass('visibility-hidden')
       $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
       $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
     }
