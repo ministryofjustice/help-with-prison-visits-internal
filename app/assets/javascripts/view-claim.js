@@ -66,12 +66,17 @@ $(function () {
 
   $('#additional-info-reject').change(function () {
     if (this[this.selectedIndex].value === 'Other') {
-      document.getElementById('additional-info-reject-manual').style.display = 'block'
-      document.getElementById('manual-label').style.display = 'block'
+      $('.rejection-reason-other').removeClass('visibility-hidden').addClass('visibility-visible')
     } else {
-      document.getElementById('additional-info-reject-manual').style.display = 'none'
-      document.getElementById('manual-label').style.display = 'none'
-      document.getElementById('additional-info-reject-manual').value = ''
+      $('.rejection-reason-other').removeClass('visibility-visible').addClass('visibility-hidden')
+    }
+  })
+
+  $('#is-trusted-checkbox').on('click', function () {
+    if ($(this).is(':checked')) {
+      $('.reject-auto-approval').removeClass('visibility-visible').addClass('visibility-hidden')
+    } else {
+      $('.reject-auto-approval').removeClass('visibility-hidden').addClass('visibility-visible')
     }
   })
 })

@@ -288,6 +288,10 @@ span.bold {
     margin-top: 1.5px;
 }
 
+.select-for-rejection {
+    height: 30px
+}
+
 .form-control.full{
     width:100%;
 }
@@ -811,4 +815,13 @@ ul.sub-tabs li a.active span.badge {
 
 .justify-content-end {
     justify-content: end;
+}
+
+.transform-increase-size {
+    transform: scale(1.2);
+    transform-origin: 0 0;
+}
+
+.float-left {
+    float: left;
 }
