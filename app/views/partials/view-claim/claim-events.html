@@ -1,28 +1,17 @@
 {%- from "moj/components/timeline/macro.njk" import mojTimeline -%}
 
-<div id="container">
-
 {% if claimEvents.length > 0 %}
   {% set timelineEvents = [] %}
-
+  {% set byline = null %}
   {% set reversedClaimEvents = claimEvents | reverse %}
 
   {% for claimEvent in reversedClaimEvents %}
-  {% if claimEvent.IsInternal %}
-  {% set label = { text: displayHelper.getClaimEventDisplayName(claimEvent.Event) } %}
-  {% if claimEvent.Caseworker !== null %}
-        {% set byline = { text: claimEvent.Caseworker, class: 'govuk-!-font-size-48' } %}
-  {% else %}
-        {% endif %}
-  {% elseif claimEvent.Caseworker %}
-        {% set byline = { text: claimEvent.Caseworker } %}
-  {% else %}
-       {% set byline = { text: Claim['FirstName'] + ' ' + Claim['LastName'] } %}
-   
-{% endif %}
-
-    {% set additionalData = claimEvent.AdditionalData %}
-
+    {% set label = { text: displayHelper.getClaimEventDisplayName(claimEvent.Event) } %}
+    {% if claimEvent.Caseworker %}
+      {% set byline = { text: claimEvent.Caseworker } %}
+    {% else %}
+      {% set byline = null %}
+    {% endif %}
 
     {% if claimEvent.IsInternal %}
       {% set html = claimEvent.Note | safe %}
@@ -33,14 +22,20 @@
       {% set html = claimEvent.Note %}
     {% endif %}
 
+    {% set additionalData = claimEvent.AdditionalData %}
+    {% if additionalData %}
+      {% set html = additionalData + ' ' + html %}
+    {% endif %}
+
     {% set datetime = { timestamp: getDateFormatted.shortDateAndTimeUTC(claimEvent.DateAdded), type: 'shortdatetime' } %}
-    
+
     {% set event = { 
       label: label,
-      text: additionalData, 
-      html: html, 
-      byline: byline, 
-      datetime: datetime } %}
+      html: html,
+      byline: byline,
+      datetime: datetime 
+    } %}
+    
     {% set timelineEvents = timelineEvents.concat([event]) %}
   {% endfor %}
 
@@ -49,5 +44,3 @@
     items: timelineEvents
   }) }}
 {% endif %}
-</div>
-
