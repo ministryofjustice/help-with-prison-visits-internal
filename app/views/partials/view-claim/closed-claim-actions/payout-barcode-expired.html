@@ -1,0 +1,40 @@
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
+<form action="/claim/{{ Claim['ClaimId'] }}/payout-barcode-expired" method="post" class="form">
+  {% include "partials/csrf-hidden-input.html" %}
+  <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+  
+  {% if Claim['Status'] == 'REJECTED' %}
+    <span class="text-warning">Payout barcode can not be expired on a rejected claim</span>
+  {% else %}
+    <span class="text-pending">This will cause the original payment to be resubmitted (excluding top ups)</span>
+    <br><br>
+    
+    {{ govukTextarea({
+      name: "payout-barcode-expired-additional-information",
+      id: "payout-barcode-expired-additional-information",
+      rows: "2",
+      classes: "govuk-!-width-one-half",
+      errorMessage: errors['additional-info-request'][0],
+      attributes: {
+        'maxlength': 2000
+      },
+      label: {
+        text: "Reason for Resubmitting Payment",
+        classes: "govuk-label--l",
+        isPageHeading: true
+      }
+    }) }}
+    
+    {{ govukButton({
+      text: "Submit",
+      name: "payout-barcode-expired-details",
+      id: "payout-barcode-expired-submit-details",
+      type: "submit",
+      attributes: {
+        formaction: "/claim/" + Claim['ClaimId'] + "/payout-barcode-expired"
+      },
+      classes: ""
+    }) }}
+  {% endif %}
+</form>
+{% endif %}
