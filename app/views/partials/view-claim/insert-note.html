@@ -1,6 +1,11 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+{% if Claim['AssignedTo'] %}
+{% else %}
+<form action="/claim/{{ Claim['ClaimId'] }}/insert-note" method="post" class="form">
+	{% include "partials/csrf-hidden-input.html" %}
+	<input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
 {{ govukTextarea({
 	name: "note-information",
 	id: "note-information",
@@ -26,3 +31,5 @@
 	classes: ""
   })
 }}
+</form>
+{% endif %}

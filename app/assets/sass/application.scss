@@ -816,12 +816,14 @@ ul.sub-tabs li a.active span.badge {
 .justify-content-end {
     justify-content: end;
 }
-
-.transform-increase-size {
-    transform: scale(1.2);
-    transform-origin: 0 0;
-}
-
 .float-left {
     float: left;
+}
+
+.claim-table-width-one-third {
+    width: 33%
+}
+
+.claim-table-width-one-sixth {
+    width: 16.66%
 }
