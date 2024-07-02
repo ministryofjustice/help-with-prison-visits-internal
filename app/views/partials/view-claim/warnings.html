@@ -7,6 +7,7 @@
     {% endfor %}
     </ul>
   </div>
+</br></br>
 {% endif %}
 
 {% if claimantDuplicates.length > 0 %}
@@ -18,6 +19,7 @@
     {% endfor %}
     </ul>
   </div>
+</br></br>
 {% endif %}
 
 {% if bankDuplicates.length > 0 %}
@@ -29,6 +31,7 @@
     {% endfor %}
     </ul>
   </div>
+</br></br>
 {% endif %}
 
 {% if overpaidClaims.length > 0 %}
@@ -40,6 +43,7 @@
     {% endfor %}
     </ul>
   </div>
+</br></br>
 {% endif %}
 
 {% if Claim['IsOverpaid'] %}
@@ -49,6 +53,7 @@
     <p>Remaining: £{{ displayHelper.toDecimal(Claim['RemainingOverpaymentAmount']) }}</p>
     <p>Reason: {{ Claim['OverpaymentReason'] }}</p>
   </div>
+</br></br>
 {% endif %}
 
 {% if Claim['ReferenceDisabled'] %}
@@ -56,6 +61,7 @@
     <p class="heading-small">This Reference has been disabled</p>
     <p>Reason: {{ Claim['DisabledReason'] }}</p>
   </div>
+  </br></br>
 {% endif %}
 
 {% if Claim['IsTrusted'] === false %}
@@ -64,4 +70,5 @@
     <p>Reason: {{ Claim['UntrustedReason'] }}</p>
     <p>Date: {{ getDateFormatted.shortDate(Claim['UntrustedDate']) }}</p>
   </div>
+</br></br>
 {% endif %}

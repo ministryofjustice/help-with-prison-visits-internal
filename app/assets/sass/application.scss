@@ -827,3 +827,15 @@ ul.sub-tabs li a.active span.badge {
 .claim-table-width-one-sixth {
     width: 16.66%
 }
+
+// override mojTimeline styles
+
+.moj-timeline__title, 
+.moj-timeline__byline, 
+.moj-timeline__description {
+    font-size: 19px;
+}
+
+.moj-timeline__date {
+    font-size: 16px;
+}
