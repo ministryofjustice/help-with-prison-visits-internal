@@ -1,30 +1,66 @@
-<table class="col-2 no-pad-right">
-  <thead>
-    <tr>
-      <th>Date Added</th>
-      <th>Amount</th>
-      <th>Caseworker</th>
-      <th>Payment Status</th>
-      <th>Payment Date</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-      {% for TopUp in TopUps %}
-        <tr>
-          <td>{{ getDateFormatted.shortDateAndTime(TopUp.DateAdded) }}</td>
-          <td>£{{ TopUp['TopUpAmount'] }}</td>
-          <td>{{ TopUp['Caseworker'] }}</td>
-          {% if TopUp.PaymentStatus === 'PROCESSED' %}
-            <td><span class="text-success">Paid</span></td>
-          {% elif TopUp.PaymentStatus === 'PENDING' %}
-            <td><span class="text-pending">Pending</span></td>
-          {% elif TopUp.PaymentStatus === 'CANCELLED' %}
-            <td><span class="text-warning">Cancelled</span></td>
-          {% endif %}
-          <td>{{ getDateFormatted.shortDateAndTime(TopUp.PaymentDate) }}</td>
-          <td>{% if unlock and TopUp.PaymentStatus === 'PENDING' %}<input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/cancel-top-up" name='cancel-top-up-{{ TopUp.TopUpId }}' class='button pull-right grey' value='Cancel'>{% endif %}</td>
-        </tr>
-      {% endfor %}
-  </tbody>
-</table>
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
+{% set tableRows = [
+  [
+    { html: "Date Added", classes: "claim-table-width-third govuk-table__header" },
+    { html: "Amount", classes: " govuk-table__header" },
+    { html: "Caseworker", classes: " govuk-table__header" },
+    { html: "Payment Status", classes: " govuk-table__header" },
+    { html: "Payment Date", classes: " govuk-table__header" },
+    { html: "", classes: "" }
+  ]
+] %}
+
+{% for TopUp in TopUps %}
+  {% set dateAddedData = getDateFormatted.shortDateAndTime(TopUp.DateAdded) %}
+  {% set amountData = "£" ~ TopUp['TopUpAmount'] %}
+  {% set caseworkerData = TopUp['Caseworker'] %}
+
+  {% set paymentStatusData %}
+    {% if TopUp.PaymentStatus == 'PROCESSED' %}
+      <span class='text-success'>Paid</span>
+    {% elif TopUp.PaymentStatus == 'PENDING' %}
+      <span class='text-pending'>Pending</span>
+    {% elif TopUp.PaymentStatus == 'CANCELLED' %}
+      <span class='text-warning'>Cancelled</span>
+    {% endif %}
+  {% endset %}
+
+  {% set paymentDateData = getDateFormatted.shortDateAndTime(TopUp.PaymentDate) %}
+  {% set cancelTopUpButton = "" %}
+  {% if unlock and TopUp.PaymentStatus == 'PENDING' %}
+    {% set cancelTopUpButton %}
+      {{ govukButton({
+        text: "Cancel",
+        id: "cancel-top-up",
+        type: "submit",
+        name: "cancel-top-up-" + TopUp.TopUpId,
+        attributes: {
+          formaction: "/claim/" + Claim['ClaimId'] + "/cancel-top-up"
+        },
+        classes: "govuk-!-margin-bottom-0 edit-claim-button govuk-button--secondary pull-right"
+      }) }}
+    {% endset %}
+  {% endif %}
+
+  {% set row = [
+    { html: dateAddedData, classes: "claim-table-width-one-third vertical-align-middle" },
+    { html: amountData, classes: "vertical-align-middle" },
+    { html: caseworkerData, classes: "vertical-align-middle" },
+    { html: paymentStatusData, classes: "vertical-align-middle" },
+    { html: paymentDateData, classes: "vertical-align-middle" },
+    { html: cancelTopUpButton, classes: "vertical-align-middle" }
+  ] %}
+
+  {% set tableRows = tableRows | concat([row]) %}
+
+{% endfor %}
+
+{{ govukTable({
+  caption: "Top Ups",
+  captionClasses: "govuk-table__caption--l",
+  classes: "govuk-!-margin-bottom-8",
+  errorMessage: '',
+  rows: tableRows
+}) }}

@@ -1,0 +1,53 @@
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
+
+    <form action="/claim/{{ Claim['ClaimId'] }}/update-overpayment-status" method="post" class="form">
+      {% include "partials/csrf-hidden-input.html" %}
+      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+      
+      {% if Claim['IsOverpaid'] != true %}
+        {% set overPaymentTitleText = 'Amount' %}
+        {% set overPaymentInput = 'overpayment-amount' %}
+      {% elseif Claim['IsOverpaid'] == true %}
+        {% set overPaymentTitleText = 'Remaining' %}
+        {% set overPaymentInput = 'overpayment-remaining' %}
+      {% endif %}
+      
+      {{ govukInput({
+        label: { text: overPaymentTitleText,
+                 classes: "govuk-label--l",
+                 isPageHeading: true },
+        formGroup: { classes: 'govuk-!-margin-bottom-4' },
+        id: overPaymentInput,
+        name: overPaymentInput,
+        classes: "claim-table-width-one-sixth",
+        value: autoApprovalConfig.MaxClaimTotal,
+        prefix: { text: "£" },
+        spellcheck: false,
+        errorMessage: ''
+      }) }}
+      
+      {{ govukTextarea({
+        name: "overpayment-reason",
+        id: "overpayment-reason",
+        rows: "2",
+        classes: "govuk-!-width-one-half",
+        errorMessage: '',
+        attributes: {
+          'maxlength': 2000
+        },
+        label: {
+          text: "Reason",
+          classes: "govuk-label--l",
+          isPageHeading: true
+        }
+      }) }}
+      
+      {{ govukButton({
+        text: "Submit",
+        name: "update-overpayment-status",
+        id: "update-overpayment-status",
+        type: "submit",
+        classes: ""
+      }) }}
+    </form>
+    {% endif %}

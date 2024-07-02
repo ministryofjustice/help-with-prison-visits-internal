@@ -4,6 +4,7 @@
 // $govuk-compatibility-govukfrontendtoolkit: true;
 
 $govuk-global-styles: true;
+$moj-images-path: "../../../node_modules/@ministryofjustice/frontend/moj/assets/images/";
 
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
@@ -14,9 +15,12 @@ $govuk-page-width: $moj-page-width;
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/header/header';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/primary-navigation/primary-navigation';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/ticket-panel/_ticket-panel';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/badge/badge';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/timeline/timeline';
+
 
 // Path to assets for use with the file-url function
-// in the govuk frontend toolkit's url-helpers partial
+// in the govuk frontend toolkit's url-helpers partial:
 $path: "/public/images/";
 
 // This includes entire govuk-elements from _govuk-elements.scss
@@ -60,6 +64,18 @@ table.no-pad-right td {
     padding-bottom:10px;
     margin-bottom: 0px;
     margin-top: 40px;
+}
+
+.table-no-border-bottom {
+    border-bottom: none
+}
+
+.table-row-flex {
+    display: flex;
+}
+
+.claim-table-email-text {
+    word-break: break-all;
 }
 
 .search {
@@ -233,9 +249,11 @@ span.bold {
 
 .visibility-visible {
   visibility: visible;
+  display: block;
 }
 .visibility-hidden {
   visibility: hidden;
+  display: none;
 }
 .display-none {
   display: none;
@@ -244,15 +262,25 @@ span.bold {
     display: none;
 }
 
-.form-control.action-select{
+.form-control.action-select {
     width:200px;
     float:right;
 }
 
-.change {
+.select-for-form {
     float:right;
-    font-weight: bold;
-    padding-right: 0;
+    margin: 0px;
+    margin-top: 1.5px;
+}
+
+.select-for-deduction {
+    float:left;
+    margin: 0px;
+    margin-top: 1.5px;
+}
+
+.select-for-rejection {
+    height: 30px
 }
 
 .form-control.full{
@@ -279,6 +307,23 @@ span.bold {
 
 .button.red {
     background:#f40b0c;
+}
+
+.edit-claim-button {
+    display: flex;
+    width: fit-content;
+}
+
+.vertical-align-middle {
+    vertical-align: middle;
+}
+
+.vertical-align-bottom {
+    vertical-align: bottom;
+}
+
+.select-display-none {
+    display: none
 }
 
 .pull-right {
@@ -333,14 +378,12 @@ tr.warning td:first-child{
 }
 
 .text-pending {
-    color:#d2841c;
-    padding-top:6px;
-    display:inline-block;
+    color: govuk-colour("orange")
 }
 
 .text-pending:before {
-    background-color: #d2841c;
-    color:#d2841c;
+    background-color: govuk-colour("orange");
+    color: govuk-colour("orange");
 }
 
 .text-pending:before {
@@ -362,14 +405,12 @@ tr.warning td:first-child{
 }
 
 .text-warning {
-    color:#b10e1e;
-    padding-top:6px;
-    display:inline-block;
+    color: $govuk-error-colour;
 }
 
 .text-warning:before {
-    background-color: #b10e1e;
-    color:#b10e1e;
+    background-color: $govuk-error-colour;
+    color:$govuk-error-colour;
 }
 
 .text-warning:before {
@@ -391,14 +432,12 @@ tr.warning td:first-child{
 }
 
 .text-success {
-    color:#00823b;
-    padding-top:2px;
-    display:inline-block;
+    color: $govuk-success-colour
 }
 
 .text-success:before {
-    background-color: #00823b;
-    color:#00823b;
+    background-color:  $govuk-success-colour;
+    color: $govuk-success-colour
 }
 .text-success:before {
     -webkit-border-radius: 50%;
@@ -488,6 +527,10 @@ label.custom-file-upload {
   td:nth-child(4) {
     width: 35%;
   }
+}
+
+.claim-expense-input-height {
+    height: 35px!important
 }
 
 ul.claim-dialog li {
@@ -748,4 +791,24 @@ ul.sub-tabs li a.active span.badge {
 .govuk-input__prefix {
     height: 40px;
     font-size: 19px;
+}
+
+.view-claim-display-helper{
+    display: flex;
+    align-items: center;
+} 
+
+.justify-content-end {
+    justify-content: end;
+}
+.float-left {
+    float: left;
+}
+
+.claim-table-width-one-third {
+    width: 33%
+}
+
+.claim-table-width-one-sixth {
+    width: 16.66%
 }

@@ -23,3 +23,7 @@ module.exports.getMonth = function (date) {
 module.exports.getYear = function (date) {
   return moment.utc(date).format('YYYY')
 }
+
+module.exports.shortDateAndTimeUTC = function (date) {
+  return moment.utc(date)
+}
