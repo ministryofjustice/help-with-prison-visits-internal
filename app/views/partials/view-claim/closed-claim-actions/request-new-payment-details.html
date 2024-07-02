@@ -1,0 +1,37 @@
+{% if displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) %}
+<form action="/claim/{{ Claim['ClaimId'] }}/request-new-payment-details" method="post" class="form">
+  {% include "partials/csrf-hidden-input.html" %}
+  <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+  
+  {% if Claim['Status'] == 'REJECTED' %}
+    <span class="text-warning">New bank details can not be requested on a rejected claim</span>
+  {% else %}
+    {{ govukTextarea({
+      name: "payment-details-additional-information",
+      id: "payment-details-additional-information",
+      rows: "2",
+      classes: "govuk-!-width-one-half",
+      errorMessage: errors['additional-info-request'][0],
+      attributes: {
+        'maxlength': 2000
+      },
+      label: {
+        text: "Note to claimant (optional)",
+        classes: "govuk-label--l",
+        isPageHeading: true
+      }
+    }) }}
+    
+    {{ govukButton({
+      text: "Submit",
+      name: "request-new-payment-details",
+      id: "request-new-payment-details",
+      type: "submit",
+      attributes: {
+        formaction: "/claim/" + Claim['ClaimId'] + "/request-new-payment-details"
+      },
+      classes: ""
+    }) }}
+  {% endif %}
+</form>
+{% endif %}

@@ -41,79 +41,20 @@
   <br>
   {% include "partials/view-claim/claim.html" %}
   <br>
-  <br>
   {% include "partials/view-claim/add-deduction.html" %}
-<br>
   
   {% if TopUps.length > 0 %}
-    <h1 class="table-heading" name="top-ups-table" id="top-ups-table">Top Ups</h1>
     {% include "partials/view-claim/top-ups.html" %}
   {% endif %}
 
   {% include "partials/view-claim/claim-events.html" %}
-  <br>
-  <br>
+  
   {% include "partials/view-claim/decision.html" %}
-</form>
 
-<br>
-<br>
-
-  {% if Claim['AssignedTo'] %}
-  {% else %}
-    <form action="/claim/{{ Claim['ClaimId'] }}/insert-note" method="post" class="form">
-      {% include "partials/csrf-hidden-input.html" %}
-      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-      {% include "partials/view-claim/insert-note.html" %}
-    </form>
-  {% endif %}
+  {% include "partials/view-claim/insert-note.html" %}
 
   {% include "partials/view-claim/closed-claim-actions.html" %}
-  <form action="/claim/{{ Claim['ClaimId'] }}/update-overpayment-status" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    {% include "partials/view-claim/manage-overpayments.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/add-top-up" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    {% include "partials/view-claim/add-top-up.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/close-advance-claim" method="post" class="form">
-      {% include "partials/csrf-hidden-input.html" %}
-      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-      {% include "partials/view-claim/close-advance-claim.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/disable-reference-number" method="post" class="form">
-
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    <input type="hidden" name="referenceToBeDisabled" value="{{ Claim['Reference'] }}">
-    {% include "partials/view-claim/disable-reference-number.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/re-enable-reference-number" method="post" class="form">
-
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    <input type="hidden" name="referenceToBeReEnabled" value="{{ Claim['Reference'] }}">
-    {% include "partials/view-claim/re-enable-reference-number.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/request-new-payment-details" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    {% include "partials/view-claim/request-new-payment-details.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/payout-barcode-expired" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    {% include "partials/view-claim/payout-barcode-expired.html" %}
-  </form>
+</form>
 
 {% endblock %}
 

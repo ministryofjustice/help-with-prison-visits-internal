@@ -29,7 +29,7 @@
 
 {% set benefitInformation %}
 <span class="govuk-!-margin-right-2"> {{ displayHelper.getBenefitDisplayName(Claim.Benefit) }}</span>
-<br>
+</br>
   {% if displayHelper.getBenefitRequireUpload(Claim.Benefit) or Claim.benefitDocument.length > 0 %}
     {% for document in Claim.benefitDocument %}
       {% if document.DocumentStatus == 'uploaded' %}
@@ -312,17 +312,17 @@
 [[
       {
         text: "Benefit Expiry",
-        classes: "govuk-!-width-one-third vertical-align-middle",
+        classes: "claim-table-width-one-third vertical-align-middle",
         errorMessage: errors['benefit-expiry'][0],
         id: "dwp-check"
       },
       {
         html: expiryDate,
-        classes: "govuk-!-width-one-third"
+        classes: "claim-table-width-one-third"
       },
       {
         html: expiryDateButton,
-        classes: "govuk-!-width-one-third vertical-align-middle"
+        classes: "claim-table-width-one-third vertical-align-middle"
       }
     ]
     ]
@@ -348,15 +348,15 @@
     [
       {
         text: "Payment method",
-        classes: "govuk-!-width-one-third table-no-border-bottom "
+        classes: "claim-table-width-one-third table-no-border-bottom "
       },
       {
         html: displayHelper.getPaymentMethodDisplayName(Claim.PaymentMethod),
-        classes: "govuk-!-width-one-third table-no-border-bottom"
+        classes: "claim-table-width-one-third table-no-border-bottom"
       },
       {
         text: '',
-        classes: "govuk-!-width-one-third table-no-border-bottom "
+        classes: "claim-table-width-one-third table-no-border-bottom "
       }
     ]
   ]
