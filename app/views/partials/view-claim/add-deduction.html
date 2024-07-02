@@ -1,6 +1,7 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% if unlock %}
     {% set deductionSelect %}
@@ -8,9 +9,9 @@
         {{ govukSelect({
           id: "deductionType",
           name: "deductionType",
-          classes: "govuk-!-margin-bottom-0 ",
+          classes: "govuk-!-margin-bottom-2",
           formGroup: {
-            classes: "govuk-!-margin-top-1 select-for-deduction"
+            classes: "govuk-!-margin-top-1 select-for-deduction "
           },
           errorMessage: errors['deductionType'][0],
           items: [
@@ -70,6 +71,7 @@
     {{ govukTable({
       caption: "Deduction",
       captionClasses: "govuk-table__caption--l",
+      classes: "govuk-!-margin-bottom-8",
       errorMessage: '',
       rows: [
         [

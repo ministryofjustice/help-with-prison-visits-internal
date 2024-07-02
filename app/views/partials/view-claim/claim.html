@@ -133,7 +133,7 @@
   {% endset %}
 
   {% set expenseRow = [
-    { html: expenseOverview, classes: "claim-table-width-one-third" },
+    { html: expenseOverview, classes: "govuk-!-width-one-third" },
     { html: expenseDocumentStatus, classes: "govuk-!-width-one-third vertical-align-middle" },
     { html: expenseButtons, classes: "govuk-!-width-one-third vertical-align-middle" }
   ] %}
@@ -185,10 +185,10 @@
 
 {{ govukTable({
   firstCellIsHeader: true,
-  classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-1 total-approved-cost",
+  classes: "govuk-!-margin-bottom-4 govuk-!-margin-top-1 total-approved-cost",
   errorMessage: errors.total-approved-cost,
   rows: [[
-    { text: "Total approved cost:", classes: " claim-table-width-one-third table-no-border-bottom" },
+    { text: "Total approved cost:", classes: "govuk-!-width-one-third table-no-border-bottom" },
     { html: '', classes: "govuk-!-width-one-third table-no-border-bottom govuk-!-font-size-24 govuk-!-font-weight-bold claim-expense-approvedCostText" },
     { html: '', classes: "govuk-!-width-one-third table-no-border-bottom" }
   ]]
