@@ -19,11 +19,14 @@
         formGroup: { classes: 'govuk-!-margin-bottom-4' },
         id: overPaymentInput,
         name: overPaymentInput,
+        errorMessage: errors | findError(overPaymentInput),
         classes: "claim-table-width-one-sixth",
         value: autoApprovalConfig.MaxClaimTotal,
         prefix: { text: "£" },
-        spellcheck: false,
-        errorMessage: ''
+        attributes: {
+          'step': 0.01
+        },
+        type: 'number'
       }) }}
       
       {{ govukTextarea({
@@ -51,3 +54,4 @@
       }) }}
     </form>
     {% endif %}
+    
