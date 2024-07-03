@@ -147,7 +147,7 @@ module.exports = function (router) {
       applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
     return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      const benefitExpiryDate = new BenefitExpiryDate(req.body['expiry-date-section-day'], req.body['expiry-date-section-month'], req.body['expiry-date-section-year'])
+      const benefitExpiryDate = new BenefitExpiryDate(req.body['expiry-day'], req.body['expiry-month'], req.body['expiry-year'])
       return updateVisitorBenefitExpiryDate(req.params.claimId, benefitExpiryDate)
         .then(function () {
           return false

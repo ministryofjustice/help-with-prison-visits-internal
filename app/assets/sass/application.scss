@@ -183,8 +183,8 @@ span.bold {
 span.error {
     font-weight:bold;
     background:#f2dede!important;
-    border:2px solid #a94442;
-    color:#a94442!important;
+    border:2px solid $govuk-error-colour;
+    color:$govuk-error-colour!important;
     margin:0 0 0 10px;
     padding:1px 5px!important;
 }
@@ -209,8 +209,8 @@ td.text-right {
 .warning {
     padding:10px;
     background:#f2dede;
-    border-left:5px solid #a94442;
-    color:#a94442;
+    border-left:5px solid $govuk-error-colour;
+    color:$govuk-error-colour;
 }
 
 tr.warning td{
@@ -821,11 +821,19 @@ ul.sub-tabs li a.active span.badge {
 }
 
 .claim-table-width-one-third {
-    width: 33%
+    width: 33%;
 }
 
 .claim-table-width-one-sixth {
-    width: 16.66%
+    width: 16.66%;
+}
+
+.claim-table-width-full {
+    width: 100% !important;
+}
+
+.claim-table-error-text {
+    color: $govuk-error-colour!important;
 }
 
 // override mojTimeline styles

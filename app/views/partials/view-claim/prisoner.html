@@ -19,13 +19,15 @@
       {% endif %}
     </span>
   {% endif %}
+{% endset %}
 
+{% set approvedSelect %}
   {% if unlock %}
     {{ govukSelect({
       id: "nomis-check",
       name: "nomisCheck",
       classes: "action-select",
-      errorMessage: errors.nomis-check[0],
+      errorMessage: errors | findError('nomis-check'),
       formGroup: {
         classes: "select-for-form"
       },
@@ -61,55 +63,29 @@
   firstCellIsHeader: true,
   rows: [
     [
-      {
-        text: "Name",
-        classes: "claim-table-width-one-third",
-        id: "benefit-owner-name"
-      },
-      {
-        text: Claim.PrisonerFirstName + " " + Claim.PrisonerLastName,
-        classes: "govuk-!-width-two-thirds"
-      }
+      { text: "Name", classes: "claim-table-width-one-third" },
+      { text: Claim.PrisonerFirstName + " " + Claim.PrisonerLastName, classes: "govuk-!-width-one-third" },
+      { text: '', classes: "govuk-!-width-one-third" }
     ],
     [
-      {
-        text: "Date of birth",
-        classes: "claim-table-width-one-third"
-      },
-      {
-        text: getDateFormatted.shortDate(Claim.PrisonerDateOfBirth),
-        classes: "govuk-!-width-two-thirds"
-      }
+      { text: "Date of birth", classes: "claim-table-width-one-third" },
+      { text: getDateFormatted.shortDate(Claim.PrisonerDateOfBirth), classes: "claim-table-width-one-third" },
+      { text: '', classes: "claim-table-width-one-third" }
     ],
     [
-      {
-        text: "Prisoner number",
-        classes: "claim-table-width-one-third"
-      },
-      {
-        text: Claim.PrisonNumber,
-        classes: "govuk-!-width-two-thirds"
-      }
+      { text: "Prisoner number", classes: "claim-table-width-one-third" },
+      { text: Claim.PrisonNumber, classes: "govuk-!-width-one-third" },
+      { text: '', classes: "govuk-!-width-one-third" }
     ],
     [
-      {
-        text: "Prison",
-        classes: "claim-table-width-one-third"
-      },
-      {
-        text: displayHelper.getPrisonDisplayName(Claim.NameOfPrison),
-        classes: "govuk-!-width-two-thirds"
-      }
+      { text: "Prison", classes: "claim-table-width-one-third" },
+      { text: displayHelper.getPrisonDisplayName(Claim.NameOfPrison), classes: "govuk-!-width-one-third" },
+      { text: '', classes: "govuk-!-width-one-third" }
     ],
     [
-      {
-        text: "Eligible for visitation?",
-        classes: "claim-table-width-one-third table-no-border-bottom"
-      },
-      {
-        html: approvedCheck,
-        classes: "govuk-!-width-two-thirds table-no-border-bottom"
-      }
+      { text: "Eligible for visitation?", classes: "claim-table-width-one-third table-no-border-bottom vertical-align-middle" },
+      { html: approvedCheck, classes: "govuk-!-width-one-third table-no-border-bottom vertical-align-middle" },
+      { html: approvedSelect, classes: "govuk-!-width-one-third table-no-border-bottom" }
     ]
   ]
 }) }}

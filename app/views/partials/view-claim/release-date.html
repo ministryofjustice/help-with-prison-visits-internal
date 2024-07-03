@@ -9,7 +9,7 @@
       {{ govukDateInput({
         id: "release-date-section",
         namePrefix: "release-date-section",
-        errorMessage: errors.release-date-section[0],
+        errorMessage: errors | findError('release-date-section'),
         formGroup: {
           classes: "govuk-!-margin-bottom-0"
         },
@@ -36,7 +36,9 @@
       }) }}
     </fieldset>
     {% set saveButton %}
+
  {# TODO: BUTTON HERE IN DESIGN #}
+ 
 {% endset %}
   {% else %}
     {% if Claim.ReleaseDate %}
@@ -64,7 +66,7 @@
       },
       {
         html: saveButton,
-        classes: "govuk-!-width-one-third vertical-align-middle "
+        classes: "govuk-!-width-one-third vertical-align-middle"
       }
     ]
   ]

@@ -25,8 +25,8 @@
       },
       id: "visit-confirmation-check",
       name: "visitConfirmationCheck",
-      classes: "action-select select-for-form govuk-!-margin-left-4 govuk-!-margin-top-1 govuk-!-margin-bottom-2",
-      errorMessage: errors.visit-confirmation-check[0],
+      classes: "action-select select-for-form govuk-!-margin-top-1 govuk-!-margin-bottom-2",
+      errorMessage: errors | findError('visit-confirmation-check'),
       formGroup: {
         classes: "select-for-form"
       },
@@ -70,7 +70,6 @@
   caption: "Visit",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
-  errorMessage: errors.visit-confirmation-check[0],
   rows: [
     [
       {
