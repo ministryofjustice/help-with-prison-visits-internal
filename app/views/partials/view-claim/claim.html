@@ -3,22 +3,8 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% if errors.claim-expense[0] %}
-  <span class="error-message" id="error-message-status-request">{{ errors.claim-expense[0] }}</span>
-{% endif %}
-{% if errors.approve-cost[0] %}
-  <span class="error-message" id="error-message-cost-request">{{ errors.approve-cost[0] }}</span>
-{% endif %}
-{% if errors.claim-expenses[0] %}
-  <span class="error-message" id="claim-expenses">{{ errors.claim-expenses[0] }}</span>
-{% endif %}
-{% if errors.total-approved-cost[0] %}
-  <span class="error-message" id="total-approved-cost">{{ errors.total-approved-cost[0] }}</span>
-{% endif %}
-
 {% set expenseData = [] %}
 {% for expense in Expenses %}
-
   {% set expenseSelectItems = [
     { value: undefined, text: "Select", selected: expense.Status == undefined }
   ] %}
@@ -52,7 +38,7 @@
   {% set expenseSelectItems = expenseSelectItems | concat([{
     value: "REJECTED",
     text: "Reject item",
-    selected: expense.Status == claimDecisionEnum.REJECTED 
+    selected: expense.Status == claimDecisionEnum.REJECTED
   }]) %}
 
   {% set expenseOverview %}
@@ -68,48 +54,54 @@
 
   {% set expenseButtons %}
     {% if unlock %}
-      {{ govukSelect({
-        formGroup: { classes: "select-for-form" },
-        id: "claim-expense-" + expense.ClaimExpenseId + "-status",
-        name: "claim-expense-" + expense.ClaimExpenseId + "-status",
-        classes: "action-select govuk-!-margin-left-4 claim-expense-status",
-        attributes: { 'data-id': expense.ClaimExpenseId },
-        errorMessage: expense.Status == 'Select' or expense.Error,
-        items: expenseSelectItems
-      }) }}
+      <div id="container">
+        <div id="claim-expenses" class="error-div"></div>
+        <div id="claim-expense" class="error-div"></div>
+        {{ govukSelect({
+          formGroup: { classes: "select-for-form" },
+          id: "claim-expense-" + expense.ClaimExpenseId + "-status",
+          name: "claim-expense-" + expense.ClaimExpenseId + "-status",
+          classes: "action-select govuk-!-margin-left-4 claim-expense-status",
+          attributes: { 'data-id': expense.ClaimExpenseId },
+          errorMessage: errors | findError('claim-expense'),
+          items: expenseSelectItems
+        }) }}
 
-      {% set inputVisibility %}
-      {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %}
-        visibility-visible
-      {% else %}
-        visibility-hidden
-      {% endif %}
-      {% endset %}
+        {% set inputVisibility %}
+          {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %}
+            visibility-visible
+          {% else %}
+            visibility-hidden
+          {% endif %}
+        {% endset %}
 
-      {{ govukInput({
-        formGroup: { classes: "claim-expense-input-height select-for-form govuk-!-margin-left-2" + inputVisibility + "claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
-        label: {
-          text: "Change approved cost for" + getDisplayFieldName[expense.ExpenseType],
-          classes: "govuk-visually-hidden"
-        },
-        prefix: {
-          text: "£"
-        },
-        errorMessage: '',
-        classes: " govuk-input--width-4 approved-cost",
-        value: displayHelper.toDecimal(expense.Cost),
-        id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
-        name: expense.ClaimExpenseId,
-        inputmode: "numeric",
-        spellcheck: false
-      }) }}
+        <div id='approve-cost'>
+          {{ govukInput({
+            formGroup: { classes: "claim-expense-input-height select-for-form govuk-!-margin-left-2" + inputVisibility + "claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
+            label: {
+              text: "Change approved cost for " + getDisplayFieldName[expense.ExpenseType],
+              classes: "govuk-visually-hidden"
+            },
+            prefix: {
+              text: "£"
+            },
+            errorMessage: errors | findError('approve-cost'),
+            classes: "govuk-input--width-4 approved-cost",
+            value: displayHelper.toDecimal(expense.Cost),
+            id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
+            name: expense.ClaimExpenseId,
+            inputmode: "numeric",
+            spellcheck: false
+          }) }}
+        </div>
+      </div>
 
       {% if expense.DocumentStatus == 'upload-later' or expense.DocumentStatus == 'post-later' %}
         {{ govukButton({
           text: "Add",
           id: "add-benefit-documentation-upload-later",
-          href: "/claim/file-upload/" + Claim.Reference + "/" + Claim.ClaimId + "/RECEIPT?eligibilityId=" + Claim.EligibilityId + "&claimExpenseId=" + expense.ClaimExpenseId + "&claimDocumentId=" + expense.ClaimDocumentId ,
-          classes: "edit-claim-button govuk-button--secondary pull-right govuk-!-margin-bottom-0 "
+          href: "/claim/file-upload/" + Claim.Reference + "/" + Claim.ClaimId + "/RECEIPT?eligibilityId=" + Claim.EligibilityId + "&claimExpenseId=" + expense.ClaimExpenseId + "&claimDocumentId=" + expense.ClaimDocumentId,
+          classes: "edit-claim-button govuk-button--secondary pull-right govuk-!-margin-bottom-0"
         }) }}
       {% endif %}
     {% endif %}
@@ -133,7 +125,7 @@
   {% endset %}
 
   {% set expenseRow = [
-    { html: expenseOverview, classes: "govuk-!-width-one-third" },
+    { html: expenseOverview, classes: "govuk-!-width-one-third vertical-align-middle" },
     { html: expenseDocumentStatus, classes: "govuk-!-width-one-third vertical-align-middle" },
     { html: expenseButtons, classes: "govuk-!-width-one-third vertical-align-middle" }
   ] %}
@@ -183,13 +175,25 @@
   rows: deductionData
 }) }}
 
-{{ govukTable({
-  firstCellIsHeader: true,
-  classes: "govuk-!-margin-bottom-4 govuk-!-margin-top-1 total-approved-cost",
-  errorMessage: errors.total-approved-cost,
-  rows: [[
-    { text: "Total approved cost:", classes: "govuk-!-width-one-third table-no-border-bottom" },
-    { html: '', classes: "govuk-!-width-one-third table-no-border-bottom govuk-!-font-size-24 govuk-!-font-weight-bold claim-expense-approvedCostText" },
-    { html: '', classes: "govuk-!-width-one-third table-no-border-bottom" }
-  ]]
-}) }}
+{% set warningClass %}
+{% if errors['total-approved-cost'] %}
+  govuk-!-width-one-third table-no-border-bottom govuk-!-font-size-24 govuk-!-font-weight-bold claim-expense-approvedCostText claim-table-error-text
+{% else %}
+  govuk-!-width-one-third table-no-border-bottom govuk-!-font-size-24 govuk-!-font-weight-bold claim-expense-approvedCostText
+{% endif %}
+{% endset %}
+{% if errors["total-approved-cost"][0] %}
+  <p class="claim-table-error-text govuk-!-font-weight-bold govuk-!-margin-top-3 govuk-!-margin-bottom-0" id="total-approved-cost">{{ errors["total-approved-cost"][0] }}</p>
+{% endif %}
+
+<div id="total-approved-cost" class="error-div">
+  {{ govukTable({
+    firstCellIsHeader: true,
+    classes: "govuk-!-margin-bottom-4 govuk-!-margin-top-1 total-approved-cost",
+    rows: [[
+      { text: "Total approved cost:", classes: "govuk-!-width-one-third table-no-border-bottom" },
+      { html: '', classes: warningClass },
+      { html: '', classes: "govuk-!-width-one-third table-no-border-bottom" }
+    ]]
+  }) }}
+</div>
