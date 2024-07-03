@@ -5,14 +5,17 @@
 
 {% if unlock %}
     {% set deductionSelect %}
-    <div>
-        <span class="select-for-deduction govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Type</span>
+    <div class="claim-table-deduction-section-container">
+      <div>
+        <span class=" govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Type</span>
+      </div>
+      <div>
         {{ govukSelect({
           id: "deductionType",
           name: "deductionType",
           classes: "govuk-!-margin-bottom-2",
           formGroup: {
-            classes: "govuk-!-margin-top-1 select-for-deduction"
+            classes: "govuk-!-margin-bottom-0"
           },
           errorMessage: errors | findError('deductionType'),
           items: [
@@ -32,10 +35,15 @@
           ]
         }) }}
       </div>
+    </div>
     {% endset %}
 
     {% set deductionAmount %}
-        <span class="select-for-deduction govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Amount</span>
+    <div class="claim-table-deduction-section-container">
+      <div>
+        <span class="govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Amount</span>
+      </div>
+      <div>
         {{ govukInput({
           label: {
             text: "Deduction amount",
@@ -43,7 +51,7 @@
           },
           errorMessage: errors | findError('deductionAmount'),
           formGroup: {
-            classes: "govuk-!-margin-bottom-0 select-for-deduction"
+            classes: "govuk-!-margin-bottom-0"
           },
           classes: " govuk-input--width-4 ",
           prefix: {
@@ -54,6 +62,7 @@
           name: "deductionAmount",
           type: 'number'
         }) }}
+      </div>
     {% endset %}
 
     {% set deductionButton %}
