@@ -126,20 +126,24 @@
 <br>
 <br>
 
+{% set errorMargin %}{% if errors['additional-info-reject'][0] %}govuk-!-margin-top-8{% else %}{% endif %}{% endset%}
+{% set errorMarginFormGroup %}{% if errors['additional-info-reject'][0] %}claim-table-decision-error-margin{% else %}{% endif %}{% endset%}
+
+
 {{ govukTextarea({
   name: "additionalInfoRejectManual",
   id: "additional-info-reject-manual",
   classes: "govuk-!-width-one-half govuk-!-margin-bottom-4",
   rows: "2",
   formGroup: {
-    classes: "rejection-reason-other visibility-hidden"
+    classes: "rejection-reason-other visibility-hidden " + errorMarginFormGroup
   },
   attributes: {
     'maxlength': 2000
   },
   label: {
     text: "Enter a reason not in the dropdown",
-    classes: "govuk-label--l govuk-!-padding-top-0",
+    classes: "govuk-label--l govuk-!-padding-top-0 " + errorMargin,
     isPageHeading: true
   }
 }) }}
@@ -148,7 +152,7 @@
   text: "Submit and send rejection email",
   name: "reject",
   type: "submit",
-  classes: ""
+  classes: errorMargin
 }) }}
 {% endset %}
 

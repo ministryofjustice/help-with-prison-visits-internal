@@ -54,7 +54,7 @@
 
   {% set expenseButtons %}
     {% if unlock %}
-      <div id="container">
+      <div id="claim-table-claim-section-container">
         <div id="claim-expenses" class="error-div"></div>
         <div id="claim-expense" class="error-div"></div>
         {{ govukSelect({
@@ -77,7 +77,7 @@
 
         <div id='approve-cost'>
           {{ govukInput({
-            formGroup: { classes: "claim-expense-input-height select-for-form govuk-!-margin-left-2" + inputVisibility + "claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
+            formGroup: { classes: " select-for-form govuk-!-margin-left-2 govuk-!-margin-right-2" + inputVisibility + "claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
             label: {
               text: "Change approved cost for " + getDisplayFieldName[expense.ExpenseType],
               classes: "govuk-visually-hidden"
@@ -126,8 +126,8 @@
 
   {% set expenseRow = [
     { html: expenseOverview, classes: "govuk-!-width-one-third vertical-align-middle" },
-    { html: expenseDocumentStatus, classes: "govuk-!-width-one-third vertical-align-middle" },
-    { html: expenseButtons, classes: "govuk-!-width-one-third vertical-align-middle" }
+    { html: expenseDocumentStatus, classes: " vertical-align-middle" },
+    { html: expenseButtons, classes: "govuk-!-width-one-half vertical-align-middle" }
   ] %}
 
   {% set expenseData = expenseData | concat([expenseRow]) %}

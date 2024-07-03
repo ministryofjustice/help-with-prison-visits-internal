@@ -81,6 +81,9 @@ table.no-pad-right td {
 .claim-table-email-text {
     word-break: break-all;
 }
+.table-short-column {
+    width: 200px;
+}
 
 .search {
     padding: 15px 0 0 0;
@@ -278,12 +281,6 @@ span.bold {
 
 .select-for-form {
     float:right;
-    margin: 0px;
-    margin-top: 1.5px;
-}
-
-.select-for-deduction {
-    float:left;
     margin: 0px;
     margin-top: 1.5px;
 }
@@ -535,10 +532,6 @@ label.custom-file-upload {
   td:nth-child(4) {
     width: 35%;
   }
-}
-
-.claim-expense-input-height {
-    height: 35px!important
 }
 
 ul.claim-dialog li {
@@ -816,8 +809,13 @@ ul.sub-tabs li a.active span.badge {
 .justify-content-end {
     justify-content: end;
 }
+
 .float-left {
     float: left;
+}
+
+.claim-table-email-text {
+    word-break: break-all;
 }
 
 .claim-table-width-one-third {
@@ -834,7 +832,26 @@ ul.sub-tabs li a.active span.badge {
 
 .claim-table-error-text {
     color: $govuk-error-colour!important;
+    padding-left: 15px;
+    border-left: 5px solid #d4351c;
 }
+
+.claim-table-deduction-section-container {
+    text-align: left;
+    align-items: center;
+    display: flex;
+}
+
+.claim-table-claim-section-container {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.claim-table-decision-error-margin {
+    margin-top: 30px!important;
+    margin-bottom: -40px!important;
+}
+
 
 // override mojTimeline styles
 
