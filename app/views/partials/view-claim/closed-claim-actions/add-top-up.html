@@ -11,13 +11,13 @@
     id: "top-up-amount",
     name: "top-up-amount",
     classes: "claim-table-width-one-sixth",
+    errorMessage: errors | findError('top-up-amount'),
     value: topUpAmount,
     prefix: { text: "£" },
     attributes: {
       'step': 0.01
     },
-    spellcheck: false,
-    errorMessage: errors['top-up-amount'][0]
+    type: 'number'
   }) }}
   
   {{ govukTextarea({
@@ -25,7 +25,7 @@
     id: "top-up-reason",
     rows: "2",
     classes: "govuk-!-width-one-half",
-    errorMessage: errors['top-up-reason'][0],
+    errorMessage: errors | findError('top-up-reason'),
     attributes: {
       'maxlength': 2000
     },
