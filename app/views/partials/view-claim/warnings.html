@@ -1,74 +1,130 @@
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{# DUPLICATE #}
 {% if duplicates.length > 0 %}
-  <div class="banner">
-    <p class="heading-small">This claim may be a duplicate</p>
+  {% set duplicatesList %}
     <ul class="list">
-    {% for duplicateClaim in duplicates %}
-      <li><a href='/claim/{{ duplicateClaim.ClaimId }}'>{{ duplicateClaim.Reference }}</a></li>
-    {% endfor %}
+      {% for duplicateClaim in duplicates %}
+        <li><a href='/claim/{{ duplicateClaim.ClaimId }}'>{{ duplicateClaim.Reference }}</a></li>
+      {% endfor %}
     </ul>
-  </div>
-</br></br>
+  {% endset %}
+
+  {{ govukWarningText({
+    html: "This claim may be a duplicate" + duplicatesList,
+    classes: 'claim-table-warning-text',
+    iconFallbackText: "Warning"
+  }) }}
 {% endif %}
 
+{# CLAIMANT DUPLICATE #}
 {% if claimantDuplicates.length > 0 %}
-  <div class="banner">
-    <p class="heading-small">Another Claimant has a claim for this Prisoner on this date</p>
+  {% set claimantDuplicatesList %}
     <ul class="list">
-    {% for claim in claimantDuplicates %}
-      <li><a href='/claim/{{ claim.ClaimId }}'>{{ claim.Reference }}</a></li>
-    {% endfor %}
+      {% for claim in claimantDuplicates %}
+        <li><a href='/claim/{{ claim.ClaimId }}'>{{ claim.Reference }}</a></li>
+      {% endfor %}
     </ul>
-  </div>
-</br></br>
+  {% endset %}
+
+  {{ govukWarningText({
+    html: "Another Claimant has a claim for this Prisoner on this date" + claimantDuplicatesList,
+    classes: 'claim-table-warning-text',
+    iconFallbackText: "Warning"
+  }) }}
 {% endif %}
 
+{# BANK DUPLICATE #}
 {% if bankDuplicates.length > 0 %}
-  <div class="banner">
-    <p class="heading-small">Another Claimant has used these bank details</p>
+  {% set bankDuplicatesList %}
     <ul class="list">
-    {% for bank in bankDuplicates %}
-      <li><a href='/claim/{{ bank.ClaimId }}'>{{ bank.Reference }}</a></li>
-    {% endfor %}
+      {% for bank in bankDuplicates %}
+        <li><a href='/claim/{{ bank.ClaimId }}'>{{ bank.Reference }}</a></li>
+      {% endfor %}
     </ul>
-  </div>
-</br></br>
+  {% endset %}
+
+  {{ govukWarningText({
+    html: "Another Claimant has used these bank details" + bankDuplicatesList,
+    classes: 'claim-table-warning-text',
+    iconFallbackText: "Warning"
+  }) }}
 {% endif %}
 
+{# OVERPAID AND PAID CLAIM #}
 {% if overpaidClaims.length > 0 %}
-  <div class="banner">
-    <p class="heading-small">This claim is for a claimant that has been overpaid</p>
+  {% set overpaidClaimList %}
     <ul class="list">
-    {% for overpaidClaim in overpaidClaims %}
-      <li><a href='/claim/{{ overpaidClaim.ClaimId }}'>{{ getDateFormatted.shortDate(overpaidClaim.DateOfJourney) }} - Remaining: £{{ displayHelper.toDecimal(overpaidClaim.RemainingOverpaymentAmount) }}</a></li>
-    {% endfor %}
+      {% for overpaidClaim in overpaidClaims %}
+        <li>
+          <a href='/claim/{{ overpaidClaim.ClaimId }}'>
+            <span class="govuk-!-font-weight-bold">{{ overpaidClaim.ClaimId }}</span> - 
+            {{ getDateFormatted.shortDate(overpaidClaim.DateOfJourney) }} - 
+            Remaining: £{{ displayHelper.toDecimal(overpaidClaim.RemainingOverpaymentAmount) }}
+          </a>
+        </li>
+      {% endfor %}
     </ul>
-  </div>
-</br></br>
+  {% endset %}
+
+  {{ govukWarningText({
+    html: "This claim is for a claimant that has been overpaid" + overpaidClaimList,
+    classes: 'claim-table-warning-text',
+    iconFallbackText: "Warning"
+  }) }}
 {% endif %}
 
+{# OVERPAID BUT MARKED CLAIM #}
 {% if Claim['IsOverpaid'] %}
-  <div class="banner">
-    <p class="heading-small">This claim has been marked as overpaid</p>
+  {% set overpaidMarkedList %}
     <p>Total overpaid: £{{ displayHelper.toDecimal(Claim['OverpaymentAmount']) }}</p>
     <p>Remaining: £{{ displayHelper.toDecimal(Claim['RemainingOverpaymentAmount']) }}</p>
     <p>Reason: {{ Claim['OverpaymentReason'] }}</p>
-  </div>
-</br></br>
+  {% endset %}
+
+  {{ govukWarningText({
+    html: "This claim has been marked as overpaid" + overpaidMarkedList,
+    classes: 'claim-table-warning-text',
+    iconFallbackText: "Warning"
+  }) }}
 {% endif %}
 
+{# REFERENCE DISABLED #}
 {% if Claim['ReferenceDisabled'] %}
-  <div class="banner">
-    <p class="heading-small">This Reference has been disabled</p>
-    <p>Reason: {{ Claim['DisabledReason'] }}</p>
-  </div>
-  </br></br>
+  {% set disabledReason %}
+    {% if Claim.DisabledReason %}
+      This Reference has been disabled <br>
+      <p>Reason: {{ Claim.DisabledReason }}</p>
+    {% else %}
+      This Reference has been disabled <br>
+      <p class="text-italic">No reason given</p>
+    {% endif %}
+  {% endset %}
+
+  {{ govukWarningText({
+    html: disabledReason,
+    classes: 'claim-table-warning-text',
+    iconFallbackText: "Warning"
+  }) }}
 {% endif %}
+
+{# AUTO-APPROVAL OFF #}
+{% set trustedReason %}
+  {% if Claim.UntrustedReason %}
+    Auto-approval has been switched off for this claimant <br>
+    <p>Reason: {{ Claim.UntrustedReason }}</p>
+    <p>Date: {{ getDateFormatted.shortDate(Claim.UntrustedDate) }}</p>
+  {% else %}
+    Auto-approval has been switched off for this claimant <br>
+    <p class="text-italic">No reason given</p>
+    <p>Date: {{ getDateFormatted.shortDate(Claim.UntrustedDate) }}</p>
+  {% endif %}
+{% endset %}
 
 {% if Claim['IsTrusted'] === false %}
-  <div class="banner">
-    <p class="heading-small">Auto-approval has been switched off for this claimant</p>
-    <p>Reason: {{ Claim['UntrustedReason'] }}</p>
-    <p>Date: {{ getDateFormatted.shortDate(Claim['UntrustedDate']) }}</p>
-  </div>
-</br></br>
+  {{ govukWarningText({
+    html: trustedReason,
+    classes: 'claim-table-warning-text',
+    iconFallbackText: "Warning"
+  }) }}
 {% endif %}
