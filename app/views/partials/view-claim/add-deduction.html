@@ -15,7 +15,8 @@
           name: "deductionType",
           classes: "govuk-!-margin-bottom-2",
           formGroup: {
-            classes: "govuk-!-margin-bottom-0"
+            classes: "govuk-!-margin-bottom-0",
+            id: 'deductionType'
           },
           errorMessage: errors | findError('deductionType'),
           items: [
@@ -60,7 +61,8 @@
           value: '',
           id: "deductionAmount",
           name: "deductionAmount",
-          type: 'number'
+          inputmode: 'decimal',
+          step: '0.01'
         }) }}
       </div>
     {% endset %}
