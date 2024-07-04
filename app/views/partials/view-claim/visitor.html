@@ -74,7 +74,7 @@
           text: "Add",
           id: "add-benefit-documentation-upload-later",
           href: "/claim/file-upload/" + Claim.Reference + "/" + Claim.ClaimId + "/" + Claim.Benefit + "?eligibilityId=" + Claim.EligibilityId + "&claimDocumentId=" + document.ClaimDocumentId,
-          classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-1 edit-claim-button govuk-button--secondary pull-right"
+          classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-1 govuk-!-margin-right-2 edit-claim-button govuk-button--secondary pull-right"
         }) }}
       {% endif %}
     {% endif %}
@@ -89,9 +89,9 @@
       errorMessage: errors | findError('benefit-expiry'),
       formGroup: { classes: 'govuk-!-margin-bottom-0' },
       items: [
-        { name: "day", id: "expiry-day", type: "number", classes: "govuk-input--width-2", value: Claim.expiryDay },
-        { name: "month", id: "expiry-month", type: "number", classes: "govuk-input--width-2", value: Claim.expiryMonth },
-        { name: "year", id: "expiry-year", type: "number", classes: "govuk-input--width-4", value: Claim.expiryYear }
+        { name: "day", id: "day", type: "number", classes: "govuk-input--width-2", value: Claim.expiryDay },
+        { name: "month", id: "month", type: "number", classes: "govuk-input--width-2", value: Claim.expiryMonth },
+        { name: "year", id: "year", type: "number", classes: "govuk-input--width-4", value: Claim.expiryYear }
       ]
     }) }}
   {% else %}

@@ -3,7 +3,7 @@
 
 {% if Claim['AssignedTo'] %}
 {% else %}
-<form action="/claim/{{ Claim['ClaimId'] }}/insert-note" method="post" class="form">
+
     {% include "partials/csrf-hidden-input.html" %}
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
     
@@ -30,5 +30,5 @@
         type: "submit",
         classes: ""
     }) }}
-</form>
+
 {% endif %}
