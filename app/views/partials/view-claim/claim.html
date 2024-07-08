@@ -69,14 +69,6 @@
           items: expenseSelectItems
         }) }}
 
-        {% set inputVisibility %}
-          {% if expense['Status'] == claimDecisionEnum.APPROVED_DIFF_AMOUNT %}
-            visibility-visible
-          {% else %}
-            visibility-hidden
-          {% endif %}
-        {% endset %}
-
         <div id='approve-cost'>
           {{ govukInput({
             formGroup: { classes: " select-for-form govuk-!-margin-left-2 govuk-!-margin-right-2 js-hidden claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },

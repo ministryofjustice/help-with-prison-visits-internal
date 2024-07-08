@@ -1,38 +1,53 @@
+function totalApproved () {
+  let approvedCost = 0
+  let manuallyProcessed = 0
+  if ($('#unassign').length) {
+    $('.approved-amount').each(function () {
+      if (!isNaN(this.value) && this.value.length !== 0 && this.value.indexOf('e') === -1 && this.value.indexOf('E') === -1) {
+        manuallyProcessed += parseFloat(this.value)
+      }
+      approvedCost += +$(this).text().replace('£', '')
+    })
+    $('.deduction').each(function () {
+      approvedCost += +$(this).text().replace(' £', '')
+    })
+  } else { // use hidden approved cost for unassigned claims
+    $('.approved-cost').each(function () {
+      const parsedCost = parseFloat(+$(this).text().replace('£', ''))
+      if (!isNaN(parsedCost) && parsedCost !== 0) {
+        approvedCost += parsedCost
+      }
+    })
+    $('.deduction').each(function () {
+      approvedCost += +$(this).text().replace(' £', '')
+    })
+  }
+
+  const totalCost = approvedCost + manuallyProcessed
+  const formattedCost = totalCost < 0 ? '- £' + Math.abs(totalCost).toFixed(2) : '£' + totalCost.toFixed(2)
+  $('.claim-expense-approvedCostText').text(formattedCost)
+}
+
 $(document).ready(function () {
+  function initializeState () {
+    $('.claim-expense-status').each(function () {
+      const id = $(this).attr('data-id')
+      const value = $(this).val()
+      if (value === 'APPROVED-DIFF-AMOUNT') {
+        $(`.claim-expense-${id}-approvedcost`).removeClass('js-hidden')
+        $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
+      }
+    })
+    $('#additional-info-reject').each(function () {
+      if (this[this.selectedIndex].value === 'Other') {
+        $('.rejection-reason-other').removeClass('js-hidden')
+      }
+    })
+  }
+  initializeState()
+
   $(function () {
     totalApproved()
-
-    if (document.getElementById('additional-info-reject') !== null) {
-      if (document.getElementById('additional-info-reject').value === 'Other') {
-        document.getElementById('additional-info-reject-manual').style.display = 'block'
-        document.getElementById('manual-label').style.display = 'block'
-      }
-    }
-
-    function initializeState () {
-      $('.claim-expense-status').each(function () {
-        const id = $(this).attr('data-id')
-        const value = $(this).val()
-        if (value === 'APPROVED-DIFF-AMOUNT') {
-          $(`.claim-expense-${id}-approvedcost`).removeClass('js-hidden')
-          $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
-          $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
-        } else if (value === 'APPROVED') {
-          $(`.claim-expense-${id}-approvedcost`).addClass('js-hidden')
-          $(`#claim-expense-${id}-claimedcost`).addClass('approved-amount')
-          $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
-        } else {
-          $(`.claim-expense-${id}-approvedcost`).addClass('js-hidden')
-          $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
-          $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
-        }
-      })
-    }
-
-    // Call the function to initialize the state
-    initializeState()
-
-    // Attach change event handler
     $('.claim-expense-status').change(function () {
       const id = $(this).attr('data-id')
       const value = $(this).val()
@@ -44,8 +59,8 @@ $(document).ready(function () {
           totalApproved()
         })
       } else if (value === 'APPROVED') {
-        $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
         $(`.claim-expense-${id}-approvedcost`).addClass('js-hidden')
+        $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
         $(`#claim-expense-${id}-claimedcost`).addClass('approved-amount')
         $(`#claim-expense-${id}-approvedcost`).removeClass('approved-cost')
       } else {
@@ -93,50 +108,21 @@ $(document).ready(function () {
 
     $('#additional-info-reject').change(function () {
       if (this[this.selectedIndex].value === 'Other') {
-        $('.rejection-reason-other').removeClass('visibility-hidden').addClass('visibility-visible')
+        $('.rejection-reason-other').removeClass('js-hidden')
       } else {
-        $('.rejection-reason-other').removeClass('visibility-visible').addClass('visibility-hidden')
+        $('.rejection-reason-other').addClass('js-hidden')
       }
     })
 
     $('#is-trusted-checkbox').on('click', function () {
       if ($(this).is(':checked')) {
-        $('.reject-auto-approval').removeClass('visibility-visible').addClass('visibility-hidden')
+        $('.reject-auto-approval').addClass('js-hidden')
       } else {
-        $('.reject-auto-approval').removeClass('visibility-hidden').addClass('visibility-visible')
+        $('.reject-auto-approval').removeClass('js-hidden')
       }
     })
   })
 
-  function totalApproved () {
-    let approvedCost = 0
-    let manuallyProcessed = 0
-    if ($('#unassign').length) {
-      $('.approved-amount').each(function () {
-        if (!isNaN(this.value) && this.value.length !== 0 && this.value.indexOf('e') === -1 && this.value.indexOf('E') === -1) {
-          manuallyProcessed += parseFloat(this.value)
-        }
-        approvedCost += +$(this).text().replace('£', '')
-      })
-      $('.deduction').each(function () {
-        approvedCost += +$(this).text().replace(' £', '')
-      })
-    } else { // use hidden approved cost for unassigned claims
-      $('.approved-cost').each(function () {
-        const parsedCost = parseFloat(+$(this).text().replace('£', ''))
-        if (!isNaN(parsedCost) && parsedCost !== 0) {
-          approvedCost += parsedCost
-        }
-      })
-      $('.deduction').each(function () {
-        approvedCost += +$(this).text().replace(' £', '')
-      })
-    }
-
-    const totalCost = approvedCost + manuallyProcessed
-    const formattedCost = totalCost < 0 ? '- £' + Math.abs(totalCost).toFixed(2) : '£' + totalCost.toFixed(2)
-    $('.claim-expense-approvedCostText').text(formattedCost)
-  }
   function showClosedClaimActionSection (id) {
     $('#overpayment-input').addClass('js-hidden')
     $('#close-advanced-claim-input').addClass('js-hidden')
