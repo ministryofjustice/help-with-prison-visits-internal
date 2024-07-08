@@ -1,17 +1,20 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-
-{# TODO: LOGIC NEEDED FOR SETTING NEW RELEASE DATE AS release-date-is-set IS NEEEDED IN THE POST#}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% set releaseDate %}
   {% if unlock %}
+  
     <fieldset>
       {{ govukDateInput({
-        id: "release-date-section",
-        namePrefix: "release-date-section",
+        id: "release",
+        namePrefix: "release",
+        classes: "js-hidden",
         errorMessage: errors | findError('release-date-section'),
         formGroup: {
-          classes: "govuk-!-margin-bottom-0"
+          classes: "govuk-!-margin-bottom-0",
+          id: "release-date-section",
+          type: "number"
         },
         items: [
           {
@@ -37,8 +40,6 @@
     </fieldset>
     {% set saveButton %}
 
- {# TODO: BUTTON HERE IN DESIGN #}
- 
 {% endset %}
   {% else %}
     {% if Claim.ReleaseDate %}
@@ -48,6 +49,27 @@
     {% endif %}
   {% endif %}
 {% endset %}
+
+{% set releaseDateCheckbox %}
+ {{ govukCheckboxes({
+  name: "release-date-is-set",
+  id: "release-date-is-set",
+  name: "release-date-is-set",
+  classes: "govuk-!-margin-top-3 govuk-!-margin-bottom-3",
+  formGroup: {
+    classes: "govuk-!-margin-bottom-0 pull-right"
+  },
+  items: [
+      { 
+      name:"release-date-is-set", 
+      value: "on", 
+      text: "Release date is set?", 
+      checked: Claim['ReleaseDateIsSet'] == true
+    }
+  ]
+}) }}
+
+ {% endset %}
 
 {{ govukTable({
   caption: "Release Information",
@@ -62,10 +84,10 @@
       },
       {
         html: releaseDate,
-        classes: "govuk-!-width-one-third"
+        classes: "govuk-!-width-one-third vertical-align-middle"
       },
       {
-        html: saveButton,
+        html: releaseDateCheckbox,
         classes: "govuk-!-width-one-third vertical-align-middle"
       }
     ]

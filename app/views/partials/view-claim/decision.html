@@ -28,7 +28,7 @@
   classes: "float-left",
   formGroup: { classes: "govuk-!-margin-bottom-4" },
   items: [
-    { value: '',
+    { value: 'on',
       text: "Allow auto-approval",
       id: "is-trusted-checkbox",
       checked: Claim['IsTrusted'] 
@@ -59,6 +59,8 @@
   text: "Submit and send approval email",
   name: "approve",
   type: "submit",
+  id: "approve-submit",
+  value: 'Send approval email',
   classes: ""
 }) }}
 {% endset %}
@@ -83,6 +85,7 @@
 {{ govukButton({
   text: "Submit and send request email",
   name: "request",
+  value: 'Send request email',
   type: "submit",
   classes: ""
 }) }}
@@ -149,6 +152,7 @@
   text: "Submit and send rejection email",
   name: "reject",
   type: "submit",
+  value: "Send rejection email",
   classes: errorMargin
 }) }}
 {% endset %}

@@ -5,9 +5,11 @@
 
 {% set expenseData = [] %}
 {% for expense in Expenses %}
-  {% set expenseSelectItems = [
-    { value: undefined, text: "Select", selected: expense.Status == undefined }
-  ] %}
+  {% set expenseSelectItems = [{
+    value: "Select",
+    text: "Select",
+    selected: expense.Status == undefined 
+  }] %}
 
   {% if expense.Cost > 0 %}
     {% set expenseSelectItems = expenseSelectItems | concat([{
@@ -64,6 +66,7 @@
           id: "claim-expense-" + expense.ClaimExpenseId + "-status",
           name: "claim-expense-" + expense.ClaimExpenseId + "-status",
           classes: "action-select claim-expense-status",
+          value: 'test',
           attributes: { 'data-id': expense.ClaimExpenseId },
           errorMessage: errors | findError('claim-expenses'),
           items: expenseSelectItems
