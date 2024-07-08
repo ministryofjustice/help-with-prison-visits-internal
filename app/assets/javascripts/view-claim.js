@@ -43,6 +43,11 @@ $(document).ready(function () {
         $('.rejection-reason-other').removeClass('js-hidden')
       }
     })
+    $('#release-date-is-set').each(function () {
+      if ($(this).is(':checked')) {
+        $('#release').removeClass('js-hidden')
+      }
+    })
   }
   initializeState()
 
@@ -116,12 +121,20 @@ $(document).ready(function () {
 
     $('#is-trusted-checkbox').on('click', function () {
       if ($(this).is(':checked')) {
-        $('.reject-auto-approval').addClass('js-hidden')
-      } else {
         $('.reject-auto-approval').removeClass('js-hidden')
+      } else {
+        $('.reject-auto-approval').addClass('js-hidden')
       }
     })
-  })
+
+    $('#release-date-is-set').on('click', function () {
+      if ($(this).is(':checked')) {
+        $('#release').removeClass('js-hidden')
+      } else {
+        $('#release').addClass('js-hidden')
+      }
+    })
+1  })
 
   function showClosedClaimActionSection (id) {
     $('#overpayment-input').addClass('js-hidden')
