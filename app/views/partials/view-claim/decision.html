@@ -41,7 +41,7 @@
   id: "untrusted-reason",
   classes: "govuk-!-width-one-half",
   rows: "2",
-  formGroup: { classes: 'govuk-!-margin-top-6 reject-auto-approval visibility-hidden' },
+  formGroup: { classes: 'govuk-!-margin-top-6 reject-auto-approval js-hidden' },
   hint: {
     text: 'The claimant won’t see this'
   },
@@ -103,8 +103,6 @@
   {% endif %}
 {% endfor %}
 
-{# TODO: FIX DISPLAY FOR REJECT REASON AS DIVS OVERLAP ON 'additional-info-reject' ERROR #}
-
 {% set rejectClaimHtml %}
 <div class="select-for-rejection govuk-!-margin-bottom-2">
 {{ govukSelect({
@@ -126,9 +124,8 @@
 <br>
 <br>
 
-{% set errorMargin %}{% if errors['additional-info-reject'][0] %}govuk-!-margin-top-8{% else %}{% endif %}{% endset%}
-{% set errorMarginFormGroup %}{% if errors['additional-info-reject'][0] %}claim-table-decision-error-margin{% else %}{% endif %}{% endset%}
-
+{% set errorMargin = 'govuk-!-margin-top-8' if errors['additional-info-reject'][0] else '' %}
+{% set errorMarginFormGroup = 'claim-table-decision-error-margin' if errors['additional-info-reject'][0] else '' %}
 
 {{ govukTextarea({
   name: "additionalInfoRejectManual",
@@ -136,7 +133,7 @@
   classes: "govuk-!-width-one-half govuk-!-margin-bottom-4",
   rows: "2",
   formGroup: {
-    classes: "rejection-reason-other visibility-hidden " + errorMarginFormGroup
+    classes: "rejection-reason-other js-hidden " + errorMarginFormGroup
   },
   attributes: {
     'maxlength': 2000
