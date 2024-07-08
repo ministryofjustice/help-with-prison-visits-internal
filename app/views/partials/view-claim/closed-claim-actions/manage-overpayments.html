@@ -13,21 +13,27 @@
       {% endif %}
       
       {{ govukInput({
-        label: { text: overPaymentTitleText,
-                 classes: "govuk-label--l",
-                 isPageHeading: true },
-        formGroup: { classes: 'govuk-!-margin-bottom-4' },
+        label: { 
+          text: overPaymentTitleText,
+          classes: "govuk-label--l",
+          isPageHeading: true 
+        },
+        formGroup: { 
+          classes: "govuk-!-margin-bottom-4"
+        },
         id: overPaymentInput,
         name: overPaymentInput,
         errorMessage: errors | findError(overPaymentInput),
         classes: "claim-table-width-one-sixth",
         value: autoApprovalConfig.MaxClaimTotal,
-        prefix: { text: "£" },
-        attributes: {
-          'step': '0.01',
-          'inputmode': 'decimal'
+        prefix: { 
+          text: "£" 
         },
-        type: 'number'
+        attributes: {
+          "step": "0.01",
+          "inputmode": "decimal"
+        },
+        type: "number"
       }) }}
       
       {{ govukTextarea({
@@ -37,7 +43,7 @@
         classes: "govuk-!-width-one-half",
         errorMessage: '',
         attributes: {
-          'maxlength': 2000
+          "maxlength": 2000
         },
         label: {
           text: "Reason",
