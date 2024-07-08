@@ -313,6 +313,10 @@ span.bold {
     display: none
 }
 
+.vertical-align-middle {
+    vertical-align: middle;
+}
+
 .pull-right {
     float:right;
 }
@@ -763,7 +767,8 @@ ul.sub-tabs li a.active span.badge {
 
 .config-description {
     color: $govuk-secondary-text-colour;
-    width: 53%
+    width: 53%;
+    vertical-align: middle;
 }
 
 .config-rule-checkbox {
