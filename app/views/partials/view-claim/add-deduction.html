@@ -7,7 +7,7 @@
     {% set deductionSelect %}
     <div class="claim-table-deduction-section-container">
       <div>
-        <span class=" govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Type</span>
+        <span class="govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Type</span>
       </div>
       <div>
         {{ govukSelect({
@@ -15,7 +15,7 @@
           name: "deductionType",
           formGroup: {
             classes: "govuk-!-margin-bottom-0",
-            id: 'deductionType'
+            id: "deductionType"
           },
           errorMessage: errors | findError('deductionType'),
           items: [
@@ -57,11 +57,11 @@
           prefix: {
             text: "£"
           },
-          value: '',
+          value: "",
           id: "deductionAmount",
           name: "deductionAmount",
-          inputmode: 'decimal',
-          step: '0.01'
+          inputmode: "decimal",
+          step: "0.01"
         }) }}
       </div>
     {% endset %}
@@ -83,7 +83,6 @@
       caption: "Deduction",
       captionClasses: "govuk-table__caption--l",
       classes: "govuk-!-margin-bottom-8",
-      errorMessage: '',
       rows: [
         [
           {
@@ -92,7 +91,7 @@
           },
           {
             html: deductionAmount,
-            classes: "govuk-!-width-one-third vertical-align-middle claim-table-width-full "
+            classes: "govuk-!-width-one-third vertical-align-middle claim-table-width-full"
           },
           {
             html: deductionButton,

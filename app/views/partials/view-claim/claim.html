@@ -71,7 +71,7 @@
 
         <div id='approve-cost'>
           {{ govukInput({
-            formGroup: { classes: " select-for-form govuk-!-margin-left-2 govuk-!-margin-right-2 js-hidden claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
+            formGroup: { classes: "select-for-form govuk-!-margin-left-2 govuk-!-margin-right-2 js-hidden claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
             label: {
               text: "Change approved cost for " + getDisplayFieldName[expense.ExpenseType],
               classes: "govuk-visually-hidden"
@@ -84,8 +84,8 @@
             value: displayHelper.toDecimal(expense.ApprovedCost),
             id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
             name: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
-            inputmode: 'decimal',
-            step: '0.01'
+            inputmode: "decimal",
+            step: "0.01"
           }) }}
         </div>
       </div>
@@ -120,7 +120,7 @@
 
   {% set expenseRow = [
     { html: expenseOverview, classes: "govuk-!-width-one-third vertical-align-middle" },
-    { html: expenseDocumentStatus, classes: " vertical-align-middle" },
+    { html: expenseDocumentStatus, classes: "vertical-align-middle" },
     { html: expenseButtons, classes: "govuk-!-width-one-half vertical-align-middle" }
   ] %}
 
@@ -149,7 +149,10 @@
         type: "submit",
         name: "remove-deduction-" + deduction.ClaimDeductionId,
         id: "remove-deduction-" + deduction.ClaimDeductionId,
-        attributes: { formaction: "/claim/" + Claim.ClaimId + "/remove-deduction", value: 'Remove' },
+        attributes: { 
+          formaction: "/claim/" + Claim.ClaimId + "/remove-deduction",
+          value: "Remove" 
+        },
         classes: "govuk-button--secondary govuk-!-margin-bottom-0 pull-right"
       }) }}
     {% endif %}
@@ -176,6 +179,7 @@
   govuk-!-width-one-third table-no-border-bottom govuk-!-font-size-24 govuk-!-font-weight-bold claim-expense-approvedCostText
 {% endif %}
 {% endset %}
+
 {% if errors["total-approved-cost"][0] %}
   <p class="claim-table-error-text govuk-!-font-weight-bold govuk-!-margin-top-3 govuk-!-margin-bottom-0" id="total-approved-cost">{{ errors["total-approved-cost"][0] }}</p>
 {% endif %}

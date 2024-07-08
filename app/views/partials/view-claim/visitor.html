@@ -55,7 +55,9 @@
 {% set benefitInformationButtons %}
     {% if unlock %}
       {{ govukSelect({
-        formGroup: { classes: "select-for-form", id: 'dwp-check' },
+        formGroup: { 
+          classes: "select-for-form", 
+          id: "dwp-check" },
         id: "dwp-check",
         name: "dwpCheck",
         classes: "action-select select-for-form",
@@ -85,7 +87,9 @@
       id: "benefit-expiry",
       namePrefix: "benefit-expiry",
       errorMessage: errors | findError('benefit-expiry'),
-      formGroup: { classes: 'govuk-!-margin-bottom-0' },
+      formGroup: { 
+        classes: "govuk-!-margin-bottom-0" 
+      },
       items: [
         { name: "day", id: "day", type: "number", classes: "govuk-input--width-2", value: Claim.expiryDay },
         { name: "month", id: "month", type: "number", classes: "govuk-input--width-2", value: Claim.expiryMonth },
@@ -207,9 +211,9 @@
   firstCellIsHeader: true,
   rows: [
     [
-      { text: "Payment method", classes: "claim-table-width-one-third table-no-border-bottom " },
+      { text: "Payment method", classes: "claim-table-width-one-third table-no-border-bottom" },
       { html: displayHelper.getPaymentMethodDisplayName(Claim.PaymentMethod), classes: "claim-table-width-one-third table-no-border-bottom" },
-      { text: '', classes: "claim-table-width-one-third table-no-border-bottom " }
+      { text: '', classes: "claim-table-width-one-third table-no-border-bottom" }
     ]
   ]
 }) }}

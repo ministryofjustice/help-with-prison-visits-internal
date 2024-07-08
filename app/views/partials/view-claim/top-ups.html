@@ -4,10 +4,10 @@
 {% set tableRows = [
   [
     { html: "Date Added", classes: "claim-table-width-third govuk-table__header" },
-    { html: "Amount", classes: " govuk-table__header" },
-    { html: "Caseworker", classes: " govuk-table__header" },
-    { html: "Payment Status", classes: " govuk-table__header" },
-    { html: "Payment Date", classes: " govuk-table__header" },
+    { html: "Amount", classes: "govuk-table__header" },
+    { html: "Caseworker", classes: "govuk-table__header" },
+    { html: "Payment Status", classes: "govuk-table__header" },
+    { html: "Payment Date", classes: "govuk-table__header" },
     { html: "", classes: "" }
   ]
 ] %}
@@ -19,11 +19,11 @@
 
   {% set paymentStatusData %}
     {% if TopUp.PaymentStatus == 'PROCESSED' %}
-      <span class='text-success'>Paid</span>
+      <span class="text-success">Paid</span>
     {% elif TopUp.PaymentStatus == 'PENDING' %}
-      <span class='text-pending'>Pending</span>
+      <span class="text-pending">Pending</span>
     {% elif TopUp.PaymentStatus == 'CANCELLED' %}
-      <span class='text-warning'>Cancelled</span>
+      <span class="text-warning">Cancelled</span>
     {% endif %}
   {% endset %}
 

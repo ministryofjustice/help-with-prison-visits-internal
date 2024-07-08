@@ -12,7 +12,7 @@
 
   {{ govukWarningText({
     html: "This claim may be a duplicate" + duplicatesList,
-    classes: 'claim-table-warning-text',
+    classes: "claim-table-warning-text",
     iconFallbackText: "Warning"
   }) }}
 {% endif %}
@@ -29,7 +29,7 @@
 
   {{ govukWarningText({
     html: "Another Claimant has a claim for this Prisoner on this date" + claimantDuplicatesList,
-    classes: 'claim-table-warning-text',
+    classes: "claim-table-warning-text",
     iconFallbackText: "Warning"
   }) }}
 {% endif %}
@@ -46,7 +46,7 @@
 
   {{ govukWarningText({
     html: "Another Claimant has used these bank details" + bankDuplicatesList,
-    classes: 'claim-table-warning-text',
+    classes: "claim-table-warning-text",
     iconFallbackText: "Warning"
   }) }}
 {% endif %}
@@ -69,7 +69,7 @@
 
   {{ govukWarningText({
     html: "This claim is for a claimant that has been overpaid" + overpaidClaimList,
-    classes: 'claim-table-warning-text',
+    classes: "claim-table-warning-text",
     iconFallbackText: "Warning"
   }) }}
 {% endif %}
@@ -84,7 +84,7 @@
 
   {{ govukWarningText({
     html: "This claim has been marked as overpaid" + overpaidMarkedList,
-    classes: 'claim-table-warning-text',
+    classes: "claim-table-warning-text",
     iconFallbackText: "Warning"
   }) }}
 {% endif %}
@@ -103,7 +103,7 @@
 
   {{ govukWarningText({
     html: disabledReason,
-    classes: 'claim-table-warning-text',
+    classes: "claim-table-warning-text",
     iconFallbackText: "Warning"
   }) }}
 {% endif %}
@@ -124,7 +124,7 @@
 {% if Claim['IsTrusted'] === false %}
   {{ govukWarningText({
     html: trustedReason,
-    classes: 'claim-table-warning-text',
+    classes: "claim-table-warning-text",
     iconFallbackText: "Warning"
   }) }}
 {% endif %}
