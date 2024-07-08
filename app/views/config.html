@@ -23,7 +23,7 @@
       head: [],
       rows: [
         [
-          { text: "Auto approval enabled", classes: "govuk-!-width-one-quarter" },
+          { text: "Auto approval enabled", classes: "govuk-!-width-one-quarter vertical-align-middle" },
           { text: "Whether claims that meet the rules below will be automatically approved", classes: "config-description" },
           { html: govukRadios({
             classes: "govuk-radios--inline",
@@ -34,11 +34,11 @@
               { name:"AutoApprovalEnabled", value: "true", text: "On", checked: autoApprovalConfig.AutoApprovalEnabled },
               { name:"AutoApprovalEnabled", value: "false", text: "Off", checked: not autoApprovalConfig.AutoApprovalEnabled }
             ],
-            errorMessage: errors['auto-approval-enabled']
+            errorMessage: errors | findError('auto-approval-enabled')
           }) }
         ],
         [
-          { text: "Auto approval cost variance" },
+          { text: "Auto approval cost variance", classes: "vertical-align-middle" },
           { text: "The cost variance percentage used for auto approval (e.g. 10)", classes: "config-description" },
           { html: govukInput({
             label: { text: "The cost variance percentage used for auto approval (e.g. 10)", classes: "govuk-visually-hidden govuk-!-margin-bottom-0" },
@@ -48,11 +48,11 @@
             value: autoApprovalConfig.CostVariancePercentage,
             prefix: { text: "%" },
             spellcheck: false,
-            errorMessage: errors['cost-variance-percentage']
+            errorMessage: errors | findError('cost-variance-percentage')
           }) }
         ],
         [
-          { text: "Max claim total" },
+          { text: "Max claim total", classes: "vertical-align-middle" },
           { text: "The maximum claim total that can be auto-approved (e.g. 250)", classes: "config-description" },
           { html: govukInput({
             label: { text: "The maximum claim total that can be auto-approved (e.g. 250)", classes: "govuk-visually-hidden" },
@@ -62,11 +62,11 @@
             value: autoApprovalConfig.MaxClaimTotal,
             prefix: { text: "£" },
             spellcheck: false,
-            errorMessage: errors['max-claim-total']
+            errorMessage: errors | findError('max-claim-total')
           }) }
         ],
         [
-          { text: "Max days after APVU visit" },
+          { text: "Max days after APVU visit", classes: "vertical-align-middle" },
           { text: "The number of days after a visit that a claim can be auto-approved (e.g. 28)", classes: "config-description" },
           { html: govukInput({
             label: { text: "The number of days after a visit that a claim can be auto-approved (e.g. 28)", classes: "govuk-visually-hidden" },
@@ -76,11 +76,11 @@
             value: autoApprovalConfig.MaxDaysAfterAPVUVisit,
             suffix: { text: "days" },
             spellcheck: false,
-            errorMessage: errors['max-days-after-apvu-visit']
+            errorMessage: errors | findError('max-days-after-apvu-visit')
           }) }
         ],
         [
-          { text: "Max number of claims per year" },
+          { text: "Max number of claims per year", classes: "vertical-align-middle" },
           { text: "The maximum number of claims that can be auto-approved per year (e.g. 26)", classes: "config-description" },
           { html: govukInput({
             label: { text: "The maximum number of claims that can be auto-approved per year (e.g. 26)", classes: "govuk-visually-hidden" },
@@ -90,11 +90,11 @@
             value: autoApprovalConfig.MaxNumberOfClaimsPerYear,
             suffix: { text: "claims" },
             spellcheck: false,
-            errorMessage: errors['max-number-of-claims-per-year']
+            errorMessage: errors | findError('max-number-of-claims-per-year')
           }) }
         ],
         [
-          { text: "Max number of claims per month" },
+          { text: "Max number of claims per month", classes: "vertical-align-middle" },
           { text: "The maximum number of claims that can be auto-approved per month (e.g. 4)", classes: "config-description" },
           { html: govukInput({
             label: { text: "The maximum number of claims that can be auto-approved per month (e.g. 4)", classes: "govuk-visually-hidden" },
@@ -104,11 +104,11 @@
             value: autoApprovalConfig.MaxNumberOfClaimsPerMonth,
             suffix: { text: "claims" },
             spellcheck: false,
-            errorMessage: errors['max-number-of-claims-per-month']
+            errorMessage: errors | findError('max-number-of-claims-per-month')
           }) }
         ],
         [
-          { text: "Number of consecutive auto approvals" },
+          { text: "Number of consecutive auto approvals", classes: "vertical-align-middle" },
           { text: "Controls the maximum number of consecutive auto approvals before a claim is forced to be manual (e.g. 4)", classes: "config-description" },
           { html: govukInput({
             label: { text: "Controls the maximum number of consecutive auto approvals before a claim is forced to be manual (e.g. 4)", classes: "govuk-visually-hidden" },
@@ -118,7 +118,7 @@
             value: autoApprovalConfig.NumberOfConsecutiveAutoApprovals,
             suffix: { text: "approvals" },
             spellcheck: false,
-            errorMessage: errors['number-of-consecutive-auto-approvals']
+            errorMessage: errors | findError('number-of-consecutive-auto-approvals')
           }) }
         ]
       ]
@@ -131,7 +131,7 @@
     {% set rows = [] %}
     {% for key, rule in autoApprovalRulesEnum %}
       {% set row = [
-        { text: rule.displayName, classes: "govuk-!-width-one-quarter" },
+        { text: rule.displayName, classes: "govuk-!-width-one-quarter vertical-align-middle" },
         { text: rule.description, classes: "config-description"},
         { html: govukCheckboxes({
           formGroup: { classes: 'govuk-!-margin-0' },
@@ -145,7 +145,7 @@
             }
           , value: rule.value, text: " ", checked: rule.value not in rulesDisabled }
           ]
-        }) }
+        }), classes: 'vertical-align-middle' }
       ] %}
       {% set rows = rows.concat([row]) %}
     {% endfor %}
@@ -167,7 +167,7 @@
       head: [],
       rows: [
         [
-          { text: "Audit limit", classes: "govuk-!-width-one-quarter" },
+          { text: "Audit limit", classes: "govuk-!-width-one-quarter vertical-align-middle" },
           { text: "The minimum claim amount that will be included in audit report ", classes: "config-description" },
           { html: govukInput({
             label: { text: "The minimum claim amount that will be included in audit report ", classes: "govuk-visually-hidden govuk-!-margin-bottom-0" },
@@ -176,11 +176,11 @@
             name: "AuditThreshold",
             value: auditConfig.ThresholdAmount,
             prefix: { text: "£" },
-            errorMessage: errors['audit-threshold']
+            errorMessage: errors | findError('audit-threshold')
           }) }
         ],
         [
-          { text: "Audit verification percentage", classes: "govuk-!-width-one-quarter"  },
+          { text: "Audit verification percentage", classes: "govuk-!-width-one-quarter vertical-align-middle"  },
           { text: "Controls the percentage of claims to be verified", classes: "config-description" },
           { html: govukInput({
             label: { text: "Controls the percentage of claims to be verified", classes: "govuk-visually-hidden" },
@@ -189,7 +189,7 @@
             name: "VerificationPercentage",
             value: auditConfig.VerificationPercent,
             prefix: { text: "%" },
-            errorMessage: errors['audit-verification-percentage']
+            errorMessage: errors | findError('audit-verification-percentage')
           }) }
         ]
       ]
