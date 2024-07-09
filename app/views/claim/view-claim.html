@@ -4,58 +4,43 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% block pageTitle %}
-  {% if serviceName %} {{ serviceName }} {% endif %}
+  {% if serviceName %} 
+    {{ serviceName }} 
+  {% endif %}
 {% endblock %}
 
 {% set activeMainNav = 'claims' %}
 
 {% block content %}
+  {% include "partials/view-claim/overview-header.html" %}
+  <br>
+  {% include "partials/view-claim/overview-summary.html" %}
+  <br>
+  {% include "partials/view-claim/assisted-caseworker.html" %}
+  {% include "partials/view-claim/warnings.html" %}
+  {% include "includes/validation-error-messages.html" %}
 
-{% include "partials/view-claim/overview-header.html" %}
-</br>
-{% include "partials/view-claim/overview-summary.html" %}
-</br>
-{% include "partials/view-claim/assisted-caseworker.html" %}
-{% include "partials/view-claim/warnings.html" %}
-{% include "includes/validation-error-messages.html" %}
-
-<form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
-  {% include "partials/csrf-hidden-input.html" %}
-  <input type="hidden" name="assistedDigitalCaseworker" value="{{ Claim['AssistedDigitalCaseworker'] }}">
-  <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-  
-  {% include "partials/view-claim/visitor.html" %}
-  <br>
-  {% include "partials/view-claim/bank-account-details.html" %}
-  <br>
-  {% include "partials/view-claim/benefit-owner.html" %}
-  <br>
-  {% include "partials/view-claim/eligible-child.html" %}
-  {% include "partials/view-claim/prisoner.html" %}
-  <br>
-  {% include "partials/view-claim/release-date.html" %}
-  <br>
-  {% include "partials/view-claim/visit.html" %}
-  <br>
-  {% include "partials/view-claim/claim.html" %}
-  <br>
-  {% include "partials/view-claim/add-deduction.html" %}
-  
-  {% if TopUps.length > 0 %}
+  <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
+    {% include "partials/csrf-hidden-input.html" %}
+    <input type="hidden" name="assistedDigitalCaseworker" value="{{ Claim['AssistedDigitalCaseworker'] }}">
+    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+    
+    {% include "partials/view-claim/visitor.html" %}
+    {% include "partials/view-claim/bank-account-details.html" %}
+    {% include "partials/view-claim/benefit-owner.html" %}
+    {% include "partials/view-claim/eligible-child.html" %}
+    {% include "partials/view-claim/prisoner.html" %}
+    {% include "partials/view-claim/release-date.html" %}
+    {% include "partials/view-claim/visit.html" %}
+    {% include "partials/view-claim/claim.html" %}
+    {% include "partials/view-claim/add-deduction.html" %}
     {% include "partials/view-claim/top-ups.html" %}
-  {% endif %}
-
-  {% include "partials/view-claim/claim-events.html" %}
-  
-  {% include "partials/view-claim/decision.html" %}
-
-</form>
+    {% include "partials/view-claim/claim-events.html" %}
+    {% include "partials/view-claim/decision.html" %}
+  </form>
 
   {% include "partials/view-claim/insert-note.html" %}
-
   {% include "partials/view-claim/closed-claim-actions.html" %}
-
-
 {% endblock %}
 
 {% block bodyEnd %}

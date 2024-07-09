@@ -6,216 +6,221 @@
 
 {% if not displayHelper.getClaimStatusClosed(Claim['Status'], Claim['IsAdvanceClaim'], Claim['DateOfJourney']) and unlock %}
 
-{% set approveClaimHtml %}
-{{ govukTextarea({
-  name: "additionalInfoApprove",
-  id: "additional-info-approve",
-  classes: "govuk-!-width-one-half",
-  rows: "2",
-  attributes: {
-    "maxlength": 2000
-  },
-  label: {
-    text: "Note to claimant (optional)",
-    classes: "govuk-label--l",
-    isPageHeading: true
-  }
-}) }}
-
-{{ govukCheckboxes({
-  name: "is-trusted",
-  id: "is-trusted",
-  classes: "float-left",
-  formGroup: { classes: "govuk-!-margin-bottom-4" },
-  items: [
-    { value: 'on',
-      text: "Allow auto-approval",
-      id: "is-trusted-checkbox",
-      checked: Claim['IsTrusted'] 
-    }
-  ]
-}) }}
-
-{{ govukTextarea({
-  name: "untrusted-reason",
-  id: "untrusted-reason",
-  classes: "govuk-!-width-one-half",
-  rows: "2",
-  formGroup: { classes: "govuk-!-margin-top-6 reject-auto-approval js-hidden" },
-  hint: {
-    text: "The claimant won’t see this"
-  },
-  attributes: {
-    "maxlength": 2000
-  },
-  label: {
-    text: "Why aren’t you allowing auto-approval?",
-    classes: "govuk-label--l",
-    isPageHeading: true
-  }
-}) }}
-
-{{ govukButton({
-  text: "Submit and send approval email",
-  name: "approve",
-  type: "submit",
-  id: "approve-submit",
-  value: 'Send approval email',
-  classes: ""
-}) }}
-{% endset %}
-
-{% set requestInformationHtml %}
-{{ govukTextarea({
-  name: "additional-info-request",
-  id: "additional-info-request",
-  rows: "2",
-  classes: "govuk-!-width-one-half govuk-!-margin-bottom-4",
-  errorMessage: errors | findError('additional-info-request'),
-  attributes: {
-    "maxlength": 2000
-  },
-  label: {
-    text: "Note to claimant",
-    classes: "govuk-label--l",
-    isPageHeading: true
-  }
-}) }}
-
-{{ govukButton({
-  text: "Submit and send request email",
-  name: "request",
-  value: 'Send request email',
-  type: "submit",
-  classes: ""
-}) }}
-{% endset %}
-
-{% set reasonArray = [{
-  value: undefined,
-  text: "Select",
-  selected: selectedRejectReason === undefined
-}] %}
-{% for reason in rejectionReasons %}
-  {% if reason.enabled %}
-    {% set reason = {
-      value: reason.reason,
-      text: reason.reason,
-      selected: selectedRejectReason === reason.reason } %}
-    {% set reasonArray = reasonArray.concat([reason]) %}
-  {% endif %}
-{% endfor %}
-
-{% set rejectClaimHtml %}
-<div class="select-for-rejection govuk-!-margin-bottom-2">
-{{ govukSelect({
-  name: "additionalInfoReject",
-  id: "additional-info-reject",
-  classes: "govuk-!-margin-bottom-0",
-  label: {
-    text: "Reason for rejection",
-    classes: "govuk-label--l",
-    isPageHeading: true
-  },
-  formGroup: {
-    classes: "govuk-!-margin-top-1"
-  },
-  errorMessage: errors | findError('additional-info-reject'),
-  items: reasonArray
-}) }}
-</div>
-<br>
-<br>
-
-{% set errorMargin = "govuk-!-margin-top-8" if errors['additional-info-reject'][0] else '' %}
-{% set errorMarginFormGroup = "claim-table-decision-error-margin" if errors['additional-info-reject'][0] else '' %}
-
-{{ govukTextarea({
-  name: "additionalInfoRejectManual",
-  id: "additional-info-reject-manual",
-  classes: "govuk-!-width-one-half govuk-!-margin-bottom-4",
-  rows: "2",
-  formGroup: {
-    classes: "rejection-reason-other js-hidden " + errorMarginFormGroup
-  },
-  attributes: {
-    "maxlength": 2000
-  },
-  label: {
-    text: "Enter a reason not in the dropdown",
-    classes: "govuk-label--l govuk-!-padding-top-0 " + errorMargin,
-    isPageHeading: true
-  }
-}) }}
-
-{{ govukButton({
-  text: "Submit and send rejection email",
-  name: "reject",
-  type: "submit",
-  value: "Send rejection email",
-  classes: errorMargin
-}) }}
-{% endset %}
-
-<div id="decision" class="error-div"></div>
-{{ govukRadios({
-  name: "decision",
-  errorMessage: errors | findError('decision'),
-  formGroup: {
-    classes: "govuk-!-margin-top-8"
-  },
-  fieldset: {
-    legend: {
-      text: "Outcome",
-      isPageHeading: false,
-      classes: "govuk-fieldset__legend--l",
-      id: "reason"
-    }
-  },
-  items: [
-    {
-      text: "Approve claim",
-      id: "approve",
-      name: "decision",
-      checked: claimDecision['decision'] == claimDecisionEnum.APPROVED,
-      value: claimDecisionEnum.APPROVED,
+  {% set approveClaimHtml %}
+    {{ govukTextarea({
+      name: "additionalInfoApprove",
+      id: "additional-info-approve",
+      classes: "govuk-!-width-one-half",
+      rows: "2",
+      value: claimDecision['additionalInfoApprove'],
       attributes: {
-        "data-target": "accept-input"
+        "maxlength": 2000
       },
-      label: { text: "Outcome: Approve claim" },
-      conditional: {
-        html: approveClaimHtml
+      label: {
+        text: "Note to claimant (optional)",
+        classes: "govuk-label--l",
+        isPageHeading: true
+      }
+    }) }}
+
+    {{ govukCheckboxes({
+      name: "is-trusted",
+      id: "is-trusted",
+      classes: "float-left",
+      formGroup: { classes: "govuk-!-margin-bottom-4" },
+      items: [
+        {
+          value: 'on',
+          text: "Allow auto-approval",
+          id: "is-trusted-checkbox",
+          checked: Claim['IsTrusted']
+        }
+      ]
+    }) }}
+
+    {{ govukTextarea({
+      name: "untrusted-reason",
+      id: "untrusted-reason",
+      classes: "govuk-!-width-one-half",
+      rows: "2",
+      formGroup: { classes: "govuk-!-margin-top-6 reject-auto-approval js-hidden" },
+      hint: {
+        text: "The claimant won’t see this"
+      },
+      value: claimDecision['untrusted-reason'],
+      attributes: {
+        "maxlength": 2000
+      },
+      label: {
+        text: "Why aren’t you allowing auto-approval?",
+        classes: "govuk-label--l",
+        isPageHeading: true
+      }
+    }) }}
+
+    {{ govukButton({
+      text: "Submit and send approval email",
+      name: "approve",
+      type: "submit",
+      id: "approve-submit",
+      value: 'Send approval email',
+      classes: ""
+    }) }}
+  {% endset %}
+
+  {% set requestInformationHtml %}
+    {{ govukTextarea({
+      name: "additionalInfoRequest",
+      id: "additional-info-request",
+      rows: "2",
+      value: claimDecision['additionalInfoRequest'],
+      classes: "govuk-!-width-one-half govuk-!-margin-bottom-4",
+      errorMessage: errors | findError('additional-info-request'),
+      attributes: {
+        "maxlength": 2000
+      },
+      label: {
+        text: "Note to claimant",
+        classes: "govuk-label--l",
+        isPageHeading: true
+      }
+    }) }}
+
+    {{ govukButton({
+      text: "Submit and send request email",
+      name: "request",
+      value: 'Send request email',
+      type: "submit",
+      classes: ""
+    }) }}
+  {% endset %}
+
+  {% set reasonArray = [{
+    value: undefined,
+    text: "Select",
+    selected: selectedRejectReason === undefined
+  }] %}
+  {% for reason in rejectionReasons %}
+    {% if reason.enabled %}
+      {% set reason = {
+        value: reason.reason,
+        text: reason.reason,
+        selected: selectedRejectReason === reason.reason } %}
+      {% set reasonArray = reasonArray.concat([reason]) %}
+    {% endif %}
+  {% endfor %}
+
+  {% set rejectClaimHtml %}
+    <div class="select-for-rejection govuk-!-margin-bottom-2">
+      {{ govukSelect({
+        name: "additionalInfoReject",
+        id: "additional-info-reject",
+        classes: "govuk-!-margin-bottom-0",
+        label: {
+          text: "Reason for rejection",
+          classes: "govuk-label--l",
+          isPageHeading: true
+        },
+        formGroup: {
+          classes: "govuk-!-margin-top-1"
+        },
+        errorMessage: errors | findError('additional-info-reject'),
+        items: reasonArray
+      }) }}
+    </div>
+    <br>
+    <br>
+
+    {% set errorMargin = "govuk-!-margin-top-8" if errors['additional-info-reject'][0] else '' %}
+    {% set errorMarginFormGroup = "claim-table-decision-error-margin" if errors['additional-info-reject'][0] else '' %}
+
+    {{ govukTextarea({
+      name: "additionalInfoRejectManual",
+      id: "additional-info-reject-manual",
+      classes: "govuk-!-width-one-half govuk-!-margin-bottom-4",
+      rows: "2",
+      formGroup: {
+        classes: "rejection-reason-other js-hidden " + errorMarginFormGroup
+      },
+      value: claimDecision['additionalInfoRejectManual'],
+      attributes: {
+        "maxlength": 2000
+      },
+      label: {
+        text: "Enter a reason not in the dropdown",
+        classes: "govuk-label--l govuk-!-padding-top-0 " + errorMargin,
+        isPageHeading: true
+      }
+    }) }}
+
+    {{ govukButton({
+      text: "Submit and send rejection email",
+      name: "reject",
+      type: "submit",
+      value: "Send rejection email",
+      classes: errorMargin
+    }) }}
+  {% endset %}
+
+  <div id="decision" class="error-div"></div>
+  {{ govukRadios({
+    name: "decision",
+    errorMessage: errors | findError('decision'),
+    formGroup: {
+      classes: "govuk-!-margin-top-8"
+    },
+    fieldset: {
+      legend: {
+        text: "Outcome",
+        isPageHeading: false,
+        classes: "govuk-fieldset__legend--l",
+        id: "reason"
       }
     },
-    {
-      text: "Request information",
-      id: "request",
-      name: "decision",
-      checked: claimDecision['decision'] == claimDecisionEnum.REQUEST_INFORMATION,
-      value: claimDecisionEnum.REQUEST_INFORMATION,
-      attributes: {
-        "data-target": "request-input"
+    items: [
+      {
+        text: "Approve claim",
+        id: "approve",
+        name: "decision",
+        checked: claimDecision['decision'] == claimDecisionEnum.APPROVED,
+        value: claimDecisionEnum.APPROVED,
+        attributes: {
+          "data-target": "accept-input"
+        },
+        label: { text: "Outcome: Approve claim" },
+        conditional: {
+          html: approveClaimHtml
+        }
       },
-      label: { text: "Outcome: Request information for claim" },
-      conditional: {
-        html: requestInformationHtml
-      }
-    },
-    {
-      text: "Reject claim",
-      id: "reject",
-      name: "decision",
-      checked: claimDecision['decision'] == claimDecisionEnum.REJECTED,
-      value: claimDecisionEnum.REJECTED,
-      attributes: {
-        "data-target": "reject-input"
+      {
+        text: "Request information",
+        id: "request",
+        name: "decision",
+        checked: claimDecision['decision'] == claimDecisionEnum.REQUEST_INFORMATION,
+        value: claimDecisionEnum.REQUEST_INFORMATION,
+        attributes: {
+          "data-target": "request-input"
+        },
+        label: { text: "Outcome: Request information for claim" },
+        conditional: {
+          html: requestInformationHtml
+        }
       },
-      label: { text: "Outcome: Reject claim" },
-      conditional: {
-        html: rejectClaimHtml
+      {
+        text: "Reject claim",
+        id: "reject",
+        name: "decision",
+        checked: claimDecision['decision'] == claimDecisionEnum.REJECTED,
+        value: claimDecisionEnum.REJECTED,
+        attributes: {
+          "data-target": "reject-input"
+        },
+        label: { text: "Outcome: Reject claim" },
+        conditional: {
+          html: rejectClaimHtml
+        }
       }
-    }
-  ]
-}) }}
+    ]
+  }) }}
 
 {% endif %}

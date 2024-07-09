@@ -3,32 +3,32 @@
 
 {% if Claim['AssignedTo'] %}
 {% else %}
-
+  <form action="/claim/{{ Claim['ClaimId'] }}/insert-note" method="post" class="form">
     {% include "partials/csrf-hidden-input.html" %}
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    
+
     {{ govukTextarea({
-        name: "note-information",
-        id: "note-information",
-        rows: "2",
-        classes: "govuk-!-width-one-half",
-        errorMessage: errors | findError('additional-info-request'),
-        attributes: {
-            'maxlength': 2000
-        },
-        label: {
-            text: "Add Note to Claim",
-            classes: "govuk-label--l",
-            isPageHeading: true
-        }
+      name: "note-information",
+      id: "note-information",
+      rows: "2",
+      classes: "govuk-!-width-one-half",
+      errorMessage: errors | findError('additional-info-request'),
+      attributes: {
+        'maxlength': 2000
+      },
+      label: {
+        text: "Add Note to Claim",
+        classes: "govuk-label--l",
+        isPageHeading: true
+      }
     }) }}
 
     {{ govukButton({
-        text: "Submit",
-        name: "insert-note",
-        id: "insert-note",
-        type: "submit",
-        classes: ""
+      text: "Submit",
+      name: "insert-note",
+      id: "insert-note",
+      type: "submit",
+      classes: ""
     }) }}
-
+  </form>
 {% endif %}

@@ -12,7 +12,7 @@ function totalApproved () {
       approvedCost += +$(this).text().replace(' £', '')
     })
   } else { // use hidden approved cost for unassigned claims
-    $('.approved-cost').each(function () {
+    $('.approved-set-amount').each(function () {
       const parsedCost = parseFloat(+$(this).text().replace('£', ''))
       if (!isNaN(parsedCost) && parsedCost !== 0) {
         approvedCost += parsedCost
@@ -22,10 +22,19 @@ function totalApproved () {
       approvedCost += +$(this).text().replace(' £', '')
     })
   }
+  if (isNaN(manuallyProcessed)) {
+    manuallyProcessed = 0
+  }
 
   const totalCost = approvedCost + manuallyProcessed
   const formattedCost = totalCost < 0 ? '- £' + Math.abs(totalCost).toFixed(2) : '£' + totalCost.toFixed(2)
   $('.claim-expense-approvedCostText').text(formattedCost)
+
+  if (totalCost < 0) {
+    $('.claim-expense-approvedCostText').addClass('claim-table-negative')
+  } else {
+    $('.claim-expense-approvedCostText').removeClass('claim-table-negative')
+  }
 }
 
 $(document).ready(function () {
@@ -33,9 +42,14 @@ $(document).ready(function () {
     $('.claim-expense-status').each(function () {
       const id = $(this).attr('data-id')
       const value = $(this).val()
-      if (value === 'APPROVED-DIFF-AMOUNT') {
-        $(`.claim-expense-${id}-approvedcost`).removeClass('js-hidden')
+      if (value === 'APPROVED') {
         $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
+      }
+      if (value === 'APPROVED-DIFF-AMOUNT') {
+        $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
+        $(`#claim-expense-${id}-claimedcost`).removeClass('approved-set-amount')
+        $('.approved-cost-set').addClass('js-hidden')
+        $(`.claim-expense-${id}-approvedcost`).removeClass('js-hidden')
       }
     })
     $('#additional-info-reject').each(function () {
@@ -48,6 +62,13 @@ $(document).ready(function () {
         $('#release').removeClass('js-hidden')
       }
     })
+    $('#is-trusted-checkbox').each(function () {
+      if ($(this).is(':checked')) {
+        $('.reject-auto-approval').addClass('js-hidden')
+      } else {
+        $('.reject-auto-approval').removeClass('js-hidden')
+      }
+    })
   }
   initializeState()
 
@@ -58,6 +79,7 @@ $(document).ready(function () {
       const value = $(this).val()
       if (value === 'APPROVED-DIFF-AMOUNT') {
         $(`.claim-expense-${id}-approvedcost`).removeClass('js-hidden')
+        $('.approved-cost-set').addClass('js-hidden')
         $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
         $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
         $('input.approved-amount').on('input', function () {
@@ -65,10 +87,11 @@ $(document).ready(function () {
         })
       } else if (value === 'APPROVED') {
         $(`.claim-expense-${id}-approvedcost`).addClass('js-hidden')
+        $('.approved-cost-set').removeClass('js-hidden').text($(`#claim-expense-${id}-claimedcost`).text())
         $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
         $(`#claim-expense-${id}-claimedcost`).addClass('approved-amount')
-        $(`#claim-expense-${id}-approvedcost`).removeClass('approved-cost')
       } else {
+        $('.approved-cost-set').text('').removeClass('js-hidden')
         $(`.claim-expense-${id}-approvedcost`).addClass('js-hidden')
         $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
         $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
@@ -77,7 +100,7 @@ $(document).ready(function () {
     })
 
     $('input[value="Remove"]').parent().parent().find('td.deduction').addClass('approved-amount')
-    $('.approved-cost').on('input', function () {
+    $('.approved-manual-cost').on('input', function () {
       totalApproved()
     })
 
@@ -121,9 +144,9 @@ $(document).ready(function () {
 
     $('#is-trusted-checkbox').on('click', function () {
       if ($(this).is(':checked')) {
-        $('.reject-auto-approval').removeClass('js-hidden')
-      } else {
         $('.reject-auto-approval').addClass('js-hidden')
+      } else {
+        $('.reject-auto-approval').removeClass('js-hidden')
       }
     })
 
@@ -134,7 +157,7 @@ $(document).ready(function () {
         $('#release').addClass('js-hidden')
       }
     })
-1  })
+  })
 
   function showClosedClaimActionSection (id) {
     $('#overpayment-input').addClass('js-hidden')

@@ -3,7 +3,14 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% set expenseData = [] %}
+<br>
+
+{% set expenseData = [[
+    { html: "", classes: "govuk-table__header govuk-!-width-one-third" },
+    { html: "Claimed cost", classes: "govuk-table__header claim-table-short-column" },
+    { html: "Approved cost ", classes: "govuk-table__header claim-table-shorter-column" },
+    { html: "", classes: "claim-table-short-column" }
+  ]] %}
 {% for expense in Expenses %}
   {% set expenseSelectItems = [{
     value: "Select",
@@ -48,7 +55,7 @@
     <span>{{ getDisplayFieldName[expense.ExpenseType] }}</span>
     <p class="govuk-body govuk-!-margin-bottom-0">
       {% if expense.ExpenseType == 'car' %}
-        {{ getClaimExpenseDetailFormatted(expense) | safe }}
+        {{ getClaimExpenseDetailFormatted(expense) | safe }} 
       {% else %}
         {{ getClaimExpenseDetailFormatted(expense) }}
       {% endif %}
@@ -57,6 +64,7 @@
   {% endset %}
 
   {% set expenseButtons %}
+  
     {% if unlock %}
       <div id="claim-table-claim-section-container">
         <div id="claim-expenses" class="error-div"></div>
@@ -66,33 +74,13 @@
           id: "claim-expense-" + expense.ClaimExpenseId + "-status",
           name: "claim-expense-" + expense.ClaimExpenseId + "-status",
           classes: "action-select claim-expense-status",
-          value: 'test',
+          value: '',
           attributes: { 'data-id': expense.ClaimExpenseId },
           errorMessage: errors | findError('claim-expenses'),
           items: expenseSelectItems
         }) }}
-
-        <div id='approve-cost'>
-          {{ govukInput({
-            formGroup: { classes: "select-for-form govuk-!-margin-left-2 govuk-!-margin-right-2 js-hidden claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
-            label: {
-              text: "Change approved cost for " + getDisplayFieldName[expense.ExpenseType],
-              classes: "govuk-visually-hidden"
-            },
-            prefix: {
-              text: "£"
-            },
-            errorMessage: errors | findError('approve-cost'),
-            classes: "govuk-input--width-4 approved-cost",
-            value: displayHelper.toDecimal(expense.ApprovedCost),
-            id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
-            name: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
-            inputmode: "decimal",
-            step: "0.01"
-          }) }}
-        </div>
       </div>
-
+     
       {% if expense.DocumentStatus == 'upload-later' or expense.DocumentStatus == 'post-later' %}
         {{ govukButton({
           text: "Add",
@@ -105,7 +93,11 @@
   {% endset %}
 
   {% set expenseDocumentStatus %}
-    <span class="govuk-!-margin-right-2 cost{% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} approved-cost{% endif %}" id="claim-expense-{{expense.ClaimExpenseId}}-claimedcost">£{{ displayHelper.toDecimal(expense.Cost) }}</span>
+  <div class="claim-table-claim-section-document-container">
+    <div>
+    <span class="govuk-!-margin-right-2 cost{% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} {% endif %}" id="claim-expense-{{expense.ClaimExpenseId}}-claimedcost">£{{ displayHelper.toDecimal(expense.Cost) }}</span>
+  </div>
+  <div>
     {% if receiptAndProcessedManuallyEnum[expense.ExpenseType].receiptRequired %}
       {% if expense.DocumentStatus == 'uploaded' %}
         <a href="/claim/{{ Claim.ClaimId }}/download?claim-document-id={{ expense.ClaimDocumentId }}">View receipt</a>
@@ -119,11 +111,41 @@
         <span class="text-warning">Receipt required</span>
       {% endif %}
     {% endif %}
+    </div>
+  </div>
+  {% endset %}
+
+  {% set differentAmountField %}
+  {% if errors["total-approved-cost"][0] %}0.00{% elseif expense.ApprovedCost %}{{ displayHelper.toDecimal(expense.ApprovedCost) }}{% else %}{{ displayHelper.toDecimal(expense.Cost) }}{% endif %}
+  {% endset %}
+
+  {% set approvedCostHtml %}
+  <span class="approved-cost-set approved-set-amount{% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT  %}{% else %} js-hidden {% endif %}">£{{ displayHelper.toDecimal(expense.ApprovedCost) }}</span>
+  <div id='approve-cost'>
+    {{ govukInput({
+      formGroup: { classes: "claim-approve-different-input govuk-!-margin-right-2 js-hidden claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
+      label: {
+        text: "Change approved cost for " + getDisplayFieldName[expense.ExpenseType],
+        classes: "govuk-visually-hidden"
+      },
+      prefix: {
+        text: "£"
+      },
+      errorMessage: errors | findError('approve-cost'),
+      classes: "govuk-input--width-4 approved-manual-cost",
+      value: differentAmountField ,
+      id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
+      name: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
+      inputmode: "decimal",
+      step: "0.01"
+    }) }}
+  </div>
   {% endset %}
 
   {% set expenseRow = [
     { html: expenseOverview, classes: "govuk-!-width-one-third vertical-align-middle" },
-    { html: expenseDocumentStatus, classes: "vertical-align-middle" },
+    { html: expenseDocumentStatus, classes: "claim-table-short-column vertical-align-middle" },
+    { html: approvedCostHtml, classes: "claim-table-shorter-column vertical-align-middle" },
     { html: expenseButtons, classes: "govuk-!-width-one-half vertical-align-middle" }
   ] %}
 
@@ -163,8 +185,11 @@
 
   {% set deductionRow = [
     { html: deductionOverview, classes: "govuk-!-width-one-third" },
-    { html: "- £" + displayHelper.toDecimal(deduction.Amount), classes: "deduction govuk-!-width-one-third vertical-align-middle" },
-    { html: deductionButton, classes: "govuk-!-width-two-thirds vertical-align-middle" }
+    { html: '', classes: "claim-table-short-column" },
+    { html: "- £" + displayHelper.toDecimal(deduction.Amount), classes: "deduction vertical-align-middle claim-table-negative" },
+    { html: '', classes: "" },
+
+    { html: deductionButton, classes: "vertical-align-middle" }
   ] %}
   {% set deductionData = deductionData | concat([deductionRow]) %}
 {% endfor %}
@@ -190,11 +215,13 @@
 <div id="total-approved-cost" class="error-div">
   {{ govukTable({
     firstCellIsHeader: true,
-    classes: "govuk-!-margin-bottom-4 govuk-!-margin-top-1 total-approved-cost",
+    classes: "govuk-!-margin-bottom-6 govuk-!-margin-top-1 total-approved-cost",
     rows: [[
       { text: "Total approved cost:", classes: "govuk-!-width-one-third table-no-border-bottom" },
-      { html: claim.Total, classes: warningClass },
-      { html: '', classes: "govuk-!-width-one-third table-no-border-bottom" }
+      { html: '', classes: "claim-table-short-column table-no-border-bottom" },
+      { html: claim.Total, classes: "claim-table-shorter-column" + warningClass },
+      { html: '', classes: "claim-table-short-column table-no-border-bottom" }
     ]]
   }) }}
 </div>
+

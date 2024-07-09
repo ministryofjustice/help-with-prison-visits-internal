@@ -2,9 +2,10 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
+<br>
+
 {% set releaseDate %}
   {% if unlock %}
-  
     <fieldset>
       {{ govukDateInput({
         id: "release",
@@ -38,9 +39,6 @@
         ]
       }) }}
     </fieldset>
-    {% set saveButton %}
-
-{% endset %}
   {% else %}
     {% if Claim.ReleaseDate %}
       {{ getDateFormatted.shortDate(Claim.ReleaseDate) }}
@@ -51,25 +49,25 @@
 {% endset %}
 
 {% set releaseDateCheckbox %}
- {{ govukCheckboxes({
-  name: "release-date-is-set",
-  id: "release-date-is-set",
-  name: "release-date-is-set",
-  classes: "govuk-!-margin-top-3 govuk-!-margin-bottom-3",
-  formGroup: {
-    classes: "govuk-!-margin-bottom-0 pull-right"
-  },
-  items: [
-      { 
-      name:"release-date-is-set", 
-      value: "on", 
-      text: "Release date is set?", 
-      checked: Claim['ReleaseDateIsSet'] == true
-    }
-  ]
-}) }}
-
- {% endset %}
+  {% if unlock %}
+    {{ govukCheckboxes({
+      name: "release-date-is-set",
+      id: "release-date-is-set",
+      classes: "govuk-!-margin-top-3 govuk-!-margin-bottom-3",
+      formGroup: {
+        classes: "govuk-!-margin-bottom-0 pull-right"
+      },
+      items: [
+        { 
+          name: "release-date-is-set", 
+          value: "on", 
+          text: "Release date is set?", 
+          checked: Claim['ReleaseDateIsSet'] == true
+        }
+      ]
+    }) }}
+  {% endif %}
+{% endset %}
 
 {{ govukTable({
   caption: "Release Information",
