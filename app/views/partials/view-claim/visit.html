@@ -2,6 +2,8 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
+<br>
+
 {% set dateOfVisit %}
   <span class="govuk-!-margin-right-2">{{ getDateFormatted.shortDate(Claim.DateOfJourney) }}</span>
   {% if Claim.visitConfirmation.DocumentStatus == 'uploaded' %}

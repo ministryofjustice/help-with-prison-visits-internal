@@ -848,10 +848,35 @@ ul.sub-tabs li a.active span.badge {
     flex-direction: row-reverse;
 }
 
+.claim-table-claim-section-document-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .claim-table-decision-error-margin {
     margin-top: 30px!important;
     margin-bottom: -40px!important;
 }
+
+.claim-table-short-column {
+    width: 20%;
+}
+
+.claim-table-shorter-column {
+    width: 15%;
+}
+
+.claim-table-negative {
+    position: relative;
+    left: -13px
+}
+
+.claim-approve-different-input {
+    margin: 0px;
+    margin-top: 1.5px;
+}
+
 
 
 // override mojTimeline styles
