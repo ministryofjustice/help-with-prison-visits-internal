@@ -48,7 +48,7 @@ $(document).ready(function () {
       if (value === 'APPROVED-DIFF-AMOUNT') {
         $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
         $(`#claim-expense-${id}-claimedcost`).removeClass('approved-set-amount')
-        $('.approved-cost-set').addClass('js-hidden')
+        $(`.approved-${id}-cost-set`).addClass('js-hidden')
         $(`.claim-expense-${id}-approvedcost`).removeClass('js-hidden')
       }
     })
@@ -79,7 +79,7 @@ $(document).ready(function () {
       const value = $(this).val()
       if (value === 'APPROVED-DIFF-AMOUNT') {
         $(`.claim-expense-${id}-approvedcost`).removeClass('js-hidden')
-        $('.approved-cost-set').addClass('js-hidden')
+        $(`.approved-${id}-cost-set`).addClass('js-hidden')
         $(`#claim-expense-${id}-approvedcost`).addClass('approved-amount')
         $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
         $('input.approved-amount').on('input', function () {
@@ -87,11 +87,11 @@ $(document).ready(function () {
         })
       } else if (value === 'APPROVED') {
         $(`.claim-expense-${id}-approvedcost`).addClass('js-hidden')
-        $('.approved-cost-set').removeClass('js-hidden').text($(`#claim-expense-${id}-claimedcost`).text())
+        $(`.approved-${id}-cost-set`).removeClass('js-hidden').text($(`#claim-expense-${id}-claimedcost`).text())
         $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
         $(`#claim-expense-${id}-claimedcost`).addClass('approved-amount')
       } else {
-        $('.approved-cost-set').text('').removeClass('js-hidden')
+        $(`.approved-${id}-cost-set`).text('').removeClass('js-hidden')
         $(`.claim-expense-${id}-approvedcost`).addClass('js-hidden')
         $(`#claim-expense-${id}-claimedcost`).removeClass('approved-amount')
         $(`#claim-expense-${id}-approvedcost`).removeClass('approved-amount')
