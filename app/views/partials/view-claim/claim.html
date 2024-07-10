@@ -120,7 +120,7 @@
   {% endset %}
 
   {% set approvedCostHtml %}
-  <span class="approved-cost-set approved-set-amount{% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT  %}{% else %} js-hidden {% endif %}">£{{ displayHelper.toDecimal(expense.ApprovedCost) }}</span>
+  <span class="approved-{{ expense.ClaimExpenseId }}-cost-set approved-set-amount{% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT  %}{% else %} js-hidden {% endif %}">£{{ displayHelper.toDecimal(expense.ApprovedCost) }}</span>
   <div id='approve-cost'>
     {{ govukInput({
       formGroup: { classes: "claim-approve-different-input govuk-!-margin-right-2 js-hidden claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
