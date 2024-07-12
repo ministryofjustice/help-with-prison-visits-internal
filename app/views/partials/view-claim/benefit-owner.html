@@ -3,7 +3,7 @@
 <br>
 {% if Claim.BenefitOwnerFirstName %}
 {{ govukTable({
-  caption: "Benefit Owner",
+  caption: "Benefit owner",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
   rows: [
@@ -30,7 +30,7 @@
     ],
     [
       {
-        text: "National Insurance number",
+        text: "National insurance number",
         classes: "claim-table-width-one-third"
       },
       {
@@ -42,7 +42,7 @@
 }) }}
 {% else %}
 {{ govukTable({
-  caption: "Benefit Owner",
+  caption: "Benefit owner",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
   rows: [
@@ -69,7 +69,7 @@
     ],
     [
       {
-        text: "National Insurance number",
+        text: "National insurance number",
         classes: "claim-table-width-one-third table-no-border-bottom"
       },
       {

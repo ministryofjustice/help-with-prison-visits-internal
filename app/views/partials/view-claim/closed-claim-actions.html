@@ -50,7 +50,7 @@
     {% set radioItems = radioItems | concat([
       {
         value: "TOPUP",
-        text: "Top Up Claim",
+        text: "Top up claim",
         conditional: {
           html: topUpHtml
         }
@@ -62,7 +62,7 @@
     {% set radioItems = radioItems | concat([
       {
         value: "CLOSE-ADVANCE-CLAIM",
-        text: "Close Advance Claim",
+        text: "Close advance claim",
         conditional: {
           html: closeAdvanceClaimHtml
         }
@@ -98,7 +98,7 @@
     {% set radioItems = radioItems | concat([
       {
         value: "DISABLE-REFERENCE-NUMBER",
-        text: "Disable this Reference No",
+        text: "Disable this reference number",
         conditional: {
           html: setDisableThisReferenceHtml
         }
@@ -110,7 +110,7 @@
     {% set radioItems = radioItems | concat([
       {
         value: "RE-ENABLE-REFERENCE-NUMBER",
-        text: "Re-enable this Reference No",
+        text: "Re-enable this reference number",
         conditional: {
           html: setReenableThisReferenceHtml
         }
@@ -126,7 +126,7 @@
     },
     fieldset: {
       legend: {
-        text: "Further Actions",
+        text: "Further actions",
         isPageHeading: false,
         classes: "govuk-fieldset__legend--l"
       }
