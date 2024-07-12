@@ -8,6 +8,9 @@ $govuk-global-styles: true;
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
 
+$moj-page-width: 1170px;
+$govuk-page-width: $moj-page-width;
+
 @import '../../../node_modules/govuk-frontend/govuk/all';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/objects/all';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/settings/measurements';
@@ -18,6 +21,7 @@ $govuk-page-width: $moj-page-width;
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/notification-badge/notification-badge';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/search/search';
 
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/ticket-panel/_ticket-panel';
 
 // Path to assets for use with the file-url function
 // in the govuk frontend toolkit's url-helpers partial
@@ -25,6 +29,16 @@ $path: "/public/images/";
 
 // This includes entire govuk-elements from _govuk-elements.scss
 @import 'govuk-elements';
+
+// override default navigation anchor tags 
+.moj-header__navigation-item:first-of-type {
+    pointer-events: none;
+    cursor: default;
+}
+
+.moj-header__link--service-name:hover {
+    text-decoration: underline;
+}
 
 // override datatable styles
 
@@ -66,6 +80,10 @@ table.no-pad-right td {
 .dataTable {
     border-bottom: none!important;;
     margin-bottom: 1em!important
+}
+
+.table-short-column {
+    width: 200px;
 }
 
 .search {
@@ -243,6 +261,9 @@ span.bold {
 .display-none {
   display: none;
 }
+.js-hidden {
+    display: none;
+}
 
 .form-control.action-select{
     width:200px;
@@ -279,6 +300,10 @@ span.bold {
 
 .button.red {
     background:#f40b0c;
+}
+
+.vertical-align-middle {
+    vertical-align: middle;
 }
 
 .pull-right {
@@ -741,4 +766,19 @@ ul.sub-tabs li a.active span.badge {
 
 .govuk-tabs__tab {
     color: black
+}
+.config-description {
+    color: $govuk-secondary-text-colour;
+    width: 53%;
+    vertical-align: middle;
+}
+
+.config-rule-checkbox {
+    display: flex;
+    justify-content: center;
+}
+
+.govuk-input__prefix {
+    height: 40px;
+    font-size: 19px;
 }

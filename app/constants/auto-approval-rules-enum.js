@@ -1,7 +1,7 @@
 module.exports = {
   ARE_CHILDREN_UNDER_18: {
     value: 'are-children-under-18',
-    displayName: 'Are children under 18',
+    displayName: 'Are children under 18?',
     description: 'Children claimed for must be under 18'
   },
   COST_AND_VARIANCE_EQUAL_OR_LESS_THAN_FIRST_TIME_CLAIM: {
@@ -11,7 +11,7 @@ module.exports = {
   },
   DO_EXPENSES_MATCH_FIRST_TIME_CLAIM: {
     value: 'do-expenses-match-first-time-claim',
-    displayName: 'Do expenses match first time claim',
+    displayName: 'Do expenses match first time claim?',
     description: 'Expenses claimed for must also have been claimed for in the first time claim'
   },
   HAS_CLAIMED_LESS_THAN_MAX_TIMES_THIS_YEAR: {
@@ -37,7 +37,7 @@ module.exports = {
   IS_LATEST_MANUAL_CLAIM_APPROVED: {
     value: 'is-latest-manual-claim-approved',
     displayName: 'Latest manual claim approved',
-    description: 'The claimant\'s latest manual claim must have been approved'
+    description: 'The Claimant\'s latest manual claim must have been approved'
   },
   IS_NO_PREVIOUS_PENDING_CLAIM_FOR_CLAIMANT: {
     value: 'is-no-previous-pending-claim',
@@ -62,7 +62,7 @@ module.exports = {
   CLAIMANT_HAS_NOT_OVERPAID: {
     value: 'claimant-has-not-been-overpaid',
     displayName: 'Claimant not overpaid on a previous claim',
-    description: 'Then claimant must not have an associated claim that has been flagged as overpaid'
+    description: 'Then Claimant must not have an associated claim that has been flagged as overpaid'
   },
   HAS_CLAIMED_LESS_THAN_MAX_TIMES_THIS_MONTH: {
     value: 'has-claimed-less-than-max-times-this-month',

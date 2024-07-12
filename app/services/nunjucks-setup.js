@@ -39,4 +39,34 @@ module.exports = function (app, developmentMode) {
       return str
     }
   })
+
+  const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
+
+  const mojFilters = getMojFilters()
+  Object.keys(mojFilters).forEach(filterName => {
+    njkEnv.addFilter(filterName, mojFilters[filterName])
+  })
+
+  // convert errors to format for GOV.UK error summary component
+  njkEnv.addFilter('errorSummaryList', (errors = []) => {
+    return Object.keys(errors).map((error) => {
+      const errorListItem = {}
+      errorListItem.text = errors[error][0]
+      if (error !== 'expired') {
+        errorListItem.href = `#${error}`
+      }
+      return errorListItem
+    })
+  })
+
+  // find specifc error and return errorMessage for field validation
+  njkEnv.addFilter('findError', (errors, formFieldId) => {
+    if (!errors || !formFieldId) return null
+    if (errors[formFieldId]) {
+      return {
+        text: errors[formFieldId][0]
+      }
+    }
+    return null
+  })
 }

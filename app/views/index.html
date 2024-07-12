@@ -1,4 +1,5 @@
 {% extends "includes/layout_new.html" %}
+{% extends "includes/layout_new.html" %}
 
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
@@ -10,6 +11,8 @@
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
+
+{% set activeMainNav = 'claims' %}
 
 {% block content %}
 <div class="govuk-grid-row">
