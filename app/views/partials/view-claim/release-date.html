@@ -6,6 +6,7 @@
 
 {% set releaseDate %}
   {% if unlock %}
+  <div id="release-date-section">
     <fieldset>
       {{ govukDateInput({
         id: "release",
@@ -14,7 +15,6 @@
         errorMessage: errors | findError('release-date-section'),
         formGroup: {
           classes: "govuk-!-margin-bottom-0",
-          id: "release-date-section",
           type: "number"
         },
         items: [
@@ -46,6 +46,7 @@
       <span class="text-pending">Pending</span>
     {% endif %}
   {% endif %}
+</div>
 {% endset %}
 
 {% set releaseDateCheckbox %}
