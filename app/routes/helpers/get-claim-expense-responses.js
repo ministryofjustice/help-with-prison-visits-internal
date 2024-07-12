@@ -12,7 +12,7 @@ module.exports = function (body) {
       const claimExpenseId = formKey.replace('claim-expense-', '').replace('-status', '')
       const status = body[formKey]
       // approvedCost is value input by user
-      const approvedCost = body[approvedCostKey].trim()
+      const approvedCost = body[approvedCostKey].trim().replace(' £', '')
       const cost = body[costKey]
 
       claimExpenses.push(new ClaimExpenseResponse(claimExpenseId, approvedCost, cost, status))

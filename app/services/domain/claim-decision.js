@@ -107,7 +107,7 @@ class ClaimDecision {
         .isRequired(ERROR_MESSAGES.getExpenseCheckRequired)
 
       if (expense.approvedCost != null) {
-        FieldValidator(expense.approvedCost, 'approve-cost', errors)
+        FieldValidator(expense.approvedCost, 'approved-cost', errors)
           .isRequired()
           .isCurrency()
           .isGreaterThanZero()
