@@ -408,7 +408,11 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
   return getIndividualClaimDetails(claimId)
     .then(function (data) {
       if (keepUnsubmittedChanges) {
-        populateNewData(data, req)
+        if (!data.claim.AssignedTo) {
+          populateNewData(data, req)
+        } else {
+          populateNewData(data, req, true)
+        }
       }
       if (data.claim.BenefitExpiryDate) {
         data.claim.expiryDay = getDateFormatted.getDay(data.claim.BenefitExpiryDate)
@@ -452,19 +456,17 @@ function handleError (error, req, res, updateConflict, next) {
   }
 }
 
-function populateNewData (data, req) {
+function populateNewData (data, req, keepUnassignedChanges) {
   data.claim.NomisCheck = req.body.nomisCheck
   data.claim.DWPCheck = req.body.dwpCheck
   data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
-  data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
+  if (keepUnassignedChanges || data.claim.AssignedTo) {
+    data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
+  }
   data.claim.expiryDay = req.body['benefit-expiry-day']
   data.claim.expiryMonth = req.body['benefit-expiry-month']
   data.claim.expiryYear = req.body['benefit-expiry-year']
-  if (req.body['release-date-is-set']) {
-    data.claim.ReleaseDateIsSet = true
-  } else {
-    data.claim.ReleaseDateIsSet = false
-  }
+  data.claim.ReleaseDateIsSet = Boolean(req.body['release-date-is-set'])
   if (data.latestUnpaidTopUp) {
     data.latestUnpaidTopUp.TopUpAmount = req.body['top-up-amount']
     data.latestUnpaidTopUp.Reason = req.body['top-up-reason']

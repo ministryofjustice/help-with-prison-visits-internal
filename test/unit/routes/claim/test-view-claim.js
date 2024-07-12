@@ -329,7 +329,7 @@ describe('routes/claim/view-claim', function () {
         .post('/claim/123')
         .send(VALID_DATA_APPROVE)
         .expect(function () {
-          expect(mockMergeClaimExpensesWithSubmittedResponses).toHaveBeenCalledTimes(1)
+          expect(mockMergeClaimExpensesWithSubmittedResponses).toHaveBeenCalledTimes(0)
         })
     })
   })

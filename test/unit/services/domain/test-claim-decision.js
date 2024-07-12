@@ -151,7 +151,7 @@ describe('services/domain/claim-decision', function () {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', '', '', '')
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['benefit-expiry'][0]).toBe('Please enter the Benefit Expiry date')
+      expect(e.validationErrors['benefit-expiry'][0]).toBe('Please enter the benefit expiry date')
     }
   })
 
@@ -169,7 +169,7 @@ describe('services/domain/claim-decision', function () {
       claimDecision = new ClaimDecision(VALID_CASEWORKER, '', VALID_DECISION_REJECTED, '', '', 'Other', '', '', VALID_VISIT_CONFIRMATION_CHECK, VALID_CLAIMEXPENSES_REJECTED, VALID_CLAIMDEDUCTION, NOT_ADVANCE_CLAIM, 13, '', '22', '4', '2019', 'on', '22', '4', '2020')
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['release-date-section'][0]).toBe('Release Date must be in the future')
+      expect(e.validationErrors['release-date-section'][0]).toBe('Release date must be in the future')
     }
   })
 })
