@@ -11,6 +11,7 @@
     { html: "Approved cost ", classes: "govuk-table__header claim-table-shorter-column" },
     { html: "", classes: "claim-table-short-column" }
   ]] %}
+  
 {% for expense in Expenses %}
   {% set expenseSelectItems = [{
     value: "Select",
@@ -65,8 +66,9 @@
 
   {% set expenseButtons %}
   
+  
     {% if unlock %}
-      <div id="claim-table-claim-section-container">
+      <div id="claim-table-claim-section-container" class="claim-table-claim-section-container-{{expense.ClaimExpenseId}}">
         <div id="claim-expenses" class="error-div"></div>
         <div id="claim-expense" class="error-div"></div>
         {{ govukSelect({
@@ -95,7 +97,7 @@
   {% set expenseDocumentStatus %}
   <div class="claim-table-claim-section-document-container">
     <div>
-    <span class="govuk-!-margin-right-2 cost{% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT %} {% endif %}" id="claim-expense-{{expense.ClaimExpenseId}}-claimedcost">£{{ displayHelper.toDecimal(expense.Cost) }}</span>
+    <span class="govuk-!-margin-right-2" id="claimed-expense-for-{{expense.ClaimExpenseId}}">£{{ displayHelper.toDecimal(expense.Cost) }}</span>
   </div>
   <div>
     {% if receiptAndProcessedManuallyEnum[expense.ExpenseType].receiptRequired %}
@@ -115,15 +117,23 @@
   </div>
   {% endset %}
 
-  {% set differentAmountField %}
-  {% if errors["total-approved-cost"][0] %}0.00{% elseif expense.ApprovedCost %}{{ displayHelper.toDecimal(expense.ApprovedCost) }}{% else %}{{ displayHelper.toDecimal(expense.Cost) }}{% endif %}
+  {% set approveDifferentAmountInputValue %}
+  {% if errors["approved-cost"][0] %}0.00{% elseif expense.ApprovedCost %}{{ displayHelper.toDecimal(expense.ApprovedCost) }}{% else %}{{ displayHelper.toDecimal(expense.Cost) | trim }}{% endif %}
   {% endset %}
 
   {% set approvedCostHtml %}
-  <span class="approved-{{ expense.ClaimExpenseId }}-cost-set approved-set-amount{% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT  %}{% else %} js-hidden {% endif %}">£{{ displayHelper.toDecimal(expense.ApprovedCost) }}</span>
-  <div id='approve-cost'>
+  {% if unlocked %} 
+    <p> not approved </p>
+  {% else %}
+    {% if expense.Status == claimDecisionEnum.APPROVED or expense.Status == claimDecisionEnum.APPROVED_DIFF_AMOUNT %}
+    <span id="text-for-{{ expense.ClaimExpenseId }}-approved-cost" class="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost approved-amount">£{{ displayHelper.toDecimal(expense.ApprovedCost) }}</span>
+  {% endif %}
+   <span id="text-for-{{ expense.ClaimExpenseId }}-approved-cost" class="claim-expense-{{ expense.ClaimExpenseId }}-approvedcost"></span>
+  {% endif %}
+
+  <div id='approved-cost'>
     {{ govukInput({
-      formGroup: { classes: "claim-approve-different-input govuk-!-margin-right-2 js-hidden claim-expense-" + expense.ClaimExpenseId + "-approvedcost" },
+      formGroup: { classes: "claim-approve-different-input input-container-for-" + expense.ClaimExpenseId + "-approve-different-cost js-hidden" },
       label: {
         text: "Change approved cost for " + getDisplayFieldName[expense.ExpenseType],
         classes: "govuk-visually-hidden"
@@ -131,13 +141,12 @@
       prefix: {
         text: "£"
       },
-      errorMessage: errors | findError('approve-cost'),
-      classes: "govuk-input--width-4 approved-manual-cost",
-      value: differentAmountField ,
-      id: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
+      errorMessage: errors | findError('approved-cost'),
+      classes: "govuk-input--width-4 input-value-for-" + expense.ClaimExpenseId + "-approve-different-cost input-for-different-cost",
+      value: approveDifferentAmountInputValue | trim,
       name: "claim-expense-" + expense.ClaimExpenseId + "-approvedcost",
-      inputmode: "decimal",
-      step: "0.01"
+      id: "input-value-for-" + expense.ClaimExpenseId + "-approve-different-cost",
+      inputmode: "decimal"
     }) }}
   </div>
   {% endset %}

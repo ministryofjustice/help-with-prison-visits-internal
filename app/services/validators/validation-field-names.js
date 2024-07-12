@@ -4,7 +4,7 @@ module.exports = {
   'additional-info-request': 'Note to claimant',
   decision: 'Decision',
   'claim-expense': 'Claim expense status',
-  'approve-cost': 'New approved cost',
+  'approved-cost': 'New approved cost',
   'total-approved-cost': 'Total approved cost',
   'nomis-check': 'NOMIS check',
   'dwp-check': 'Benefit check',

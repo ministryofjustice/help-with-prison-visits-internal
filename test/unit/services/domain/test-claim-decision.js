@@ -109,7 +109,7 @@ describe('services/domain/claim-decision', function () {
       expect(false).toBe(true)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['approve-cost'][0]).toBe('New approved cost must be greater than zero')
+      expect(e.validationErrors['approved-cost'][0]).toBe('New approved cost must be greater than zero')
     }
   })
 
