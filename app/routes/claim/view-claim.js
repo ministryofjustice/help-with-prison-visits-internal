@@ -409,9 +409,9 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
     .then(function (data) {
       if (keepUnsubmittedChanges) {
         if (!data.claim.AssignedTo) {
-          populateNewData(data, req)
+          populateNewData({ data, req })
         } else {
-          populateNewData(data, req, true)
+          populateNewData({ data, req, keepUnassignedChanges: true })
         }
       }
       if (data.claim.BenefitExpiryDate) {
@@ -438,7 +438,7 @@ function handleError (error, req, res, updateConflict, next) {
     return getIndividualClaimDetails(req.params.claimId)
       .then(function (data) {
         if (data.claim && data.claimExpenses && !updateConflict && claimExpenses) {
-          populateNewData(data, req)
+          populateNewData({ data, req })
         }
         if (req.route.path.includes('/update-benefit-expiry-date')) {
           data.claim.expiryDay = req.body['benefit-expiry-day']
@@ -456,7 +456,7 @@ function handleError (error, req, res, updateConflict, next) {
   }
 }
 
-function populateNewData (data, req, keepUnassignedChanges) {
+function populateNewData ({ data, req, keepUnassignedChanges = false }) {
   data.claim.NomisCheck = req.body.nomisCheck
   data.claim.DWPCheck = req.body.dwpCheck
   data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck

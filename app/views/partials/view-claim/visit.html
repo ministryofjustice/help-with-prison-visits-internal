@@ -2,8 +2,6 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-<br>
-
 {% set dateOfVisit %}
   <span class="govuk-!-margin-right-2">{{ getDateFormatted.shortDate(Claim.DateOfJourney) }}</span>
   {% if Claim.visitConfirmation.DocumentStatus == 'uploaded' %}
@@ -71,6 +69,7 @@
 {{ govukTable({
   caption: "Visit",
   captionClasses: "govuk-table__caption--l",
+  classes: "govuk-!-margin-top-8",
   firstCellIsHeader: true,
   rows: [
     [

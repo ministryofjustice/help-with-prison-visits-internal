@@ -57,12 +57,11 @@
   {% endif %}
 {% endset %}
 
-<br>
-
 {{ govukTable({
   caption: "Prisoner",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
+  classes: "govuk-!-margin-top-6",
   rows: [
     [
       { text: "Name", classes: "claim-table-width-one-third" },

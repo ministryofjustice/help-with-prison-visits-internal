@@ -3,8 +3,6 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-<br>
-
 {% set expenseData = [[
     { html: "", classes: "govuk-table__header govuk-!-width-one-third" },
     { html: "Claimed cost", classes: "govuk-table__header claim-table-short-column" },
@@ -165,7 +163,7 @@
   caption: "Claim",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
-  classes: "govuk-!-margin-bottom-0",
+  classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-8",
   rows: expenseData
 }) }}
 

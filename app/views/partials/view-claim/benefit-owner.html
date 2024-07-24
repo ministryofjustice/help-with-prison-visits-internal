@@ -1,11 +1,11 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
-<br>
 {% if Claim.BenefitOwnerFirstName %}
 {{ govukTable({
   caption: "Benefit owner",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
+  classes: "govuk-!-margin-top-8",
   rows: [
     [
       {
@@ -45,6 +45,7 @@
   caption: "Benefit owner",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
+  classes: "govuk-!-margin-top-8",
   rows: [
     [
       {

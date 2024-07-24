@@ -2,51 +2,47 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
-<br>
-
 {% set releaseDate %}
-  {% if unlock %}
   <div id="release-date-section">
-    <fieldset>
-      {{ govukDateInput({
-        id: "release",
-        namePrefix: "release",
-        classes: "js-hidden",
-        errorMessage: errors | findError('release-date-section'),
-        formGroup: {
-          classes: "govuk-!-margin-bottom-0",
-          type: "number"
-        },
-        items: [
-          {
-            name: "day",
-            id: "release-day",
-            classes: "govuk-input--width-2",
-            value: Claim.releaseDay
+    {% if unlock %}
+      <fieldset>
+        {{ govukDateInput({
+          id: "release",
+          namePrefix: "release",
+          classes: "js-hidden",
+          errorMessage: errors | findError('release-date-section'),
+          formGroup: {
+            classes: "govuk-!-margin-bottom-0",
+            type: "number"
           },
-          {
-            name: "month",
-            id: "release-month",
-            classes: "govuk-input--width-2",
-            value: Claim.releaseMonth
-          },
-          {
-            name: "year",
-            id: "release-year",
-            classes: "govuk-input--width-4",
-            value: Claim.releaseYear
-          }
-        ]
-      }) }}
-    </fieldset>
-  {% else %}
-    {% if Claim.ReleaseDate %}
+          items: [
+            {
+              name: "day",
+              id: "release-day",
+              classes: "govuk-input--width-2",
+              value: Claim.releaseDay
+            },
+            {
+              name: "month",
+              id: "release-month",
+              classes: "govuk-input--width-2",
+              value: Claim.releaseMonth
+            },
+            {
+              name: "year",
+              id: "release-year",
+              classes: "govuk-input--width-4",
+              value: Claim.releaseYear
+            }
+          ]
+        }) }}
+      </fieldset>
+    {% elseif Claim.ReleaseDate %}
       {{ getDateFormatted.shortDate(Claim.ReleaseDate) }}
     {% else %}
       <span class="text-pending">Pending</span>
     {% endif %}
-  {% endif %}
-</div>
+  </div>
 {% endset %}
 
 {% set releaseDateCheckbox %}
@@ -59,10 +55,10 @@
         classes: "govuk-!-margin-bottom-0 pull-right"
       },
       items: [
-        { 
-          name: "release-date-is-set", 
-          value: "on", 
-          text: "Release date is set?", 
+        {
+          name: "release-date-is-set",
+          value: "on",
+          text: "Release date is set?",
           checked: Claim['ReleaseDateIsSet'] == true
         }
       ]
@@ -74,6 +70,7 @@
   caption: "Release information",
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
+  classes: "govuk-!-margin-top-8",
   rows: [
     [
       {

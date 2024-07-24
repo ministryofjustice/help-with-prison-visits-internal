@@ -435,15 +435,12 @@ tr.warning td:first-child{
 }
 
 .text-success:before {
-    background-color:  $govuk-success-colour;
-    color: $govuk-success-colour
-}
-.text-success:before {
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
     content: '✔ ';
     color: #fff;
+    background-color:  $govuk-success-colour;
     display: inline-block;
     font-family: arial;
     font-weight: bold;
@@ -797,22 +794,15 @@ ul.sub-tabs li a.active span.badge {
 .view-claim-display-helper{
     display: flex;
     align-items: center;
-} 
-
-.justify-content-end {
     justify-content: end;
-}
-
-.float-left {
-    float: left;
-}
-
-.text-italic {
-    font-style: italic;
-}
+} 
 
 .govuk-warning-text__text {
     font-size: 19px;
+}
+
+.claim-table-no-reason-text {
+    font-style: italic;
 }
 
 .claim-table-email-text {
@@ -855,7 +845,6 @@ ul.sub-tabs li a.active span.badge {
 }
 
 .claim-table-decision-error-margin {
-    margin-top: 30px!important;
     margin-bottom: -40px!important;
 }
 
@@ -873,11 +862,9 @@ ul.sub-tabs li a.active span.badge {
 }
 
 .claim-approve-different-input {
-    margin: 0px;
+    margin: 0;
     margin-top: 1.5px;
 }
-
-
 
 // override mojTimeline styles
 

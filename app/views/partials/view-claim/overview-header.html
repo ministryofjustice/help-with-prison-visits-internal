@@ -14,7 +14,7 @@
     <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
         {% include "partials/csrf-hidden-input.html" %}
         <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-        <div class="view-claim-display-helper justify-content-end govuk-!-margin-bottom-0">
+        <div class="view-claim-display-helper govuk-!-margin-bottom-0">
             {% if Claim['AssignedTo'] %}
                 <div>Assigned to: {{ Claim['AssignedTo'] }}</div>
                 {{ govukButton({
