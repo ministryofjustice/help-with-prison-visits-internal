@@ -3,14 +3,10 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
-<br>
-
 {% if unlock %}
     {% set deductionSelect %}
     <div class="claim-table-deduction-section-container">
-      <div>
-        <span class="govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Type</span>
-      </div>
+      <div class="govuk-!-margin-right-4 govuk-!-font-weight-bold">Type</div>
       <div>
         {{ govukSelect({
           id: "deductionType",
@@ -41,10 +37,8 @@
     {% endset %}
 
     {% set deductionAmount %}
-    <div class="claim-table-deduction-section-container">
-      <div>
-        <span class="govuk-!-margin-top-2 govuk-!-margin-right-4 govuk-!-font-weight-bold">Amount</span>
-      </div>
+    <div class="claim-table-deduction-section-container vertical-align-middle">
+      <div class="govuk-!-margin-right-4 govuk-!-font-weight-bold">Amount</div>
       <div>
         {{ govukInput({
           label: {
@@ -83,7 +77,7 @@
     {{ govukTable({
       caption: "Deduction",
       captionClasses: "govuk-table__caption--l",
-      classes: "govuk-!-margin-bottom-8",
+      classes: "govuk-!-margin-bottom-8 govuk-!-margin-top-8",
       rows: [
         [
           {
@@ -92,7 +86,7 @@
           },
           {
             html: deductionAmount,
-            classes: "govuk-!-width-one-third vertical-align-middle "
+            classes: "govuk-!-width-one-third vertical-align-middle"
           },
           {
             html: deductionButton,

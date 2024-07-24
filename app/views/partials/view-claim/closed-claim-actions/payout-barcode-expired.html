@@ -6,8 +6,9 @@
   {% if Claim['Status'] == 'REJECTED' %}
     <span class="text-warning">Payout barcode can not be expired on a rejected claim</span>
   {% else %}
-    <span class="text-pending">This will cause the original payment to be resubmitted (excluding top ups)</span>
-    <br><br>
+    <div class="govuk-!-margin-bottom-3">
+      <span class="text-pending">This will cause the original payment to be resubmitted (excluding top ups)</span>
+    </div>
     
     {{ govukTextarea({
       name: "payout-barcode-expired-additional-information",

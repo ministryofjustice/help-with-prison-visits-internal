@@ -2,31 +2,37 @@
 {% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set visitRules %}
-  <span class="govuk-caption-xl">Visit rules</span>
-  <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">{{ displayHelper.getRegionRulesByValue(Claim['Country']) }}</h1>
+  <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">
+    <span class="govuk-caption-xl">Visit rules</span>
+    {{ displayHelper.getRegionRulesByValue(Claim['Country']) }}
+  </h1>
 {% endset %}
 
 {% set submitted %}
-  <span class="govuk-caption-xl">Submitted</span>
-  <h1 class="govuk-heading-xl govuk-!-margin-bottom-4">{{ getDateFormatted.shortDate(Claim['DateSubmitted']) }}</h1>
+  <h1 class="govuk-heading-xl govuk-!-margin-bottom-4"> 
+    <span class="govuk-caption-xl">Submitted</span>
+    {{ getDateFormatted.shortDate(Claim['DateSubmitted']) }}
+  </h1>
 {% endset %}
 
 {% set lastUpdated %}
-  <span class="govuk-caption-xl ">Last updated</span>
-  <h1 class="govuk-heading-xl govuk-!-margin-bottom-4 ">{{ getDateFormatted.shortDate(Claim['LastUpdated']) }}</h1>
+  <h1 class="govuk-heading-xl govuk-!-margin-bottom-4 ">
+    <span class="govuk-caption-xl ">Last updated</span>
+    {{ getDateFormatted.shortDate(Claim['LastUpdated']) }}
+  </h1>
 {% endset %}
 
 {{ govukTable({
-  classes: "govuk-!-margin-bottom-0",
+  classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-8",
   rows: [
     [
       {
         html: visitRules,
-        classes: "govuk-!-width-one-third table-no-border-bottom "
+        classes: "govuk-!-width-one-third table-no-border-bottom"
       },
       {
         html: submitted,
-        classes: "govuk-!-width-one-third table-no-border-bottom "
+        classes: "govuk-!-width-one-third table-no-border-bottom"
       },
       {
         html: lastUpdated,

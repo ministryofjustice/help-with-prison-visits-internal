@@ -1,7 +1,7 @@
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {# DUPLICATE #}
-{% if duplicates.length > 0 %}
+{% if duplicates | length %}
   {% set duplicatesList %}
     <ul class="list">
       {% for duplicateClaim in duplicates %}
@@ -18,7 +18,7 @@
 {% endif %}
 
 {# CLAIMANT DUPLICATE #}
-{% if claimantDuplicates.length > 0 %}
+{% if claimantDuplicates | length %}
   {% set claimantDuplicatesList %}
     <ul class="list">
       {% for claim in claimantDuplicates %}
@@ -35,7 +35,7 @@
 {% endif %}
 
 {# BANK DUPLICATE #}
-{% if bankDuplicates.length > 0 %}
+{% if bankDuplicates | length %}
   {% set bankDuplicatesList %}
     <ul class="list">
       {% for bank in bankDuplicates %}
@@ -52,7 +52,7 @@
 {% endif %}
 
 {# OVERPAID AND PAID CLAIM #}
-{% if overpaidClaims.length > 0 %}
+{% if overpaidClaims | length %}
   {% set overpaidClaimList %}
     <ul class="list">
       {% for overpaidClaim in overpaidClaims %}
@@ -92,12 +92,11 @@
 {# REFERENCE DISABLED #}
 {% if Claim['ReferenceDisabled'] %}
   {% set disabledReason %}
+  This Reference has been disabled <br>
     {% if Claim.DisabledReason %}
-      This Reference has been disabled <br>
       <p>Reason: {{ Claim.DisabledReason }}</p>
     {% else %}
-      This Reference has been disabled <br>
-      <p class="text-italic">No reason given</p>
+      <p class="claim-table-no-reason-text">No reason given</p>
     {% endif %}
   {% endset %}
 
@@ -116,7 +115,7 @@
     <p>Date: {{ getDateFormatted.shortDate(Claim.UntrustedDate) }}</p>
   {% else %}
     Auto-approval has been switched off for this claimant <br>
-    <p class="text-italic">No reason given</p>
+    <p class="claim-table-no-reason-text">No reason given</p>
     <p>Date: {{ getDateFormatted.shortDate(Claim.UntrustedDate) }}</p>
   {% endif %}
 {% endset %}

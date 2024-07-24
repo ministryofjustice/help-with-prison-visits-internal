@@ -141,7 +141,7 @@
   caption: tableCaption | safe,
   captionClasses: "govuk-table__caption--l",
   firstCellIsHeader: true,
-  classes: "govuk-!-margin-bottom-0",
+  classes: "govuk-!-margin-bottom-0 govuk-!-margin-top-8",
   rows: [
     [
       { text: visitorType | safe, classes: "govuk-!-width-one-third" },
@@ -209,6 +209,7 @@
 
 {{ govukTable({
   firstCellIsHeader: true,
+  classes: "govuk-!-margin-bottom-8",
   rows: [
     [
       { text: "Payment method", classes: "claim-table-width-one-third table-no-border-bottom" },
