@@ -16,18 +16,18 @@
 {% block header %}
 {{ mojHeader({
   organisationLabel: {
-    text: organisationName,
-    href: '/'
+    text: organisationName
   },
   serviceLabel: {
-    text: serviceName ,
+    text: serviceName,
     href: '/'
   },
   navigation: {
     label: 'Account navigation',
+    
     items: [{
       text: serialisedName,
-      href: '/'
+      active: false
     }, {
       text: 'Sign out',
       href: '/logout'

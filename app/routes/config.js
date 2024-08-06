@@ -50,7 +50,7 @@ module.exports = function (router) {
 
       const auditConfig = new AuditConfig(
         req.body.AuditThreshold,
-        req.body.AuditVerificationPercentage
+        req.body.VerificationPercentage
       )
 
       updateAutoApprovalConfig(autoApprovalConfig)
@@ -68,12 +68,21 @@ module.exports = function (router) {
         })
     } catch (error) {
       if (error instanceof ValidationError) {
+        const autoApprovalConfig = {
+          ...req.body,
+          AutoApprovalEnabled: req.body.AutoApprovalEnabled === 'true'
+        }
+        const auditConfig = {
+          ThresholdAmount: req.body.ThresholdAmount,
+          VerificationPercent: req.body.VerificationPercentage
+        }
+        const errors = error.validationErrors
         res.status(400).render('config', {
-          autoApprovalConfig: req.body,
-          auditConfig: req.body,
+          autoApprovalConfig,
+          auditConfig,
           autoApprovalRulesEnum,
           rulesDisabled,
-          errors: error.validationErrors
+          errors
         })
       } else {
         next(error)
@@ -82,19 +91,9 @@ module.exports = function (router) {
   })
 }
 
-const generateRulesDisabled = function (rulesEnabled) {
-  const rules = []
-
-  for (const rule in autoApprovalRulesEnum) {
-    rules.push(autoApprovalRulesEnum[rule].value)
-  }
-  const rulesDisabled = []
-
-  rules.forEach(function (rule) {
-    if (rulesEnabled.indexOf(rule) === -1) {
-      rulesDisabled.push(rule)
-    }
-  })
+const generateRulesDisabled = (rulesEnabled) => {
+  const rules = Object.values(autoApprovalRulesEnum).map(rule => rule.value)
+  const rulesDisabled = rules.filter(rule => !rulesEnabled.includes(rule))
 
   return rulesDisabled
 }

@@ -1,24 +1,14 @@
-{% if errors %}
-<div class="error-summary" role="group" aria-labelledby="error-summary-heading-example-1" tabindex="-1">
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-  {% if errors.UpdateConflict %}
-  <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
-    {{ errors.UpdateConflict[0] }}
-  </h1>
-
-  {% else %}
-  <h1 class="heading-medium error-summary-heading" id="error-summary-heading-example-1">
-    There are errors on this page
-  </h1>
-
-  <ul class="error-summary-list">
-    {% for field, messages in errors %}
-      {% if messages[0] %}
-        <li><a href="#{{ field }}">{{ messages[0] }}</a></li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-  {% endif %}
-
-</div>
+{% if errors.UpdateConflict %}
+  {{ govukErrorSummary({
+    titleText: errors.UpdateConflict,
+    errorList: ''
+  }) }}
+{% elseif errors %}
+  {% set errorSummaryList = errors | errorSummaryList %}
+  {{ govukErrorSummary({
+    titleText: "There was a problem",
+    errorList: errorSummaryList
+  }) }}
 {% endif %}
