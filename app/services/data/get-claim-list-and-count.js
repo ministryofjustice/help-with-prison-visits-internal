@@ -37,9 +37,9 @@ module.exports = function (status, advanceClaims, offset, limit, user, sortType,
         .then(function (claims) {
           const claimsToReturn = []
           return Promise.each(claims, function (claim) {
-            claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
+            claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY')
             claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
-            claim.UpdatedDateFormatted = moment(claim.LastUpdated).format('DD/MM/YYYY - HH:mm')
+            claim.UpdatedDateFormatted = moment(claim.LastUpdated).format('DD/MM/YYYY')
             claim.DisplayStatus = statusFormatter(claim.Status)
             claim.Name = claim.FirstName + ' ' + claim.LastName
             if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
