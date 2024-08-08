@@ -1,195 +1,44 @@
 {% extends "includes/layout_new.html" %}
+{% from "moj/components/badge/macro.njk" import mojBadge %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% block pageTitle %}
-  {% if serviceName %} {{ serviceName }} {% endif %}
+  {% if serviceName %} 
+    {{ serviceName }} 
+  {% endif %}
 {% endblock %}
 
 {% set activeMainNav = 'claims' %}
 
 {% block content %}
-
-  <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    <div>
-      {% if Claim['AssignedTo'] %}
-        <div>This claim is assigned to: <span class="bold">{{ Claim['AssignedTo'] }}</span>
-        <input id="unassign" type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/unassign" name="unassign" class="button pull-right grey assignment" value="Unassign"></div>
-      {% else %}
-        <input id="assign-self" type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/assign-self" name="assign-self" class="button pull-left grey assignment" value="Assign myself to this claim">
-      {% endif %}
-    </div>
-  </form>
-
-  <div class="grid-row">
-    <div class="column-quarter">
-      <h1 class="heading-large">
-        <span id="reference" class="heading-secondary">Reference number</span>{{ Claim['Reference'] }}
-      </h1>
-      {% if Claim['AssistedDigitalCaseworker'] %}
-      <span class="bold-small">Assisted digital - </span>{{ Claim['AssistedDigitalCaseworker'] }}
-      {% endif %}
-      <span class="tag {{ Claim['ClaimType'] }}" \>{{ displayHelper.getClaimTypeDisplayName(Claim['ClaimType']) }} {% if Claim['IsAdvanceClaim'] %} - Advance{% endif %}</span>
-    </div>
-
-    <div class="column-quarter">
-      <h1 class="heading-large">
-        <span class="heading-secondary">Visit rules</span>
-        <span>{{ displayHelper.getRegionRulesByValue(Claim['Country']) }}</span>
-      </h1>
-    </div>
-
-    <div class="column-quarter">
-      <h1 class="heading-large">
-        <span class="heading-secondary">Submitted </span>{{ getDateFormatted.shortDate(Claim['DateSubmitted']) }}
-      </h1>
-    </div>
-
-    <div class="column-quarter">
-
-      <h1 class="heading-large">
-        <span class="heading-secondary">Last Updated </span>{{ getDateFormatted.shortDate(Claim['LastUpdated']) }}
-      </h1>
-    </div>
-
-  </div>
-
+  {% include "partials/view-claim/overview-header.html" %}
+  {% include "partials/view-claim/overview-summary.html" %}
+  {% include "partials/view-claim/assisted-caseworker.html" %}
   {% include "partials/view-claim/warnings.html" %}
-
   {% include "includes/validation-error-messages.html" %}
 
-  <br>
-  <h1 class="table-heading">{{ 'Visitors' if Children[0] else 'Visitor' }}</h1>
-  </br>
-
   <form action="/claim/{{ Claim['ClaimId'] }}" method="post" class="form">
-
     {% include "partials/csrf-hidden-input.html" %}
-
     <input type="hidden" name="assistedDigitalCaseworker" value="{{ Claim['AssistedDigitalCaseworker'] }}">
     <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-
-    {% include "partials/view-claim/visitor.html" %}
-
-    {% if Claim.AccountNumber %}
-      <br>
-      <h1 class="table-heading">Bank Account Details</h1>
-      </br>
-    {% endif %}
-    {% include "partials/view-claim/bank-account-details.html" %}
-
-    <br>
-    <h1 class="table-heading">Benefit Owner</h1>
-    </br>
-    {% include "partials/view-claim/benefit-owner.html" %}
-
-    {% if ClaimEligibleChild.length > 0 %}
-      <br>
-      <h1 class="table-heading">Eligible Children</h1>
-      </br>
-    {% endif %}
-
-    {% include "partials/view-claim/eligible-child.html" %}
-
-    <br>
-    <h1 class="table-heading">Prisoner</h1>
-    </br>
-
-    {% include "partials/view-claim/prisoner.html" %}
-
-    <br>
-    <h1 class="table-heading">Release information</h1>
-    <br>
-    {% include "partials/view-claim/release-date.html" %}
-
-    <h1 class="table-heading">Visit</h1>
-
-    {% include "partials/view-claim/visit.html" %}
-
-    <div id='approve-cost'></div>
-    <h1 class="table-heading">Claim</h1>
-
-    {% include "partials/view-claim/claim.html" %}
-    <br>
-
-    {% include "partials/view-claim/add-deduction.html" %}
     
-    {% if TopUps.length > 0 %}
-      <h1 class="table-heading" name="top-ups-table" id="top-ups-table">Top Ups</h1>
-
-      {% include "partials/view-claim/top-ups.html" %}
-    {% endif %}
-
-    <br>
-
+    {% include "partials/view-claim/visitor.html" %}
+    {% include "partials/view-claim/bank-account-details.html" %}
+    {% include "partials/view-claim/benefit-owner.html" %}
+    {% include "partials/view-claim/eligible-child.html" %}
+    {% include "partials/view-claim/prisoner.html" %}
+    {% include "partials/view-claim/release-date.html" %}
+    {% include "partials/view-claim/visit.html" %}
+    {% include "partials/view-claim/claim.html" %}
+    {% include "partials/view-claim/add-deduction.html" %}
+    {% include "partials/view-claim/top-ups.html" %}
     {% include "partials/view-claim/claim-events.html" %}
-      
-    <br>
-    <br>
-
     {% include "partials/view-claim/decision.html" %}
-
   </form>
 
-  <br>
-  <br>
-
-  {% if Claim['AssignedTo'] %}
-  {% else %}
-    <form action="/claim/{{ Claim['ClaimId'] }}/insert-note" method="post" class="form">
-      {% include "partials/csrf-hidden-input.html" %}
-      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-      {% include "partials/view-claim/insert-note.html" %}
-    </form>
-  {% endif %}
-
+  {% include "partials/view-claim/insert-note.html" %}
   {% include "partials/view-claim/closed-claim-actions.html" %}
-  <form action="/claim/{{ Claim['ClaimId'] }}/update-overpayment-status" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    {% include "partials/view-claim/manage-overpayments.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/add-top-up" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    {% include "partials/view-claim/add-top-up.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/close-advance-claim" method="post" class="form">
-      {% include "partials/csrf-hidden-input.html" %}
-      <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-      {% include "partials/view-claim/close-advance-claim.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/disable-reference-number" method="post" class="form">
-
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    <input type="hidden" name="referenceToBeDisabled" value="{{ Claim['Reference'] }}">
-    {% include "partials/view-claim/disable-reference-number.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/re-enable-reference-number" method="post" class="form">
-
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    <input type="hidden" name="referenceToBeReEnabled" value="{{ Claim['Reference'] }}">
-    {% include "partials/view-claim/re-enable-reference-number.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/request-new-payment-details" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    {% include "partials/view-claim/request-new-payment-details.html" %}
-  </form>
-
-  <form action="/claim/{{ Claim['ClaimId'] }}/payout-barcode-expired" method="post" class="form">
-    {% include "partials/csrf-hidden-input.html" %}
-    <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
-    {% include "partials/view-claim/payout-barcode-expired.html" %}
-  </form>
-
 {% endblock %}
 
 {% block bodyEnd %}

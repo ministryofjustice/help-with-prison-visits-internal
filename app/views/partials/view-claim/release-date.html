@@ -1,47 +1,91 @@
-{% if unlock %}
-<div class="form-group">
-  <div class="multiple-choice">
-    <input type="checkbox" name='release-date-is-set' id='release-date-is-set' {% if Claim['ReleaseDateIsSet'] === true %} checked {% endif %} />
-    <label for='release-date-is-set' class="block-label" data-target="release-date-section"><span>Release Date is set?</span></label>
-  </div>
-</div>
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
-<div id="release-date-section" name="release-date-section" class="form-date form-group {% if not Claim['ReleaseDateIsSet'] %} js-hidden {% endif %} {% if errors['release-date-section'][0] %} form-group-error warning {% endif %}">
-  <fieldset>
-    <div class="form-group form-group-day">
-      <label id="release-day" for="release-day-input">Day</label>
-      <input id="release-day-input" type="number" name="release-day" autocomplete="off" 
-            value="{{ Claim['releaseDay'] }}" class="form-control{% if errors['release-date-section'][0] %} form-control-error {% endif %}">
-    </div>
-
-    <div class="form-group form-group-month">
-      <label id="release-month" for="release-month-input">Month</label>
-      <input id="release-month-input" type="number" name="release-month" autocomplete="off"
-            value="{{ Claim['releaseMonth'] }}" class="form-control{% if errors['release-date-section'][0] %} form-control-error {% endif %}">
-    </div>
-
-    <div class="form-group form-group-year">
-      <label id="release-year" for="release-year-input">Year</label>
-      <input id="release-year-input" type="number" name="release-year" autocomplete="off"
-            value="{{ Claim['releaseYear'] }}" class="form-control{% if errors['release-date-section'][0] %} form-control-error {% endif %}">
-    </div>
-  </fieldset>
-</div>
-
-{% else %}
-
-<table class="col-2 no-pad-right">
-
-  <tr>
-    <td>Release Date</td>
-    {% if Claim['ReleaseDate'] %}
-      <td>{{ getDateFormatted.shortDate(Claim['ReleaseDate']) }}</td>
+{% set releaseDate %}
+  <div id="release-date-section">
+    {% if unlock %}
+      <fieldset>
+        {{ govukDateInput({
+          id: "release",
+          namePrefix: "release",
+          classes: "js-hidden",
+          errorMessage: errors | findError('release-date-section'),
+          formGroup: {
+            classes: "govuk-!-margin-bottom-0",
+            type: "number"
+          },
+          items: [
+            {
+              name: "day",
+              id: "release-day",
+              classes: "govuk-input--width-2",
+              value: Claim.releaseDay
+            },
+            {
+              name: "month",
+              id: "release-month",
+              classes: "govuk-input--width-2",
+              value: Claim.releaseMonth
+            },
+            {
+              name: "year",
+              id: "release-year",
+              classes: "govuk-input--width-4",
+              value: Claim.releaseYear
+            }
+          ]
+        }) }}
+      </fieldset>
+    {% elseif Claim.ReleaseDate %}
+      {{ getDateFormatted.shortDate(Claim.ReleaseDate) }}
     {% else %}
-      <td><span class="text-pending">Pending</span></td>
+      <span class="text-pending">Pending</span>
     {% endif %}
-  </tr>
+  </div>
+{% endset %}
 
-</table>
+{% set releaseDateCheckbox %}
+  {% if unlock %}
+    {{ govukCheckboxes({
+      name: "release-date-is-set",
+      id: "release-date-is-set",
+      classes: "govuk-!-margin-top-3 govuk-!-margin-bottom-3",
+      formGroup: {
+        classes: "govuk-!-margin-bottom-0 pull-right"
+      },
+      items: [
+        {
+          name: "release-date-is-set",
+          value: "on",
+          text: "Release date is set?",
+          checked: Claim['ReleaseDateIsSet'] == true
+        }
+      ]
+    }) }}
+  {% endif %}
+{% endset %}
 
-
-{% endif %}
+{{ govukTable({
+  caption: "Release information",
+  captionClasses: "govuk-table__caption--l",
+  firstCellIsHeader: true,
+  classes: "govuk-!-margin-top-8",
+  rows: [
+    [
+      {
+        text: "Release date",
+        classes: "claim-table-width-one-third vertical-align-middle",
+        id: "benefit-owner-name"
+      },
+      {
+        html: releaseDate,
+        classes: "govuk-!-width-one-third vertical-align-middle"
+      },
+      {
+        html: releaseDateCheckbox,
+        classes: "govuk-!-width-one-third vertical-align-middle"
+      }
+    ]
+  ]
+}) }}

@@ -1,22 +1,98 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+
 {% if unlock %}
-<h1 class="table-heading">Deduction</h1>
-<table>
-  <tbody>
-    <tr class="form-group{% if errors['deductionType'][0] or errors['deductionAmount'][0] %} form-group-error warning {% endif %}">
-      <td>
-        Type: <select id="deductionType" name="deductionType" class="form-control{% if errors['deductionType'][0] %} form-control-error {% endif %}">
-          <option selected>Select</option>
-          <option value="hc3">{{ displayHelper.getDeductionTypeDisplayName('hc3') }}</option>
-          <option value="overpayment">{{ displayHelper.getDeductionTypeDisplayName('overpayment') }}</option>
-        </select>
-      </td>
-      <td>
-        Amount: <input id="deductionAmount" name="deductionAmount" type="text" class="form-control{% if errors['deductionAmount'][0] %} form-control-error {% endif %}">
-      </td>
-      <td>
-        <input type="submit" formaction="/claim/{{ Claim['ClaimId'] }}/add-deduction" class="button pull-right grey" name="add-deduction" id="add-deduction" value="Add">
-      </td>
-    </tr>
-  </tbody>
-</table>
+    {% set deductionSelect %}
+    <div class="claim-table-deduction-section-container">
+      <div class="govuk-!-margin-right-4 govuk-!-font-weight-bold">Type</div>
+      <div>
+        {{ govukSelect({
+          id: "deductionType",
+          name: "deductionType",
+          formGroup: {
+            classes: "govuk-!-margin-bottom-0",
+            id: "deductionType"
+          },
+          errorMessage: errors | findError('deductionType'),
+          items: [
+            {
+              value: "Select",
+              text: "Select",
+              selected: true
+            },
+            {
+              value: "hc3",
+              text: displayHelper.getDeductionTypeDisplayName('hc3')
+            },
+            {
+              value: "overpayment",
+              text: displayHelper.getDeductionTypeDisplayName('overpayment')
+            }
+          ]
+        }) }}
+      </div>
+    </div>
+    {% endset %}
+
+    {% set deductionAmount %}
+    <div class="claim-table-deduction-section-container vertical-align-middle">
+      <div class="govuk-!-margin-right-4 govuk-!-font-weight-bold">Amount</div>
+      <div>
+        {{ govukInput({
+          label: {
+            text: "Deduction amount",
+            classes: "govuk-visually-hidden"
+          },
+          errorMessage: errors | findError('deductionAmount'),
+          formGroup: {
+            classes: "govuk-!-margin-bottom-0"
+          },
+          classes: " govuk-input--width-4 ",
+          prefix: {
+            text: "£"
+          },
+          value: "",
+          id: "deductionAmount",
+          name: "deductionAmount",
+          inputmode: "decimal"
+        }) }}
+      </div>
+    {% endset %}
+
+    {% set deductionButton %}
+        {{ govukButton({
+          text: "Add",
+          id: "add-deduction",
+          type: "submit",
+          name: "add-deduction",
+          attributes: {
+            formaction: "/claim/" +  Claim['ClaimId'] + "/add-deduction"
+          },
+          classes: "govuk-!-margin-bottom-0 edit-claim-button govuk-button--secondary pull-right"
+        }) }}      
+    {% endset %}
+
+    {{ govukTable({
+      caption: "Deduction",
+      captionClasses: "govuk-table__caption--l",
+      classes: "govuk-!-margin-bottom-8 govuk-!-margin-top-8",
+      rows: [
+        [
+          {
+            html: deductionSelect,
+            classes: "claim-table-width-one-third vertical-align-middle"
+          },
+          {
+            html: deductionAmount,
+            classes: "govuk-!-width-one-third vertical-align-middle"
+          },
+          {
+            html: deductionButton,
+            classes: "govuk-!-width-one-third vertical-align-middle"
+          }
+        ]
+      ]
+    }) }}
 {% endif %}
