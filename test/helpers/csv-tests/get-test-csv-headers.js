@@ -3,6 +3,7 @@ module.exports = function () {
     'Reference',
     'Prison Name',
     'Prisoner Number',
+    'Prisoner Date Of Birth',
     'Prisoner Relationship',
     'Child Count',
     'Has Escort?',

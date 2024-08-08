@@ -2,6 +2,7 @@ module.exports = function () {
   return [{
     Name: 'Terry Johnson',
     'Prison Name': 'Hewell',
+    'Prisoner Date Of Birth': '10/11/2000',
     'Prisoner Relationship': 'Brother or sister',
     'Child Count': 0,
     'Has Escort?': 'N',
