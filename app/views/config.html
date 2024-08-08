@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<div class="govuk-heading-l">Settings</div>
+<div class="govuk-heading-xl">Settings</div>
 
 {% include "includes/validation-error-messages.html" %}
 
@@ -17,7 +17,7 @@
 
 <form action="/config" method="post">
     {{ govukTable({
-      captionClasses: "govuk-table__caption--m",
+      captionClasses: "govuk-table__caption--l",
       caption: "Auto approval",
       firstCellIsHeader: true,
       head: [],
@@ -152,7 +152,7 @@
 
     {{ govukTable({
       caption: "Auto approval checks",
-      captionClasses: "govuk-table__caption--m",
+      captionClasses: "govuk-table__caption--l",
       firstCellIsHeader: true,
       rows: rows
     }) }}
@@ -161,7 +161,7 @@
 
   {# AUDIT REPORT #}
     {{ govukTable({
-      captionClasses: "govuk-table__caption--m",
+      captionClasses: "govuk-table__caption--l",
       caption: "Audit report",
       firstCellIsHeader: true,
       head: [],
