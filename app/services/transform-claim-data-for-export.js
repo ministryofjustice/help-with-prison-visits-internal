@@ -11,6 +11,7 @@ const prisonerRelationshipEnum = require('../../app/constants/prisoner-relations
 
 const NAME_HEADER = 'Name'
 const PRISONER_NUMBER_HEADER = 'Prisoner Number'
+const PRISONER_DOB_HEADER = 'Prisoner Date Of Birth'
 const CLAIM_REFERENCE_HEADER = 'Reference'
 const PRISON_NAME_HEADER = 'Prison Name'
 const PRISONER_RELATIONSHIP_HEADER = 'Prisoner Relationship'
@@ -57,6 +58,7 @@ module.exports = function (claims) {
       returnValue[NAME_HEADER] = claim.Name
       returnValue[CLAIM_REFERENCE_HEADER] = claim.ClaimId
       returnValue[PRISONER_NUMBER_HEADER] = claim.PrisonNumber
+      returnValue[PRISONER_DOB_HEADER] = dateHelper.shortDate(claim.DateOfBirth)
       returnValue[PRISON_NAME_HEADER] = displayHelper.getPrisonDisplayName(claim.NameOfPrison)
       returnValue[PRISONER_RELATIONSHIP_HEADER] = prisonerRelationshipEnum[claim.Relationship].displayName
       returnValue[CHILD_COUNT_HEADER] = childCount ? childCount.Count : 0
