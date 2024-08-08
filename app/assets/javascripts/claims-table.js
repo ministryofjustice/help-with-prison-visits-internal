@@ -36,22 +36,27 @@ $(document).ready(function () {
         alert('An error occurred when searching for claims.') // eslint-disable-line no-undef
       }
     },
-
     columns: [
-      { data: 'Reference', render: cleanColumnOutput, orderable: false },
-      { data: 'Name', render: cleanColumnOutput, orderable: false },
-      { data: 'DateSubmittedFormatted', orderable: true },
-      { data: 'DateOfJourneyFormatted', orderable: true },
-      { data: 'UpdatedDateFormatted', orderable: true },
-      { data: 'DisplayStatus', orderable: false },
+      { title: 'Ref no.', data: 'Reference', render: cleanColumnOutput, orderable: false },
+      { title: 'Name', data: 'Name', render: cleanColumnOutput, orderable: false },
+      { title: 'Submitted', data: 'DateSubmittedFormatted', orderable: true },
+      { title: 'Visit date', data: 'DateOfJourneyFormatted', orderable: true },
+      { title: 'Updated date', data: 'UpdatedDateFormatted', orderable: true },
+      { title: 'Status', data: 'DisplayStatus', orderable: false },
       {
+        title: 'Claim type',
         data: 'ClaimType',
         orderable: false,
         createdCell: function (td, cellData, rowData, row, col) {
-          $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
+          if (rowData.ClaimTypeDisplayName === 'Repeat') {
+            $(td).html('<span class="moj-badge moj-badge--green">' + rowData.ClaimTypeDisplayName + '</span>')
+          } else {
+            $(td).html('<span class="moj-badge">' + rowData.ClaimTypeDisplayName + '</span>')
+          }
         }
       },
       {
+        title: '',
         data: 'ClaimId',
         orderable: false,
         createdCell: function (td, cellData, rowData, row, col) {
@@ -59,6 +64,8 @@ $(document).ready(function () {
         }
       }
     ],
+    // TODO: update pagination to match design
+    pagingType: 'first_last_numbers',
 
     columnDefs: [
       {
@@ -67,10 +74,9 @@ $(document).ready(function () {
         searchable: false
       }
     ],
-
     drawCallback: function () {
       const total = $('#claims_info').text().split(' ')[5]
-      $('.badge').text(total)
+      $('.moj-notification-badge').text(total)
     },
 
     language: {

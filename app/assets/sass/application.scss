@@ -8,11 +8,19 @@ $govuk-global-styles: true;
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
 
+$moj-page-width: 1170px;
+$govuk-page-width: $moj-page-width;
+
 @import '../../../node_modules/govuk-frontend/govuk/all';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/objects/all';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/settings/measurements';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/header/header';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/primary-navigation/primary-navigation';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/sortable-table/sortable-table';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/badge/badge';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/notification-badge/notification-badge';
+@import '../../../node_modules/@ministryofjustice/frontend/moj/components/search/search';
+
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/ticket-panel/_ticket-panel';
 
 // Path to assets for use with the file-url function
@@ -35,13 +43,20 @@ $path: "/public/images/";
 // override datatable styles
 
 table.dataTable thead th {
-    padding-left: inherit;
-    padding-right: inherit;
+    color: #005ea5;
+    padding-left: 0px!important;
+    padding-right: 0px!important;
 }
 
 table.dataTable tbody td {
-    padding-left: inherit;
-    padding-right: inherit;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+
+table.dataTable tbody tr {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 table.col-2 td:first-child {
@@ -62,16 +77,18 @@ table.no-pad-right td {
     margin-top: 40px;
 }
 
+.dataTable {
+    border-bottom: none!important;;
+    margin-bottom: 1em!important
+}
+
 .table-short-column {
     width: 200px;
 }
 
 .search {
-    padding: 15px 0 0 0;
-}
-
-.search input.form-control {
-    width: 200px;
+    display: flex;
+    align-items: flex-end;
 }
 
 .rejection-reason {
@@ -622,6 +639,10 @@ ul.sub-tabs li a.active span.badge {
   margin-bottom: 0.3125em;
 }
 
+.sorting_disabled {
+    max-width: 200px;
+}
+
 @media (min-width: 641px) {
   .heading-small {
     font-size: 19px;
@@ -743,6 +764,9 @@ ul.sub-tabs li a.active span.badge {
     font-size: 19px;
 }
 
+.govuk-tabs__tab {
+    color: black
+}
 .config-description {
     color: $govuk-secondary-text-colour;
     width: 53%;
