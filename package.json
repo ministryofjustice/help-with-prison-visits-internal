@@ -91,6 +91,7 @@
     "csv-stringify": "^6.5.1",
     "datatables.net": "^1.13.6",
     "datatables.net-dt": "^1.13.6",
+    "date-fns": "^3.6.0",
     "debug": "^4.3.6",
     "dotenv": "^16.4.5",
     "express": "~4.19.2",
