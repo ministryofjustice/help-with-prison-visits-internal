@@ -10,7 +10,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       LastName: 'LastNameTest',
       AssignedTo: '',
       AssignmentExpiry: '',
-      PaymentDate: '2024-01-13 00:00:00',
+      PaymentDate: '2024-01-13 00:00:00'
     }, {
       DateSubmitted: '2024-01-02 13:33:00',
       DateSubmittedFormatted: '02/01/2024 - 13:33',
@@ -24,7 +24,7 @@ describe('services/data/get-claim-list-for-advanced-search', function () {
       AssignedTo: 'Unassigned',
       AssignmentExpiry: '',
       PaymentDate: '2024-01-13 00:00:00',
-      DaysUntilPayment: 10,
+      DaysUntilPayment: 10
     }]
   ])('getClaimsToReturn', (testClaim, expectedClaim) => {
     expect(getClaimsToReturn([], [testClaim], {}).claims[0]).toEqual(expectedClaim)
