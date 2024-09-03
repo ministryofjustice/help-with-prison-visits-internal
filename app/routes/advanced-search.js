@@ -1,5 +1,5 @@
 const authorisation = require('../services/authorisation')
-const getClaimListForAdvancedSearch = require('../services/data/get-claim-list-for-advanced-search')
+const { getClaimListForAdvancedSearch } = require('../services/data/get-claim-list-for-advanced-search')
 const exportSearchResults = require('../services/export-search-results')
 const displayHelper = require('../views/helpers/display-helper')
 const dateFormatter = require('../services/date-formatter')
