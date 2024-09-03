@@ -1,5 +1,4 @@
-const moment = require('moment')
-// const { format, differenceInCalendarDays } = require('date-fns')
+const { format, differenceInDays } = require('date-fns')
 const { getDatabaseConnector } = require('../../databaseConnector')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const rulesEnum = require('../../../app/constants/region-rules-enum')
@@ -395,23 +394,18 @@ function getClaimsToReturn (closedClaimsStatuses, claims, total) {
   const claimsToReturn = []
 
   claims.forEach((claim) => {
-    claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
-    claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
-    // claim.DateSubmittedFormatted = format(claim.DateSubmitted, 'DD/MM/YYYY - HH:mm')
-    // claim.DateOfJourneyFormatted = format(claim.DateOfJourney, 'DD/MM/YYYY')
-    claim.DateSubmittedMoment = moment(claim.DateSubmitted)
+    claim.DateSubmittedFormatted = format(claim.DateSubmitted, 'dd/MM/yyyy - HH:mm')
+    claim.DateOfJourneyFormatted = format(claim.DateOfJourney, 'dd/MM/yyyy')
     claim.DisplayStatus = statusFormatter(claim.Status)
     claim.Name = claim.FirstName + ' ' + claim.LastName
+
     if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
       claim.AssignedTo = null
     }
+
     claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
-    if (claim.PaymentDate) {
-      claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
-      // claim.DaysUntilPayment = differenceInCalendarDays(claim.PaymentDate, claim.DateSubmitted)
-    } else {
-      claim.DaysUntilPayment = 'N/A'
-    }
+    claim.DaysUntilPayment = claim.PaymentDate ? differenceInDays(claim.PaymentDate, claim.DateSubmitted) : 'N/A'
+
     if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
       const status = closedClaimsStatuses[claim.ClaimId]
       claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
