@@ -132,7 +132,9 @@ const RETURNED_CLAIM = {
 }
 
 let errorsReturnedToView = {}
-const mockGetClaimListForAdvancedSearch = jest.fn()
+const mockGetClaimListForAdvancedSearch = {
+  getClaimListForAdvancedSearch: jest.fn()
+}
 let mockDisplayHelper
 let mockAuthorisation
 const mockHasRoles = jest.fn()
@@ -219,7 +221,7 @@ describe('routes/index', function () {
 
   describe('POST /advanced-search-results', function () {
     it('should respond with a 200 and call data method', function () {
-      mockGetClaimListForAdvancedSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
+      mockGetClaimListForAdvancedSearch.getClaimListForAdvancedSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
       return supertest(app)
         .post('/advanced-search-results')
         .send({ start, length })
@@ -227,21 +229,21 @@ describe('routes/index', function () {
         .expect(function (response) {
           expect(mockHasRoles).toHaveBeenCalledTimes(1)
           // expected data method to be called with empty search criteria
-          expect(mockGetClaimListForAdvancedSearch).toHaveBeenCalledWith({}, start, length)
+          expect(mockGetClaimListForAdvancedSearch.getClaimListForAdvancedSearch).toHaveBeenCalledWith({}, start, length)
           expect(response.body.recordsTotal).toBe(1)
           expect(response.body.claims[0].ClaimTypeDisplayName).toBe('First time')
         })
     })
 
     it('should extract search criteria correctly', function () {
-      mockGetClaimListForAdvancedSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
+      mockGetClaimListForAdvancedSearch.getClaimListForAdvancedSearch.mockResolvedValue({ claims: [RETURNED_CLAIM], total: { Count: 1 } })
 
       return supertest(app)
         .post('/advanced-search-results')
         .send(INPUT_SEARCH_CRITERIA)
         .expect(function (response) {
           // expected data method to be called with processed search criteria
-          expect(mockGetClaimListForAdvancedSearch).toHaveBeenCalledWith(expect.objectContaining(PROCESSED_SEARCH_CRITERIA), start, length)
+          expect(mockGetClaimListForAdvancedSearch.getClaimListForAdvancedSearch).toHaveBeenCalledWith(expect.objectContaining(PROCESSED_SEARCH_CRITERIA), start, length)
         })
     })
 
@@ -254,7 +256,7 @@ describe('routes/index', function () {
           res.status(500).render('includes/error')
         }
       })
-      mockGetClaimListForAdvancedSearch.mockRejectedValue()
+      mockGetClaimListForAdvancedSearch.getClaimListForAdvancedSearch.mockRejectedValue()
       return supertest(app)
         .post('/advanced-search-results')
         .expect(500)

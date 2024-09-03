@@ -1,5 +1,5 @@
 /* eslint-disable no-prototype-builtins */
-const getClaimListForAdvancedSearch = require('../../../../app/services/data/get-claim-list-for-advanced-search')
+const { getClaimListForAdvancedSearch } = require('../../../../app/services/data/get-claim-list-for-advanced-search')
 const dateFormatter = require('../../../../app/services/date-formatter')
 const { getTestData, insertTestData, deleteAll, db } = require('../../../helpers/database-setup-for-tests')
 const { getClaimReference } = require('../../../helpers/integration')

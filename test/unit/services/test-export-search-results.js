@@ -16,7 +16,9 @@ describe('services/export-search-results', function () {
   beforeAll(function () {
     const getClaimListForAdvancedSearchResult = { claims: [], total: 0 }
 
-    mockGetClaimListForAdvancedSearch = jest.fn().mockResolvedValue(getClaimListForAdvancedSearchResult)
+    mockGetClaimListForAdvancedSearch = {
+      getClaimListForAdvancedSearch: jest.fn().mockResolvedValue(getClaimListForAdvancedSearchResult)
+    }
     mockTransformClaimDataForExport = jest.fn().mockResolvedValue([])
 
     exportSearchResults = require('../../../app/services/export-search-results')
@@ -27,7 +29,7 @@ describe('services/export-search-results', function () {
 
     return exportSearchResults(searchCriteria)
       .then(function () {
-        expect(mockGetClaimListForAdvancedSearch).toHaveBeenCalledWith(searchCriteria, 0, Number.MAX_SAFE_INTEGER, true)
+        expect(mockGetClaimListForAdvancedSearch.getClaimListForAdvancedSearch).toHaveBeenCalledWith(searchCriteria, 0, Number.MAX_SAFE_INTEGER, true)
         expect(mockTransformClaimDataForExport).toHaveBeenCalledTimes(1)
       })
   })

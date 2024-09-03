@@ -1,19 +1,14 @@
+const moment = require('moment')
+// const { format, differenceInCalendarDays } = require('date-fns')
 const { getDatabaseConnector } = require('../../databaseConnector')
-// const moment = require('moment')
-const { format, differenceInCalendarDays } = require('date-fns')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const rulesEnum = require('../../../app/constants/region-rules-enum')
 const dateFormatter = require('../date-formatter')
 const statusFormatter = require('../claim-status-formatter')
-const Promise = require('bluebird').Promise
 const getClosedClaimsStatuses = require('./get-closed-claims-statuses')
 
 const APPROVED_STATUS_VALUES = [claimStatusEnum.APPROVED.value, claimStatusEnum.APPROVED_ADVANCE_CLOSED.value, claimStatusEnum.APPROVED_PAYOUT_BARCODE_EXPIRED.value, claimStatusEnum.AUTOAPPROVED.value]
 const IN_PROGRESS_STATUS_VALUES = [claimStatusEnum.UPDATED.value, claimStatusEnum.REQUEST_INFORMATION.value, claimStatusEnum.REQUEST_INFO_PAYMENT.value]
-
-let countQuery
-let selectQuery
-let selectFields
 
 const validSearchOptions = [
   'reference',
@@ -83,13 +78,7 @@ const EXPORT_CLAIMS_FIELDS = [
   'Claim.PaymentDate'
 ]
 
-module.exports = function (searchCriteria, offset, limit, isExport) {
-  if (isExport) {
-    selectFields = EXPORT_CLAIMS_FIELDS
-  } else {
-    selectFields = ADVANCED_SEARCH_FIELDS
-  }
-
+function getClaimListForAdvancedSearch (searchCriteria, offset, limit, isExport) {
   let validSearchOptionFound = false
 
   for (const option in searchCriteria) {
@@ -107,7 +96,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     })
   }
 
-  createBaseQueries(limit, offset)
+  const { countQuery, selectQuery } = createBaseQueries(limit, offset, isExport)
 
   if (searchCriteria.reference) {
     applyReferenceFilter(selectQuery, searchCriteria.reference)
@@ -231,7 +220,6 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     .then(function (count) {
       return selectQuery
         .then(function (claims) {
-          const claimsToReturn = []
           const claimIds = claims.reduce(function (currentClaimIds, claim) {
             currentClaimIds.push(claim.ClaimId)
 
@@ -240,38 +228,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
 
           return getClosedClaimsStatuses(claimIds)
             .then(function (closedClaimsStatuses) {
-              return Promise.each(claims, function (claim) {
-                // claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
-                // claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
-                claim.DateSubmittedFormatted = format(claim.DateSubmitted, 'DD/MM/YYYY - HH:mm')
-                claim.DateOfJourneyFormatted = format(claim.DateOfJourney, 'DD/MM/YYYY')
-                // claim.DateSubmittedMoment = moment(claim.DateSubmitted)
-                claim.DisplayStatus = statusFormatter(claim.Status)
-                claim.Name = claim.FirstName + ' ' + claim.LastName
-                if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
-                  claim.AssignedTo = null
-                }
-                claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
-                if (claim.PaymentDate) {
-                  claim.DaysUntilPayment = differenceInCalendarDays(claim.PaymentDate, claim.DateSubmitted)
-                } else {
-                  claim.DaysUntilPayment = 'N/A'
-                }
-                if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
-                  const status = closedClaimsStatuses[claim.ClaimId]
-                  claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
-                }
-
-                claimsToReturn.push(claim)
-
-                return Promise.resolve()
-              })
-                .then(function () {
-                  return {
-                    claims: claimsToReturn,
-                    total: count[0]
-                  }
-                })
+              return getClaimsToReturn(closedClaimsStatuses, claims, count[0])
             })
         })
     })
@@ -409,17 +366,18 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     query.where('Claim.PaymentMethod', paymentMethod)
   }
 
-  function createBaseQueries (limit, offset) {
+  async function createBaseQueries (limit, offset, isExport) {
+    const selectFields = isExport ? EXPORT_CLAIMS_FIELDS : ADVANCED_SEARCH_FIELDS
     const db = getDatabaseConnector()
 
-    countQuery = db('Claim')
+    const countQuery = db('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
       .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
       .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
       .leftJoin('ClaimRejectionReason', 'Claim.RejectionReasonId', '=', 'ClaimRejectionReason.ClaimRejectionReasonId')
       .count('Claim.ClaimId AS Count')
 
-    selectQuery = db('Claim')
+    const selectQuery = db('Claim')
       .join('Visitor', 'Claim.EligibilityId', '=', 'Visitor.EligibilityId')
       .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
       .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
@@ -428,5 +386,47 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
       .orderBy('Claim.DateSubmitted', 'asc')
       .limit(limit)
       .offset(offset)
+
+    return { countQuery, selectQuery }
   }
+}
+
+function getClaimsToReturn (closedClaimsStatuses, claims, total) {
+  const claimsToReturn = []
+
+  claims.forEach((claim) => {
+    claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
+    claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
+    // claim.DateSubmittedFormatted = format(claim.DateSubmitted, 'DD/MM/YYYY - HH:mm')
+    // claim.DateOfJourneyFormatted = format(claim.DateOfJourney, 'DD/MM/YYYY')
+    claim.DateSubmittedMoment = moment(claim.DateSubmitted)
+    claim.DisplayStatus = statusFormatter(claim.Status)
+    claim.Name = claim.FirstName + ' ' + claim.LastName
+    if (claim.AssignedTo && claim.AssignmentExpiry < dateFormatter.now().toDate()) {
+      claim.AssignedTo = null
+    }
+    claim.AssignedTo = !claim.AssignedTo ? 'Unassigned' : claim.AssignedTo
+    if (claim.PaymentDate) {
+      claim.DaysUntilPayment = moment(claim.PaymentDate).diff(claim.DateSubmittedMoment, 'days')
+      // claim.DaysUntilPayment = differenceInCalendarDays(claim.PaymentDate, claim.DateSubmitted)
+    } else {
+      claim.DaysUntilPayment = 'N/A'
+    }
+    if (claim.Status === claimStatusEnum.APPROVED_ADVANCE_CLOSED.value) {
+      const status = closedClaimsStatuses[claim.ClaimId]
+      claim.DisplayStatus = 'Closed - ' + statusFormatter(status)
+    }
+
+    claimsToReturn.push(claim)
+  })
+
+  return {
+    claims: claimsToReturn,
+    total
+  }
+}
+
+module.exports = {
+  getClaimsToReturn,
+  getClaimListForAdvancedSearch
 }
