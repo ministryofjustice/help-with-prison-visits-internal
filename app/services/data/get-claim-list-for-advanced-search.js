@@ -81,10 +81,8 @@ function getClaimListForAdvancedSearch (searchCriteria, offset, limit, isExport)
   let validSearchOptionFound = false
 
   for (const option in searchCriteria) {
-    if (validSearchOptions.indexOf(option) !== -1) {
-      if (searchCriteria[option]) {
-        validSearchOptionFound = true
-      }
+    if (validSearchOptions.includes(option) && searchCriteria[option]) {
+      validSearchOptionFound = true
     }
   }
 
@@ -219,11 +217,7 @@ function getClaimListForAdvancedSearch (searchCriteria, offset, limit, isExport)
     .then(function (count) {
       return selectQuery
         .then(function (claims) {
-          const claimIds = claims.reduce(function (currentClaimIds, claim) {
-            currentClaimIds.push(claim.ClaimId)
-
-            return currentClaimIds
-          }, [])
+          const claimIds = claims.map(claim => claim.ClaimId)
 
           return getClosedClaimsStatuses(claimIds)
             .then(function (closedClaimsStatuses) {
@@ -257,12 +251,9 @@ function getClaimListForAdvancedSearch (searchCriteria, offset, limit, isExport)
   }
 
   function applyClaimStatusFilter (query, claimStatus) {
-    const value = claimStatusEnum[claimStatus] ? claimStatusEnum[claimStatus].value : null
-    if (value === claimStatusEnum.APPROVED.value) {
-      return query.whereIn('Claim.Status', APPROVED_STATUS_VALUES)
-    }
+    const claimStatusValue = claimStatusEnum[claimStatus] ? claimStatusEnum[claimStatus].value : null
 
-    return query.where('Claim.Status', value)
+    return query.where('Claim.Status', claimStatusValue === claimStatusEnum.APPROVED.value ? APPROVED_STATUS_VALUES : value)
   }
 
   function applyInProgressClaimStatusFilter (query) {
@@ -282,16 +273,13 @@ function getClaimListForAdvancedSearch (searchCriteria, offset, limit, isExport)
   }
 
   function applyModeOfApprovalFilter (query, modeOfApproval) {
-    modeOfApproval = claimStatusEnum[modeOfApproval] ? claimStatusEnum[modeOfApproval].value : null
-    return query.where('Claim.Status', modeOfApproval)
+    const modeOfApprovalForQuery = claimStatusEnum[modeOfApproval] ? claimStatusEnum[modeOfApproval].value : null
+
+    return query.where('Claim.Status', modeOfApprovalForQuery)
   }
 
   function applyPastOrFutureFilter (query, pastOrFuture) {
-    if (pastOrFuture === 'past') {
-      return query.where('Claim.IsAdvanceClaim', 'false')
-    }
-
-    return query.where('Claim.IsAdvanceClaim', 'true')
+    return pastOrFuture === 'past' ? query.where('Claim.IsAdvanceClaim', 'false') : query.where('Claim.IsAdvanceClaim', 'true')
   }
 
   function applyVisitRulesFilter (query, visitRules) {
