@@ -253,7 +253,7 @@ function getClaimListForAdvancedSearch (searchCriteria, offset, limit, isExport)
   function applyClaimStatusFilter (query, claimStatus) {
     const claimStatusValue = claimStatusEnum[claimStatus] ? claimStatusEnum[claimStatus].value : null
 
-    return query.where('Claim.Status', claimStatusValue === claimStatusEnum.APPROVED.value ? APPROVED_STATUS_VALUES : value)
+    return query.where('Claim.Status', claimStatusValue === claimStatusEnum.APPROVED.value ? APPROVED_STATUS_VALUES : claimStatusValue)
   }
 
   function applyInProgressClaimStatusFilter (query) {
