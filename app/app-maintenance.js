@@ -24,8 +24,8 @@ const govukAssets = [
   '../node_modules/govuk-frontend/govuk/assets',
   '../node_modules/govuk-frontend',
   '../node_modules/jquery/dist',
-  '../node_modules/datatables.net/js',
-  '../node_modules/datatables.net-dt/css'
+  '../node_modules/datatables.net',
+  '../node_modules/datatables.net-dt'
 ]
 govukAssets.forEach(dir => {
   app.use('/assets', express.static(path.join(__dirname, dir)))
