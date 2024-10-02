@@ -66,8 +66,8 @@ publicFolders.forEach(dir => {
 
 // jquery asset paths
 const govukAssets = [
-  '../node_modules/govuk-frontend/govuk/assets',
-  '../node_modules/govuk-frontend',
+  '../node_modules/govuk-frontend/dist/govuk/assets',
+  '../node_modules/govuk-frontend/dist',
   '../node_modules/datatables.net',
   '../node_modules/datatables.net-dt',
   '../node_modules/jquery/dist'

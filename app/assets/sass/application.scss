@@ -11,7 +11,7 @@ $govuk-page-width: $moj-page-width;
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
 
-@import '../../../node_modules/govuk-frontend/govuk/all';
+@import '../../../node_modules/govuk-frontend/dist/govuk/all';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/objects/all';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/settings/measurements';
 @import '../../../node_modules/@ministryofjustice/frontend/moj/components/header/header';
