@@ -43,10 +43,10 @@ app.use(helmet.contentSecurityPolicy({
       '*.google-analytics.com',
       (_req, res) => `'nonce-${res.locals.cspNonce}'`
     ],
-    connectSrc: ["'self'", 'www.google-analytics.com'],
+    connectSrc: ["'self'", '*.google-analytics.com'],
     styleSrc: ["'self'"],
     fontSrc: ["'self'", 'data:'],
-    imgSrc: ["'self'", 'www.google-analytics.com']
+    imgSrc: ["'self'", '*.google-analytics.com']
   }
 }))
 
