@@ -14,11 +14,10 @@ const url =
     ? `rediss://${config.REDIS.HOST}:${config.REDIS.PORT}`
     : `redis://${config.REDIS.HOST}:${config.REDIS.PORT}`
 
-const createRedisClient = ({ legacyMode }) => {
+const createRedisClient = () => {
   const client = redis.createClient({
     url,
     password: config.REDIS.PASSWORD,
-    legacyMode,
     socket: {
       reconnectStrategy: (attempts) => {
         // Exponential back off: 20ms, 40ms, 80ms..., capped to retry every 30 seconds
@@ -36,7 +35,7 @@ const createRedisClient = ({ legacyMode }) => {
 
 module.exports = function (app) {
   if (config.AUTHENTICATION_ENABLED === 'true') {
-    const client = createRedisClient({ legacyMode: true })
+    const client = createRedisClient()
     client.connect().catch((err) => log.error('Error connecting to Redis', err))
 
     app.set('trust proxy', true)
