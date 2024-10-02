@@ -11,17 +11,8 @@ $govuk-page-width: $moj-page-width;
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
 
-@import '../../../node_modules/govuk-frontend/dist/govuk/all';
-@import '../../../node_modules/@ministryofjustice/frontend/moj/objects/all';
-@import '../../../node_modules/@ministryofjustice/frontend/moj/settings/measurements';
-@import '../../../node_modules/@ministryofjustice/frontend/moj/components/header/header';
-@import '../../../node_modules/@ministryofjustice/frontend/moj/components/primary-navigation/primary-navigation';
-@import '../../../node_modules/@ministryofjustice/frontend/moj/components/sortable-table/sortable-table';
-@import '../../../node_modules/@ministryofjustice/frontend/moj/components/badge/badge';
-@import '../../../node_modules/@ministryofjustice/frontend/moj/components/notification-badge/notification-badge';
-@import '../../../node_modules/@ministryofjustice/frontend/moj/components/search/search';
-
-@import '../../../node_modules/@ministryofjustice/frontend/moj/components/ticket-panel/_ticket-panel';
+@import 'govuk/all';
+@import 'moj/all';
 
 // Path to assets for use with the file-url function
 // in the govuk frontend toolkit's url-helpers partial
