@@ -4,11 +4,10 @@ const redis = require('redis')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
 const axios = require('axios')
-const connectRedis = require('connect-redis')
 const log = require('./services/log')
 const applicationRoles = require('./constants/application-roles-enum')
 
-const RedisStore = connectRedis(session)
+const RedisStore = require('connect-redis').default
 
 const url =
   config.PRODUCTION
