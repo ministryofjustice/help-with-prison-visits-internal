@@ -40,10 +40,7 @@ app.use(helmet.contentSecurityPolicy({
     defaultSrc: ["'self'"],
     scriptSrc: [
       "'self'",
-      "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
-      "'sha256-G29/qSW/JHHANtFhlrZVDZW1HOkCDRc78ggbqwwIJ2g='",
-      "'sha256-l1eTVSK8DTnK8+yloud7wZUqFrI0atVo6VlC6PJvYaQ='", // govuk-frontend - initAll() inline script
-      'www.google-analytics.com',
+      '*.google-analytics.com',
       (_req, res) => `'nonce-${res.locals.cspNonce}'`
     ],
     connectSrc: ["'self'", 'www.google-analytics.com'],
