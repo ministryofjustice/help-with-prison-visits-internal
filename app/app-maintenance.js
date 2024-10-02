@@ -21,6 +21,8 @@ publicFolders.forEach(dir => {
 
 // jquery asset paths
 const govukAssets = [
+  '../node_modules/@ministryofjustice/frontend/moj/assets',
+  '../node_modules/@ministryofjustice/frontend',
   '../node_modules/govuk-frontend/dist/govuk/assets',
   '../node_modules/govuk-frontend/dist',
   '../node_modules/jquery/dist',
