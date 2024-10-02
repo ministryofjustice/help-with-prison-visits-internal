@@ -1,5 +1,6 @@
 const config = require('../config')
 const express = require('express')
+const crypto = require('crypto')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
 const favicon = require('serve-favicon')
@@ -29,12 +30,18 @@ app.use(helmet())
 app.use(helmet.hsts({ maxAge: 5184000 }))
 
 // Configure Content Security Policy
+// Hashes for inline Gov Template script entries
+app.use((_req, res, next) => {
+  res.locals.cspNonce = crypto.randomBytes(16).toString('hex')
+  next()
+})
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
     scriptSrc: [
       "'self'",
-      '*.google-analytics.com'
+      '*.google-analytics.com',
+      (_req, res) => `'nonce-${res.locals.cspNonce}'`
     ],
     connectSrc: ["'self'", '*.google-analytics.com'],
     styleSrc: ["'self'"],
