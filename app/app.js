@@ -1,5 +1,6 @@
 const config = require('../config')
 const express = require('express')
+const crypto = require('crypto')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
 const favicon = require('serve-favicon')
@@ -30,18 +31,22 @@ app.use(helmet.hsts({ maxAge: 5184000 }))
 
 // Configure Content Security Policy
 // Hashes for inline Gov Template script entries
+app.use((_req, res, next) => {
+  res.locals.cspNonce = crypto.randomBytes(16).toString('hex')
+  next()
+})
 app.use(helmet.contentSecurityPolicy({
   directives: {
     defaultSrc: ["'self'"],
-    scriptSrc: ["'self'",
-      "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
-      "'sha256-G29/qSW/JHHANtFhlrZVDZW1HOkCDRc78ggbqwwIJ2g='",
-      "'sha256-l1eTVSK8DTnK8+yloud7wZUqFrI0atVo6VlC6PJvYaQ='", // govuk-frontend - initAll() inline script
-      'www.google-analytics.com'],
-    connectSrc: ["'self'", 'www.google-analytics.com'],
+    scriptSrc: [
+      "'self'",
+      '*.google-analytics.com',
+      (_req, res) => `'nonce-${res.locals.cspNonce}'`
+    ],
+    connectSrc: ["'self'", '*.google-analytics.com'],
     styleSrc: ["'self'"],
     fontSrc: ["'self'", 'data:'],
-    imgSrc: ["'self'", 'www.google-analytics.com']
+    imgSrc: ["'self'", '*.google-analytics.com']
   }
 }))
 
@@ -61,10 +66,12 @@ publicFolders.forEach(dir => {
 
 // jquery asset paths
 const govukAssets = [
-  '../node_modules/govuk-frontend/govuk/assets',
-  '../node_modules/govuk-frontend',
-  '../node_modules/datatables.net/js',
-  '../node_modules/datatables.net-dt/css',
+  '../node_modules/@ministryofjustice/frontend/moj/assets',
+  '../node_modules/@ministryofjustice/frontend',
+  '../node_modules/govuk-frontend/dist/govuk/assets',
+  '../node_modules/govuk-frontend/dist',
+  '../node_modules/datatables.net',
+  '../node_modules/datatables.net-dt',
   '../node_modules/jquery/dist'
 ]
 govukAssets.forEach(dir => {

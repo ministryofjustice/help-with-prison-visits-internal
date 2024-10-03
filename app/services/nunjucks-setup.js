@@ -3,9 +3,9 @@ const nunjucks = require('nunjucks')
 
 module.exports = function (app, developmentMode) {
   const appViews = [
-    path.join(__dirname, '../../node_modules/govuk-frontend/'),
-    path.join(__dirname, '../../node_modules/govuk_template_jinja'),
-    path.join(__dirname, '../../node_modules/@ministryofjustice/frontend/'),
+    'node_modules/govuk-frontend/dist/',
+    'node_modules/govuk_template_jinja',
+    'node_modules/@ministryofjustice/frontend/',
     path.join(__dirname, '../views')
   ]
 

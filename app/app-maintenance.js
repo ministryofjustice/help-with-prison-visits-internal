@@ -21,11 +21,13 @@ publicFolders.forEach(dir => {
 
 // jquery asset paths
 const govukAssets = [
-  '../node_modules/govuk-frontend/govuk/assets',
-  '../node_modules/govuk-frontend',
+  '../node_modules/@ministryofjustice/frontend/moj/assets',
+  '../node_modules/@ministryofjustice/frontend',
+  '../node_modules/govuk-frontend/dist/govuk/assets',
+  '../node_modules/govuk-frontend/dist',
   '../node_modules/jquery/dist',
-  '../node_modules/datatables.net/js',
-  '../node_modules/datatables.net-dt/css'
+  '../node_modules/datatables.net',
+  '../node_modules/datatables.net-dt'
 ]
 govukAssets.forEach(dir => {
   app.use('/assets', express.static(path.join(__dirname, dir)))
