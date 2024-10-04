@@ -1,13 +1,34 @@
-{% if Claim['AccountNumber'] %}
-  <table class="col-2 no-pad-right">
-    <tr>
-      <td>Name on Account</td>
-      <td id="benefit-owner-name">{{ Claim['NameOnAccount'] }}</td>
-    </tr>
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
-    <tr>
-      <td>Account Number</td>
-      <td>{{ displayHelper.maskString(Claim['AccountNumber'],4) }}</td>
-    </tr>
-  </table>
+{% if Claim.AccountNumber %}
+{{ govukTable({
+  caption: "Bank account details",
+  captionClasses: "govuk-table__caption--l",
+  firstCellIsHeader: true,
+  classes: "govuk-!-margin-top-8",
+  rows: [
+    [
+      {
+        text: "Name on account",
+        classes: "claim-table-width-one-third",
+        id: "claim-account-name"
+      },
+      {
+        text: Claim.NameOnAccount,
+        classes: "govuk-!-width-two-thirds"
+      }
+    ],
+    [
+      {
+        text: "Account number",
+        classes: "claim-table-width-one-third",
+        id: "claim-account-number"
+      },
+      {
+        text: displayHelper.maskString(Claim.AccountNumber,4),
+        classes: "govuk-!-width-two-thirds"
+      }
+    ]
+  ]
+}) }}
 {% endif %}

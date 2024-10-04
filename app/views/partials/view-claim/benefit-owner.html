@@ -1,36 +1,83 @@
-{% if Claim['BenefitOwnerFirstName'] %}
-  <table class="col-2 no-pad-right">
-    <tr>
-      <td>Name</td>
-      <td id="benefit-owner-name">{{ Claim['BenefitOwnerFirstName'] }} {{ Claim['BenefitOwnerLastName'] }}</td>
-    </tr>
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
-    <tr>
-      <td>Date of birth</td>
-      <td>{{ getDateFormatted.shortDate(Claim['BenefitOwnerDateOfBirth']) }}</td>
-    </tr>
-
-    <tr>
-      <td>National Insurance number</td>
-      <td>{{ Claim['BenefitOwnerNationalInsuranceNumber'] }}</td>
-    </tr>
-  </table>
+{% if Claim.BenefitOwnerFirstName %}
+{{ govukTable({
+  caption: "Benefit owner",
+  captionClasses: "govuk-table__caption--l",
+  firstCellIsHeader: true,
+  classes: "govuk-!-margin-top-8",
+  rows: [
+    [
+      {
+        text: "Name",
+        classes: "claim-table-width-one-third",
+        id: "benefit-owner-name"
+      },
+      {
+        text: Claim.BenefitOwnerFirstName + " " + Claim.BenefitOwnerLastName,
+        classes: "govuk-!-width-two-thirds"
+      }
+    ],
+    [
+      {
+        text: "Date of birth",
+        classes: "claim-table-width-one-third"
+      },
+      {
+        text: getDateFormatted.shortDate(Claim.BenefitOwnerDateOfBirth),
+        classes: "govuk-!-width-two-thirds"
+      }
+    ],
+    [
+      {
+        text: "National insurance number",
+        classes: "claim-table-width-one-third"
+      },
+      {
+        text: Claim.BenefitOwnerNationalInsuranceNumber,
+        classes: "govuk-!-width-two-thirds"
+      }
+    ]
+  ]
+}) }}
 {% else %}
-{# The visitor is the benefit owner #}
-<table class="col-2 no-pad-right">
-  <tr>
-    <td>Name</td>
-    <td id="benefit-owner-name">{{ Claim['FirstName'] }} {{ Claim['LastName'] }}</td>
-  </tr>
-
-  <tr>
-    <td>Date of birth</td>
-    <td>{{ getDateFormatted.shortDate(Claim['DateOfBirth']) }}</td>
-  </tr>
-
-  <tr>
-    <td>National Insurance number</td>
-    <td>{{ Claim['NationalInsuranceNumber'] }}</td>
-  </tr>
-</table>
+{{ govukTable({
+  caption: "Benefit owner",
+  captionClasses: "govuk-table__caption--l",
+  firstCellIsHeader: true,
+  classes: "govuk-!-margin-top-8",
+  rows: [
+    [
+      {
+        text: "Name",
+        classes: "claim-table-width-one-third",
+        id: "benefit-owner-name"
+      },
+      {
+        text: Claim.FirstName + " " + Claim.LastName,
+        classes: "govuk-!-width-two-thirds"
+      }
+    ],
+    [
+      {
+        text: "Date of birth",
+        classes: "claim-table-width-one-third"
+      },
+      {
+        text: getDateFormatted.shortDate(Claim.DateOfBirth),
+        classes: "govuk-!-width-two-thirds"
+      }
+    ],
+    [
+      {
+        text: "National insurance number",
+        classes: "claim-table-width-one-third table-no-border-bottom"
+      },
+      {
+        text: Claim.NationalInsuranceNumber,
+        classes: "govuk-!-width-two-thirds table-no-border-bottom"
+      }
+    ]
+  ]
+}) }}
 {% endif %}

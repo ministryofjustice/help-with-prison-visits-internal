@@ -4,9 +4,7 @@
 // $govuk-compatibility-govukfrontendtoolkit: true;
 
 $govuk-global-styles: true;
-
-$moj-page-width: 1170px;
-$govuk-page-width: $moj-page-width;
+$moj-images-path: "../../../node_modules/@ministryofjustice/frontend/moj/assets/images/";
 
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
@@ -15,7 +13,7 @@ $govuk-page-width: $moj-page-width;
 @import 'moj/all';
 
 // Path to assets for use with the file-url function
-// in the govuk frontend toolkit's url-helpers partial
+// in the govuk frontend toolkit's url-helpers partial:
 $path: "/public/images/";
 
 // This includes entire govuk-elements from _govuk-elements.scss
@@ -70,7 +68,25 @@ table.no-pad-right td {
 
 .dataTable {
     border-bottom: none!important;;
-    margin-bottom: 1em!important
+    margin-bottom: 1em!important;
+}
+.table-no-border-bottom {
+    border-bottom: none
+}
+
+.table-row-flex {
+    display: flex;
+}
+
+.claim-table-email-text {
+    word-break: break-all;
+}
+.table-short-column {
+    width: 200px;
+}
+
+.search {
+    padding: 15px 0 0 0;
 }
 
 .table-short-column {
@@ -170,8 +186,8 @@ span.bold {
 span.error {
     font-weight:bold;
     background:#f2dede!important;
-    border:2px solid #a94442;
-    color:#a94442!important;
+    border:2px solid $govuk-error-colour;
+    color:$govuk-error-colour!important;
     margin:0 0 0 10px;
     padding:1px 5px!important;
 }
@@ -196,8 +212,8 @@ td.text-right {
 .warning {
     padding:10px;
     background:#f2dede;
-    border-left:5px solid #a94442;
-    color:#a94442;
+    border-left:5px solid $govuk-error-colour;
+    color:$govuk-error-colour;
 }
 
 tr.warning td{
@@ -243,28 +259,27 @@ span.bold {
     padding-right:20px;
 }
 
-.visibility-visible {
-  visibility: visible;
-}
-.visibility-hidden {
-  visibility: hidden;
-}
 .display-none {
   display: none;
 }
+
 .js-hidden {
     display: none;
 }
 
-.form-control.action-select{
+.form-control.action-select {
     width:200px;
     float:right;
 }
 
-.change {
+.select-for-form {
     float:right;
-    font-weight: bold;
-    padding-right: 0;
+    margin: 0px;
+    margin-top: 1.5px;
+}
+
+.select-for-rejection {
+    height: 30px
 }
 
 .form-control.full{
@@ -293,8 +308,21 @@ span.bold {
     background:#f40b0c;
 }
 
+.edit-claim-button {
+    display: flex;
+    width: fit-content;
+}
+
 .vertical-align-middle {
     vertical-align: middle;
+}
+
+.vertical-align-bottom {
+    vertical-align: bottom;
+}
+
+.select-display-none {
+    display: none
 }
 
 .pull-right {
@@ -349,14 +377,12 @@ tr.warning td:first-child{
 }
 
 .text-pending {
-    color:#d2841c;
-    padding-top:6px;
-    display:inline-block;
+    color: govuk-colour("orange")
 }
 
 .text-pending:before {
-    background-color: #d2841c;
-    color:#d2841c;
+    background-color: govuk-colour("orange");
+    color: govuk-colour("orange");
 }
 
 .text-pending:before {
@@ -378,14 +404,12 @@ tr.warning td:first-child{
 }
 
 .text-warning {
-    color:#b10e1e;
-    padding-top:6px;
-    display:inline-block;
+    color: $govuk-error-colour;
 }
 
 .text-warning:before {
-    background-color: #b10e1e;
-    color:#b10e1e;
+    background-color: $govuk-error-colour;
+    color:$govuk-error-colour;
 }
 
 .text-warning:before {
@@ -407,21 +431,16 @@ tr.warning td:first-child{
 }
 
 .text-success {
-    color:#00823b;
-    padding-top:2px;
-    display:inline-block;
+    color: $govuk-success-colour
 }
 
-.text-success:before {
-    background-color: #00823b;
-    color:#00823b;
-}
 .text-success:before {
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
     content: '✔ ';
     color: #fff;
+    background-color:  $govuk-success-colour;
     display: inline-block;
     font-family: arial;
     font-weight: bold;
@@ -770,4 +789,91 @@ ul.sub-tabs li a.active span.badge {
 .govuk-input__prefix {
     height: 40px;
     font-size: 19px;
+}
+
+.view-claim-display-helper{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+} 
+
+.govuk-warning-text__text {
+    font-size: 19px;
+}
+
+.claim-table-no-reason-text {
+    font-style: italic;
+}
+
+.claim-table-email-text {
+    word-break: break-all;
+}
+
+.claim-table-width-one-third {
+    width: 33%;
+}
+
+.claim-table-width-one-sixth {
+    width: 16.66%;
+}
+
+.claim-table-width-full {
+    width: 100% !important;
+}
+
+.claim-table-error-text {
+    color: $govuk-error-colour!important;
+    padding-left: 15px;
+    border-left: 5px solid #d4351c;
+}
+
+.claim-table-deduction-section-container {
+    text-align: left;
+    align-items: center;
+    display: flex;
+}
+
+.claim-table-claim-section-container {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.claim-table-claim-section-document-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.claim-table-decision-error-margin {
+    margin-bottom: -40px!important;
+}
+
+.claim-table-short-column {
+    width: 20%;
+}
+
+.claim-table-shorter-column {
+    width: 15%;
+}
+
+.claim-table-negative {
+    position: relative;
+    left: -13px
+}
+
+.claim-approve-different-input {
+    margin: 0;
+    margin-top: 1.5px;
+}
+
+// override mojTimeline styles
+
+.moj-timeline__title, 
+.moj-timeline__byline, 
+.moj-timeline__description {
+    font-size: 19px;
+}
+
+.moj-timeline__date {
+    font-size: 16px;
 }

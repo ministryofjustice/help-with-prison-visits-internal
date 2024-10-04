@@ -20,7 +20,7 @@ describe('services/domain/benefit-expiry-date', function () {
       benefitExpiryDate = new BenefitExpiryDate('', '', '')
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['benefit-expiry'][0]).toBe('Please enter the Benefit Expiry date')
+      expect(e.validationErrors['benefit-expiry'][0]).toBe('Please enter the benefit expiry date')
     }
   })
 
@@ -29,7 +29,7 @@ describe('services/domain/benefit-expiry-date', function () {
       benefitExpiryDate = new BenefitExpiryDate('01', '13', '2020')
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['benefit-expiry'][0]).toBe('Benefit Expiry Date was invalid')
+      expect(e.validationErrors['benefit-expiry'][0]).toBe('Benefit expiry date was invalid')
     }
   })
 })

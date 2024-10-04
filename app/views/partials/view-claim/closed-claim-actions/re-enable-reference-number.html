@@ -1,0 +1,33 @@
+{% if Claim['ReferenceDisabled'] === true %}
+<form action="/claim/{{ Claim['ClaimId'] }}/re-enable-reference-number" method="post" class="form">
+  {% include "partials/csrf-hidden-input.html" %}
+  <input type="hidden" name="lastUpdated" value="{{ Claim['lastUpdatedHidden'] }}">
+  <input type="hidden" name="referenceToBeReEnabled" value="{{ Claim['Reference'] }}">
+  
+  {{ govukTextarea({
+    name: "re-enable-reference-number-additional-information",
+    id: "re-enable-reference-number-additional-information",
+    rows: "2",
+    classes: "govuk-!-width-one-half",
+    attributes: {
+      "maxlength": 2000
+    },
+    label: {
+      text: "Reason why this reference is being re-enabled (optional)",
+      classes: "govuk-label--l",
+      isPageHeading: true
+    }
+  }) }}
+  
+  {{ govukButton({
+    text: "Submit",
+    name: "re-enable-reference-number",
+    id: "re-enable-reference-number",
+    type: "submit",
+    attributes: {
+      formaction: "/claim/" + Claim['ClaimId'] + "/re-enable-reference-number"
+    },
+    classes: ""
+  }) }}
+</form>
+{% endif %}

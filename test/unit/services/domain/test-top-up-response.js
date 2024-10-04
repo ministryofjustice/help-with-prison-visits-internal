@@ -17,7 +17,7 @@ describe('services/domain/topup-response', function () {
       topUp = new TopUpResponse('', VALID_REASON)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['top-up-amount'][0]).toBe('A Top-up amount is required')
+      expect(e.validationErrors['top-up-amount'][0]).toBe('A top-up amount is required')
     }
   })
 
@@ -26,7 +26,7 @@ describe('services/domain/topup-response', function () {
       topUp = new TopUpResponse(VALID_AMOUNT, '')
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['top-up-reason'][0]).toBe('A Top-up reason is required')
+      expect(e.validationErrors['top-up-reason'][0]).toBe('A top-up reason is required')
     }
   })
 
@@ -35,7 +35,7 @@ describe('services/domain/topup-response', function () {
       topUp = new TopUpResponse('-10', VALID_REASON)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['top-up-amount'][0]).toBe('A Top-up amount must be greater than zero')
+      expect(e.validationErrors['top-up-amount'][0]).toBe('A top-up amount must be greater than zero')
     }
   })
 
@@ -44,7 +44,7 @@ describe('services/domain/topup-response', function () {
       topUp = new TopUpResponse('0', VALID_REASON)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['top-up-amount'][0]).toBe('A Top-up amount must be greater than zero')
+      expect(e.validationErrors['top-up-amount'][0]).toBe('A top-up amount must be greater than zero')
     }
   })
 
@@ -53,7 +53,7 @@ describe('services/domain/topup-response', function () {
       topUp = new TopUpResponse('10e3', VALID_REASON)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['top-up-amount'][0]).toBe('A Top-up amount must be a valid currency')
+      expect(e.validationErrors['top-up-amount'][0]).toBe('A top-up amount must be a valid currency')
     }
   })
 
@@ -62,7 +62,7 @@ describe('services/domain/topup-response', function () {
       topUp = new TopUpResponse('1000000', VALID_REASON)
     } catch (e) {
       expect(e).toBeInstanceOf(ValidationError)
-      expect(e.validationErrors['top-up-amount'][0]).toBe('A Top-up amount value is too large for this field')
+      expect(e.validationErrors['top-up-amount'][0]).toBe('A top-up amount value is too large for this field')
     }
   })
 })
