@@ -16,7 +16,8 @@
 {% endif %}
 
 {% set contactDetails %}
-  <a href="mailto:{{ Claim.EmailAddress }}">{{ Claim.EmailAddress }}</a>
+  <p><a href="mailto:{{ Claim.EmailAddress }}">{{ Claim.EmailAddress }}</a></p>
+  <p class="govuk-!-margin-bottom-0">{{ Claim.PhoneNumber | default("No phone number provided", true) | escape }}</p>
 {% endset %}
 
 {% set changeContactDetails %}
