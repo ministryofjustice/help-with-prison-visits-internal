@@ -7,7 +7,7 @@ const axios = require('axios')
 const log = require('./services/log')
 const applicationRoles = require('./constants/application-roles-enum')
 
-const RedisStore = require('connect-redis').default
+const { RedisStore } = require("connect-redis")
 
 const url =
   config.PRODUCTION
