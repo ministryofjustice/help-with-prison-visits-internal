@@ -79,7 +79,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.705.0",
-    "@ministryofjustice/frontend": "^3.2.0",
+    "@ministryofjustice/frontend": "3.1.0",
     "applicationinsights": "^2.9.6",
     "axios": "^1.7.9",
     "bluebird": "^3.7.2",
