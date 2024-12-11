@@ -6,6 +6,7 @@ module.exports = function (app, developmentMode) {
     'node_modules/govuk-frontend/dist/',
     'node_modules/govuk_template_jinja',
     'node_modules/@ministryofjustice/frontend/',
+    'node_modules/@ministryofjustice/frontend/moj/components/',
     path.join(__dirname, '../views')
   ]
 
