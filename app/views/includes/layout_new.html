@@ -1,6 +1,6 @@
 {% extends "govuk/template.njk" %}
 
-{%- from "moj/components/header/macro.njk" import mojHeader -%}
+{% from "moj/components/header/macro.njk" import mojHeader %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -24,7 +24,6 @@
   },
   navigation: {
     label: 'Account navigation',
-    
     items: [{
       text: serialisedName,
       active: false
