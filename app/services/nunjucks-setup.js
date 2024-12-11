@@ -40,12 +40,12 @@ module.exports = function (app, developmentMode) {
     }
   })
 
-  const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
+  // const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
 
-  const mojFilters = getMojFilters()
-  Object.keys(mojFilters).forEach(filterName => {
-    njkEnv.addFilter(filterName, mojFilters[filterName])
-  })
+  // const mojFilters = getMojFilters()
+  // Object.keys(mojFilters).forEach(filterName => {
+  //   njkEnv.addFilter(filterName, mojFilters[filterName])
+  // })
 
   // convert errors to format for GOV.UK error summary component
   njkEnv.addFilter('errorSummaryList', (errors = []) => {
