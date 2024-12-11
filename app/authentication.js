@@ -1,13 +1,12 @@
-const config = require('../config')
 const session = require('express-session')
 const redis = require('redis')
+const { RedisStore } = require('connect-redis')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
 const axios = require('axios')
+const config = require('../config')
 const log = require('./services/log')
 const applicationRoles = require('./constants/application-roles-enum')
-
-const { RedisStore } = require('connect-redis')
 
 const url =
   config.PRODUCTION
