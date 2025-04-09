@@ -2,13 +2,11 @@
 {% from "moj/components/ticket-panel/macro.njk" import mojTicketPanel %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 
-{% block pageTitle %}
-{% if serviceName %} {{ serviceName }} {% endif %}
-{% endblock %}
-
 {% set activeMainNav = 'dashboard' %}
 
 {% block content %}
+
+<div class="govuk-heading-xl">Dashboard</div>
 
 <form action='/dashboard' method="GET">
   {{ govukSelect({
