@@ -9,7 +9,7 @@
 <div class="grid-row">
     <div class="column-one-third">
 
-      <h3 class="heading-medium">SSCL Access Pay file</h3>
+      <h3 class="govuk-heading-m">SSCL Access Pay file</h3>
       {% if topAccessPayFile %}
       <a href="/download-payment-files/download?id={{ topAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(topAccessPayFile.DateCreated) }}</a>
       {% endif %}
@@ -34,7 +34,7 @@
 
     <div class="column-one-third">
 
-        <h3 class="heading-medium">APVU Access Pay file</h3>
+        <h3 class="govuk-heading-m">APVU Access Pay file</h3>
         {% if topApvuAccessPayFile %}
         <a href="/download-payment-files/download?id={{ topApvuAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(topApvuAccessPayFile.DateCreated) }}</a>
         {% endif %}
@@ -59,7 +59,7 @@
 
     <div class="column-one-third">
 
-      <h3 class="heading-medium">ADI Journal</h3>
+      <h3 class="govuk-heading-m">ADI Journal</h3>
         {% if topAdiJournalFile %}
       <a href="/download-payment-files/download?id={{ topAdiJournalFile.PaymentFileId }}" class="link">Download transactions for {{ dateHelper.shortDateAndTime(topAdiJournalFile.DateCreated) }}</a>
       {% endif %}
