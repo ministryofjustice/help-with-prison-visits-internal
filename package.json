@@ -112,7 +112,7 @@
     "passport-oauth2": "^1.8.0",
     "path": "^0.12.7",
     "ramda": "^0.30.1",
-    "redis": "^4.7.1",
+    "redis": "^5.0.1",
     "sanitize-html": "^2.17.0",
     "sass": "^1.89.0",
     "serve-favicon": "^2.5.0",
