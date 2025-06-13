@@ -1,7 +1,6 @@
 const express = require('express')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
-const favicon = require('serve-favicon')
 const onFinished = require('on-finished')
 const log = require('./services/log')
 
@@ -13,7 +12,7 @@ const { nameSerialiser } = require('./views/helpers/username-serialiser')
 
 nunjucksSetup(app, developmentMode)
 
-const publicFolders = ['public', 'assets', '../node_modules/govuk_template_jinja/assets', '../node_modules/govuk_frontend_toolkit']
+const publicFolders = ['public', 'assets']
 
 publicFolders.forEach(dir => {
   app.use('/public', express.static(path.join(__dirname, dir)))
@@ -32,8 +31,6 @@ const govukAssets = [
 govukAssets.forEach(dir => {
   app.use('/assets', express.static(path.join(__dirname, dir)))
 })
-
-app.use(favicon(path.join(__dirname, '../node_modules/govuk_template_jinja/assets/images/favicon.ico')))
 
 // Send assetPath to all views.
 app.use(function (req, res, next) {

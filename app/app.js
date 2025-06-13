@@ -3,7 +3,6 @@ const express = require('express')
 const crypto = require('crypto')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
-const favicon = require('serve-favicon')
 const helmet = require('helmet')
 const compression = require('compression')
 const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
@@ -58,7 +57,7 @@ const organisationName = 'HMPPS'
 
 nunjucksSetup(app, developmentMode)
 
-const publicFolders = ['public', 'assets', '../node_modules/govuk_template_jinja/assets', '../node_modules/govuk_frontend_toolkit']
+const publicFolders = ['public', 'assets']
 
 publicFolders.forEach(dir => {
   app.use('/public', express.static(path.join(__dirname, dir)))
@@ -77,8 +76,6 @@ const govukAssets = [
 govukAssets.forEach(dir => {
   app.use('/assets', express.static(path.join(__dirname, dir)))
 })
-
-app.use(favicon(path.join(__dirname, '../node_modules/govuk_template_jinja/assets/images/favicon.ico')))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
