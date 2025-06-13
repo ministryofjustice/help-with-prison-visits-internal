@@ -16,8 +16,6 @@ $govuk-page-width: $moj-page-width;
 // in the govuk frontend toolkit's url-helpers partial:
 $path: "/public/images/";
 
-// This includes entire govuk-elements from _govuk-elements.scss
-@import 'govuk-elements';
 
 // override default navigation anchor tags 
 .moj-header__navigation-item:first-of-type {
