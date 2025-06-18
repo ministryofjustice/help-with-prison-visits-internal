@@ -1,6 +1,7 @@
 {% extends "includes/layout_new.html" %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -197,7 +198,9 @@
                             <input type="hidden" name="band" value="5">
                             {% include "partials/csrf-hidden-input.html" %}
                             </br>
-                            <input type="submit" class="button" value="Save">
+                            {{ govukButton({
+                                text: "Save"
+                            }) }}
                         </form>
                     {% endif %}
                 {% endif %}

@@ -1,4 +1,5 @@
 {% extends "includes/layout_new.html" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -13,7 +14,9 @@
 
         <form action="/audit" method="post">
           {% include "partials/csrf-hidden-input.html" %}
-          <input type="submit" class="button" value="Create new report">
+          {{ govukButton({
+            text: "Create new report"
+          }) }}
         </form>
         </br></br>
 

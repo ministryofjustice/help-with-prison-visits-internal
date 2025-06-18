@@ -30,15 +30,15 @@ module.exports = function (router) {
     validationErrors = {}
     const auditReportStartDate = validateDate(
       'auditReportStartDate',
-      req.body.auditReportStartDateDay,
-      req.body.auditReportStartDateMonth,
-      req.body.auditReportStartDateYear
+      req.body['auditReportStartDate-Day'],
+      req.body['auditReportStartDate-Month'],
+      req.body['auditReportStartDate-Year']
     )
     const auditReportEndDate = validateDate(
       'auditReportEndDate',
-      req.body.auditReportEndDateDay,
-      req.body.auditReportEndDateMonth,
-      req.body.auditReportEndDateYear
+      req.body['auditReportEndDate-Day'],
+      req.body['auditReportEndDate-Month'],
+      req.body['auditReportEndDate-Year']
     )
     if (auditReportStartDate && auditReportEndDate && auditReportStartDate.isAfter(auditReportEndDate)) {
       validationErrors.auditReportStartDate = ['The start date must be before the end date']
