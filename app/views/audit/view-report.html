@@ -22,17 +22,17 @@
                     {% if auditStatus == 'Completed' %}
                         {{ govukTag({
                             text: "Completed",
-                            classes: "govuk-tag--green"
+                            classes: "govuk-tag--green govuk-!-margin-bottom-3"
                         }) }}
                     {% elseif auditStatus == 'NotStarted'  %}
                         {{ govukTag({
                             text: "Not Started",
-                            classes: "govuk-tag--grey"
+                            classes: "govuk-tag--grey govuk-!-margin-bottom-3"
                         }) }}
                     {% elseif auditStatus == 'InProgress'  %}
                         {{ govukTag({
                             text: "Not In Progress",
-                            classes: "govuk-tag--blue"
+                            classes: "govuk-tag--blue govuk-!-margin-bottom-3"
                         }) }}
                     {% endif %}
                     <p class="govuk-body">You will need to review the claims and mark as valid or invalid.</p>
