@@ -1,4 +1,6 @@
 {% extends "includes/layout_new.html" %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -13,22 +15,25 @@
                 {% include "includes/validation-error-messages.html" %}
                 {% if reportDeleted %}
                     <h1 class="govuk-heading-xl">View  audit report</h1>
-                    <p1 class="govuk-body">This report is deleted or does not exist.</p1>
+                    <p class="govuk-body">This report is deleted or does not exist.</p>
                 {% else %}
                     <span class="govuk-caption-xl">{{ startDate }} - {{ endDate }}</span>
                     <h1 class="govuk-heading-xl">View  audit report</h1>
                     {% if auditStatus == 'Completed' %}
-                        <strong class="govuk-tag govuk-tag--green">
-                            Completed
-                        </strong>
+                        {{ govukTag({
+                            text: "Completed",
+                            classes: "govuk-tag--green"
+                        }) }}
                     {% elseif auditStatus == 'NotStarted'  %}
-                        <strong class="govuk-tag govuk-tag--grey">
-                            Not Started
-                        </strong>
+                        {{ govukTag({
+                            text: "Not Started",
+                            classes: "govuk-tag--grey"
+                        }) }}
                     {% elseif auditStatus == 'InProgress'  %}
-                        <strong class="govuk-tag blue">
-                            In Progress
-                        </strong>
+                        {{ govukTag({
+                            text: "Not In Progress",
+                            classes: "govuk-tag--blue"
+                        }) }}
                     {% endif %}
                     </br></br>
                     <p1 class="govuk-body">You will need to review the claims and mark as valid or invalid.</p1>
@@ -37,16 +42,20 @@
                         <form action="/audit/print-report" method="post">
                             <input type="hidden" name="reportId" value="{{ reportId }}">
                             {% include "partials/csrf-hidden-input.html" %}
-                            <input type="submit" class="button" value="Print report">
+                            {{ govukButton({
+                                text: "Print report"
+                            }) }}
                         </form>
                         </br></br>
                     {% endif %}
                         <form action="/audit/delete-report-confirmation" method="post">
                             <input type="hidden" name="reportId" value="{{ reportId }}">
                             {% include "partials/csrf-hidden-input.html" %}
-                            <button type="submit" class="govuk-button govuk-button--secondary" data-module="govuk-button">
-                                Delete report
-                            </button>
+                            {{ govukButton({
+                                type: "button",
+                                text: "Delete report",
+                                classes: "govuk-button--secondary"
+                            }) }}
                         </form>
 
                     <table class="govuk-table">

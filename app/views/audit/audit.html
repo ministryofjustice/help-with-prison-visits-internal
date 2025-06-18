@@ -18,7 +18,6 @@
             text: "Create new report"
           }) }}
         </form>
-        </br></br>
 
         {% if checkListDisplay | length %}
           <h2 class="govuk-heading-l">Reports that need checking</h2>
@@ -80,7 +79,6 @@
           </table>
         {% endif %}
 
-        </br>
         {% if not isReportExist %}
           <p class="govuk-body">There are no audit reports.</p>
         {% endif %}

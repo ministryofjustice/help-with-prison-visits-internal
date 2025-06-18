@@ -1,4 +1,5 @@
 {% extends "includes/layout_new.html" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -22,6 +23,8 @@
         </main>
     </div>
 
-
-    <a href="/audit" class="button">Go to Audits</a>
+    {{ govukButton({
+        text: "Go to audits",
+        href: "/audit"
+    }) }}
 {% endblock %}
