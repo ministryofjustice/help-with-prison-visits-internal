@@ -1,4 +1,5 @@
 {% extends "includes/layout_new.html" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -8,7 +9,10 @@
 
 {% block content %}
      <a href="#" id="backBtn" class="govuk-back-link">Back</a>
-        <input type="submit" id="print" value="Print"/>
+        {{ govukButton({
+            id: "print",
+            text: "Print"
+        }) }}
         <div id="print-report">
             <p class="govuk-hint">Audit report printed by {{ userName }} on {{ dateTime }}</p>
             <h2 class="govuk-heading-l">Help with prison visits</h2>
