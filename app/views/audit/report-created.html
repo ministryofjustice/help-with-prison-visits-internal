@@ -10,20 +10,13 @@
 
 {% block content %}
     <a href="#" id="backBtn" class="govuk-back-link">Back</a>
-    <div class="govuk-width-container">
-        <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    {{ govukPanel({
-                        titleText: "Report created"
-                    }) }}
-                </div>
-            </div>
-        </main>
-    </div>
+
+    {{ govukPanel({
+        titleText: "Report created"
+    }) }}
 
     {{ govukButton({
         text: "View report",
-        href: "/audit/view-report/{{ reportId }}"
+        href: "/audit/view-report/" + reportId
     }) }}
 {% endblock %}

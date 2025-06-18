@@ -35,9 +35,7 @@
                             classes: "govuk-tag--blue"
                         }) }}
                     {% endif %}
-                    </br></br>
-                    <p1 class="govuk-body">You will need to review the claims and mark as valid or invalid.</p1>
-                    </br></br></br>
+                    <p class="govuk-body">You will need to review the claims and mark as valid or invalid.</p>
                     {% if auditStatus == 'Completed' %}
                         <form action="/audit/print-report" method="post">
                             <input type="hidden" name="reportId" value="{{ reportId }}">
@@ -46,17 +44,17 @@
                                 text: "Print report"
                             }) }}
                         </form>
-                        </br></br>
                     {% endif %}
-                        <form action="/audit/delete-report-confirmation" method="post">
-                            <input type="hidden" name="reportId" value="{{ reportId }}">
-                            {% include "partials/csrf-hidden-input.html" %}
-                            {{ govukButton({
-                                type: "button",
-                                text: "Delete report",
-                                classes: "govuk-button--secondary"
-                            }) }}
-                        </form>
+
+                    <form action="/audit/delete-report-confirmation" method="post">
+                        <input type="hidden" name="reportId" value="{{ reportId }}">
+                        {% include "partials/csrf-hidden-input.html" %}
+                        {{ govukButton({
+                            type: "button",
+                            text: "Delete report",
+                            classes: "govuk-button--secondary"
+                        }) }}
+                    </form>
 
                     <table class="govuk-table">
                         <thead class="govuk-table__head">
