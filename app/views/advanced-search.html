@@ -1,510 +1,641 @@
 {% extends "includes/layout_new.html" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
 {% set activeMainNav = 'claims' %}
+{% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
   {% include "includes/validation-error-messages.html" %}
 
-  <h2 class="heading-medium">Advanced search</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-xl">Advanced search</h1>
+    </div>
+  </div>
 
   <form action="/advanced-search">
 
-    <div class="grid-row">
+    <div class="govuk-grid-row">
 
-      <div class="column-one-third">
-        <div class="form-group">
-          <label class="form-label-bold">
-            Reference number
-            <input id="reference" type="text" name="reference" value="{{ query.reference }}" class="form-control full" maxlength="7">
-          </label>
-        </div>
+      <div class="govuk-grid-column-one-third">
+        {{ govukInput({
+          label: {
+            text: "Reference number",
+            classes: "govuk-label--s",
+            isPageHeading: false
+          },
+          id: "reference",
+          name: "reference",
+          value: query.reference
+        }) }}
       </div>
 
-      <div class="column-one-third">
-        <div class="form-group">
-          <label class="form-label-bold">
-            Name
-            <input id="name" type="text" name="name" value="{{ query.name }}" class="form-control full" maxlength="400">
-          </label>
-        </div>
+      <div class="govuk-grid-column-one-third">
+        {{ govukInput({
+          label: {
+            text: "Name",
+            classes: "govuk-label--s",
+            isPageHeading: false
+          },
+          id: "name",
+          name: "name",
+          value: query.name
+        }) }}
       </div>
 
-      <div class="column-one-third">
-        <div class="form-group">
-          <label class="form-label-bold">
-            National Insurance number
-            <input id="ninumber" type="text" name="ninumber" value="{{ query.ninumber }}" class="form-control full" maxlength="20">
-          </label>
-        </div>
+      <div class="govuk-grid-column-one-third">
+        {{ govukInput({
+          label: {
+            text: "National Insurance number",
+            classes: "govuk-label--s",
+            isPageHeading: false
+          },
+          id: "ninumber",
+          name: "ninumber",
+          value: query.ninumber
+        }) }}
       </div>
 
-      <div class="column-one-third">
-        <div class="form-group">
-          <label class="form-label-bold">
-            Prisoner number
-            <input id="prisonerNumber" type="text" name="prisonerNumber" value="{{ query.prisonerNumber }}" class="form-control full" maxlength="20">
-          </label>
-        </div>
+      <div class="govuk-grid-column-one-third">
+        {{ govukInput({
+          label: {
+            text: "Prisoner number",
+            classes: "govuk-label--s",
+            isPageHeading: false
+          },
+          id: "prisonerNumber",
+          name: "prisonerNumber",
+          value: query.prisonerNumber
+        }) }}
       </div>
 
-      <div class="column-one-third">
-        <div class="form-group">
-          <label class="form-label-bold">
-            Prison
-            <input id="prison" type="text" name="prison" value="{{ query.prison }}" class="form-control full" maxlength="30">
-          </label>
-        </div>
+      <div class="govuk-grid-column-one-third">
+        {{ govukInput({
+          label: {
+            text: "Prison",
+            classes: "govuk-label--s",
+            isPageHeading: false
+          },
+          id: "prison",
+          name: "prison",
+          value: query.prison
+        }) }}
       </div>
 
-      <div class="column-one-third">
-        <div class="form-group margin-top">
-          <div class="multiple-choice">
-            <input id="assistedDigital" type="checkbox" name="assistedDigital" {% if query.assistedDigital %} checked {% endif %}>
-            <label for="assistedDigital" class="block-label inline">Assisted digital</label>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <h3 class="heading-small">Claim status</h3>
-
-    <div class="grid-row">
-      <div class="column-one-quarter">
-        <div class="form-group">
-          <div class="multiple-choice">
-            <input id="claimStatusAll" type="radio" name="claimStatus" value="all" {% if query.claimStatus == 'all' %} checked {% endif %}>
-            <label for="claimStatusAll" class="block-label inline">All</label>
-          </div>
-          <div class="multiple-choice">
-            <input id="claimStatusApproved" type="radio" name="claimStatus" value="approved" {% if query.claimStatus == 'approved' %} checked {% endif %}>
-            <label for="claimStatusApproved" class="block-label inline">Approved</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <div class="form-group">
-          <div class="multiple-choice">
-            <input id="claimStatusNew" type="radio" name="claimStatus" value="new" {% if query.claimStatus == 'new' %} checked {% endif %}>
-            <label for="claimStatusNew" class="block-label inline">New</label>
-          </div>
-          <div class="multiple-choice">
-            <input id="claimStatusPaid" type="radio" name="claimStatus" value="paid" {% if query.claimStatus == 'paid' %} checked {% endif %}>
-            <label for="claimStatusPaid" class="block-label inline">Paid</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <div class="form-group">
-          <div class="multiple-choice">
-            <input id="claimStatusPending" type="radio" name="claimStatus" value="pending" {% if query.claimStatus == 'pending' %} checked {% endif %}>
-            <label for="claimStatusPending" class="block-label inline">Pending</label>
-          </div>
-          <div class="multiple-choice">
-            <input id="claimStatusRejected" type="radio" name="claimStatus" value="rejected" {% if query.claimStatus == 'rejected' %} checked {% endif %}>
-            <label for="claimStatusRejected" class="block-label inline">Rejected</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <div class="form-group">
-          <div class="multiple-choice">
-            <input id="claimStatusInProgress" type="radio" name="claimStatus" value="inProgress" {% if query.claimStatus == 'inProgress' %} checked {% endif %}>
-            <label for="claimStatusInProgress" class="block-label inline">In progress</label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid-row">
-      <div class="column-one-quarter">
-        <h3 class="heading-small">Mode of approval</h3>
-        <div class="form-group">
-          <div class="multiple-choice">
-            <input id="modeOfApprovalAuto" type="radio" name="modeOfApproval" value="auto" {% if query.modeOfApproval == 'auto' %} checked {% endif %}>
-            <label for="modeOfApprovalAuto" class="block-label inline">Auto</label>
-          </div>
-          <div class="multiple-choice">
-            <input id="modeOfApprovalManual"type="radio" name="modeOfApproval" value="manual" {% if query.modeOfApproval == 'manual' %} checked {% endif %}>
-            <label for="modeOfApprovalManual" class="block-label inline">Manual</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <h3 class="heading-small">Type of claim</h3>
-        <div class="form-group">
-          <div class="multiple-choice">
-            <input id="typeOfClaimPast" type="radio" name="pastOrFuture" value="past" {% if query.pastOrFuture == 'past' %} checked {% endif %}>
-            <label for="typeOfClaimPast" class="block-label inline">Visit in past</label>
-          </div>
-          <div class="multiple-choice">
-            <input id="typeOfClaimFuture" type="radio" name="pastOrFuture" value="future" {% if query.pastOrFuture == 'future' %} checked {% endif %}>
-            <label for="typeOfClaimFuture" class="block-label inline">Visit in future</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <h3 class="heading-small">Visit rules</h3>
-        <div class="form-group">
-          <div class="multiple-choice">
-            <input id="visitRulesEnglandWales" type="radio" name="visitRules" value="englandWales" {% if query.visitRules == 'englandWales' %} checked {% endif %}>
-            <label for="visitRulesEnglandWales" class="block-label inline">England/Wales</label>
-          </div>
-          <div class="multiple-choice">
-            <input id="visitRulesScotland" type="radio" name="visitRules" value="scotland" {% if query.visitRules == 'scotland' %} checked {% endif %}>
-            <label for="visitRulesScotland" class="block-label inline">Scotland</label>
-          </div>
-          <div class="multiple-choice">
-            <input id="visitRulesNorthernIreland" type="radio" name="visitRules" value="northernIreland" {% if query.visitRules == 'northernIreland' %} checked {% endif %}>
-            <label for="visitRulesNorthernIreland" class="block-label inline">Northern Ireland</label>
-          </div>
-        </div>
-      </div>
-
-      <div class="column-one-quarter">
-        <h3 class="heading-small">Is Claim Overpaid?</h3>
-        <div class="form-group">
-          <div class="multiple-choice">
-            <input id="overpaymentYes" type="radio" name="overpaymentStatus" value="yes" {% if query.overpaymentStatus == 'yes' %} checked {% endif %}>
-            <label for="overpaymentYes" class="block-label inline">Yes</label>
-          </div>
-          <div class="multiple-choice">
-            <input id="overpaymentNo" type="radio" name="overpaymentStatus" value="no" {% if query.overpaymentStatus == 'no' %} checked {% endif %}>
-            <label for="overpaymentNo" class="block-label inline">No</label>
-          </div>
-        </div>
+      <div class="govuk-grid-column-one-third">
+        {{ govukCheckboxes({
+          name: "assistedDigital",
+          items: [
+            {
+              value: true,
+              checked: query.assistedDigital,
+              text: "Assisted digital"
+            }
+          ]
+        }) }}
       </div>
 
     </div>
 
-    <div class="grid-row">
-        <div class="column-one-third">
-          <h3 class="heading-small">Payment Method</h3>
-          <div class="form-group">
-            <div class="multiple-choice">
-              <input id="paymentMethodBank" type="radio" name="paymentMethod" value="bank" {% if query.paymentMethod == 'bank' %} checked {% endif %}>
-              <label for="paymentMethodBank" class="block-label inline">Bank</label>
-            </div>
-            <div class="multiple-choice">
-              <input id="paymentMethodVoucher"type="radio" name="paymentMethod" value="payout" {% if query.paymentMethod == 'payout' %} checked {% endif %}>
-              <label for="paymentMethodVoucher" class="block-label inline">Voucher</label>
-            </div>
-          </div>
-        </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        {{ govukRadios({
+          name: "claimStatus",
+          fieldset: {
+            legend: {
+              text: "Claim status",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              value: "all",
+              text: "All",
+              checked: query.claimStatus == 'all'
+            },
+            {
+              value: "approved",
+              text: "Approved",
+              checked: query.claimStatus == 'approved'
+            },
+            {
+              value: "new",
+              text: "New",
+              checked: query.claimStatus == 'new'
+            },
+            {
+              value: "paid",
+              text: "Paid",
+              checked: query.claimStatus == 'paid'
+            },
+            {
+              value: "pending",
+              text: "Pending",
+              checked: query.claimStatus == 'pending'
+            },
+            {
+              value: "rejected",
+              text: "Rejected",
+              checked: query.claimStatus == 'rejected'
+            },
+            {
+              value: "inProgress",
+              text: "In progress",
+              checked: query.claimStatus == 'inProgress'
+            }
+          ]
+        }) }}
+      </div>
     </div>
 
-    <div class="grid-row">
-      <div class="column-one-half">
-        <h3 class="heading-small">Date of visit</h3>
-
-        <div class="grid-row">
-          <div class="column-one-half">
-            <div class="form-group">
-              <label id="visitDateFrom" class="form-label-bold">
-                From
-              </label>
-
-              {% if errors['visitDateFrom'][0] %}
-                <span class="error-message">{{ errors['visitDateFrom'][0] }}</span>
-              {% endif %}
-
-              <div class="form-date advanced-search-date">
-                <div class="form-group form-group-day">
-                  <label for="visitDateFromDay">Day</label>
-                  <input id="visitDateFromDay" name="visitDateFromDay" value="{{ query.visitDateFromDay }}" class="form-control">
-                </div>
-                <div class="form-group form-group-month">
-                  <label for="visitDateFromMonth">Month</label>
-                  <input id="visitDateFromMonth" name="visitDateFromMonth" value="{{ query.visitDateFromMonth }}" class="form-control">
-                </div>
-                <div class="form-group form-group-year">
-                  <label for="visitDateFromYear">Year</label>
-                  <input id="visitDateFromYear" name="visitDateFromYear" value="{{ query.visitDateFromYear }}" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column-one-half">
-            <div class="form-group">
-              <label id="visitDateTo" class="form-label-bold">
-                To
-              </label>
-
-              {% if errors['visitDateTo'][0] %}
-                <span class="error-message">{{ errors['visitDateTo'][0] }}</span>
-              {% endif %}
-
-              <div class="form-date advanced-search-date">
-                <div class="form-group form-group-day">
-                  <label for="visitDateToDay">Day</label>
-                  <input id="visitDateToDay" name="visitDateToDay" value="{{ query.visitDateToDay }}" class="form-control">
-                </div>
-                <div class="form-group form-group-month">
-                  <label for="visitDateToMonth">Month</label>
-                  <input id="visitDateToMonth" name="visitDateToMonth" value="{{ query.visitDateToMonth }}" class="form-control">
-                </div>
-                <div class="form-group form-group-year">
-                  <label for="visitDateToYear">Year</label>
-                  <input id="visitDateToYear" name="visitDateToYear" value="{{ query.visitDateToYear }}" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukRadios({
+          name: "modeOfApproval",
+          fieldset: {
+            legend: {
+              text: "Mode of approval",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              value: "auto",
+              text: "Auto",
+              checked: query.modeOfApproval == 'auto'
+            },
+            {
+              value: "manual",
+              text: "Manual",
+              checked: query.modeOfApproval == 'manual'
+            }
+          ]
+        }) }}
       </div>
 
-      <div class="column-one-half">
-        <h3 class="heading-small">Date claim submitted</h3>
-
-        <div class="grid-row">
-          <div class="column-one-half">
-            <div class="form-group">
-              <label id="dateSubmittedFrom" class="form-label-bold">
-                From
-              </label>
-
-              {% if errors['dateSubmittedFrom'][0] %}
-                <span class="error-message">{{ errors['dateSubmittedFrom'][0] }}</span>
-              {% endif %}
-
-              <div class="form-date advanced-search-date">
-                <div class="form-group form-group-day">
-                  <label for="dateSubmittedFromDay">Day</label>
-                  <input id="dateSubmittedFromDay" name="dateSubmittedFromDay" value="{{ query.dateSubmittedFromDay }}" class="form-control">
-                </div>
-                <div class="form-group form-group-month">
-                  <label for="dateSubmittedFromMonth">Month</label>
-                  <input id="dateSubmittedFromMonth" name="dateSubmittedFromMonth" value="{{ query.dateSubmittedFromMonth }}" class="form-control">
-                </div>
-                <div class="form-group form-group-year">
-                  <label for="dateSubmittedFromYear">Year</label>
-                  <input id="dateSubmittedFromYear" name="dateSubmittedFromYear" value="{{ query.dateSubmittedFromYear }}" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column-one-half">
-            <div class="form-group">
-              <label id="dateSubmittedTo" class="form-label-bold">
-                To
-              </label>
-
-              {% if errors['dateSubmittedTo'][0] %}
-                <span class="error-message">{{ errors['dateSubmittedTo'][0] }}</span>
-              {% endif %}
-
-              <div class="form-date advanced-search-date">
-                <div class="form-group form-group-day">
-                  <label for="dateSubmittedToDay">Day</label>
-                  <input id="dateSubmittedToDay" name="dateSubmittedToDay" value="{{ query.dateSubmittedToDay }}" class="form-control">
-                </div>
-                <div class="form-group form-group-month">
-                  <label for="dateSubmittedToMonth">Month</label>
-                  <input id="dateSubmittedToMonth" name="dateSubmittedToMonth" value="{{ query.dateSubmittedToMonth }}" class="form-control">
-                </div>
-                <div class="form-group form-group-year">
-                  <label for="dateSubmittedToYear">Year</label>
-                  <input id="dateSubmittedToYear" name="dateSubmittedToYear" value="{{ query.dateSubmittedToYear }}" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukRadios({
+          name: "pastOrFuture",
+          fieldset: {
+            legend: {
+              text: "Type of claim",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              value: "past",
+              text: "Visit in past",
+              checked: query.pastOrFuture == 'past'
+            },
+            {
+              value: "future",
+              text: "Visit in future",
+              checked: query.pastOrFuture == 'future'
+            }
+          ]
+        }) }}
       </div>
 
-    </div>
-
-    <div class="grid-row">
-      <div class="column-one-half">
-        <h3 class="heading-small">Date claim approved</h3>
-
-        <div class="grid-row">
-          <div class="column-one-half">
-            <div class="form-group">
-              <label id="dateApprovedFrom" class="form-label-bold">
-                From
-              </label>
-
-              {% if errors['dateApprovedFrom'][0] %}
-                <span class="error-message">{{ errors['dateApprovedFrom'][0] }}</span>
-              {% endif %}
-
-              <div class="form-date advanced-search-date">
-                <div class="form-group form-group-day">
-                  <label for="dateApprovedFromDay">Day</label>
-                  <input id="dateApprovedFromDay" name="dateApprovedFromDay" value="{{ query.dateApprovedFromDay }}" class="form-control">
-                </div>
-                <div class="form-group form-group-month">
-                  <label for="dateApprovedFromMonth">Month</label>
-                  <input id="dateApprovedFromMonth" name="dateApprovedFromMonth" value="{{ query.dateApprovedFromMonth }}" class="form-control">
-                </div>
-                <div class="form-group form-group-year">
-                  <label for="dateApprovedFromYear">Year</label>
-                  <input id="dateApprovedFromYear" name="dateApprovedFromYear" value="{{ query.dateApprovedFromYear }}" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column-one-half">
-            <div class="form-group">
-              <label id="dateApprovedTo" class="form-label-bold">
-                To
-              </label>
-
-              {% if errors['dateApprovedTo'][0] %}
-                <span class="error-message">{{ errors['dateApprovedTo'][0] }}</span>
-              {% endif %}
-
-              <div class="form-date advanced-search-date">
-                <div class="form-group form-group-day">
-                  <label for="dateApprovedToDay">Day</label>
-                  <input id="dateApprovedToDay" name="dateApprovedToDay" value="{{ query.dateApprovedToDay }}" class="form-control">
-                </div>
-                <div class="form-group form-group-month">
-                  <label for="dateApprovedToMonth">Month</label>
-                  <input id="dateApprovedToMonth" name="dateApprovedToMonth" value="{{ query.dateApprovedToMonth }}" class="form-control">
-                </div>
-                <div class="form-group form-group-year">
-                  <label for="dateApprovedToYear">Year</label>
-                  <input id="dateApprovedToYear" name="dateApprovedToYear" value="{{ query.dateApprovedToYear }}" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukRadios({
+          name: "visitRules",
+          fieldset: {
+            legend: {
+              text: "Visit rules",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              value: "englandWales",
+              text: "England/Wales",
+              checked: query.visitRules == 'englandWales'
+            },
+            {
+              value: "scotland",
+              text: "Scotland",
+              checked: query.visitRules == 'scotland'
+            },
+            {
+              value: "northernIreland",
+              text: "Northern Ireland",
+              checked: query.visitRules == 'northernIreland'
+            }
+          ]
+        }) }}
       </div>
 
-      <div class="column-one-half">
-        <h3 class="heading-small">Date claim rejected</h3>
-
-        <div class="grid-row">
-          <div class="column-one-half">
-            <div class="form-group">
-              <label id="dateRejectedFrom" class="form-label-bold">
-                From
-              </label>
-
-              {% if errors['dateRejectedFrom'][0] %}
-                <span class="error-message">{{ errors['dateRejectedFrom'][0] }}</span>
-              {% endif %}
-
-              <div class="form-date advanced-search-date">
-                <div class="form-group form-group-day">
-                  <label for="dateRejectedFromDay">Day</label>
-                  <input id="dateRejectedFromDay" name="dateRejectedFromDay" value="{{ query.dateRejectedFromDay }}" class="form-control">
-                </div>
-                <div class="form-group form-group-month">
-                  <label for="dateRejectedFromMonth">Month</label>
-                  <input id="dateRejectedFromMonth" name="dateRejectedFromMonth" value="{{ query.dateRejectedFromMonth }}" class="form-control">
-                </div>
-                <div class="form-group form-group-year">
-                  <label for="dateRejectedFromYear">Year</label>
-                  <input id="dateRejectedFromYear" name="dateRejectedFromYear" value="{{ query.dateRejectedFromYear }}" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column-one-half">
-            <div class="form-group">
-              <label id="dateRejectedTo" class="form-label-bold">
-                To
-              </label>
-
-              {% if errors['dateRejectedTo'][0] %}
-                <span class="error-message">{{ errors['dateRejectedTo'][0] }}</span>
-              {% endif %}
-
-              <div class="form-date advanced-search-date">
-                <div class="form-group form-group-day">
-                  <label for="dateRejectedToDay">Day</label>
-                  <input id="dateRejectedToDay" name="dateRejectedToDay" value="{{ query.dateRejectedToDay }}" class="form-control">
-                </div>
-                <div class="form-group form-group-month">
-                  <label for="dateRejectedToMonth">Month</label>
-                  <input id="dateRejectedToMonth" name="dateRejectedToMonth" value="{{ query.dateRejectedToMonth }}" class="form-control">
-                </div>
-                <div class="form-group form-group-year">
-                  <label for="dateRejectedToYear">Year</label>
-                  <input id="dateRejectedToYear" name="dateRejectedToYear" value="{{ query.dateRejectedToYear }}" class="form-control">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukRadios({
+          name: "overpaymentStatus",
+          fieldset: {
+            legend: {
+              text: "Is Claim Overpaid?",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              value: "yes",
+              text: "Yes",
+              checked: query.overpaymentStatus == 'yes'
+            },
+            {
+              value: "no",
+              text: "No",
+              checked: query.overpaymentStatus == 'no'
+            }
+          ]
+        }) }}
       </div>
 
     </div>
 
-    <div class="grid-row">
-      <div class="column-one-third">
-        <div class="form-group pound-wrapper">
-          <label id="approvedClaimAmountFrom" class="form-label-bold">Approved claim amount from</label>
-          {% if errors['approvedClaimAmountFrom'][0] %}
-            <span class="error-message">{{ errors['approvedClaimAmountFrom'][0] }}</span>
-          {% endif %}
-          <span class="pound-symbol">£</span>
-          <input id="approvedClaimAmountFromInput" type="text" class="form-control full" name="approvedClaimAmountFrom" value="{{ query.approvedClaimAmountFrom }}" maxlength="6">
-        </div>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        {{ govukRadios({
+          name: "paymentMethod",
+          fieldset: {
+            legend: {
+              text: "Payment Method",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              value: "bank",
+              text: "Bank",
+              checked: query.paymentMethod == 'bank'
+            },
+            {
+              value: "payout",
+              text: "Voucher",
+              checked: query.paymentMethod == 'payout'
+            }
+          ]
+        }) }}
       </div>
-
-      <div class="column-one-third">
-        <div class="form-group pound-wrapper">
-          <label id="approvedClaimAmountTo" class="form-label-bold">Approved claim amount to</label>
-          {% if errors['approvedClaimAmountTo'][0] %}
-            <span class="error-message">{{ errors['approvedClaimAmountTo'][0] }}</span>
-          {% endif %}
-          <span class="pound-symbol">£</span>
-          <input id="approvedClaimAmountToInput" type="text" class="form-control full" name="approvedClaimAmountTo" value="{{ query.approvedClaimAmountTo }}" maxlength="6">
-        </div>
-      </div>
-
     </div>
 
-    <div class="form-group">
-      <a id="clear-search" href="/advanced-search" class="link">Clear search</a>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <h3 class="govuk-heading-s">Date of visit</h3>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <h3 class="govuk-heading-s">Date claim submitted</h3>
+      </div>
     </div>
 
-    <div class="form-group">
-      <input id="advanced-search-submit" type="submit" class="button" value="Search">
-      <a href="/" class="link margin-left margin-top">Cancel</a>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukDateInput({
+          id: "visitDateFrom",
+          namePrefix: "visitDateFrom",
+          fieldset: {
+            legend: {
+              text: "From",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              classes: "govuk-input--width-2",
+              name: "Day",
+              value: query.visitDateFromDay
+            },
+            {
+              classes: "govuk-input--width-2",
+              name: "Month",
+              value: query.visitDateFromMonth
+            },
+            {
+              classes: "govuk-input--width-4",
+              name: "Year",
+              value: query.visitDateFromYear
+            }
+          ]
+        }) }}
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukDateInput({
+          id: "visitDateTo",
+          namePrefix: "visitDateTo",
+          fieldset: {
+            legend: {
+              text: "To",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              classes: "govuk-input--width-2",
+              name: "Day",
+              value: query.visitDateToDay
+            },
+            {
+              classes: "govuk-input--width-2",
+              name: "Month",
+              value: query.visitDateToMonth
+            },
+            {
+              classes: "govuk-input--width-4",
+              name: "Year",
+              value: query.visitDateToYear
+            }
+          ]
+        }) }}
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukDateInput({
+          id: "dateSubmittedFrom",
+          namePrefix: "dateSubmittedFrom",
+          fieldset: {
+            legend: {
+              text: "From",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              classes: "govuk-input--width-2",
+              name: "Day",
+              value: query.dateSubmittedFromDay
+            },
+            {
+              classes: "govuk-input--width-2",
+              name: "Month",
+              value: query.dateSubmittedFromMonth
+            },
+            {
+              classes: "govuk-input--width-4",
+              name: "Year",
+              value: query.dateSubmittedFromYear
+            }
+          ]
+        }) }}
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukDateInput({
+          id: "dateSubmittedTo",
+          namePrefix: "dateSubmittedTo",
+          fieldset: {
+            legend: {
+              text: "To",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              classes: "govuk-input--width-2",
+              name: "Day",
+              value: query.dateSubmittedToDay
+            },
+            {
+              classes: "govuk-input--width-2",
+              name: "Month",
+              value: query.dateSubmittedToMonth
+            },
+            {
+              classes: "govuk-input--width-4",
+              name: "Year",
+              value: query.dateSubmittedToYear
+            }
+          ]
+        }) }}
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-half">
+        <h3 class="govuk-heading-s">Date claim approved</h3>
+      </div>
+      <div class="govuk-grid-column-one-half">
+        <h3 class="govuk-heading-s">Date claim rejected</h3>
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukDateInput({
+          id: "dateApprovedFrom",
+          namePrefix: "dateApprovedFrom",
+          fieldset: {
+            legend: {
+              text: "From",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              classes: "govuk-input--width-2",
+              name: "Day",
+              value: query.dateApprovedFromDay
+            },
+            {
+              classes: "govuk-input--width-2",
+              name: "Month",
+              value: query.dateApprovedFromMonth
+            },
+            {
+              classes: "govuk-input--width-4",
+              name: "Year",
+              value: query.dateApprovedFromYear
+            }
+          ]
+        }) }}
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukDateInput({
+          id: "dateApprovedTo",
+          namePrefix: "dateApprovedTo",
+          fieldset: {
+            legend: {
+              text: "To",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              classes: "govuk-input--width-2",
+              name: "Day",
+              value: query.dateApprovedToDay
+            },
+            {
+              classes: "govuk-input--width-2",
+              name: "Month",
+              value: query.dateApprovedToMonth
+            },
+            {
+              classes: "govuk-input--width-4",
+              name: "Year",
+              value: query.dateApprovedToYear
+            }
+          ]
+        }) }}
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukDateInput({
+          id: "dateRejectedFrom",
+          namePrefix: "dateRejectedFrom",
+          fieldset: {
+            legend: {
+              text: "From",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              classes: "govuk-input--width-2",
+              name: "Day",
+              value: query.dateRejectedFromDay
+            },
+            {
+              classes: "govuk-input--width-2",
+              name: "Month",
+              value: query.dateRejectedFromMonth
+            },
+            {
+              classes: "govuk-input--width-4",
+              name: "Year",
+              value: query.dateRejectedFromYear
+            }
+          ]
+        }) }}
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukDateInput({
+          id: "dateRejectedTo",
+          namePrefix: "dateRejectedTo",
+          fieldset: {
+            legend: {
+              text: "To",
+              isPageHeading: true,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              classes: "govuk-input--width-2",
+              name: "Day",
+              value: query.dateRejectedToDay
+            },
+            {
+              classes: "govuk-input--width-2",
+              name: "Month",
+              value: query.dateRejectedToMonth
+            },
+            {
+              classes: "govuk-input--width-4",
+              name: "Year",
+              value: query.dateRejectedToYear
+            }
+          ]
+        }) }}
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        {{ govukInput({
+          id: "approvedClaimAmountFrom",
+          name: "approvedClaimAmountFrom",
+          label: {
+            text: "Approved claim amount from",
+            classes: "govuk-label--s",
+            isPageHeading: false
+          },
+          prefix: {
+            text: "£"
+          },
+          spellcheck: false,
+          value: query.approvedClaimAmountFrom
+        }) }}
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        {{ govukInput({
+          id: "approvedClaimAmountTo",
+          name: "approvedClaimAmountTo",
+          label: {
+            text: "Approved claim amount to",
+            classes: "govuk-label--s",
+            isPageHeading: false
+          },
+          prefix: {
+            text: "£"
+          },
+          spellcheck: false,
+          value: query.approvedClaimAmountTo
+        }) }}
+      </div>
+    </div>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <p>
+          <a id="clear-search" href="/advanced-search" class="govuk-link">Clear search</a>
+        </p>
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            id: "advanced-search-submit",
+            text: "Search"
+          }) }}
+
+          <a class="govuk-link" href="/">Cancel</a>
+        </div>
+      </div>
     </div>
 
   </form>
 
-  <h2 id="search-results-header" class="heading-medium" hidden>Search results</h2>
-  {% if rawQuery != '' %}
-  <a href="/advanced-search-results/export?{{ rawQuery }}" class="link export">Export search results (CSV file)</a>
-  {% endif %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h2 id="search-results-header" class="govuk-heading-m" hidden>Search results</h2>
+      {% if rawQuery != '' %}
+      <a href="/advanced-search-results/export?{{ rawQuery }}" class="link export">Export search results (CSV file)</a>
+      {% endif %}
 
-  <table id="advanced-search-results" class="table" hidden>
-    <thead>
-      <tr>
-        <th class="sorting_disabled">Ref no.</th>
-        <th class="sorting_disabled">Name</th>
-        <th class="sorting_disabled">Submitted</th>
-        <th class="sorting_disabled">Visit Date</th>
-        <th class="sorting_disabled">Status</th>
-        <th class="sorting_disabled">Claim type</th>
-        <th class="sorting_disabled">Days until Payment</th>
-        <th class="sorting_disabled">Assigned to</th>
-        <th class="sorting_disabled"></th>
-      </tr>
-    </thead>
-  </table>
+      <table id="advanced-search-results" hidden>
+        <thead>
+          <tr>
+            <th class="sorting_disabled">Ref no.</th>
+            <th class="sorting_disabled">Name</th>
+            <th class="sorting_disabled">Submitted</th>
+            <th class="sorting_disabled">Visit Date</th>
+            <th class="sorting_disabled">Status</th>
+            <th class="sorting_disabled">Claim type</th>
+            <th class="sorting_disabled">Days until Payment</th>
+            <th class="sorting_disabled">Assigned to</th>
+            <th class="sorting_disabled"></th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
 {% endblock %}
 
 {% block bodyEnd %}

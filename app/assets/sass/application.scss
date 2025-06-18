@@ -83,10 +83,6 @@ table.no-pad-right td {
     width: 200px;
 }
 
-.search {
-    padding: 15px 0 0 0;
-}
-
 .table-short-column {
     width: 200px;
 }
@@ -94,6 +90,7 @@ table.no-pad-right td {
 .search {
     display: flex;
     align-items: flex-end;
+    margin-bottom: govuk-spacing(6);
 }
 
 .rejection-reason {
