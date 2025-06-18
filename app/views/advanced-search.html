@@ -314,21 +314,24 @@
               classes: "govuk-fieldset__legend--s"
             }
           },
+          errorMessage: {
+            text: errors["visitDateFrom"][0]
+          } if errors["visitDateFrom"][0],
           items: [
             {
               classes: "govuk-input--width-2",
               name: "Day",
-              value: query.visitDateFromDay
+              value: query["visitDateFrom-Day"]
             },
             {
               classes: "govuk-input--width-2",
               name: "Month",
-              value: query.visitDateFromMonth
+              value: query["visitDateFrom-Month"]
             },
             {
               classes: "govuk-input--width-4",
               name: "Year",
-              value: query.visitDateFromYear
+              value: query["visitDateFrom-Year"]
             }
           ]
         }) }}
@@ -344,21 +347,24 @@
               classes: "govuk-fieldset__legend--s"
             }
           },
+          errorMessage: {
+            text: errors["visitDateTo"][0]
+          } if errors["visitDateTo"][0],
           items: [
             {
               classes: "govuk-input--width-2",
               name: "Day",
-              value: query.visitDateToDay
+              value: query["visitDateTo-Day"]
             },
             {
               classes: "govuk-input--width-2",
               name: "Month",
-              value: query.visitDateToMonth
+              value: query["visitDateTo-Month"]
             },
             {
               classes: "govuk-input--width-4",
               name: "Year",
-              value: query.visitDateToYear
+              value: query["visitDateTo-Year"]
             }
           ]
         }) }}
@@ -374,21 +380,24 @@
               classes: "govuk-fieldset__legend--s"
             }
           },
+          errorMessage: {
+            text: errors["dateSubmittedFrom"][0]
+          } if errors["dateSubmittedFrom"][0],
           items: [
             {
               classes: "govuk-input--width-2",
               name: "Day",
-              value: query.dateSubmittedFromDay
+              value: query["dateSubmittedFrom-Day"]
             },
             {
               classes: "govuk-input--width-2",
               name: "Month",
-              value: query.dateSubmittedFromMonth
+              value: query["dateSubmittedFrom-Month"]
             },
             {
               classes: "govuk-input--width-4",
               name: "Year",
-              value: query.dateSubmittedFromYear
+              value: query["dateSubmittedFrom-Year"]
             }
           ]
         }) }}
@@ -404,21 +413,24 @@
               classes: "govuk-fieldset__legend--s"
             }
           },
+          errorMessage: {
+            text: errors["dateSubmittedTo"][0]
+          } if errors["dateSubmittedTo"][0],
           items: [
             {
               classes: "govuk-input--width-2",
               name: "Day",
-              value: query.dateSubmittedToDay
+              value: query["dateSubmittedTo-Day"]
             },
             {
               classes: "govuk-input--width-2",
               name: "Month",
-              value: query.dateSubmittedToMonth
+              value: query["dateSubmittedTo-Month"]
             },
             {
               classes: "govuk-input--width-4",
               name: "Year",
-              value: query.dateSubmittedToYear
+              value: query["dateSubmittedTo-Year"]
             }
           ]
         }) }}
@@ -446,21 +458,24 @@
               classes: "govuk-fieldset__legend--s"
             }
           },
+          errorMessage: {
+            text: errors["dateApprovedFrom"][0]
+          } if errors["dateApprovedFrom"][0],
           items: [
             {
               classes: "govuk-input--width-2",
               name: "Day",
-              value: query.dateApprovedFromDay
+              value: query["dateApprovedFrom-Day"]
             },
             {
               classes: "govuk-input--width-2",
               name: "Month",
-              value: query.dateApprovedFromMonth
+              value: query["dateApprovedFrom-Month"]
             },
             {
               classes: "govuk-input--width-4",
               name: "Year",
-              value: query.dateApprovedFromYear
+              value: query["dateApprovedFrom-Year"]
             }
           ]
         }) }}
@@ -476,21 +491,24 @@
               classes: "govuk-fieldset__legend--s"
             }
           },
+          errorMessage: {
+            text: errors["dateApprovedTo"][0]
+          } if errors["dateApprovedTo"][0],
           items: [
             {
               classes: "govuk-input--width-2",
               name: "Day",
-              value: query.dateApprovedToDay
+              value: query["dateApprovedTo-Day"]
             },
             {
               classes: "govuk-input--width-2",
               name: "Month",
-              value: query.dateApprovedToMonth
+              value: query["dateApprovedTo-Month"]
             },
             {
               classes: "govuk-input--width-4",
               name: "Year",
-              value: query.dateApprovedToYear
+              value: query["dateApprovedTo-Year"]
             }
           ]
         }) }}
@@ -506,21 +524,24 @@
               classes: "govuk-fieldset__legend--s"
             }
           },
+          errorMessage: {
+            text: errors["dateRejectedFrom"][0]
+          } if errors["dateRejectedFrom"][0],
           items: [
             {
               classes: "govuk-input--width-2",
               name: "Day",
-              value: query.dateRejectedFromDay
+              value: query["dateRejectedFrom-Day"]
             },
             {
               classes: "govuk-input--width-2",
               name: "Month",
-              value: query.dateRejectedFromMonth
+              value: query["dateRejectedFrom-Month"]
             },
             {
               classes: "govuk-input--width-4",
               name: "Year",
-              value: query.dateRejectedFromYear
+              value: query["dateRejectedFrom-Year"]
             }
           ]
         }) }}
@@ -536,21 +557,24 @@
               classes: "govuk-fieldset__legend--s"
             }
           },
+          errorMessage: {
+            text: errors["dateRejectedTo"][0]
+          } if errors["dateRejectedTo"][0],
           items: [
             {
               classes: "govuk-input--width-2",
               name: "Day",
-              value: query.dateRejectedToDay
+              value: query["dateRejectedTo-Day"]
             },
             {
               classes: "govuk-input--width-2",
               name: "Month",
-              value: query.dateRejectedToMonth
+              value: query["dateRejectedTo-Month"]
             },
             {
               classes: "govuk-input--width-4",
               name: "Year",
-              value: query.dateRejectedToYear
+              value: query["dateRejectedTo-Year"]
             }
           ]
         }) }}
@@ -570,6 +594,9 @@
           prefix: {
             text: "£"
           },
+          errorMessage: {
+            text: errors["approvedClaimAmountFrom"][0]
+          } if errors["approvedClaimAmountFrom"][0],
           spellcheck: false,
           value: query.approvedClaimAmountFrom
         }) }}
@@ -584,6 +611,9 @@
             classes: "govuk-label--s",
             isPageHeading: false
           },
+          errorMessage: {
+            text: errors["approvedClaimAmountTo"][0]
+          } if errors["approvedClaimAmountTo"][0],
           prefix: {
             text: "£"
           },
@@ -616,7 +646,7 @@
     <div class="govuk-grid-column-full">
       <h2 id="search-results-header" class="govuk-heading-m" hidden>Search results</h2>
       {% if rawQuery != '' %}
-      <a href="/advanced-search-results/export?{{ rawQuery }}" class="link export">Export search results (CSV file)</a>
+      <a href="/advanced-search-results/export?{{ rawQuery }}" class="govuk-link export">Export search results (CSV file)</a>
       {% endif %}
 
       <table id="advanced-search-results" hidden>
