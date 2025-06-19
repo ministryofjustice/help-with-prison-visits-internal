@@ -18,7 +18,8 @@ module.exports = function (router) {
         if (validationErrors[field].length > 0) {
           return res.status(400).render('audit/delete-report-confirmation', {
             errors: validationErrors,
-            reportId
+            reportId,
+            backLinkHref: `/audit/view-report/${reportId}`
           })
         }
       }
@@ -26,7 +27,7 @@ module.exports = function (router) {
 
     if (deleteConfirmation === 'yes') {
       deleteReport(reportId).then(function () {
-        res.render('audit/report-deleted')
+        res.render('audit/report-deleted', { backLinkHref: "/audit" })
       })
     } else {
       res.redirect(`/audit/view-report/${reportId}`)
@@ -38,7 +39,8 @@ module.exports = function (router) {
     const reportId = req.body.reportId
 
     res.render('audit/delete-report-confirmation', {
-      reportId
+      reportId,
+      backLinkHref: `/audit/view-report/${reportId}`
     })
   })
 }

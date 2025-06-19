@@ -21,7 +21,8 @@ module.exports = function (router) {
       endDate: moment(endDate).format(audit.DATE_FORMAT),
       claimCount,
       claimCountOverThreshold,
-      thresholdAmount
+      thresholdAmount,
+      backLinkHref: "/audit/create-report-date"
     })
   })
 
@@ -45,7 +46,8 @@ module.exports = function (router) {
             query: req.body,
             errors: validationErrors,
             startDate: moment(startDate).format(audit.DATE_FORMAT),
-            endDate: moment(endDate).format(audit.DATE_FORMAT)
+            endDate: moment(endDate).format(audit.DATE_FORMAT),
+            backLinkHref: "/audit/create-report-date"
           })
         }
       }

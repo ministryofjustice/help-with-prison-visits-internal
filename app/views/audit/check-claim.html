@@ -38,7 +38,10 @@
         {{ govukButton({
             text: "View the claim",
             classes: "govuk-button--secondary",
-            href: "/claim/" + claimData.ClaimId
+            href: "/claim/" + claimData.ClaimId,
+            attributes: {
+                target: "_blank"
+            }
         }) }}
         <!-- Band 5 result -->
         {% if claimData.Band5Validity != 'Not checked' %}
