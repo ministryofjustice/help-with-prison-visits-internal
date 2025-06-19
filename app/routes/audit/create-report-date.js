@@ -21,7 +21,7 @@ module.exports = function (router) {
       addAuditSessionData(req, audit.SESSION.THRESHOLD_AMOUNT, thresholdAmount)
       res.render('audit/create-report-date', {
         thresholdAmount,
-        backLinkHref: "/audit"
+        backLinkHref: '/audit'
       })
     })
   })
@@ -50,7 +50,7 @@ module.exports = function (router) {
           return res.status(400).render('audit/create-report-date', {
             query: req.body,
             errors: validationErrors,
-            backLinkHref: "/audit"
+            backLinkHref: '/audit'
           })
         }
       }

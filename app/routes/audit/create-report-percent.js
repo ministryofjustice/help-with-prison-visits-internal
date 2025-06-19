@@ -22,7 +22,7 @@ module.exports = function (router) {
       claimCount,
       claimCountOverThreshold,
       thresholdAmount,
-      backLinkHref: "/audit/create-report-date"
+      backLinkHref: '/audit/create-report-date'
     })
   })
 
@@ -47,7 +47,7 @@ module.exports = function (router) {
             errors: validationErrors,
             startDate: moment(startDate).format(audit.DATE_FORMAT),
             endDate: moment(endDate).format(audit.DATE_FORMAT),
-            backLinkHref: "/audit/create-report-date"
+            backLinkHref: '/audit/create-report-date'
           })
         }
       }

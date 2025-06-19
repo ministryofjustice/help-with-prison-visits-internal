@@ -24,7 +24,7 @@ module.exports = function (router) {
       totalReviewClaim: percentClaim + claimCountOverThreshold,
       claimCountOverThreshold,
       thresholdAmount,
-      backLinkHref: "/audit/create-report-percent"
+      backLinkHref: '/audit/create-report-percent'
     })
   })
 
@@ -41,7 +41,7 @@ module.exports = function (router) {
     if (reportId) {
       return res.render('audit/report-created', {
         reportId,
-        backLinkHref: "/audit"
+        backLinkHref: '/audit'
       })
     }
     getAllClaimsDataBelowThreshold(startDate, endDate, percentClaim, thresholdAmount).then(function (claimsDataBelowThreshold) {
@@ -51,7 +51,7 @@ module.exports = function (router) {
           addAuditSessionData(req, audit.SESSION.REPORT_ID, reportId)
           return res.render('audit/report-created', {
             reportId,
-            backLinkHref: "/audit"
+            backLinkHref: '/audit'
           })
         })
       })
