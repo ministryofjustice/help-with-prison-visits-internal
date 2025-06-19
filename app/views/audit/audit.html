@@ -1,5 +1,6 @@
 {% extends "includes/layout_new.html" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -27,13 +28,15 @@
               <td class="govuk-table__cell"><a href="/audit/view-report/{{ audit.reportId }}">{{ audit.startDate }} - {{ audit.endDate }}</a></td>
               <td class="govuk-table__cell">
                 {% if audit.status == 'NotStarted' %}
-                  <strong class="govuk-tag govuk-tag--grey">
-                    NOT STARTED
-                  </strong>
+                  {{ govukTag({
+                      text: "NOT STARTED",
+                      classes: "govuk-tag--grey"
+                  }) }}
                 {% else %}
-                  <strong class="govuk-tag govuk-tag--light-blue">
-                    IN PROGRESS
-                  </strong>
+                  {{ govukTag({
+                      text: "IN PROGRESS",
+                      classes: "govuk-tag--light-blue"
+                  }) }}
                 {% endif %}
               </td>
             </tr>
@@ -49,13 +52,15 @@
               <td class="govuk-table__cell"><a href="/audit/view-report/{{ audit.reportId }}">{{ audit.startDate }} - {{ audit.endDate }}</a></td>
               <td class="govuk-table__cell">
                 {% if audit.status == 'NotStarted' %}
-                <strong class="govuk-tag govuk-tag--grey">
-                  NOT STARTED
-                </strong>
+                  {{ govukTag({
+                      text: "NOT STARTED",
+                      classes: "govuk-tag--grey"
+                  }) }}
                 {% else %}
-                <strong class="govuk-tag govuk-tag--light-blue">
-                  IN PROGRESS
-                </strong>
+                  {{ govukTag({
+                      text: "IN PROGRESS",
+                      classes: "govuk-tag--light-blue"
+                  }) }}
                 {% endif %}
               </td>
             </tr>
@@ -70,9 +75,10 @@
             <tr class="govuk-table__row">
               <td class="govuk-table__cell"><a href="/audit/view-report/{{ audit.reportId }}">{{ audit.startDate }} - {{ audit.endDate }}</a></td>
               <td class="govuk-table__cell">
-                <strong class="govuk-tag govuk-tag--green">
-                  COMPLETED
-                </strong>
+                {{ govukTag({
+                    text: "COMPLETED",
+                    classes: "govuk-tag--greem"
+                }) }}
               </td>
             </tr>
             {% endfor %}

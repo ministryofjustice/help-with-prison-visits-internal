@@ -2,6 +2,8 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -19,121 +21,130 @@
         {% else %}
             <h1 class="govuk-heading-xl">Check the claim</h1>
         {% endif %}
-        <details class="govuk-details">
-            <summary class="govuk-details__summary">
-                <span class="govuk-details__summary-text">
-                    What you should be checking
-                </span>
-            </summary>
-            <div class="govuk-details__text">
-                <p class="govuk-body">You need to ensure the claim was appropriate.</p>
-                <ul class="govuk-list govuk-list--bullet">
-                    <li>is there anything suspicious about the claim or its approval?</li>
-                    <li>did the claim amount match the evidence provided?</li>
-                    <li>did the claimant qualify for the claim?</li>
-                    <li>was the claim approved with all the necessary evidence provided?</li>
-                </ul>
-            </div>
-        </details>
-        <a href="/claim/{{ claimData.ClaimId }}" class="govuk-button govuk-button--secondary" target="_blank">View the claim</a>
+        {% set whatYouShouldBeCheckingHtml %}
+            <p class="govuk-body">You need to ensure the claim was appropriate.</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>is there anything suspicious about the claim or its approval?</li>
+                <li>did the claim amount match the evidence provided?</li>
+                <li>did the claimant qualify for the claim?</li>
+                <li>was the claim approved with all the necessary evidence provided?</li>
+            </ul>
+        {% endset %}
+        {{ govukDetails({
+            summaryText: "What you should be checking",
+            html: whatYouShouldBeCheckingHtml
+        }) }}
+
+        {{ govukButton({
+            text: "View the claim",
+            classes: "govuk-button--secondary",
+            href: "/claim/" + claimData.ClaimId
+        }) }}
         <!-- Band 5 result -->
         {% if claimData.Band5Validity != 'Not checked' %}
             <h2 class="govuk-heading-l">Check result</h2>
-            <span class="govuk-caption-xl">Checked by: {{ claimData.Band5Username }}</span>
-            </br>
+            <p><span class="govuk-caption-xl">Checked by: {{ claimData.Band5Username }}</span></p>
             {% if claimData.Band5Validity == 'Invalid' %}
-                <strong class="govuk-tag govuk-tag--red">Invalid</strong>
+                {{ govukTag({
+                    text: "Invalid",
+                    classes: "govuk-tag--red"
+                }) }}
             {% else %}
-                <strong class="govuk-tag govuk-tag--green">Valid</strong>
+                {{ govukTag({
+                    text: "Valid",
+                    classes: "govuk-tag--green"
+                }) }}
             {% endif %}
-            </br></br>
-            <span class="govuk-caption-xl">{{ claimData.Band5Description }}</span>
-            </br>
-                <!-- Band 9 result -->
-                {% if claimData.Band9Validity != 'Not required' %}
-                    {% if claimData.Band9Validity == 'Valid' or claimData.Band9Validity == 'Invalid' %}
-                        <h2 class="govuk-heading-l">Verification result</h2>
-                        <span class="govuk-caption-xl">Checked by: {{ claimData.Band9Username }}</span>
-                        </br>
-                        {% if claimData.Band9Validity == 'Invalid' %}
-                            <strong class="govuk-tag govuk-tag--red">Invalid</strong>
-                        {% else %}
-                            <strong class="govuk-tag govuk-tag--green">Valid</strong>
-                        {% endif %}
-                        </br></br>
-                        <span class="govuk-caption-xl">{{ claimData.Band9Description }}</span>
+            <p><span class="govuk-caption-xl">{{ claimData.Band5Description }}</span></p>
+            <!-- Band 9 result -->
+            {% if claimData.Band9Validity != 'Not required' %}
+                {% if claimData.Band9Validity == 'Valid' or claimData.Band9Validity == 'Invalid' %}
+                    <h2 class="govuk-heading-l">Verification result</h2>
+                    <p><span class="govuk-caption-xl">Checked by: {{ claimData.Band9Username }}</span></p>
+                    {% if claimData.Band9Validity == 'Invalid' %}
+                        {{ govukTag({
+                            text: "Invalid",
+                            classes: "govuk-tag--red"
+                        }) }}
                     {% else %}
-                    <!-- Band 9 check -->
-                        {% if isBand9 %}
-                            <form action="/audit/check-claim/{{reportId}}/{{reference}}" method="post">
-                                {% set band9Description %}
-                                    {% if errors['band9Description'][0] %}
-                                        {{ govukCharacterCount({
-                                            name: "band9Description",
-                                            id: "band9Description",
-                                            maxlength: 200,
-                                            label: {
-                                                text: "Why was this claim invalid?",
-                                                classes: "govuk-hint",
-                                                isPageHeading: false
-                                            },
-                                            errorMessage: {
-                                                text: "Please provide reason for invalid"
-                                            }
-                                        }) }}
-                                    {% else %}
-                                        {{ govukCharacterCount({
-                                            name: "band9Description",
-                                            id: "band59escription",
-                                            maxlength: 200,
-                                            label: {
-                                                text: "Why was this claim invalid?",
-                                                classes: "govuk-hint",
-                                                isPageHeading: false
-                                            }
-                                        }) }}
-                                    {% endif %}
-
-                                {% endset -%}
-
-                                {% if errors['band9Validation'][0] %}
-                                    <span class="error-message">{{ errors['band9Validation'][0] }}</span>
+                        {{ govukTag({
+                            text: "Valid",
+                            classes: "govuk-tag--green"
+                        }) }}
+                    {% endif %}
+                    <p><span class="govuk-caption-xl">{{ claimData.Band9Description }}</span></p>
+                {% else %}
+                <!-- Band 9 check -->
+                    {% if isBand9 %}
+                        <form action="/audit/check-claim/{{reportId}}/{{reference}}" method="post">
+                            {% set band9Description %}
+                                {% if errors['band9Description'][0] %}
+                                    {{ govukCharacterCount({
+                                        name: "band9Description",
+                                        id: "band9Description",
+                                        maxlength: 200,
+                                        label: {
+                                            text: "Why was this claim invalid?",
+                                            classes: "govuk-hint",
+                                            isPageHeading: false
+                                        },
+                                        errorMessage: {
+                                            text: "Please provide reason for invalid"
+                                        }
+                                    }) }}
+                                {% else %}
+                                    {{ govukCharacterCount({
+                                        name: "band9Description",
+                                        id: "band59escription",
+                                        maxlength: 200,
+                                        label: {
+                                            text: "Why was this claim invalid?",
+                                            classes: "govuk-hint",
+                                            isPageHeading: false
+                                        }
+                                    }) }}
                                 {% endif %}
-                                {{ govukRadios({
-                                    name: "band9Validation",
-                                    fieldset: {
-                                        legend: {
+
+                            {% endset -%}
+
+                            {% if errors['band9Validation'][0] %}
+                                <span class="error-message">{{ errors['band9Validation'][0] }}</span>
+                            {% endif %}
+                            {{ govukRadios({
+                                name: "band9Validation",
+                                fieldset: {
+                                    legend: {
                                         text: "Is the claim valid or invalid?",
                                         isPageHeading: false,
                                         classes: "govuk-fieldset__legend--l"
-                                        }
+                                    }
+                                },
+                                items: [
+                                    {
+                                        checked: validationValue === 'Valid',
+                                        value: "Valid",
+                                        text: "Valid"
                                     },
-                                    items: [
-                                        {
-                                            checked: validationValue === 'Valid',
-                                            value: "Valid",
-                                            text: "Valid"
-                                        },
-                                        {
-                                            checked: validationValue === 'Invalid',
-                                            value: "Invalid",
-                                            text: "Invalid",
-                                            conditional: {
-                                                html: band9Description
-                                            }
+                                    {
+                                        checked: validationValue === 'Invalid',
+                                        value: "Invalid",
+                                        text: "Invalid",
+                                        conditional: {
+                                            html: band9Description
                                         }
-                                    ]
-                                }) }}
+                                    }
+                                ]
+                            }) }}
 
-                                <input type="hidden" name="band" value="9">
-                                {% include "partials/csrf-hidden-input.html" %}
-                                {{ govukButton({
-                                    text: "Save"
-                                }) }}
-                            </form>
-                        {% endif %}
+                            <input type="hidden" name="band" value="9">
+                            {% include "partials/csrf-hidden-input.html" %}
+                            {{ govukButton({
+                                text: "Save"
+                            }) }}
+                        </form>
                     {% endif %}
                 {% endif %}
+            {% endif %}
         {% else %}
             <!-- Band 5 check -->
             {% if isBand5 %}
