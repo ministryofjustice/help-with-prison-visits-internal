@@ -27,7 +27,7 @@ module.exports = function (router) {
 
     if (deleteConfirmation === 'yes') {
       deleteReport(reportId).then(function () {
-        res.render('audit/report-deleted', { backLinkHref: "/audit" })
+        res.render('audit/report-deleted', { backLinkHref: '/audit' })
       })
     } else {
       res.redirect(`/audit/view-report/${reportId}`)
