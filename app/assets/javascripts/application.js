@@ -106,12 +106,6 @@ $(document).ready(function () {
   toggleContent.showHideCheckboxToggledContent()
 })
 
-function goBack () {
-  history.back() //eslint-disable-line
-}
-const el = document.getElementById('backBtn')
-el && el.addEventListener('click', goBack)
-
 function printReport () {
   const printContents = document.getElementById('print-report').innerHTML
   const originalContents = document.body.innerHTML
