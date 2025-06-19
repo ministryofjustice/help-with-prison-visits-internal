@@ -9,82 +9,81 @@
 {% set activeMainNav = 'audit' %}
 
 {% block content %}
-    <a href="#" id="backBtn" class="govuk-back-link">Back</a>
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                {% include "includes/validation-error-messages.html" %}
-                <h1 class="govuk-heading-xl">What is the start date and end date you would like to report on?</h1>
-                <form action="/audit/create-report-date" method="post">
-                    <div class="govuk-hint" id="create-report-date-hint">
-                        Only manually approved visits will be checked. Any claim over £{{ thresholdAmount }} is automatically included for checks.
-                    </div>
-                    {{ govukDateInput({
-                        id: "auditReportStartDate",
-                        namePrefix: "auditReportStartDate",
-                        fieldset: {
-                            legend: {
-                            text: "Start date",
-                            isPageHeading: true,
-                            classes: "govuk-fieldset__legend--s"
-                            }
-                        },
-                        errorMessage: {
-                            text: errors["auditReportStartDate"][0]
-                        } if errors["auditReportStartDate"][0],
-                        items: [
-                            {
-                                classes: "govuk-input--width-2",
-                                name: "Day",
-                                value: query["auditReportStartDate-Day"]
-                            },
-                            {
-                                classes: "govuk-input--width-2",
-                                name: "Month",
-                                value: query["auditReportStartDate-Month"]
-                            },
-                            {
-                                classes: "govuk-input--width-4",
-                                name: "Year",
-                                value: query["auditReportStartDate-Year"]
-                            }
-                        ]
-                    }) }}
-                    {{ govukDateInput({
-                        id: "auditReportEndDate",
-                        namePrefix: "auditReportEndDate",
-                        fieldset: {
-                            legend: {
-                            text: "End date",
-                            isPageHeading: true,
-                            classes: "govuk-fieldset__legend--s"
-                            }
-                        },
-                        errorMessage: {
-                            text: errors["auditReportEndDate"][0]
-                        } if errors["auditReportEndDate"][0],
-                        items: [
-                            {
-                                classes: "govuk-input--width-2",
-                                name: "Day",
-                                value: query["auditReportEndDate-Day"]
-                            },
-                            {
-                                classes: "govuk-input--width-2",
-                                name: "Month",
-                                value: query["auditReportEndDate-Month"]
-                            },
-                            {
-                                classes: "govuk-input--width-4",
-                                name: "Year",
-                                value: query["auditReportEndDate-Year"]
-                            }
-                        ]
-                    }) }}
-                    {% include "partials/csrf-hidden-input.html" %}
-                    {{ govukButton({
-                        text: "Continue"
-                    }) }}
-                </form>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% include "includes/validation-error-messages.html" %}
+        <h1 class="govuk-heading-xl">What is the start date and end date you would like to report on?</h1>
+        <form action="/audit/create-report-date" method="post">
+            <div class="govuk-hint" id="create-report-date-hint">
+                Only manually approved visits will be checked. Any claim over £{{ thresholdAmount }} is automatically included for checks.
             </div>
-        </div>
+            {{ govukDateInput({
+                id: "auditReportStartDate",
+                namePrefix: "auditReportStartDate",
+                fieldset: {
+                    legend: {
+                    text: "Start date",
+                    isPageHeading: true,
+                    classes: "govuk-fieldset__legend--s"
+                    }
+                },
+                errorMessage: {
+                    text: errors["auditReportStartDate"][0]
+                } if errors["auditReportStartDate"][0],
+                items: [
+                    {
+                        classes: "govuk-input--width-2",
+                        name: "Day",
+                        value: query["auditReportStartDate-Day"]
+                    },
+                    {
+                        classes: "govuk-input--width-2",
+                        name: "Month",
+                        value: query["auditReportStartDate-Month"]
+                    },
+                    {
+                        classes: "govuk-input--width-4",
+                        name: "Year",
+                        value: query["auditReportStartDate-Year"]
+                    }
+                ]
+            }) }}
+            {{ govukDateInput({
+                id: "auditReportEndDate",
+                namePrefix: "auditReportEndDate",
+                fieldset: {
+                    legend: {
+                    text: "End date",
+                    isPageHeading: true,
+                    classes: "govuk-fieldset__legend--s"
+                    }
+                },
+                errorMessage: {
+                    text: errors["auditReportEndDate"][0]
+                } if errors["auditReportEndDate"][0],
+                items: [
+                    {
+                        classes: "govuk-input--width-2",
+                        name: "Day",
+                        value: query["auditReportEndDate-Day"]
+                    },
+                    {
+                        classes: "govuk-input--width-2",
+                        name: "Month",
+                        value: query["auditReportEndDate-Month"]
+                    },
+                    {
+                        classes: "govuk-input--width-4",
+                        name: "Year",
+                        value: query["auditReportEndDate-Year"]
+                    }
+                ]
+            }) }}
+            {% include "partials/csrf-hidden-input.html" %}
+            {{ govukButton({
+                text: "Continue"
+            }) }}
+        </form>
+    </div>
+</div>
 {% endblock %}

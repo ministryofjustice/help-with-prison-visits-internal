@@ -1,5 +1,6 @@
 {% extends "includes/layout_new.html" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
@@ -8,20 +9,9 @@
 {% set activeMainNav = 'audit' %}
 
 {% block content %}
-    <a href="#" id="backBtn" class="govuk-back-link">Back</a>
-    <div class="govuk-width-container">
-        <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <div class="govuk-panel govuk-panel--deletion">
-                        <h1 class="govuk-panel__title">
-                            Report deleted
-                        </h1>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
+    {{ govukPanel({
+        titleText: "Report deleted"
+    }) }}
 
     {{ govukButton({
         text: "Go to audits",

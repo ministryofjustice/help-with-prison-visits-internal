@@ -9,48 +9,45 @@
 {% set activeMainNav = 'audit' %}
 
 {% block content %}
-     <a href="#" id="backBtn" class="govuk-back-link">Back</a>
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                {% include "includes/validation-error-messages.html" %}
-                <span class="govuk-caption-xl">{{ startDate }} - {{ endDate }}</span>
-                {% if claimCount == 0 and claimCountOverThreshold == 0 %}
-                    <h1 class="govuk-heading-xl">There are no claims to check in this period</h1>
-                <a href="/audit/create-report-date" class="button">Change the period</a>
-                {% else  %}
-                    <h1 class="govuk-heading-xl">What percentage of claims would you like to check?</h1>
-                    <form action="/audit/create-report-percent" method="post">
-                        {% include "partials/csrf-hidden-input.html" %}
-                        <div class="govuk-inset-text">
-                            <p>There are {{ claimCount }} manually approved claims in this period.</p>
-                            {% if claimCountOverThreshold != 0 %}
-                                This includes {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}. All these will be included in the audit check.
-                            {% else %}
-                                This includes {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}.
-                            {% endif %}
-                        </div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% include "includes/validation-error-messages.html" %}
+        <span class="govuk-caption-xl">{{ startDate }} - {{ endDate }}</span>
+        {% if claimCount == 0 and claimCountOverThreshold == 0 %}
+            <h1 class="govuk-heading-xl">There are no claims to check in this period</h1>
+            {{ govukButton({
+                text: "Change the period",
+                href: "/audit/create-report-date"
+            }) }}
+        {% else  %}
+            <h1 class="govuk-heading-xl">What percentage of claims would you like to check?</h1>
+            <form action="/audit/create-report-percent" method="post">
+                {% include "partials/csrf-hidden-input.html" %}
+                <div class="govuk-inset-text">
+                    <p>There are {{ claimCount }} manually approved claims in this period.</p>
+                    <p>This includes {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}. {% if claimCountOverThreshold != 0 %}All these will be included in the audit check.{% endif %}</p>
+                </div>
 
-                        {% if claimCount != 0 %}
-                            <p class="govuk-body"> A number of visits will be randomly selected based on the percentage you choose.</p>
-                            {{ govukInput({
-                                id: "auditReportPercent",
-                                name: "auditReportPercent",
-                                errorMessage: {
-                                    text: errors["auditReportPercent"][0]
-                                } if errors["auditReportPercent"][0],
-                                suffix: {
-                                    text: "%"
-                                },
-                                classes: "govuk-input--width-5"
-                            }) }}
-                            {{ govukButton({
-                                text: "Continue"
-                            }) }}
-                        {% endif %}
-
-                    </form>
+                {% if claimCount != 0 %}
+                    <p class="govuk-body"> A number of visits will be randomly selected based on the percentage you choose.</p>
+                    {{ govukInput({
+                        id: "auditReportPercent",
+                        name: "auditReportPercent",
+                        errorMessage: {
+                            text: errors["auditReportPercent"][0]
+                        } if errors["auditReportPercent"][0],
+                        suffix: {
+                            text: "%"
+                        },
+                        classes: "govuk-input--width-5"
+                    }) }}
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
                 {% endif %}
-            </div>
-        </div>
+
+            </form>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

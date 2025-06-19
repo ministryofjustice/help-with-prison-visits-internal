@@ -8,24 +8,23 @@
 {% set activeMainNav = 'audit' %}
 
 {% block content %}
-    <a href="#" id="backBtn" class="govuk-back-link">Back</a>
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                {% include "includes/validation-error-messages.html" %}
-                <span class="govuk-caption-xl">{{ startDate }} - {{ endDate }}</span>
-                <h1 class="govuk-heading-xl">Create audit report</h1>
-                <p class="govuk-body">You will need to review {{ totalReviewClaim }} claims for this period</p>
-                {% if claimCountOverThreshold != 0 %}
-                    <p class="govuk-body">This will include {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}</p>
-                {% endif %}
-                <form action="/audit/create-report" id="create-report" method="post">
-                    {% include "partials/csrf-hidden-input.html" %}
-                    {% if totalReviewClaim != 0 %}
-                        {{ govukButton({
-                            text: "Create report"
-                        }) }}
-                    {% endif %}
-                </form>
-            </div>
-        </div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% include "includes/validation-error-messages.html" %}
+        <span class="govuk-caption-xl">{{ startDate }} - {{ endDate }}</span>
+        <h1 class="govuk-heading-xl">Create audit report</h1>
+        <p class="govuk-body">You will need to review {{ totalReviewClaim }} claims for this period</p>
+        {% if claimCountOverThreshold != 0 %}
+            <p class="govuk-body">This will include {{ claimCountOverThreshold }} claims over £{{ thresholdAmount }}</p>
+        {% endif %}
+        {% if totalReviewClaim != 0 %}
+            <form action="/audit/create-report" id="create-report" method="post">
+                {% include "partials/csrf-hidden-input.html" %}
+                {{ govukButton({
+                    text: "Create report"
+                }) }}
+            </form>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
