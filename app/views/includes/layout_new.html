@@ -6,7 +6,13 @@
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
-{% block bodyStart %}
+{% block beforeContent %}
+  {% if backLinkHref %}
+    {{ govukBackLink({
+      text: "Back",
+      href: backLinkHref
+    }) }}
+  {% endif %}
 {% endblock %}
 
 {% block head %}
@@ -34,12 +40,6 @@
   }
 }) }}
 {% include 'partials/navigation_new.html' %}
-{% if backLinkHref %}
-  {{ govukBackLink({
-    text: "Back",
-    href: backLinkHref
-  }) }}
-{% endif %}
 {% endblock %}
 
 {% block bodyEnd %}
