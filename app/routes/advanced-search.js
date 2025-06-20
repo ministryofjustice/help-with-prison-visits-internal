@@ -174,72 +174,72 @@ function extractSearchCriteria (query) {
 
   const visitDateFrom = processDate(
     'visitDateFrom',
-    query.visitDateFromDay,
-    query.visitDateFromMonth,
-    query.visitDateFromYear
+    query['visitDateFrom-Day'],
+    query['visitDateFrom-Month'],
+    query['visitDateFrom-Year']
   )
   if (visitDateFrom) {
     searchCriteria.visitDateFrom = visitDateFrom.startOf('day').toDate()
   }
   const visitDateTo = processDate(
     'visitDateTo',
-    query.visitDateToDay,
-    query.visitDateToMonth,
-    query.visitDateToYear
+    query['visitDateTo-Day'],
+    query['visitDateTo-Month'],
+    query['visitDateTo-Year']
   )
   if (visitDateTo) {
     searchCriteria.visitDateTo = visitDateTo.endOf('day').toDate()
   }
   const dateSubmittedFrom = processDate(
     'dateSubmittedFrom',
-    query.dateSubmittedFromDay,
-    query.dateSubmittedFromMonth,
-    query.dateSubmittedFromYear
+    query['dateSubmittedFrom-Day'],
+    query['dateSubmittedFrom-Month'],
+    query['dateSubmittedFrom-Year']
   )
   if (dateSubmittedFrom) {
     searchCriteria.dateSubmittedFrom = dateSubmittedFrom.startOf('day').toDate()
   }
   const dateSubmittedTo = processDate(
     'dateSubmittedTo',
-    query.dateSubmittedToDay,
-    query.dateSubmittedToMonth,
-    query.dateSubmittedToYear
+    query['dateSubmittedTo-Day'],
+    query['dateSubmittedTo-Month'],
+    query['dateSubmittedTo-Year']
   )
   if (dateSubmittedTo) {
     searchCriteria.dateSubmittedTo = dateSubmittedTo.endOf('day').toDate()
   }
   const dateApprovedFrom = processDate(
     'dateApprovedFrom',
-    query.dateApprovedFromDay,
-    query.dateApprovedFromMonth,
-    query.dateApprovedFromYear
+    query['dateApprovedFrom-Day'],
+    query['dateApprovedFrom-Month'],
+    query['dateApprovedFrom-Year']
   )
   if (dateApprovedFrom) {
     searchCriteria.dateApprovedFrom = dateApprovedFrom.startOf('day').toDate()
   }
   const dateApprovedTo = processDate(
     'dateApprovedTo',
-    query.dateApprovedToDay,
-    query.dateApprovedToMonth,
-    query.dateApprovedToYear
+    query['dateApprovedTo-Day'],
+    query['dateApprovedTo-Month'],
+    query['dateApprovedTo-Year']
   )
   if (dateApprovedTo) {
     searchCriteria.dateApprovedTo = dateApprovedTo.endOf('day').toDate()
   }
   const dateRejectedFrom = processDate(
     'dateRejectedFrom',
-    query.dateRejectedFromDay,
-    query.dateRejectedFromMonth,
-    query.dateRejectedFromYear
+    query['dateRejectedFrom-Day'],
+    query['dateRejectedFrom-Month'],
+    query['dateRejectedFrom-Year']
   )
   if (dateRejectedFrom) {
     searchCriteria.dateRejectedFrom = dateRejectedFrom.startOf('day').toDate()
   }
   const dateRejectedTo = processDate(
     'dateRejectedTo',
-    query.dateRejectedToDay,
-    query.dateRejectedToMonth,
-    query.dateRejectedToYear
+    query['dateRejectedTo-Day'],
+    query['dateRejectedTo-Month'],
+    query['dateRejectedTo-Year']
   )
   if (dateRejectedTo) {
     searchCriteria.dateRejectedTo = dateRejectedTo.endOf('day').toDate()
