@@ -57,7 +57,9 @@ const organisationName = 'HMPPS'
 
 nunjucksSetup(app, developmentMode)
 
-['public', 'assets'].forEach(dir => {
+const publicFolders = ['public', 'assets']
+
+publicFolders.forEach(dir => {
   app.use('/public', express.static(path.join(__dirname, dir)))
 })
 

@@ -12,7 +12,9 @@ const { nameSerialiser } = require('./views/helpers/username-serialiser')
 
 nunjucksSetup(app, developmentMode)
 
-['public', 'assets'].forEach(dir => {
+const publicFolders = ['public', 'assets']
+
+publicFolders.forEach(dir => {
   app.use('/public', express.static(path.join(__dirname, dir)))
 })
 
