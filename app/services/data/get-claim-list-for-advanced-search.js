@@ -228,9 +228,10 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   }
 
   log.info('before queries')
+  log.info(selectQuery)
   return countQuery
     .then(function (count) {
-      log.info('count done')
+      log.info('count done', count)
       return selectQuery
         .then(function (claims) {
           log.info(claims)

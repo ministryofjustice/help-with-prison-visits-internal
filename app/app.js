@@ -10,7 +10,7 @@ const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
 const roleCheckingMiddleware = require('./middleware/roleChecking')
 const routes = require('./routes/routes')
 const log = require('./services/log')
-const onFinished = require('on-finished')
+// const onFinished = require('on-finished')
 const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
@@ -112,12 +112,12 @@ app.use(function (req, res, next) {
 // Log each HTML request and it's response.
 app.use(function (req, res, next) {
   // Log response started.
-  log.info({ request: req }, 'Route Started.')
+  // log.info({ request: req }, 'Route Started.')
 
   // Log response finished.
-  onFinished(res, function () {
-    log.info({ response: res }, 'Route Complete.')
-  })
+  // onFinished(res, function () {
+  //   log.info({ response: res }, 'Route Complete.')
+  // })
 
   next()
 })
