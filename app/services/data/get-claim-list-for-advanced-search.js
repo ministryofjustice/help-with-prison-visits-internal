@@ -1,5 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const moment = require('moment')
+const log = require('../log')
 const claimStatusEnum = require('../../../app/constants/claim-status-enum')
 const rulesEnum = require('../../../app/constants/region-rules-enum')
 const dateFormatter = require('../date-formatter')
@@ -226,14 +227,16 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     applyPaymentMethodFilter(countQuery, searchCriteria.paymentMethod)
   }
 
+  log.info('before queries')
   return countQuery
     .then(function (count) {
+      log.info('count done')
       return selectQuery
         .then(function (claims) {
+          log.info(claims)
           const claimsToReturn = []
           const claimIds = claims.reduce(function (currentClaimIds, claim) {
             currentClaimIds.push(claim.ClaimId)
-            console.log('XXXX', claim.DateSubmittedFormatted, claim.DateApproved)
 
             return currentClaimIds
           }, [])
