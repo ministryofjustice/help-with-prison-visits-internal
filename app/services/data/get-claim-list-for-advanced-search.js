@@ -233,7 +233,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
           const claimsToReturn = []
           const claimIds = claims.reduce(function (currentClaimIds, claim) {
             currentClaimIds.push(claim.ClaimId)
-            console.log("XXXX", claim.DateSubmittedFormatted, claim.DateApproved)
+            console.log('XXXX', claim.DateSubmittedFormatted, claim.DateApproved)
 
             return currentClaimIds
           }, [])
