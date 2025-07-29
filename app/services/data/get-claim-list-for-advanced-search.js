@@ -226,6 +226,9 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     applyPaymentMethodFilter(countQuery, searchCriteria.paymentMethod)
   }
 
+  console.log(countQuery)
+  console.log(selectQuery)
+
   return countQuery
     .then(function (count) {
       return selectQuery
