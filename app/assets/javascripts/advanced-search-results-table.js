@@ -11,7 +11,7 @@ $(document).ready(function () {
     $('#search-results-header').show()
     $('#advanced-search-results').show()
     const dataReference = '/advanced-search-results'
-    console.log(search)
+
     $('#advanced-search-results').DataTable({
       processing: true,
       serverSide: true,
