@@ -240,7 +240,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
           return getClosedClaimsStatuses(claimIds)
             .then(function (closedClaimsStatuses) {
               return Promise.each(claims, function (claim) {
-                console.log(claim.DateSubmittedFormatted, Claim.DateReviewed)
+                console.log(claim.DateSubmittedFormatted, claim.DateReviewed)
                 claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
                 claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
                 claim.DateSubmittedMoment = moment(claim.DateSubmitted)
