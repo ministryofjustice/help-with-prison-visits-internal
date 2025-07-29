@@ -233,7 +233,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     .then(function (count) {
       log.info('count done', count)
 
-      if (count.length === 0) {
+      if (count[0].Count === 0) {
         return {
           claims: [],
           total: 0
