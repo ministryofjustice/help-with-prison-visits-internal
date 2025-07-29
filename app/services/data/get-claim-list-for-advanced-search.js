@@ -232,6 +232,14 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
   return countQuery
     .then(function (count) {
       log.info('count done', count)
+
+      if (count.length === 0) {
+        return {
+          claims: [],
+          total: 0
+        }
+      }
+
       return selectQuery
         .then(function (claims) {
           log.info(claims)
