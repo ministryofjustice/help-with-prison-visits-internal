@@ -226,9 +226,6 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
     applyPaymentMethodFilter(countQuery, searchCriteria.paymentMethod)
   }
 
-  console.log(countQuery)
-  console.log(selectQuery)
-
   return countQuery
     .then(function (count) {
       return selectQuery
@@ -243,6 +240,7 @@ module.exports = function (searchCriteria, offset, limit, isExport) {
           return getClosedClaimsStatuses(claimIds)
             .then(function (closedClaimsStatuses) {
               return Promise.each(claims, function (claim) {
+                console.log(claim.DateSubmittedFormatted, Claim.DateReviewed)
                 claim.DateSubmittedFormatted = moment(claim.DateSubmitted).format('DD/MM/YYYY - HH:mm')
                 claim.DateOfJourneyFormatted = moment(claim.DateOfJourney).format('DD/MM/YYYY')
                 claim.DateSubmittedMoment = moment(claim.DateSubmitted)
