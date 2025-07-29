@@ -70,6 +70,7 @@ module.exports = function (router) {
   router.post('/advanced-search-results', function (req, res, next) {
     authorisation.hasRoles(req, allowedRoles)
     const searchCriteria = extractSearchCriteria(req.body)
+    console.log('search', searchCriteria)
     getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body.start), parseInt(req.body.length))
       .then(function (data) {
         const claims = data.claims
