@@ -13,12 +13,12 @@
 
     {% include "includes/validation-error-messages.html" %}
 
-      <h2 class="heading-large">
+      <h2 class="govuk-heading-l">
       {{ fileUploadGuidingText[document].title }}
       </h2>
       <p>{{ fileUploadGuidingText[document].guidingText }}</p>
 
-      <h3 id="upload" class="heading-medium">Upload now</h3>
+      <h3 id="upload" class="govuk-heading-m">Upload now</h3>
 
       <form action="{{ URL }}" method="post" class="form" enctype="multipart/form-data">
 
