@@ -6,83 +6,109 @@
 
 <div class="govuk-heading-xl">Download payment files</div>
 
-<div class="grid-row">
-    <div class="govuk-grid-column-one-third">
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-third">
+    <h3 class="govuk-heading-m">SSCL Access Pay file</h3>
 
-      <h3 class="govuk-heading-m">SSCL Access Pay file</h3>
-      {% if topAccessPayFile %}
-      <a href="/download-payment-files/download?id={{ topAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(topAccessPayFile.DateCreated) }}</a>
-      {% endif %}
-      <br>
-      <br>
+    {% if topAccessPayFile %}
+      <a href="/download-payment-files/download?id={{ topAccessPayFile.PaymentFileId }}" class="govuk-link">
+        Download file for {{ dateHelper.shortDateAndTime(topAccessPayFile.DateCreated) }}
+      </a>
+    {% endif %}
 
-      {% if previousAccessPayFiles %}
-      <div class="form-group">
-        <details role="group">
-          <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Previous AccessPay files</span></summary>
-          <div class="panel panel-border-narrow" id="" aria-hidden="false">
-            <ul class="list list-bullet">
+    <br><br>
+
+    {% if previousAccessPayFiles %}
+      <div class="govuk-form-group">
+        <details class="govuk-details" data-module="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              Previous AccessPay files
+            </span>
+          </summary>
+          <div class="govuk-details__text">
+            <ul class="govuk-list govuk-list--bullet">
               {% for previousAccessPayFile in previousAccessPayFiles %}
-              <li><a href="/download-payment-files/download?id={{ previousAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(previousAccessPayFile.DateCreated) }}</a></li>
+                <li>
+                  <a href="/download-payment-files/download?id={{ previousAccessPayFile.PaymentFileId }}" class="govuk-link">
+                    Download file for {{ dateHelper.shortDateAndTime(previousAccessPayFile.DateCreated) }}
+                  </a>
+                </li>
               {% endfor %}
             </ul>
           </div>
         </details>
       </div>
-      {% endif %}
-    </div>
-
-    <div class="govuk-grid-column-one-third">
-
-        <h3 class="govuk-heading-m">APVU Access Pay file</h3>
-        {% if topApvuAccessPayFile %}
-        <a href="/download-payment-files/download?id={{ topApvuAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(topApvuAccessPayFile.DateCreated) }}</a>
-        {% endif %}
-        <br>
-        <br>
-  
-        {% if previousApvuAccessPayFiles %}
-        <div class="form-group">
-          <details role="group">
-            <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Previous Apvu AccessPay files</span></summary>
-            <div class="panel panel-border-narrow" id="" aria-hidden="false">
-              <ul class="list list-bullet">
-                {% for previousApvuAccessPayFile in previousApvuAccessPayFiles %}
-                <li><a href="/download-payment-files/download?id={{ previousApvuAccessPayFile.PaymentFileId }}" class="link">Download file for {{ dateHelper.shortDateAndTime(previousApvuAccessPayFile.DateCreated) }}</a></li>
-                {% endfor %}
-              </ul>
-            </div>
-          </details>
-        </div>
-        {% endif %}
-      </div>
-
-    <div class="govuk-grid-column-one-third">
-
-      <h3 class="govuk-heading-m">ADI Journal</h3>
-        {% if topAdiJournalFile %}
-      <a href="/download-payment-files/download?id={{ topAdiJournalFile.PaymentFileId }}" class="link">Download transactions for {{ dateHelper.shortDateAndTime(topAdiJournalFile.DateCreated) }}</a>
-      {% endif %}
-
-      <br>
-      <br>
-
-      {% if previousAdiJournalFiles %}
-      <div class="form-group">
-        <details role="group">
-          <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Previous ADI Journals</span></summary>
-          <div class="panel panel-border-narrow" id="" aria-hidden="false">
-            <ul class="list list-bullet">
-              {% for previousAdiJournalFile in previousAdiJournalFiles %}
-              <li><a href="/download-payment-files/download?id={{ previousAdiJournalFile.PaymentFileId }}" class="link">Download transactions for {{ dateHelper.shortDateAndTime(previousAdiJournalFile.DateCreated) }}</a></li>
-              {% endfor %}
-            </ul>
-          </div>
-        </details>
-      </div>
-      {% endif %}
-
-    </div>
+    {% endif %}
   </div>
+  <div class="govuk-grid-column-one-third">
+    <h3 class="govuk-heading-m">APVU Access Pay file</h3>
+
+    {% if topApvuAccessPayFile %}
+      <a href="/download-payment-files/download?id={{ topApvuAccessPayFile.PaymentFileId }}" class="govuk-link">
+        Download file for {{ dateHelper.shortDateAndTime(topApvuAccessPayFile.DateCreated) }}
+      </a>
+    {% endif %}
+
+    <br><br>
+
+    {% if previousApvuAccessPayFiles %}
+      <div class="govuk-form-group">
+        <details class="govuk-details" data-module="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              Previous APVU AccessPay files
+            </span>
+          </summary>
+          <div class="govuk-details__text">
+            <ul class="govuk-list govuk-list--bullet">
+              {% for previousApvuAccessPayFile in previousApvuAccessPayFiles %}
+                <li>
+                  <a href="/download-payment-files/download?id={{ previousApvuAccessPayFile.PaymentFileId }}" class="govuk-link">
+                    Download file for {{ dateHelper.shortDateAndTime(previousApvuAccessPayFile.DateCreated) }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </details>
+      </div>
+    {% endif %}
+  </div>
+  <div class="govuk-grid-column-one-third">
+    <h3 class="govuk-heading-m">ADI Journal</h3>
+
+    {% if topAdiJournalFile %}
+      <a href="/download-payment-files/download?id={{ topAdiJournalFile.PaymentFileId }}" class="govuk-link">
+        Download transactions for {{ dateHelper.shortDateAndTime(topAdiJournalFile.DateCreated) }}
+      </a>
+    {% endif %}
+
+    <br><br>
+
+    {% if previousAdiJournalFiles %}
+      <div class="govuk-form-group">
+        <details class="govuk-details" data-module="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              Previous ADI Journals
+            </span>
+          </summary>
+          <div class="govuk-details__text">
+            <ul class="govuk-list govuk-list--bullet">
+              {% for previousAdiJournalFile in previousAdiJournalFiles %}
+                <li>
+                  <a href="/download-payment-files/download?id={{ previousAdiJournalFile.PaymentFileId }}" class="govuk-link">
+                    Download transactions for {{ dateHelper.shortDateAndTime(previousAdiJournalFile.DateCreated) }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </details>
+      </div>
+    {% endif %}
+  </div>
+</div>
 
 {% endblock %}
