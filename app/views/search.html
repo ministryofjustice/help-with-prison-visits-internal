@@ -1,39 +1,57 @@
 {% extends "includes/layout_new.html" %}
+{% from "moj/components/search/macro.njk" import mojSearch %}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
 {% set activeMainNav = 'claims' %}
+{% set mainClasses = "app-container govuk-body" %}
 
 {% block content %}
 
-  <div class="search">
-    <form action="/search">
-      <label for="input-search-query">
-        <input id="input-search-query" type="text" name="q" class="form-control" value="{{ query }}">
-      </label>
-      <input type="submit" class="button" value="Search"></a>
-      <a id="advanced-search" href="/advanced-search-input" class="link margin-left">Advanced search</a>
-    </form>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half search">
+      {{ mojSearch({
+        action: '/search',
+        method: 'get',
+        classes: 'govuk-!-width-two-thirds',
+        input: {
+          id: 'input-search-query',
+          name: 'q'
+        },
+        button: {
+          text: 'Search'
+        }
+      }) }}
+      <a id="advanced-search" href="/advanced-search-input" class="govuk-link govuk-!-width-one-third">Advanced search</a>
+    </div>
   </div>
 
-  <h2 class="heading-medium">Search results</h2>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-xl govuk-!-margin-0">Search results</h1>
+    </div>
+  </div>
 
-  <table id="search-results" class="table">
-  	<thead>
-	  <tr>
-		<th>Ref no.</th>
-		<th>Name</th>
-    <th>Submitted</th>
-    <th>Visit Date</th>
-    <th>Status</th>
-		<th>Claim type</th>
-    <th>Assigned to</th>
-		<th></th>
-	  </tr>
-  	</thead>
-  </table>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <table id="search-results">
+        <thead>
+          <tr>
+            <th>Ref no.</th>
+            <th>Name</th>
+            <th>Submitted</th>
+            <th>Visit Date</th>
+            <th>Status</th>
+            <th>Claim type</th>
+            <th>Assigned to</th>
+            <th></th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
 {% endblock %}
 
 {% block bodyEnd %}

@@ -23,7 +23,8 @@ module.exports = function (router) {
       endDate: moment(endDate).format(audit.DATE_FORMAT),
       totalReviewClaim: percentClaim + claimCountOverThreshold,
       claimCountOverThreshold,
-      thresholdAmount
+      thresholdAmount,
+      backLinkHref: '/audit/create-report-percent'
     })
   })
 
@@ -39,7 +40,8 @@ module.exports = function (router) {
 
     if (reportId) {
       return res.render('audit/report-created', {
-        reportId
+        reportId,
+        backLinkHref: '/audit'
       })
     }
     getAllClaimsDataBelowThreshold(startDate, endDate, percentClaim, thresholdAmount).then(function (claimsDataBelowThreshold) {
@@ -48,7 +50,8 @@ module.exports = function (router) {
         updateReport(claims, startDate, endDate, claimCount).then(function (reportId) {
           addAuditSessionData(req, audit.SESSION.REPORT_ID, reportId)
           return res.render('audit/report-created', {
-            reportId
+            reportId,
+            backLinkHref: '/audit'
           })
         })
       })

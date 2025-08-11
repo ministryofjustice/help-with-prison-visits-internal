@@ -1,23 +1,16 @@
-// TEMPORARY 'compatability mode' for migration from old framework to new GOV.UK Frontend
-// $govuk-compatibility-govukelements: true;
-// $govuk-compatibility-govuktemplate: true;
-// $govuk-compatibility-govukfrontendtoolkit: true;
-
 $govuk-global-styles: true;
 $moj-images-path: "../../../node_modules/@ministryofjustice/frontend/moj/assets/images/";
 
 $moj-page-width: 1170px;
 $govuk-page-width: $moj-page-width;
 
-@import 'govuk/all';
+@import 'govuk/index';
 @import 'moj/all';
 
 // Path to assets for use with the file-url function
 // in the govuk frontend toolkit's url-helpers partial:
 $path: "/public/images/";
 
-// This includes entire govuk-elements from _govuk-elements.scss
-@import 'govuk-elements';
 
 // override default navigation anchor tags 
 .moj-header__navigation-item:first-of-type {
@@ -33,19 +26,19 @@ $path: "/public/images/";
 
 table.dataTable thead th {
     color: #005ea5;
-    padding-left: 0px!important;
-    padding-right: 0px!important;
+    padding-left: 0!important;
+    padding-right: 0!important;
 }
 
 table.dataTable tbody td {
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 
 table.dataTable tbody tr {
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 table.col-2 td:first-child {
@@ -62,7 +55,7 @@ table.no-pad-right td {
     font-weight:bold;
     border-bottom:1px solid #ccc;
     padding-bottom:10px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     margin-top: 40px;
 }
 
@@ -85,10 +78,6 @@ table.no-pad-right td {
     width: 200px;
 }
 
-.search {
-    padding: 15px 0 0 0;
-}
-
 .table-short-column {
     width: 200px;
 }
@@ -96,6 +85,7 @@ table.no-pad-right td {
 .search {
     display: flex;
     align-items: flex-end;
+    margin-bottom: govuk-spacing(6);
 }
 
 .rejection-reason {
@@ -129,7 +119,7 @@ table.no-pad-right td {
     background-color: #dee0e2;
     position: absolute;
     padding: 5px 10px 4px 10px;
-    margin: 2px 0 0px 2px;
+    margin: 2px 0 0 2px;
     border-right: 1px solid #bfc1c3
 }
 
@@ -142,7 +132,7 @@ table.no-pad-right td {
     background-color: #dee0e2;
     position: absolute;
     padding: 5px 10px 4px 10px;
-    margin: 2px 0 0px 2px;
+    margin: 2px 0 0 2px;
     border-right: 1px solid #bfc1c3
 }
 
@@ -274,8 +264,8 @@ span.bold {
 
 .select-for-form {
     float:right;
-    margin: 0px;
-    margin-top: 1.5px;
+    margin: 0;
+    margin-top: 2px;
 }
 
 .select-for-rejection {
@@ -396,7 +386,7 @@ tr.warning td:first-child{
     font-weight: bold;
     height: 1em;
     line-height: 1;
-    margin-left: 0px;
+    margin-left: 0;
     margin-right: 5px;
     padding: 2px;
     text-align: center;
@@ -423,7 +413,7 @@ tr.warning td:first-child{
     font-weight: bold;
     height: 1em;
     line-height: 1;
-    margin-left: 0px;
+    margin-left: 0;
     margin-right: 5px;
     padding: 2px;
     text-align: center;
@@ -447,7 +437,7 @@ tr.warning td:first-child{
     font-size:12px;
     height: 1em;
     line-height: 1;
-    margin-left: 0px;
+    margin-left: 0;
     margin-right: 5px;
     padding: 4px;
     text-align: center;
@@ -467,7 +457,7 @@ ul.doc-upload {
     width:100%;
     float:left;
     position:relative;
-    margin:0 0 0px 0;
+    margin:0 0 0 0;
 }
 
 .custom-file-upload input[type="file"] {
@@ -595,7 +585,7 @@ ul.sub-tabs {
 ul.sub-tabs li a{
     background: #dde0e2;
     padding:11px 11px;
-    margin: 0 4px 0px 0;
+    margin: 0 4px 0 0;
     position:relative;
     float:left;
     text-decoration:none;
@@ -614,7 +604,7 @@ ul.sub-tabs li a.active{
 
 ul.sub-tabs li a span.badge  {
     font-size: 14px;
-    padding:1px 3px 0px 4px;
+    padding:1px 3px 0 4px;
     min-width: 15px;
     display: inline-block;
     border-radius: 20px;
@@ -858,12 +848,12 @@ ul.sub-tabs li a.active span.badge {
 
 .claim-table-negative {
     position: relative;
-    left: -13px
+    left: -13px;
 }
 
 .claim-approve-different-input {
     margin: 0;
-    margin-top: 1.5px;
+    margin-top: 2px;
 }
 
 // override mojTimeline styles
