@@ -26,7 +26,8 @@ module.exports = function (router) {
         reference,
         claimData,
         isBand9,
-        isBand5
+        isBand5,
+        backLinkHref: `/audit/view-report/${reportId}`
       })
     })
   })
@@ -79,7 +80,8 @@ module.exports = function (router) {
             errors: validationErrors,
             validationValue: band == 5 ? band5Validation : band9Validation,
             isBand9,
-            isBand5
+            isBand5,
+            backLinkHref: `/audit/view-report/${reportId}`
           })
         }
       }

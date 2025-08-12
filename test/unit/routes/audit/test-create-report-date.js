@@ -2,12 +2,12 @@ const routeHelper = require('../../../helpers/routes/route-helper')
 const supertest = require('supertest')
 
 const VALID_DATA = {
-  auditReportStartDateDay: '01',
-  auditReportStartDateMonth: '01',
-  auditReportStartDateYear: '2010',
-  auditReportEndDateDay: '01',
-  auditReportEndDateMonth: '01',
-  auditReportEndDateYear: '2020'
+  'auditReportStartDate-Day': '01',
+  'auditReportStartDate-Month': '01',
+  'auditReportStartDate-Year': '2010',
+  'auditReportEndDate-Day': '01',
+  'auditReportEndDate-Month': '01',
+  'auditReportEndDate-Year': '2020'
 }
 let mockAuthorisation
 const mockHasRoles = jest.fn()

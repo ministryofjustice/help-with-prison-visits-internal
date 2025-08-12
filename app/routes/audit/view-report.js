@@ -42,7 +42,8 @@ module.exports = function (router) {
                       endDate: moment(endDate).format(audit.DATE_FORMAT),
                       claimCheckList: updatedClaimCheckList,
                       reportId,
-                      auditStatus: finalStatus
+                      auditStatus: finalStatus,
+                      backLinkHref: '/audit'
                     })
                   })
                 })
@@ -52,14 +53,16 @@ module.exports = function (router) {
                   endDate: moment(endDate).format(audit.DATE_FORMAT),
                   claimCheckList,
                   reportId,
-                  auditStatus: finalStatus
+                  auditStatus: finalStatus,
+                  backLinkHref: '/audit'
                 })
               }
             })
           })
         } else {
           res.render('audit/view-report', {
-            reportDeleted: true
+            reportDeleted: true,
+            backLinkHref: '/audit'
           })
         }
       })

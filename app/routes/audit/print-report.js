@@ -48,11 +48,13 @@ module.exports = function (router) {
             claimSelectedForVerificationCount,
             invalidVerifiedClaimCount,
             invalidConfirmedClaimCount,
-            validConfirmedClaimCount
+            validConfirmedClaimCount,
+            backLinkHref: `/audit/view-report/${reportId}`
           })
         } else {
           res.render('audit/view-report', {
-            reportDeleted: true
+            reportDeleted: true,
+            backLinkHref: `/audit/view-report/${reportId}`
           })
         }
       })

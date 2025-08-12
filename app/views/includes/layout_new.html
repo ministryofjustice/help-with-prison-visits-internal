@@ -1,12 +1,18 @@
 {% extends "govuk/template.njk" %}
-
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {%- from "moj/components/header/macro.njk" import mojHeader -%}
 
 {% block pageTitle %}
 {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
 
-{% block bodyStart %}
+{% block beforeContent %}
+  {% if backLinkHref %}
+    {{ govukBackLink({
+      text: "Back",
+      href: backLinkHref
+    }) }}
+  {% endif %}
 {% endblock %}
 
 {% block head %}
@@ -16,7 +22,8 @@
 {% block header %}
 {{ mojHeader({
   organisationLabel: {
-    text: organisationName
+    text: organisationName,
+    href: "#"
   },
   serviceLabel: {
     text: serviceName,
@@ -24,7 +31,6 @@
   },
   navigation: {
     label: 'Account navigation',
-
     items: [{
       text: serialisedName,
       active: false
@@ -34,8 +40,8 @@
     }]
   }
 }) }}
- {% include 'partials/navigation_new.html' %}
- {% endblock %}
+{% include 'partials/navigation_new.html' %}
+{% endblock %}
 
 {% block bodyEnd %}
   {% include "includes/scripts.html" %}
