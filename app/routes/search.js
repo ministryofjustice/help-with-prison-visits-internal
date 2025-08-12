@@ -12,13 +12,13 @@ const allowedRoles = [
 module.exports = function (router) {
   router.get('/search', function (req, res) {
     authorisation.hasRoles(req, allowedRoles)
-    const query = req.query.q
+    const query = req.query?.q
     return res.render('search', { query })
   })
 
   router.get('/search-results', function (req, res) {
     authorisation.hasRoles(req, allowedRoles)
-    const searchQuery = req.query.q || ''
+    const searchQuery = req.query?.q || ''
 
     if (!searchQuery) {
       return res.json({
@@ -28,7 +28,7 @@ module.exports = function (router) {
         claims: []
       })
     } else {
-      getClaimListForSearch(searchQuery, parseInt(req.query.start), parseInt(req.query.length))
+      getClaimListForSearch(searchQuery, parseInt(req.query?.start), parseInt(req.query?.length))
         .then(function (data) {
           const claims = data.claims
 
@@ -37,7 +37,7 @@ module.exports = function (router) {
             return claim
           })
           return res.json({
-            draw: req.query.draw,
+            draw: req.query?.draw,
             recordsTotal: data.total.Count,
             recordsFiltered: data.total.Count,
             claims

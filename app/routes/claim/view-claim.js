@@ -55,7 +55,7 @@ module.exports = function (router) {
       applicationRoles.BAND_9
     ]
     authorisation.hasRoles(req, allowedRoles)
-    return renderViewClaimPage(req.params.claimId, req, res)
+    return renderViewClaimPage(req.params?.claimId, req, res)
       .catch(error => next(error))
   })
 
@@ -69,7 +69,7 @@ module.exports = function (router) {
     authorisation.hasRoles(req, allowedRoles)
 
     return Promise.try(function () {
-      const claimDocumentId = req.query['claim-document-id']
+      const claimDocumentId = req.query?.['claim-document-id']
       if (!claimDocumentId) {
         throw new Error('Invalid Document ID')
       }
@@ -95,8 +95,8 @@ module.exports = function (router) {
     const needAssignmentCheck = true
     let allowedRoles = []
 
-    if (req.body.decision === claimDecisionEnum.APPROVED || req.body.decision === claimDecisionEnum.REJECTED ||
-      req.body.decision === claimDecisionEnum.REQUEST_INFORMATION) {
+    if (req.body?.decision === claimDecisionEnum.APPROVED || req.body?.decision === claimDecisionEnum.REJECTED ||
+      req.body?.decision === claimDecisionEnum.REQUEST_INFORMATION) {
       allowedRoles = [
         applicationRoles.CLAIM_PAYMENT_BAND_3,
         applicationRoles.CASEWORK_MANAGER_BAND_5
@@ -111,14 +111,14 @@ module.exports = function (router) {
   router.post('/claim/:claimId/add-deduction', function (req, res, next) {
     const needAssignmentCheck = true
     const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      const deductionType = req.body.deductionType
-      // var amount = Number(req.body.deductionAmount).toFixed(2)
-      const amount = req.body.deductionAmount
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      const deductionType = req.body?.deductionType
+      // var amount = Number(req.body?.deductionAmount).toFixed(2)
+      const amount = req.body?.deductionAmount
       const claimDeduction = new ClaimDeduction(deductionType, amount)
       claimExpenses = getClaimExpenseResponses(req.body)
 
-      return insertDeduction(req.params.claimId, claimDeduction)
+      return insertDeduction(req.params?.claimId, claimDeduction)
         .then(function () {
           return false
         })
@@ -128,7 +128,7 @@ module.exports = function (router) {
   router.post('/claim/:claimId/remove-deduction', function (req, res, next) {
     const needAssignmentCheck = true
     const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
       const removeDeductionId = getClaimDeductionId(req.body)
 
       return disableDeduction(removeDeductionId)
@@ -146,9 +146,9 @@ module.exports = function (router) {
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      const benefitExpiryDate = new BenefitExpiryDate(req.body['benefit-expiry-day'], req.body['benefit-expiry-month'], req.body['benefit-expiry-year'])
-      return updateVisitorBenefitExpiryDate(req.params.claimId, benefitExpiryDate)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      const benefitExpiryDate = new BenefitExpiryDate(req.body?.['benefit-expiry-day'], req.body?.['benefit-expiry-month'], req.body?.['benefit-expiry-year'])
+      return updateVisitorBenefitExpiryDate(req.params?.claimId, benefitExpiryDate)
         .then(function () {
           return false
         })
@@ -158,14 +158,14 @@ module.exports = function (router) {
   router.post('/claim/:claimId/update-overpayment-status', function (req, res, next) {
     const needAssignmentCheck = true
     const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return getIndividualClaimDetails(req.params.claimId)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return getIndividualClaimDetails(req.params?.claimId)
         .then(function (data) {
           const claim = data.claim
 
-          const overpaymentAmount = req.body['overpayment-amount']
-          const overpaymentRemaining = req.body['overpayment-remaining']
-          const overpaymentReason = req.body['overpayment-reason']
+          const overpaymentAmount = req.body?.['overpayment-amount']
+          const overpaymentRemaining = req.body?.['overpayment-remaining']
+          const overpaymentReason = req.body?.['overpayment-reason']
 
           const overpaymentResponse = new OverpaymentResponse(overpaymentAmount, overpaymentRemaining, overpaymentReason, claim.IsOverpaid)
 
@@ -180,8 +180,8 @@ module.exports = function (router) {
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return closeAdvanceClaim(req.params.claimId, req.body['close-advance-claim-reason'], req.user.email)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return closeAdvanceClaim(req.params?.claimId, req.body?.['close-advance-claim-reason'], req.user.email)
     })
   })
 
@@ -191,11 +191,11 @@ module.exports = function (router) {
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return getIndividualClaimDetails(req.params.claimId)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return getIndividualClaimDetails(req.params?.claimId)
         .then(function (data) {
           if (data.TopUps.allTopUpsPaid) {
-            return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params.claimId, req.body['payment-details-additional-information'], req.user.email)
+            return requestNewBankDetails(data.claim.Reference, data.claim.EligibilityId, req.params?.claimId, req.body?.['payment-details-additional-information'], req.user.email)
           } else {
             throw new Error('Bank payment details cannot be requested for a claim with an outstanding Top Up')
           }
@@ -206,13 +206,13 @@ module.exports = function (router) {
   router.post('/claim/:claimId/add-top-up', function (req, res, next) {
     const needAssignmentCheck = true
     const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return getIndividualClaimDetails(req.params.claimId)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return getIndividualClaimDetails(req.params?.claimId)
         .then(function (data) {
           if (data.claim.PaymentStatus === 'PROCESSED' && data.TopUps.allTopUpsPaid) {
             const claim = data.claim
-            const topupAmount = req.body['top-up-amount']
-            const topupReason = req.body['top-up-reason']
+            const topupAmount = req.body?.['top-up-amount']
+            const topupReason = req.body?.['top-up-reason']
             const topupResponse = new TopupResponse(topupAmount, topupReason)
             return insertTopUp(claim, topupResponse, req.user.email)
               .then(function () {
@@ -228,8 +228,8 @@ module.exports = function (router) {
   router.post('/claim/:claimId/cancel-top-up', function (req, res, next) {
     const needAssignmentCheck = true
     const allowedRoles = [applicationRoles.CLAIM_PAYMENT_BAND_3]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return getIndividualClaimDetails(req.params.claimId)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return getIndividualClaimDetails(req.params?.claimId)
         .then(function (data) {
           const claim = data.claim
           return cancelTopUp(claim, req.user.email)
@@ -246,8 +246,8 @@ module.exports = function (router) {
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return payoutBarcodeExpiredClaim(req.params.claimId, req.body['payout-barcode-expired-additional-information'])
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return payoutBarcodeExpiredClaim(req.params?.claimId, req.body?.['payout-barcode-expired-additional-information'])
     })
   })
 
@@ -257,8 +257,8 @@ module.exports = function (router) {
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return disableReferenceNumber(req.params.claimId, req.body.referenceToBeDisabled, req.body['disable-reference-number-additional-information'], req.user.email)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return disableReferenceNumber(req.params?.claimId, req.body?.referenceToBeDisabled, req.body?.['disable-reference-number-additional-information'], req.user.email)
     })
   })
 
@@ -268,8 +268,8 @@ module.exports = function (router) {
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return reEnableReferenceNumber(req.params.claimId, req.body.referenceToBeReEnabled, req.body['re-enable-reference-number-additional-information'], req.user.email)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return reEnableReferenceNumber(req.params?.claimId, req.body?.referenceToBeReEnabled, req.body?.['re-enable-reference-number-additional-information'], req.user.email)
     })
   })
 
@@ -281,11 +281,11 @@ module.exports = function (router) {
       applicationRoles.CLAIM_PAYMENT_BAND_3,
       applicationRoles.CASEWORK_MANAGER_BAND_5
     ]
-    if (!req.body['note-information']) {
+    if (!req.body?.['note-information']) {
       return handleError('Note must not be blank.', req, res, false, next)
     } else {
-      return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-        return insertNote(req.params.claimId, req.body['note-information'], req.user.email)
+      return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+        return insertNote(req.params?.claimId, req.body?.['note-information'], req.user.email)
       })
     }
   })
@@ -297,8 +297,8 @@ module.exports = function (router) {
       applicationRoles.CASEWORK_MANAGER_BAND_5,
       applicationRoles.BAND_9
     ]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return updateAssignmentOfClaims(req.params.claimId, req.user.email)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return updateAssignmentOfClaims(req.params?.claimId, req.user.email)
         .then(function () {
           return false
         })
@@ -312,8 +312,8 @@ module.exports = function (router) {
       applicationRoles.CASEWORK_MANAGER_BAND_5,
       applicationRoles.BAND_9
     ]
-    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params.claimId}`, function () {
-      return updateAssignmentOfClaims(req.params.claimId, null)
+    return validatePostRequest(req, res, next, allowedRoles, needAssignmentCheck, `/claim/${req.params?.claimId}`, function () {
+      return updateAssignmentOfClaims(req.params?.claimId, null)
     })
   })
 }
@@ -335,13 +335,13 @@ function validatePostRequest (req, res, next, allowedRoles, needAssignmentCheck,
   let updateConflict = true
 
   return Promise.try(function () {
-    return checkForUpdateConflict(req.params.claimId, req.body.lastUpdated, needAssignmentCheck, req.user.email).then(function (hasConflict) {
+    return checkForUpdateConflict(req.params?.claimId, req.body?.lastUpdated, needAssignmentCheck, req.user.email).then(function (hasConflict) {
       updateConflict = hasConflict
 
       return postFunction()
         .then(function (keepUnsubmittedChanges) {
           if (keepUnsubmittedChanges) {
-            return renderViewClaimPage(req.params.claimId, req, res, keepUnsubmittedChanges)
+            return renderViewClaimPage(req.params?.claimId, req, res, keepUnsubmittedChanges)
           } else {
             return res.redirect(redirectUrl)
           }
@@ -354,41 +354,41 @@ function validatePostRequest (req, res, next, allowedRoles, needAssignmentCheck,
 }
 
 function submitClaimDecision (req, res, claimExpenses) {
-  return getIndividualClaimDetails(req.params.claimId)
+  return getIndividualClaimDetails(req.params?.claimId)
     .then(function (data) {
       claimDeductions = data.deductions
-      return getRejectionReasonId(req.body.additionalInfoReject)
+      return getRejectionReasonId(req.body?.additionalInfoReject)
         .then(function (rejectionReasonId) {
           const claimDecision = new ClaimDecision(
             req.user.email,
-            req.body.assistedDigitalCaseworker,
-            req.body.decision,
-            req.body.additionalInfoApprove,
-            req.body.additionalInfoRequest,
-            req.body.additionalInfoReject,
-            req.body.nomisCheck,
-            req.body.dwpCheck,
-            req.body.visitConfirmationCheck,
+            req.body?.assistedDigitalCaseworker,
+            req.body?.decision,
+            req.body?.additionalInfoApprove,
+            req.body?.additionalInfoRequest,
+            req.body?.additionalInfoReject,
+            req.body?.nomisCheck,
+            req.body?.dwpCheck,
+            req.body?.visitConfirmationCheck,
             claimExpenses,
             claimDeductions,
-            req.body.isAdvanceClaim,
+            req.body?.isAdvanceClaim,
             rejectionReasonId,
-            req.body.additionalInfoRejectManual,
-            req.body['benefit-expiry-day'],
-            req.body['benefit-expiry-month'],
-            req.body['benefit-expiry-year'],
-            req.body['release-date-is-set'],
-            req.body['release-day'],
-            req.body['release-month'],
-            req.body['release-year']
+            req.body?.additionalInfoRejectManual,
+            req.body?.['benefit-expiry-day'],
+            req.body?.['benefit-expiry-month'],
+            req.body?.['benefit-expiry-year'],
+            req.body?.['release-date-is-set'],
+            req.body?.['release-day'],
+            req.body?.['release-month'],
+            req.body?.['release-year']
           )
-          return SubmitClaimResponse(req.params.claimId, claimDecision)
+          return SubmitClaimResponse(req.params?.claimId, claimDecision)
             .then(function () {
               if (claimDecision.decision === claimDecisionEnum.APPROVED) {
-                const isTrusted = req.body['is-trusted'] === 'on'
-                const untrustedReason = req.body['untrusted-reason']
+                const isTrusted = req.body?.['is-trusted'] === 'on'
+                const untrustedReason = req.body?.['untrusted-reason']
 
-                return updateEligibilityTrustedStatus(req.params.claimId, isTrusted, untrustedReason)
+                return updateEligibilityTrustedStatus(req.params?.claimId, isTrusted, untrustedReason)
               }
             })
         })
@@ -435,15 +435,15 @@ function renderViewClaimPage (claimId, req, res, keepUnsubmittedChanges) {
 
 function handleError (error, req, res, updateConflict, next) {
   if (error instanceof ValidationError) {
-    return getIndividualClaimDetails(req.params.claimId)
+    return getIndividualClaimDetails(req.params?.claimId)
       .then(function (data) {
         if (data.claim && data.claimExpenses && !updateConflict && claimExpenses) {
           populateNewData({ data, req })
         }
         if (req.route.path.includes('/update-benefit-expiry-date')) {
-          data.claim.expiryDay = req.body['benefit-expiry-day']
-          data.claim.expiryMonth = req.body['benefit-expiry-month']
-          data.claim.expiryYear = req.body['benefit-expiry-year']
+          data.claim.expiryDay = req.body?.['benefit-expiry-day']
+          data.claim.expiryMonth = req.body?.['benefit-expiry-month']
+          data.claim.expiryYear = req.body?.['benefit-expiry-year']
         }
         return getRejectionReasons()
           .then(function (rejectionReasons) {
@@ -457,28 +457,28 @@ function handleError (error, req, res, updateConflict, next) {
 }
 
 function populateNewData ({ data, req, keepUnassignedChanges = false }) {
-  data.claim.NomisCheck = req.body.nomisCheck
-  data.claim.DWPCheck = req.body.dwpCheck
-  data.claim.VisitConfirmationCheck = req.body.visitConfirmationCheck
+  data.claim.NomisCheck = req.body?.nomisCheck
+  data.claim.DWPCheck = req.body?.dwpCheck
+  data.claim.VisitConfirmationCheck = req.body?.visitConfirmationCheck
   if (keepUnassignedChanges || data.claim.AssignedTo) {
     data.claimExpenses = mergeClaimExpensesWithSubmittedResponses(data.claimExpenses, claimExpenses)
   }
-  data.claim.expiryDay = req.body['benefit-expiry-day']
-  data.claim.expiryMonth = req.body['benefit-expiry-month']
-  data.claim.expiryYear = req.body['benefit-expiry-year']
-  data.claim.ReleaseDateIsSet = Boolean(req.body['release-date-is-set'])
+  data.claim.expiryDay = req.body?.['benefit-expiry-day']
+  data.claim.expiryMonth = req.body?.['benefit-expiry-month']
+  data.claim.expiryYear = req.body?.['benefit-expiry-year']
+  data.claim.ReleaseDateIsSet = Boolean(req.body?.['release-date-is-set'])
   if (data.latestUnpaidTopUp) {
-    data.latestUnpaidTopUp.TopUpAmount = req.body['top-up-amount']
-    data.latestUnpaidTopUp.Reason = req.body['top-up-reason']
+    data.latestUnpaidTopUp.TopUpAmount = req.body?.['top-up-amount']
+    data.latestUnpaidTopUp.Reason = req.body?.['top-up-reason']
   } else {
     data.latestUnpaidTopUp = {
-      TopUpAmount: req.body['top-up-amount'],
-      Reason: req.body['top-up-reason']
+      TopUpAmount: req.body?.['top-up-amount'],
+      Reason: req.body?.['top-up-reason']
     }
   }
-  data.claim.releaseDay = req.body['release-day']
-  data.claim.releaseMonth = req.body['release-month']
-  data.claim.releaseYear = req.body['release-year']
+  data.claim.releaseDay = req.body?.['release-day']
+  data.claim.releaseMonth = req.body?.['release-month']
+  data.claim.releaseYear = req.body?.['release-year']
 }
 
 function renderValues (data, req, error) {
@@ -508,15 +508,15 @@ function renderValues (data, req, error) {
     errors: error.validationErrors,
     unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry),
     latestUnpaidTopUp: data.latestUnpaidTopUp,
-    topUpAmount: req.body['top-up-amount'],
-    topUpReason: req.body['top-up-reason'],
+    topUpAmount: req.body?.['top-up-amount'],
+    topUpReason: req.body?.['top-up-reason'],
     errorWasThrown: true
   }
   if (data.rejectionReasons) {
     displayJson.rejectionReasons = data.rejectionReasons
   }
-  if (req.body.additionalInfoReject) {
-    displayJson.selectedRejectReason = req.body.additionalInfoReject
+  if (req.body?.additionalInfoReject) {
+    displayJson.selectedRejectReason = req.body?.additionalInfoReject
   }
   return displayJson
 }

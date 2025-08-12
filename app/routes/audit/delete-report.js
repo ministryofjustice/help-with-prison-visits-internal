@@ -7,8 +7,8 @@ let validationErrors
 module.exports = function (router) {
   router.post('/audit/delete-report', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
-    const reportId = req.body.reportId
-    const deleteConfirmation = req.body.deleteConfirmation
+    const reportId = req.body?.reportId
+    const deleteConfirmation = req.body?.deleteConfirmation
     validationErrors = {}
     if (!deleteConfirmation) {
       validationErrors.deleteConfirmation = ['Please select one of the choices']
@@ -36,7 +36,7 @@ module.exports = function (router) {
 
   router.post('/audit/delete-report-confirmation', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
-    const reportId = req.body.reportId
+    const reportId = req.body?.reportId
 
     res.render('audit/delete-report-confirmation', {
       reportId,

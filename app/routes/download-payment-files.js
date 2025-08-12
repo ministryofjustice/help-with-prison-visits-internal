@@ -52,7 +52,7 @@ module.exports = function (router) {
   router.get('/download-payment-files/download', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.HWPV_SSCL])
 
-    const id = parseInt(req.query.id)
+    const id = parseInt(req.query?.id)
     if (id) {
       getDirectPaymentFiles()
         .then(async function (directPaymentFiles) {

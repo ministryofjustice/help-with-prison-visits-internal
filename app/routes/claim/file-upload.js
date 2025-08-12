@@ -24,10 +24,10 @@ module.exports = function (router) {
 
     csrfToken = generateCSRFToken(req)
 
-    if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params.documentType)) {
+    if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params?.documentType)) {
       return res.render('claim/file-upload', {
-        claimType: req.params.claimType,
-        document: req.params.documentType,
+        claimType: req.params?.claimType,
+        document: req.params?.documentType,
         fileUploadGuidingText: DocumentTypeEnum,
         URL: req.url
       })
@@ -58,7 +58,7 @@ module.exports = function (router) {
 
         const originalUploadPath = getFileUploadPath(req)
 
-        if (!Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params.documentType)) {
+        if (!Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params?.documentType)) {
           throw new Error('Not a valid document type')
         }
 
@@ -76,12 +76,12 @@ module.exports = function (router) {
           }
         }
 
-        const fileUpload = new FileUpload(req.file, req.error, req.query.claimDocumentId, req.user.email)
+        const fileUpload = new FileUpload(req.file, req.error, req.query?.claimDocumentId, req.user.email)
 
         await aws.upload(targetFileName, originalUploadPath)
 
-        ClaimDocumentUpdate(req.params.referenceId, fileUpload).then(function () {
-          return res.redirect(`/claim/${req.params.claimId}`)
+        ClaimDocumentUpdate(req.params?.referenceId, fileUpload).then(function () {
+          return res.redirect(`/claim/${req.params?.claimId}`)
         }).catch(function (error) {
           next(error)
         })
@@ -89,8 +89,8 @@ module.exports = function (router) {
         if (error instanceof ValidationError) {
           return res.status(400).render('claim/file-upload', {
             errors: error.validationErrors,
-            claimType: req.params.claimType,
-            document: req.params.documentType,
+            claimType: req.params?.claimType,
+            document: req.params?.documentType,
             fileUploadGuidingText: DocumentTypeEnum,
             URL: req.url,
             csrfToken
