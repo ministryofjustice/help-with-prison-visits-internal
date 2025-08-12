@@ -70,7 +70,7 @@ module.exports = function (router) {
   router.post('/advanced-search-results', function (req, res, next) {
     authorisation.hasRoles(req, allowedRoles)
     const searchCriteria = extractSearchCriteria(req.body)
-    getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body.start), parseInt(req.body.length))
+    getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body?.start), parseInt(req.body?.length))
       .then(function (data) {
         const claims = data.claims
         claims.map(function (claim) {
@@ -88,7 +88,7 @@ module.exports = function (router) {
         }
 
         return res.json({
-          draw: req.body.draw,
+          draw: req.body?.draw,
           recordsTotal: data.total.Count,
           recordsFiltered: data.total.Count,
           claims

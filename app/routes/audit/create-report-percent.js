@@ -29,7 +29,7 @@ module.exports = function (router) {
   router.post('/audit/create-report-percent', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
     validationErrors = {}
-    const auditReportPercent = req.body.auditReportPercent
+    const auditReportPercent = req.body?.auditReportPercent
 
     if (!auditReportPercent || isNaN(auditReportPercent)) {
       validationErrors.auditReportPercent = ['Enter the percentage in numbers']

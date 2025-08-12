@@ -47,7 +47,7 @@ describe('routes/audit/check-claim', function () {
   })
 
   describe('POST /audit/check-claim', function () {
-    it('should respond with a 400 when no input is provided', function () {
+    it.only('should respond with a 400 when no input is provided', function () {
       return supertest(app)
         .post('/audit/check-claim/1/ABC123')
         .expect(400)

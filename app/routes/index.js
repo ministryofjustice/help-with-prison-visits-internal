@@ -16,7 +16,7 @@ module.exports = function (router) {
 
     res.render('index', {
       title: 'HwPV index',
-      active: req.query.status
+      active: req.query?.status
     })
   })
 
@@ -26,7 +26,7 @@ module.exports = function (router) {
     let sortType
     let sortOrder
 
-    if (req.query.order) {
+    if (req.query?.order) {
       switch (req.query.order[0].column) {
         case '2':
           sortType = 'Claim.DateSubmitted'
@@ -50,7 +50,7 @@ module.exports = function (router) {
     }
 
     let advanceClaims = false
-    let status = req.params.status
+    let status = req.params?.status
     if (status === 'ADVANCE') {
       advanceClaims = true
       status = [claimStatusEnum.NEW.value]
@@ -70,7 +70,7 @@ module.exports = function (router) {
       status = [status]
     }
 
-    getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
+    getClaimsListAndCount(status, advanceClaims, parseInt(req.query?.start), parseInt(req.query?.length), req.user.email, sortType, sortOrder)
       .then(function (data) {
         const claims = data.claims
         claims.map(function (claim) {
@@ -79,7 +79,7 @@ module.exports = function (router) {
         })
 
         return res.json({
-          draw: req.query.draw,
+          draw: req.query?.draw,
           recordsTotal: data.total.Count,
           recordsFiltered: data.total.Count,
           claims
@@ -96,7 +96,7 @@ module.exports = function (router) {
     let sortType
     let sortOrder = 'desc'
 
-    if (req.query.order) {
+    if (req.query?.order) {
       switch (req.query.order[0].column) {
         case '2':
           sortType = 'Claim.DateSubmitted'
@@ -114,16 +114,16 @@ module.exports = function (router) {
           sortType = 'Claim.DateSubmitted'
           sortOrder = 'asc'
       }
-    } else if (req.params.sortType === 'updated') {
+    } else if (req.params?.sortType === 'updated') {
       sortType = 'Claim.LastUpdated'
-    } else if (req.params.sortType === 'visit') {
+    } else if (req.params?.sortType === 'visit') {
       sortType = 'Claim.DateOfJourney'
     } else {
       sortType = 'Claim.DateSubmitted'
     }
 
     let advanceClaims = false
-    let status = req.params.status
+    let status = req.params?.status
     if (status === 'ADVANCE') {
       advanceClaims = true
       status = [claimStatusEnum.NEW.value]
@@ -143,7 +143,7 @@ module.exports = function (router) {
       status = [status]
     }
 
-    getClaimsListAndCount(status, advanceClaims, parseInt(req.query.start), parseInt(req.query.length), req.user.email, sortType, sortOrder)
+    getClaimsListAndCount(status, advanceClaims, parseInt(req.query?.start), parseInt(req.query?.length), req.user.email, sortType, sortOrder)
       .then(function (data) {
         const claims = data.claims
         claims.map(function (claim) {
@@ -152,7 +152,7 @@ module.exports = function (router) {
         })
 
         return res.json({
-          draw: req.query.draw,
+          draw: req.query?.draw,
           recordsTotal: data.total.Count,
           recordsFiltered: data.total.Count,
           claims
