@@ -26,7 +26,6 @@ generic-service:
   
   env:
     FILE_ARCHIVE_LOCATION: '/archive'
-    LOGGING_LEVEL: 'DEBUG'
     APVS_MOJ_SSO_AUTHENTICATION_ENABLED: 'true'
     APVS_MOJ_SSO_TOKEN_PATH: '/oauth/token'
     APVS_MOJ_SSO_AUTHORIZE_PATH: '/oauth/authorize'
