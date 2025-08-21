@@ -14,10 +14,9 @@ module.exports = function (router) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
     const isBand9 = req.user.roles.includes(applicationRoles.BAND_9)
     const isBand5 = req.user.roles.includes(applicationRoles.CASEWORK_MANAGER_BAND_5)
-    const {
-      reportId,
-      reference
-    } = req.params
+    const reportId = req.params?.reportId
+    const reference = req.params?.reference
+
     getClaimData(reference, reportId).then(function (result) {
       const claimData = result[0]
       addAuditSessionData(req, audit.SESSION.CLAIM_DATA, claimData)
@@ -35,17 +34,16 @@ module.exports = function (router) {
   router.post('/audit/check-claim/:reportId/:reference', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
     validationErrors = {}
-    const {
-      reportId,
-      reference
-    } = req.params
-    const {
-      band,
-      band5Validation,
-      band5Description,
-      band9Validation,
-      band9Description
-    } = req.body
+
+    const reportId = req.params?.reportId
+    const reference = req.params?.reference
+
+    const band = req.body?.band
+    const band5Validation = req.body?.band5Validation
+    const band5Description = req.body?.band5Description
+    const band9Validation = req.body?.band9Validation
+    const band9Description = req.body?.band9Description
+
     const claimData = band == 5 ? {
       Band5Validity: band5Validation,
       Band5Description: band5Description,

@@ -35,7 +35,7 @@ function updateClaim (claimId, note) {
   }
 
   return db('Claim').where('ClaimId', claimId).update(updateObject).then(
-    log.info('Claim ID ' + claimId + ' note added: ' + updateObject.Note)
+    log.info(`Claim ID ${claimId} note added: ${updateObject.Note}`)
   )
 }
 

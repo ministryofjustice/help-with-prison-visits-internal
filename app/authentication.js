@@ -116,19 +116,19 @@ module.exports = function (app) {
                       }
                     })
                     .catch(function (error) {
-                      log.error({ error }, 'error returned when requesting user roles from SSO')
+                      log.error(error, 'error returned when requesting user roles from SSO')
                       done(error, null)
                     })
                 }
               })
               .catch(function (error) {
-                log.error({ error }, 'error returned when requesting user email from SSO')
+                log.error(error, 'error returned when requesting user email from SSO')
                 done(error, null)
               })
           }
         })
         .catch(function (error) {
-          log.error({ error }, 'error returned when requesting user details from SSO')
+          log.error(error, 'error returned when requesting user details from SSO')
           done(error, null)
         })
     }))

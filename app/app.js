@@ -9,7 +9,6 @@ const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
 const roleCheckingMiddleware = require('./middleware/roleChecking')
 const routes = require('./routes/routes')
 const log = require('./services/log')
-const onFinished = require('on-finished')
 const authentication = require('./authentication')
 const cookieParser = require('cookie-parser')
 const csurf = require('csurf')
@@ -106,19 +105,6 @@ app.use(function (req, res, next) {
   next()
 })
 
-// Log each HTML request and it's response.
-app.use(function (req, res, next) {
-  // Log response started.
-  log.info({ request: req }, 'Route Started.')
-
-  // Log response finished.
-  onFinished(res, function () {
-    log.info({ response: res }, 'Route Complete.')
-  })
-
-  next()
-})
-
 // Use cookie parser middleware (required for csurf)
 app.use(cookieParser(config.INT_APPLICATION_SECRET, { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' }))
 
@@ -166,7 +152,7 @@ app.use(function (req, res, next) {
 // catch CSRF token errors
 app.use(function (err, req, res, next) {
   if (err.code !== 'EBADCSRFTOKEN') return next(err)
-  log.error({ error: err })
+  log.error(err)
   res.status(403)
   res.render('includes/error', {
     error: 'Invalid CSRF token'
@@ -175,7 +161,7 @@ app.use(function (err, req, res, next) {
 
 // Development error handler.
 app.use(function (err, req, res, next) {
-  log.error({ error: err })
+  log.error(err)
   res.status(err.status || 500)
   if (err.status === 404) {
     res.render('includes/error-404')

@@ -1,7 +1,6 @@
 const express = require('express')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
-const onFinished = require('on-finished')
 const log = require('./services/log')
 
 const app = express()
@@ -50,19 +49,6 @@ app.use(function (req, res, next) {
   next()
 })
 
-// Log each HTML request and it's response.
-app.use(function (req, res, next) {
-  // Log response started.
-  log.info({ request: req }, 'Route Started.')
-
-  // Log response finished.
-  onFinished(res, function () {
-    log.info({ response: res }, 'Route Complete.')
-  })
-
-  next()
-})
-
 // Display maintenance page
 app.use(function (req, res, next) {
   res.render('includes/maintenance')
@@ -78,7 +64,7 @@ app.use(function (req, res, next) {
 
 // Development error handler.
 app.use(function (err, req, res, next) {
-  log.error({ error: err })
+  log.error(err)
   res.status(err.status || 500)
   if (err.status === 404) {
     res.render('includes/error-404')
