@@ -11,9 +11,9 @@
     <h3 class="govuk-heading-m">SSCL Access Pay file</h3>
 
     {% if topAccessPayFile %}
-      <a href="/download-payment-files/download?id={{ topAccessPayFile.PaymentFileId }}" class="govuk-link">
+      <p class="govuk-body"><a href="/download-payment-files/download?id={{ topAccessPayFile.PaymentFileId }}" class="govuk-link">
         Download file for {{ dateHelper.shortDateAndTime(topAccessPayFile.DateCreated) }}
-      </a>
+      </a></p>
     {% endif %}
 
     <br><br>
@@ -45,9 +45,9 @@
     <h3 class="govuk-heading-m">APVU Access Pay file</h3>
 
     {% if topApvuAccessPayFile %}
-      <a href="/download-payment-files/download?id={{ topApvuAccessPayFile.PaymentFileId }}" class="govuk-link">
+      <p class="govuk-body"><a href="/download-payment-files/download?id={{ topApvuAccessPayFile.PaymentFileId }}" class="govuk-link">
         Download file for {{ dateHelper.shortDateAndTime(topApvuAccessPayFile.DateCreated) }}
-      </a>
+      </a></p>
     {% endif %}
 
     <br><br>
@@ -79,9 +79,9 @@
     <h3 class="govuk-heading-m">ADI Journal</h3>
 
     {% if topAdiJournalFile %}
-      <a href="/download-payment-files/download?id={{ topAdiJournalFile.PaymentFileId }}" class="govuk-link">
+      <p class="govuk-body"><a href="/download-payment-files/download?id={{ topAdiJournalFile.PaymentFileId }}" class="govuk-link">
         Download transactions for {{ dateHelper.shortDateAndTime(topAdiJournalFile.DateCreated) }}
-      </a>
+      </a></p>
     {% endif %}
 
     <br><br>

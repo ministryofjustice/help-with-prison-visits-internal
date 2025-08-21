@@ -11,24 +11,6 @@
 {% block content %}
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half search">
-      {{ mojSearch({
-        action: '/search',
-        method: 'get',
-        classes: 'govuk-!-width-two-thirds',
-        input: {
-          id: 'input-search-query',
-          name: 'q'
-        },
-        button: {
-          text: 'Search'
-        }
-      }) }}
-      <a id="advanced-search" href="/advanced-search-input" class="govuk-link govuk-!-width-one-third">Advanced search</a>
-    </div>
-  </div>
-
-  <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
       <h1 class="govuk-heading-xl govuk-!-margin-0">Search results</h1>
     </div>
