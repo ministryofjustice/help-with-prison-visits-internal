@@ -104,7 +104,6 @@
     "moment": "^2.30.1",
     "multer": "^2.0.2",
     "nunjucks": "^3.2.4",
-    "on-finished": "^2.4.1",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
     "path": "^0.12.7",

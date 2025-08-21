@@ -1,7 +1,6 @@
 const express = require('express')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
-const onFinished = require('on-finished')
 const log = require('./services/log')
 
 const app = express()
@@ -47,19 +46,6 @@ app.use(function (req, res, next) {
   } else {
     res.locals.serialisedName = nameSerialiser(res.locals.user.name)
   }
-  next()
-})
-
-// Log each HTML request and it's response.
-app.use(function (req, res, next) {
-  // Log response started.
-  log.info({ request: req }, 'Route Started.')
-
-  // Log response finished.
-  onFinished(res, function () {
-    log.info({ response: res }, 'Route Complete.')
-  })
-
   next()
 })
 
