@@ -64,7 +64,7 @@ app.use(function (req, res, next) {
 
 // Development error handler.
 app.use(function (err, req, res, next) {
-  log.error({ error: err })
+  log.error(err)
   res.status(err.status || 500)
   if (err.status === 404) {
     res.render('includes/error-404')
