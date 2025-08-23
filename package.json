@@ -116,7 +116,7 @@
     "validator": "^13.15.15"
   },
   "devDependencies": {
-    "cypress": "^14.5.4",
+    "cypress": "^15.0.0",
     "jest": "^30.0.5",
     "jest-html-reporter": "^4.3.0",
     "jest-junit": "^16.0.0",
