@@ -12,7 +12,7 @@ const updateAuditStatus = require('../../services/data/audit/update-audit-data')
 module.exports = function (router) {
   router.get('/audit/view-report/:reportId', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
-    const reportId = req.params.reportId
+    const reportId = req.params?.reportId
     getReportData(reportId).then(function (result) {
       getReportDates(reportId).then(function (dates) {
         if (result) {

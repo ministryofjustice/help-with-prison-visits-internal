@@ -4,7 +4,7 @@ const log = require('../services/log')
 
 module.exports = function (router) {
   router.get('/logout', function (req, res, next) {
-    log.info({ user: req.user }, 'logout')
+    log.info(req.user, 'logout')
     const redirectUrl = `${config.TOKEN_HOST}${config.LOGOUT_PATH}?client_id=${config.CLIENT_ID}&redirect_uri=${config.POST_LOGOUT_URL}`
 
     if (req.user) {
@@ -25,7 +25,7 @@ module.exports = function (router) {
   )
 
   router.get('/unauthorized', function (req, res) {
-    log.info({ user: req.user }, 'unauthorized')
+    log.info(req.user, 'unauthorized')
     return res.status(401).render('includes/error-401', { title: 'HwPV - unauthorized' })
   })
 }

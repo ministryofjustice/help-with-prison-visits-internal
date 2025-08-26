@@ -100,7 +100,7 @@ function updateClaim (claimId, caseworker, decision, note, visitConfirmationChec
   }
 
   return db('Claim').where('ClaimId', claimId).update(updateObject).then(
-    log.info('Claim ID ' + claimId + ' Closed with Status: ' + updateObject.Status)
+    log.info(`Claim ID ${claimId} Closed with Status: ${updateObject.Status}`)
   )
 }
 

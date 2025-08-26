@@ -8,7 +8,7 @@ const getReportDates = require('../../services/data/audit/get-report-dates')
 module.exports = function (router) {
   router.post('/audit/print-report', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
-    const reportId = req.body.reportId
+    const reportId = req.body?.reportId
 
     getReportData(reportId).then(function (claims) {
       getReportDates(reportId).then(function (dates) {

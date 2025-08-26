@@ -34,23 +34,23 @@ module.exports = function (router) {
   router.post('/config', function (req, res, next) {
     authorisation.hasRoles(req, [applicationRoles.BAND_9])
 
-    const rulesDisabled = generateRulesDisabled(req.body.rulesEnabled || [])
+    const rulesDisabled = generateRulesDisabled(req.body?.rulesEnabled || [])
     try {
       const autoApprovalConfig = new AutoApprovalConfig(
         req.user.email,
-        req.body.AutoApprovalEnabled,
-        req.body.CostVariancePercentage,
-        req.body.MaxClaimTotal,
-        req.body.MaxDaysAfterAPVUVisit,
-        req.body.MaxNumberOfClaimsPerYear,
-        req.body.MaxNumberOfClaimsPerMonth,
-        req.body.NumberOfConsecutiveAutoApprovals,
+        req.body?.AutoApprovalEnabled,
+        req.body?.CostVariancePercentage,
+        req.body?.MaxClaimTotal,
+        req.body?.MaxDaysAfterAPVUVisit,
+        req.body?.MaxNumberOfClaimsPerYear,
+        req.body?.MaxNumberOfClaimsPerMonth,
+        req.body?.NumberOfConsecutiveAutoApprovals,
         rulesDisabled
       )
 
       const auditConfig = new AuditConfig(
-        req.body.AuditThreshold,
-        req.body.VerificationPercentage
+        req.body?.AuditThreshold,
+        req.body?.VerificationPercentage
       )
 
       updateAutoApprovalConfig(autoApprovalConfig)
@@ -70,11 +70,11 @@ module.exports = function (router) {
       if (error instanceof ValidationError) {
         const autoApprovalConfig = {
           ...req.body,
-          AutoApprovalEnabled: req.body.AutoApprovalEnabled === 'true'
+          AutoApprovalEnabled: req.body?.AutoApprovalEnabled === 'true'
         }
         const auditConfig = {
-          ThresholdAmount: req.body.ThresholdAmount,
-          VerificationPercent: req.body.VerificationPercentage
+          ThresholdAmount: req.body?.ThresholdAmount,
+          VerificationPercent: req.body?.VerificationPercentage
         }
         const errors = error.validationErrors
         res.status(400).render('config', {

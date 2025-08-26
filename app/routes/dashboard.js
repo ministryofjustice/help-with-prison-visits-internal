@@ -13,7 +13,7 @@ module.exports = function (router) {
   router.get('/dashboard', function (req, res) {
     authorisation.hasRoles(req, allowedRoles)
 
-    const filter = req.query.filter || dashboardFilterEnum.TODAY
+    const filter = req.query?.filter || dashboardFilterEnum.TODAY
 
     return getDashboardData(filter)
       .then(function (dashboardData) {
