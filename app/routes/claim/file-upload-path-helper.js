@@ -1,11 +1,9 @@
-const R = require('ramda')
-
 const getFileUploadPath = function (req) {
-  return R.pathOr('', ['file', 'path'], req)
+  return req.file?.path ?? ''
 }
 
 const getUploadFilename = function (req) {
-  return R.path(['file', 'filename'], req)
+  return req.file?.filename
 }
 
 const getFilenamePrefix = function (params, query) {
