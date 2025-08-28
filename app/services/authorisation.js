@@ -1,5 +1,3 @@
-const log = require('./log')
-
 function isAuthenticated (req) {
   if (!req.user) {
     const error = new Error(`Unauthorized at ${req.originalUrl}`)
