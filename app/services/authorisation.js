@@ -1,7 +1,8 @@
-// APVS0246
+const log = require('./log')
+
 function isAuthenticated (req) {
   if (!req.user) {
-    const error = new Error('Unauthorized')
+    const error = new Error(`Unauthorized at ${req.originalUrl}`)
     error.status = 401
     throw error
   }
@@ -17,7 +18,7 @@ function hasRoles (req, roles) {
     }
   })
   if (!hasDesiredRole) {
-    const error = new Error('Forbidden')
+    const error = new Error(`Forbidden at ${req.originalUrl}`)
     error.status = 403
     throw error
   }
