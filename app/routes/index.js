@@ -29,9 +29,9 @@ module.exports = router => {
     let sortOrder
 
     log.info(JSON.stringify(req.query))
-    log.info(req.query?.order[0])
+    log.info(req.query?.order)
 
-    if (req.query?.order[0]) {
+    if (req.query?.order) {
       switch (req.query.order[0].column) {
         case '2':
           sortType = 'Claim.DateSubmitted'
