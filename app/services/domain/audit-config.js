@@ -3,17 +3,14 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 
 class AuditConfig {
-  constructor (
-    thresholdAmount,
-    verificationPercent
-  ) {
+  constructor(thresholdAmount, verificationPercent) {
     this.thresholdAmount = thresholdAmount || ''
     this.verificationPercent = verificationPercent || ''
 
     this.IsValid()
   }
 
-  IsValid () {
+  IsValid() {
     const errors = ErrorHandler()
 
     FieldValidator(this.thresholdAmount, 'audit-threshold', errors)

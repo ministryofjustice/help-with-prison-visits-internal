@@ -1,7 +1,7 @@
-const dateFormatter = require('../../../../app/services/date-formatter')
-const dashboardFilterEnum = require('../../../../app/constants/dashboard-filter-enum')
+const dateFormatter = require('../../date-formatter')
+const dashboardFilterEnum = require('../../../constants/dashboard-filter-enum')
 
-module.exports = function (query, filter) {
+module.exports = (query, filter) => {
   switch (filter) {
     case dashboardFilterEnum.TODAY:
       return applyTodayFilter(query, filter)
@@ -22,54 +22,59 @@ module.exports = function (query, filter) {
   }
 }
 
-function applyTodayFilter (query, filter) {
+function applyTodayFilter(query) {
   const startOfToday = dateFormatter.now().startOf('day')
 
   return query.where('DateSubmitted', '>=', startOfToday.toDate())
 }
 
-function applyYesterdayFilter (query, filter) {
+function applyYesterdayFilter(query) {
   const startOfYesterday = dateFormatter.now().subtract(1, 'days').startOf('day')
   const endOfYesterday = dateFormatter.now().subtract(1, 'days').endOf('day')
 
-  return query.where('DateSubmitted', '>=', startOfYesterday.toDate())
+  return query
+    .where('DateSubmitted', '>=', startOfYesterday.toDate())
     .andWhere('DateSubmitted', '<=', endOfYesterday.toDate())
 }
 
-function applyLastWeekFilter (query, filter) {
+function applyLastWeekFilter(query) {
   const startOf7DaysAgo = dateFormatter.now().subtract(7, 'days').startOf('day')
 
   return query.where('DateSubmitted', '>=', startOf7DaysAgo.toDate())
 }
 
-function applyOneMonthAgoFilter (query, filter) {
+function applyOneMonthAgoFilter(query) {
   const startOfPreviousMonth = dateFormatter.now().subtract(1, 'months').startOf('month')
   const endOfPreviousMonth = dateFormatter.now().subtract(1, 'months').endOf('month')
 
-  return query.where('DateSubmitted', '>=', startOfPreviousMonth.toDate())
+  return query
+    .where('DateSubmitted', '>=', startOfPreviousMonth.toDate())
     .andWhere('DateSubmitted', '<=', endOfPreviousMonth.toDate())
 }
 
-function applyTwoMonthsAgoFilter (query, filter) {
+function applyTwoMonthsAgoFilter(query) {
   const startOfTwoMonthsAgo = dateFormatter.now().subtract(2, 'months').startOf('month')
   const endOfTwoMonthsAgo = dateFormatter.now().subtract(2, 'months').endOf('month')
 
-  return query.where('DateSubmitted', '>=', startOfTwoMonthsAgo.toDate())
+  return query
+    .where('DateSubmitted', '>=', startOfTwoMonthsAgo.toDate())
     .andWhere('DateSubmitted', '<=', endOfTwoMonthsAgo.toDate())
 }
 
-function applyThreeMonthsAgoFilter (query, filter) {
+function applyThreeMonthsAgoFilter(query) {
   const startOfThreeMonthsAgo = dateFormatter.now().subtract(3, 'months').startOf('month')
   const endOfThreeMonthsAgo = dateFormatter.now().subtract(3, 'months').endOf('month')
 
-  return query.where('DateSubmitted', '>=', startOfThreeMonthsAgo.toDate())
+  return query
+    .where('DateSubmitted', '>=', startOfThreeMonthsAgo.toDate())
     .andWhere('DateSubmitted', '<=', endOfThreeMonthsAgo.toDate())
 }
 
-function applyFourMonthsAgoFilter (query, filter) {
+function applyFourMonthsAgoFilter(query) {
   const startOfFourMonthsAgo = dateFormatter.now().subtract(4, 'months').startOf('month')
   const endOfFourMonthsAgo = dateFormatter.now().subtract(4, 'months').endOf('month')
 
-  return query.where('DateSubmitted', '>=', startOfFourMonthsAgo.toDate())
+  return query
+    .where('DateSubmitted', '>=', startOfFourMonthsAgo.toDate())
     .andWhere('DateSubmitted', '<=', endOfFourMonthsAgo.toDate())
 }

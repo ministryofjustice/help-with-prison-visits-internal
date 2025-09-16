@@ -1,16 +1,15 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (reason) {
+module.exports = reason => {
   const db = getDatabaseConnector()
 
   return db('ClaimRejectionReason')
     .first('ClaimRejectionReasonId')
     .where('RejectionReason', reason)
-    .then(function (result) {
+    .then(result => {
       if (result) {
         return result.ClaimRejectionReasonId
-      } else {
-        return null
       }
+      return null
     })
 }

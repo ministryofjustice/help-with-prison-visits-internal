@@ -11,7 +11,7 @@ const expectedTopUpAmount = '99.02'
 const expectedTopUpReason = 'This is a test'
 
 describe('Adding a new top up flow', () => {
-  before(function () {
+  before(() => {
     const date = moment('20010101').toDate()
     cy.task('insertTestData', { reference, date, status: 'APPROVED', visitDate: undefined, increment: undefined, paymentStatus: 'PROCESSED' }).then(function (ids) {
       claimId = ids.claimId
@@ -43,7 +43,7 @@ describe('Adding a new top up flow', () => {
     })
   })
 
-  after(function () {
+  after(() => {
     cy.task('deleteAll', reference)
   })
 })

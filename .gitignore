@@ -40,3 +40,4 @@ uploads/
 
 #jest
 test_results
+.eslintcache

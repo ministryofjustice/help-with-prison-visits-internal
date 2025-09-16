@@ -1,30 +1,26 @@
 const FIELD_NAMES = require('./validation-field-names')
 
 class ErrorHandler {
-  constructor () {
+  constructor() {
     this.errors = {}
   }
 
-  add (fieldName, message, options) {
-    if (!(Object.prototype.hasOwnProperty.call(this.errors, fieldName))) {
+  add(fieldName, message, options) {
+    if (!Object.prototype.hasOwnProperty.call(this.errors, fieldName)) {
       this.errors[fieldName] = []
     }
     this.errors[fieldName].push(message(FIELD_NAMES[fieldName], options))
   }
 
-  get () {
-    const errors = this.errors
-    for (const field in errors) {
-      if (Object.prototype.hasOwnProperty.call(errors, field)) {
-        if (errors[field].length > 0) {
-          return errors
-        }
-      }
-    }
-    return false
+  get() {
+    const { errors } = this
+
+    const hasErrors = Object.keys(errors).some(field => errors[field].length > 0)
+
+    return hasErrors ? errors : false
   }
 }
 
-module.exports = function () {
+module.exports = () => {
   return new ErrorHandler()
 }

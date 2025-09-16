@@ -40,5 +40,5 @@ module.exports = {
   auditReportStartDate: 'The start date',
   auditReportEndDate: 'The end date',
   'audit-threshold': 'Audit threshold',
-  'audit-verification-percentage': 'Audit verification percent'
+  'audit-verification-percentage': 'Audit verification percent',
 }

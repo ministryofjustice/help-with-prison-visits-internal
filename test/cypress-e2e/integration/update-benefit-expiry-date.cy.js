@@ -12,7 +12,7 @@ const expectedYear = '2020'
 const expectedDateMoment = moment(expectedDay + '-' + expectedMonth + '-' + expectedYear, 'DD-MM-YYYY')
 
 describe('Update benefit expiry date flow', () => {
-  before(function () {
+  before(() => {
     const date = moment('20010101').toDate()
     cy.task('insertTestData', { reference, date, status: 'APPROVED', visitDate: undefined, increment: undefined, paymentStatus: 'PROCESSED' }).then(function (ids) {
       claimId = ids.claimId
@@ -54,7 +54,7 @@ describe('Update benefit expiry date flow', () => {
     })
   })
 
-  after(function () {
+  after(() => {
     cy.task('deleteAll', reference)
   })
 })

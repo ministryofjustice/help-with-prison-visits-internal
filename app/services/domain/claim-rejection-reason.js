@@ -1,5 +1,5 @@
 class ClaimRejectionReason {
-  constructor (id, reason, enabled) {
+  constructor(id, reason, enabled) {
     this.id = id
     this.reason = reason
     this.enabled = enabled

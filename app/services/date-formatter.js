@@ -1,34 +1,37 @@
 const moment = require('moment')
+
 const DATE_FORMAT = 'YYYY-MM-DD'
 const INVALID_DATE_ERROR = 'Invalid date'
 
-exports.format = function (date) {
+const format = date => {
   if (!isDate(date) || isUndefined(date) || isNull(date)) {
     return INVALID_DATE_ERROR
   }
   return date.format(DATE_FORMAT)
 }
+exports.format = format
 
-exports.now = function () {
+exports.now = () => {
   const now = moment()
   return applyDST(now)
 }
 
-exports.build = function (day, month, year) {
-  month = month - 1
+const build = (day, month, year) => {
+  month -= 1
   const date = moment([year, month, day])
   return applyDST(date)
 }
+exports.build = build
 
-exports.buildFormatted = function (day, month, year) {
-  const date = this.build(day, month, year)
+exports.buildFormatted = (day, month, year) => {
+  const date = build(day, month, year)
   if (!isValidDate(date)) {
     return INVALID_DATE_ERROR
   }
-  return this.format(date)
+  return format(date)
 }
 
-exports.buildFromDateString = function (date) {
+exports.buildFromDateString = date => {
   if (typeof date !== 'string') {
     return false
   }
@@ -37,33 +40,33 @@ exports.buildFromDateString = function (date) {
   const month = dateSplit[1]
   const day = dateSplit[2]
 
-  return this.build(day, month, year)
+  return build(day, month, year)
 }
 
-exports.isFutureDate = function (date) {
+exports.isFutureDate = date => {
   const todayDate = moment()
   return date.isAfter(todayDate)
 }
 
-function applyDST (date) {
+function applyDST(date) {
   if (date.isDST()) {
     date = date.add(1, 'hour')
   }
   return date
 }
 
-function isUndefined (date) {
+function isUndefined(date) {
   return typeof date === 'undefined'
 }
 
-function isNull (date) {
+function isNull(date) {
   return date === null
 }
 
-function isDate (date) {
+function isDate(date) {
   return date instanceof moment
 }
 
-function isValidDate (date) {
+function isValidDate(date) {
   return date.isValid()
 }

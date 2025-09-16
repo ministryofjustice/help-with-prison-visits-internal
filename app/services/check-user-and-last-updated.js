@@ -4,10 +4,12 @@ const ValidationError = require('./errors/validation-error')
 const ValidationErrorMessages = require('./validators/validation-error-messages')
 const checkUserAssignment = require('./check-user-assignment')
 
-module.exports = function (lastUpdatedData, previousLastUpdated, needAssignmentCheck, user) {
+module.exports = (lastUpdatedData, previousLastUpdated, needAssignmentCheck, user) => {
   if (needAssignmentCheck && !checkUserAssignment(user, lastUpdatedData.AssignedTo, lastUpdatedData.AssignmentExpiry)) {
     if (lastUpdatedData.AssignedTo && lastUpdatedData.AssignmentExpiry > dateFormatter.now().toDate()) {
-      throw new ValidationError({ UpdateConflict: [ValidationErrorMessages.getUserAssignmentConflict(lastUpdatedData.AssignedTo)] })
+      throw new ValidationError({
+        UpdateConflict: [ValidationErrorMessages.getUserAssignmentConflict(lastUpdatedData.AssignedTo)],
+      })
     } else {
       throw new ValidationError({ UpdateConflict: [ValidationErrorMessages.getUserNotAssigned()] })
     }

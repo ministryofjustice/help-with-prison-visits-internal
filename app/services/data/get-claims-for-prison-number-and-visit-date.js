@@ -1,6 +1,6 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (claimId, prisonerNumber, visitDate) {
+module.exports = (claimId, prisonerNumber, visitDate) => {
   const db = getDatabaseConnector()
 
   return db('Claim')
@@ -8,18 +8,15 @@ module.exports = function (claimId, prisonerNumber, visitDate) {
     .join('Prisoner', 'Claim.EligibilityId', '=', 'Prisoner.EligibilityId')
     .where({
       'Prisoner.PrisonNumber': prisonerNumber,
-      'Claim.DateOfJourney': visitDate
+      'Claim.DateOfJourney': visitDate,
     })
     .whereNot('Claim.ClaimId', claimId)
-    .select(
-      'Claim.ClaimId',
-      'Claim.Reference'
-    )
-    .then(function (data) {
-      return data.map(function (item) {
+    .select('Claim.ClaimId', 'Claim.Reference')
+    .then(data => {
+      return data.map(item => {
         return {
           ClaimId: item.ClaimId,
-          Reference: item.Reference
+          Reference: item.Reference,
         }
       })
     })

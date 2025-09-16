@@ -1,5 +1,6 @@
-module.exports = function () {
-  return ['Name',
+module.exports = () => {
+  return [
+    'Name',
     'Reference',
     'Prison Name',
     'Prisoner Number',
@@ -48,5 +49,6 @@ module.exports = function () {
     'Expense Type 13',
     'Approved Cost 13',
     'Expense Type 14',
-    'Approved Cost 14']
+    'Approved Cost 14',
+  ]
 }

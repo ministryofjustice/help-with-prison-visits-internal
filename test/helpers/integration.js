@@ -1,16 +1,16 @@
-function getClaimReference (result, reference) {
-  return result.claims.filter(function (claim) {
+function getClaimReference(result, reference) {
+  return result.claims.filter(claim => {
     return claim.Reference === reference
   })
 }
 
-function getClaimId (result, claimId) {
-  return result.claims.filter(function (claim) {
+function getClaimId(result, claimId) {
+  return result.claims.filter(claim => {
     return claim.ClaimId === claimId
   })
 }
 
 module.exports = {
   getClaimReference,
-  getClaimId
+  getClaimId,
 }

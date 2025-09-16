@@ -1,8 +1,6 @@
 {% extends "includes/layout_new.html" %}
 
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
-{% from "govuk/components/table/macro.njk" import govukTable %}
-{% from "govuk/components/pagination/macro.njk" import govukPagination %}
 {% from "moj/components/badge/macro.njk" import mojBadge %}
 {% from "moj/components/notification-badge/macro.njk" import mojNotificationBadge %}
 {% from "moj/components/search/macro.njk" import mojSearch %}
@@ -66,11 +64,21 @@
   </ul>
   <div class="govuk-tabs__panel">
     <h2 class="govuk-heading-m">{{ active | tableTitle | removeDashes | capitalize }}</h2>
-    {{ govukTable({
-    attributes: {
-    'data-module': 'moj-sortable-table',
-    'id': 'claims' }
-    }) }}
+
+    <table id="claims">
+      <thead>
+        <tr>
+          <th>Ref no.</th>
+          <th>Name</th>
+          <th>Submitted</th>
+          <th>Visit date</th>
+          <th>Updated date</th>
+          <th>Status</th>
+          <th>Claim type</th>
+          <th></th>
+        </tr>
+      </thead>
+    </table>
   </div>
 </div>
 

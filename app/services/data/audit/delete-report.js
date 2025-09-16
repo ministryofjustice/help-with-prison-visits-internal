@@ -1,28 +1,24 @@
-const {
-  getDatabaseConnector
-} = require('../../../databaseConnector')
+const { getDatabaseConnector } = require('../../../databaseConnector')
 
-module.exports = function (reportId) {
+module.exports = reportId => {
   const db = getDatabaseConnector()
   return db('AuditReport')
     .update({
-      IsDeleted: true
+      IsDeleted: true,
     })
     .where({
-      ReportId: reportId
+      ReportId: reportId,
     })
-    .then(function () {
-      return db('ReportData')
-        .select('ClaimId')
-        .where({
-          ReportId: reportId
-        })
+    .then(() => {
+      return db('ReportData').select('ClaimId').where({
+        ReportId: reportId,
+      })
     })
-    .then(function (claimList) {
+    .then(claimList => {
       const claimIdList = claimList.map(claim => claim.ClaimId)
       return db('Claim')
         .update({
-          IsIncludedInAudit: false
+          IsIncludedInAudit: false,
         })
         .whereIn('ClaimId', claimIdList)
     })

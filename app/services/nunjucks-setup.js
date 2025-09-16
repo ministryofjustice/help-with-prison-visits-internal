@@ -1,12 +1,12 @@
 const path = require('path')
 const nunjucks = require('nunjucks')
 
-module.exports = function (app, developmentMode) {
+module.exports = (app, developmentMode) => {
   const appViews = [
     'node_modules/govuk-frontend/dist/',
     'node_modules/@ministryofjustice/frontend/',
     'node_modules/@ministryofjustice/frontend/moj/components/',
-    path.join(__dirname, '../views')
+    path.join(__dirname, '../views'),
   ]
 
   // View Engine Configuration
@@ -15,32 +15,34 @@ module.exports = function (app, developmentMode) {
     express: app,
     autoescape: true,
     watch: developmentMode,
-    noCache: developmentMode
+    noCache: developmentMode,
   })
 
-  njkEnv.addFilter('concat', function (arr1, arr2) {
+  njkEnv.addFilter('concat', (arr1, arr2) => {
     return arr1.concat(arr2)
   })
 
-  njkEnv.addFilter('tableTitle', function (active) {
+  njkEnv.addFilter('tableTitle', active => {
     if (!active) {
       return 'New'
-    } else if (active === 'ADVANCE-APPROVED') {
+    }
+    if (active === 'ADVANCE-APPROVED') {
       return 'Advance pending'
-    } else if (active === 'ADVANCE-PENDING-INFORMATION') {
+    }
+    if (active === 'ADVANCE-PENDING-INFORMATION') {
       return 'Advance awaiting information'
-    } else return active
+    }
+    return active
   })
 
-  njkEnv.addFilter('removeDashes', function (str) {
+  njkEnv.addFilter('removeDashes', str => {
     if (typeof str === 'string') {
       return str.replace(/-/g, ' ')
-    } else {
-      return str
     }
+    return str
   })
 
-  const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all.js')
+  const getMojFilters = require('@ministryofjustice/frontend/moj/filters/all')
 
   const mojFilters = getMojFilters()
   Object.keys(mojFilters).forEach(filterName => {
@@ -49,9 +51,9 @@ module.exports = function (app, developmentMode) {
 
   // convert errors to format for GOV.UK error summary component
   njkEnv.addFilter('errorSummaryList', (errors = []) => {
-    return Object.keys(errors).map((error) => {
+    return Object.keys(errors).map(error => {
       const errorListItem = {}
-      errorListItem.text = errors[error][0]
+      ;[errorListItem.text] = errors[error]
       if (error !== 'expired') {
         errorListItem.href = `#${error}`
       }
@@ -64,7 +66,7 @@ module.exports = function (app, developmentMode) {
     if (!errors || !formFieldId) return null
     if (errors[formFieldId]) {
       return {
-        text: errors[formFieldId][0]
+        text: errors[formFieldId][0],
       }
     }
     return null

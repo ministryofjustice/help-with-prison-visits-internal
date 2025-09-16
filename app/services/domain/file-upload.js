@@ -6,7 +6,7 @@ const ERROR_MESSAGES = require('../validators/validation-error-messages')
 const UploadError = require('../errors/upload-error')
 
 class FileUpload {
-  constructor (file, error, claimDocumentId, caseworker) {
+  constructor(file, error, claimDocumentId, caseworker) {
     this.file = file
     this.error = error
     this.IsValid()
@@ -20,7 +20,7 @@ class FileUpload {
     }
   }
 
-  IsValid () {
+  IsValid() {
     const errors = ErrorHandler()
 
     if (this.error) {
@@ -31,8 +31,7 @@ class FileUpload {
       }
     }
 
-    FieldValidator(this.file, 'upload', errors)
-      .isRequired()
+    FieldValidator(this.file, 'upload', errors).isRequired()
 
     const validationErrors = errors.get()
 

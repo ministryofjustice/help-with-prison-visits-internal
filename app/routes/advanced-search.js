@@ -13,26 +13,24 @@ const allowedRoles = [
   applicationRoles.CLAIM_ENTRY_BAND_2,
   applicationRoles.CLAIM_PAYMENT_BAND_3,
   applicationRoles.CASEWORK_MANAGER_BAND_5,
-  applicationRoles.BAND_9
+  applicationRoles.BAND_9,
 ]
-module.exports = function (router) {
-  router.get('/advanced-search-input', function (req, res) {
+module.exports = router => {
+  router.get('/advanced-search-input', (req, res) => {
     authorisation.hasRoles(req, allowedRoles)
 
     return res.render('advanced-search')
   })
 
-  router.get('/advanced-search', function (req, res) {
+  router.get('/advanced-search', (req, res) => {
     authorisation.hasRoles(req, allowedRoles)
     validationErrors = {}
     extractSearchCriteria(req.query)
 
-    for (const field in validationErrors) {
-      if (Object.prototype.hasOwnProperty.call(validationErrors, field)) {
-        if (validationErrors[field].length > 0) {
-          return res.status(400).render('advanced-search', { query: req.query, errors: validationErrors })
-        }
-      }
+    const hasErrors = Object.keys(validationErrors).some(field => validationErrors[field].length > 0)
+
+    if (hasErrors) {
+      return res.status(400).render('advanced-search', { query: req.query, errors: validationErrors })
     }
 
     const queryIndex = req.url.indexOf('?')
@@ -40,40 +38,36 @@ module.exports = function (router) {
 
     return res.render('advanced-search', {
       query: req.query,
-      rawQuery: rawQueryString
+      rawQuery: rawQueryString,
     })
   })
 
-  router.get('/advanced-search-results/export', function (req, res) {
+  router.get('/advanced-search-results/export', (req, res) => {
     res.connection.setTimeout(500000)
     authorisation.hasRoles(req, allowedRoles)
 
     const searchCriteria = extractSearchCriteria(req.query)
 
-    const timestamp = dateFormatter.now().toDate().toISOString()
-      .replace('Z', '')
-      .replace('T', '_')
-      .replace('.', '-')
+    const timestamp = dateFormatter.now().toDate().toISOString().replace('Z', '').replace('T', '_').replace('.', '-')
 
     const filename = `claims_export_${timestamp}`
 
     res.set('Content-Type', 'text/csv')
     res.set('Content-Disposition', `attachment; filename="${filename}.csv"`)
 
-    return exportSearchResults(searchCriteria)
-      .then(function (csvString) {
-        res.write(csvString)
-        res.end()
-      })
+    return exportSearchResults(searchCriteria).then(csvString => {
+      res.write(csvString)
+      res.end()
+    })
   })
 
-  router.post('/advanced-search-results', function (req, res, next) {
+  router.post('/advanced-search-results', (req, res, next) => {
     authorisation.hasRoles(req, allowedRoles)
     const searchCriteria = extractSearchCriteria(req.body)
-    getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body?.start), parseInt(req.body?.length))
-      .then(function (data) {
-        const claims = data.claims
-        claims.map(function (claim) {
+    getClaimListForAdvancedSearch(searchCriteria, parseInt(req.body?.start, 10), parseInt(req.body?.length, 10))
+      .then(data => {
+        const { claims } = data
+        claims.map(claim => {
           claim.ClaimTypeDisplayName = displayHelper.getClaimTypeDisplayName(claim.ClaimType)
           return claim
         })
@@ -83,7 +77,7 @@ module.exports = function (router) {
             draw: 0,
             recordsTotal: 0,
             recordsFiltered: 0,
-            claims
+            claims,
           })
         }
 
@@ -91,16 +85,16 @@ module.exports = function (router) {
           draw: req.body?.draw,
           recordsTotal: data.total.Count,
           recordsFiltered: data.total.Count,
-          claims
+          claims,
         })
       })
-      .catch(function (error) {
+      .catch(error => {
         next(error)
       })
   })
 }
 
-function extractSearchCriteria (query) {
+function extractSearchCriteria(query) {
   const searchCriteria = {}
 
   if (query.reference) {
@@ -145,6 +139,8 @@ function extractSearchCriteria (query) {
       case 'paid':
         claimStatus = 'paid'
         break
+      default:
+        claimStatus = ''
     }
 
     searchCriteria.claimStatus = claimStatus
@@ -168,6 +164,8 @@ function extractSearchCriteria (query) {
       case 'no':
         overpaymentStatus = 'false'
         break
+      default:
+        overpaymentStatus = ''
     }
     searchCriteria.overpaymentStatus = overpaymentStatus
   }
@@ -176,7 +174,7 @@ function extractSearchCriteria (query) {
     'visitDateFrom',
     query['visitDateFrom-Day'],
     query['visitDateFrom-Month'],
-    query['visitDateFrom-Year']
+    query['visitDateFrom-Year'],
   )
   if (visitDateFrom) {
     searchCriteria.visitDateFrom = visitDateFrom.startOf('day').toDate()
@@ -185,7 +183,7 @@ function extractSearchCriteria (query) {
     'visitDateTo',
     query['visitDateTo-Day'],
     query['visitDateTo-Month'],
-    query['visitDateTo-Year']
+    query['visitDateTo-Year'],
   )
   if (visitDateTo) {
     searchCriteria.visitDateTo = visitDateTo.endOf('day').toDate()
@@ -194,7 +192,7 @@ function extractSearchCriteria (query) {
     'dateSubmittedFrom',
     query['dateSubmittedFrom-Day'],
     query['dateSubmittedFrom-Month'],
-    query['dateSubmittedFrom-Year']
+    query['dateSubmittedFrom-Year'],
   )
   if (dateSubmittedFrom) {
     searchCriteria.dateSubmittedFrom = dateSubmittedFrom.startOf('day').toDate()
@@ -203,7 +201,7 @@ function extractSearchCriteria (query) {
     'dateSubmittedTo',
     query['dateSubmittedTo-Day'],
     query['dateSubmittedTo-Month'],
-    query['dateSubmittedTo-Year']
+    query['dateSubmittedTo-Year'],
   )
   if (dateSubmittedTo) {
     searchCriteria.dateSubmittedTo = dateSubmittedTo.endOf('day').toDate()
@@ -212,7 +210,7 @@ function extractSearchCriteria (query) {
     'dateApprovedFrom',
     query['dateApprovedFrom-Day'],
     query['dateApprovedFrom-Month'],
-    query['dateApprovedFrom-Year']
+    query['dateApprovedFrom-Year'],
   )
   if (dateApprovedFrom) {
     searchCriteria.dateApprovedFrom = dateApprovedFrom.startOf('day').toDate()
@@ -221,7 +219,7 @@ function extractSearchCriteria (query) {
     'dateApprovedTo',
     query['dateApprovedTo-Day'],
     query['dateApprovedTo-Month'],
-    query['dateApprovedTo-Year']
+    query['dateApprovedTo-Year'],
   )
   if (dateApprovedTo) {
     searchCriteria.dateApprovedTo = dateApprovedTo.endOf('day').toDate()
@@ -230,7 +228,7 @@ function extractSearchCriteria (query) {
     'dateRejectedFrom',
     query['dateRejectedFrom-Day'],
     query['dateRejectedFrom-Month'],
-    query['dateRejectedFrom-Year']
+    query['dateRejectedFrom-Year'],
   )
   if (dateRejectedFrom) {
     searchCriteria.dateRejectedFrom = dateRejectedFrom.startOf('day').toDate()
@@ -239,7 +237,7 @@ function extractSearchCriteria (query) {
     'dateRejectedTo',
     query['dateRejectedTo-Day'],
     query['dateRejectedTo-Month'],
-    query['dateRejectedTo-Year']
+    query['dateRejectedTo-Year'],
   )
   if (dateRejectedTo) {
     searchCriteria.dateRejectedTo = dateRejectedTo.endOf('day').toDate()
@@ -262,27 +260,24 @@ function extractSearchCriteria (query) {
   return searchCriteria
 }
 
-function processDate (fieldName, day, month, year) {
+function processDate(fieldName, day, month, year) {
   if (day || month || year) {
     const date = dateFormatter.build(day, month, year)
     if (year >= MIN_YEAR && date.isValid()) {
       return date
-    } else {
-      const validationFieldName = validationFieldNames[fieldName] || 'Date'
-      validationErrors[fieldName] = [validationFieldName + ' is invalid']
-      return false
     }
-  } else {
+    const validationFieldName = validationFieldNames[fieldName] || 'Date'
+    validationErrors[fieldName] = [`${validationFieldName} is invalid`]
     return false
   }
+  return false
 }
 
-function processAmount (fieldName, amount) {
+function processAmount(fieldName, amount) {
   if (amount.match(VALID_AMOUNT_EXPRESSION)) {
     return true
-  } else {
-    const validationFieldName = validationFieldNames[fieldName] || 'Amount'
-    validationErrors[fieldName] = [validationFieldName + ' is invalid']
-    return false
   }
+  const validationFieldName = validationFieldNames[fieldName] || 'Amount'
+  validationErrors[fieldName] = [`${validationFieldName} is invalid`]
+  return false
 }

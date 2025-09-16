@@ -35,11 +35,11 @@ const routes = [
   require('./health-check/status'),
 
   // Submit claim on behalf of a claimant
-  require('./submit-claim-on-behalf-of-claimant')
+  require('./submit-claim-on-behalf-of-claimant'),
 ]
 
-module.exports = function (router) {
-  routes.forEach(function (route) {
+module.exports = router => {
+  routes.forEach(route => {
     route(router)
   })
 }

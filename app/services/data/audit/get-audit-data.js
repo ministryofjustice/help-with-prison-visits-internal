@@ -1,11 +1,8 @@
-const {
-  getDatabaseConnector
-} = require('../../../databaseConnector')
+const { getDatabaseConnector } = require('../../../databaseConnector')
 
-module.exports = function () {
+module.exports = () => {
   const db = getDatabaseConnector()
-  return db('AuditReport')
-    .where({
-      IsDeleted: false
-    })
+  return db('AuditReport').where({
+    IsDeleted: false,
+  })
 }

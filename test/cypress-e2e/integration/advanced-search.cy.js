@@ -12,7 +12,7 @@ let yesterday
 let tomorrow
 
 describe('Advanced search flow', () => {
-  before(function () {
+  before(() => {
     date = dateFormatter.now()
     yesterday = moment(date).subtract(1, 'day')
     tomorrow = moment(date).add(1, 'day')
@@ -116,7 +116,7 @@ describe('Advanced search flow', () => {
     cy.get(`#claim${reference2ClaimId}`).should('not.equal', undefined)
   })
 
-  after(function () {
+  after(() => {
     cy.task('deleteAll', reference1)
     cy.task('deleteAll', reference2)
   })

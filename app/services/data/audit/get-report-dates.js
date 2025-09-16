@@ -1,11 +1,6 @@
-const {
-  getDatabaseConnector
-} = require('../../../databaseConnector')
+const { getDatabaseConnector } = require('../../../databaseConnector')
 
-module.exports = function (reportId) {
+module.exports = reportId => {
   const db = getDatabaseConnector()
-  return db('AuditReport')
-    .select('StartDate')
-    .select('EndDate')
-    .where('ReportId', reportId)
+  return db('AuditReport').select('StartDate').select('EndDate').where('ReportId', reportId)
 }

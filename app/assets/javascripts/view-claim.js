@@ -8,7 +8,7 @@ function totalApproved () {
   }
 
   if ($('#unassign').length) {
-    $('.approved-amount').each(function () {
+    $('.approved-amount').each(function eachFunction() {
       const value = $(this).val()
       if (isValidValue(value)) {
         approvedCost += parseFloat(value)
@@ -16,7 +16,7 @@ function totalApproved () {
       approvedCost += +$(this).text().replace('£', '').trim()
     })
   } else {
-    $('.approved-amount').each(function () {
+    $('.approved-amount').each(function eachFunction() {
       const value = $(this).val()
       if (isValidValue(value)) {
         approvedCost += parseFloat(value)
@@ -25,7 +25,7 @@ function totalApproved () {
     })
   }
 
-  $('.deduction').each(function () {
+  $('.deduction').each(function eachFunction() {
     deduction += +$(this).text().replace(' £', '')
   })
 
@@ -41,11 +41,11 @@ function totalApproved () {
   }
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   function initializeState () {
     if ($('#unassign').length) {
       // setting initial state for when assigned
-      $('.claim-expense-status').each(function () {
+      $('.claim-expense-status').each(function eachFunction() {
         const id = $(this).attr('data-id')
         const value = $(this).val()
         if (value === 'APPROVED') {
@@ -57,17 +57,17 @@ $(document).ready(function () {
         }
       })
     }
-    $('#additional-info-reject').each(function () {
+    $('#additional-info-reject').each(function eachFunction() {
       if (this[this.selectedIndex].value === 'Other') {
         $('.rejection-reason-other').removeClass('js-hidden')
       }
     })
-    $('#release-date-is-set').each(function () {
+    $('#release-date-is-set').each(function eachFunction() {
       if ($(this).is(':checked')) {
         $('#release').removeClass('js-hidden')
       }
     })
-    $('#is-trusted-checkbox').each(function () {
+    $('#is-trusted-checkbox').each(function eachFunction() {
       if ($(this).is(':checked')) {
         $('.reject-auto-approval').addClass('js-hidden')
       } else {
@@ -78,8 +78,8 @@ $(document).ready(function () {
   }
   initializeState()
 
-  $(function () {
-    $('.claim-expense-status').change(function () {
+  $(() => {
+    $('.claim-expense-status').change(function onChangeFunction() {
       const id = $(this).attr('data-id')
       const value = $(this).val()
       if (value === 'APPROVED') {
@@ -99,25 +99,25 @@ $(document).ready(function () {
       totalApproved()
     })
 
-    $('.input-for-different-cost').on('input', function () {
+    $('.input-for-different-cost').on('input', () => {
       totalApproved()
     })
 
     $('input[value="Remove"]').parent().parent().find('td.deduction').addClass('approved-amount')
 
-    $('#overpayment-toggle').change(function () {
+    $('#overpayment-toggle').change(() => {
       showClosedClaimActionSection('#overpayment-input')
     })
 
-    $('#close-toggle').change(function () {
+    $('#close-toggle').change(() => {
       showClosedClaimActionSection('#close-advanced-claim-input')
     })
 
-    $('#request-new-payment-details-toggle').change(function () {
+    $('#request-new-payment-details-toggle').change(() => {
       showClosedClaimActionSection('#request-new-payment-details-input')
     })
 
-    $('#additional-info-reject').change(function () {
+    $('#additional-info-reject').change(function onChangeFunction() {
       if (this[this.selectedIndex].value === 'Other') {
         $('.rejection-reason-other').removeClass('js-hidden')
       } else {
@@ -125,7 +125,7 @@ $(document).ready(function () {
       }
     })
 
-    $('#is-trusted-checkbox').on('click', function () {
+    $('#is-trusted-checkbox').on('click', function onClickFunction() {
       if ($(this).is(':checked')) {
         $('.reject-auto-approval').addClass('js-hidden')
       } else {
@@ -133,7 +133,7 @@ $(document).ready(function () {
       }
     })
 
-    $('#release-date-is-set').on('click', function () {
+    $('#release-date-is-set').on('click', function onClickFunction() {
       if ($(this).is(':checked')) {
         $('#release').removeClass('js-hidden')
       } else {

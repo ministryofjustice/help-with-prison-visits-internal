@@ -1,5 +1,5 @@
 class ClaimExpenseResponse {
-  constructor (claimExpenseId, approvedCost, cost, status) {
+  constructor(claimExpenseId, approvedCost, cost, status) {
     this.claimExpenseId = claimExpenseId
     this.approvedCost = approvedCost
     this.cost = cost

@@ -1,4 +1,4 @@
-function isAuthenticated (req) {
+function isAuthenticated(req) {
   if (!req.user) {
     const error = new Error(`Unauthorized at ${req.originalUrl}`)
     error.status = 401
@@ -6,11 +6,11 @@ function isAuthenticated (req) {
   }
 }
 
-function hasRoles (req, roles) {
+function hasRoles(req, roles) {
   isAuthenticated(req)
 
   let hasDesiredRole = false
-  roles.forEach(function (role) {
+  roles.forEach(role => {
     if (req.user.roles.includes(role)) {
       hasDesiredRole = true
     }

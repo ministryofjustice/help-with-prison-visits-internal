@@ -1,5 +1,5 @@
-$(document).ready(function () {
-  $('#filter').change(function () {
+$(document).ready(() => {
+  $('#filter').change(() => {
     $(this).closest('form').submit()
   })
 })

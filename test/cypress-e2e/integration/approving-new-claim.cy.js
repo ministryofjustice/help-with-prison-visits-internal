@@ -11,7 +11,7 @@ let expenseId2
 const expiryDate = dateFormatter.now().add(14, 'days')
 
 describe('First time claim viewing flow', () => {
-  before(function () {
+  before(() => {
     const date = moment('20010101').toDate()
     cy.task('insertTestData', { reference, date, status: 'New', visitDate: undefined, increment: undefined }).then(function (ids) {
       claimId = ids.claimId
@@ -57,7 +57,7 @@ describe('First time claim viewing flow', () => {
     cy.get(`#claim${claimId}`).should('not.equal', undefined)
   })
 
-  after(function () {
+  after(() => {
     cy.task('deleteAll', reference)
   })
 })
