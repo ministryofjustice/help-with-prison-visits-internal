@@ -31,7 +31,7 @@ $(document).ready(() => {
     ajax: {
       url: dataReference,
       dataSrc: 'claims',
-      error: response => {
+      error: () => {
         $('#claims_processing').hide()
         alert('An error occurred when searching for claims.') // eslint-disable-line no-undef
       }
