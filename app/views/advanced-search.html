@@ -103,7 +103,6 @@
           ]
         }) }}
       </div>
-
     </div>
 
     <div class="govuk-grid-row">
@@ -263,7 +262,6 @@
           ]
         }) }}
       </div>
-
     </div>
 
     <div class="govuk-grid-row">
@@ -293,296 +291,196 @@
       </div>
     </div>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <h3 class="govuk-heading-s">Date of visit</h3>
+    <!-- Date of visit -->
+    <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+        Date of visit
+      </legend>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-margin-bottom-3">
+          {{ govukDateInput({
+            id: "visitDateFrom",
+            namePrefix: "visitDateFrom",
+            fieldset: {
+              legend: {
+                text: "From",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors["visitDateFrom"] ? { text: errors["visitDateFrom"][0] } : null,
+            items: [
+              { classes: "govuk-input--width-2", name: "Day", value: query["visitDateFrom-Day"] },
+              { classes: "govuk-input--width-2", name: "Month", value: query["visitDateFrom-Month"] },
+              { classes: "govuk-input--width-4", name: "Year", value: query["visitDateFrom-Year"] }
+            ]
+          }) }}
+        </div>
+
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-margin-bottom-3">
+          {{ govukDateInput({
+            id: "visitDateTo",
+            namePrefix: "visitDateTo",
+            fieldset: {
+              legend: {
+                text: "To",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors["visitDateTo"] ? { text: errors["visitDateTo"][0] } : null,
+            items: [
+              { classes: "govuk-input--width-2", name: "Day", value: query["visitDateTo-Day"] },
+              { classes: "govuk-input--width-2", name: "Month", value: query["visitDateTo-Month"] },
+              { classes: "govuk-input--width-4", name: "Year", value: query["visitDateTo-Year"] }
+            ]
+          }) }}
+        </div>
       </div>
-      <div class="govuk-grid-column-one-half">
-        <h3 class="govuk-heading-s">Date claim submitted</h3>
+    </fieldset>
+
+    <!-- Date claim submitted -->
+    <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+        Date claim submitted
+      </legend>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-margin-bottom-3">
+          {{ govukDateInput({
+            id: "dateSubmittedFrom",
+            namePrefix: "dateSubmittedFrom",
+            fieldset: {
+              legend: {
+                text: "From",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors["dateSubmittedFrom"] ? { text: errors["dateSubmittedFrom"][0] } : null,
+            items: [
+              { classes: "govuk-input--width-2", name: "Day", value: query["dateSubmittedFrom-Day"] },
+              { classes: "govuk-input--width-2", name: "Month", value: query["dateSubmittedFrom-Month"] },
+              { classes: "govuk-input--width-4", name: "Year", value: query["dateSubmittedFrom-Year"] }
+            ]
+          }) }}
+        </div>
+
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-margin-bottom-3">
+          {{ govukDateInput({
+            id: "dateSubmittedTo",
+            namePrefix: "dateSubmittedTo",
+            fieldset: {
+              legend: {
+                text: "To",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors["dateSubmittedTo"] ? { text: errors["dateSubmittedTo"][0] } : null,
+            items: [
+              { classes: "govuk-input--width-2", name: "Day", value: query["dateSubmittedTo-Day"] },
+              { classes: "govuk-input--width-2", name: "Month", value: query["dateSubmittedTo-Month"] },
+              { classes: "govuk-input--width-4", name: "Year", value: query["dateSubmittedTo-Year"] }
+            ]
+          }) }}
+        </div>
       </div>
-    </div>
+    </fieldset>
+
+    <!-- Date claim approved -->
+    <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+        Date claim approved
+      </legend>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-margin-bottom-3">
+          {{ govukDateInput({
+            id: "dateApprovedFrom",
+            namePrefix: "dateApprovedFrom",
+            fieldset: {
+              legend: {
+                text: "From",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors["dateApprovedFrom"] ? { text: errors["dateApprovedFrom"][0] } : null,
+            items: [
+              { classes: "govuk-input--width-2", name: "Day", value: query["dateApprovedFrom-Day"] },
+              { classes: "govuk-input--width-2", name: "Month", value: query["dateApprovedFrom-Month"] },
+              { classes: "govuk-input--width-4", name: "Year", value: query["dateApprovedFrom-Year"] }
+            ]
+          }) }}
+        </div>
+
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-margin-bottom-3">
+          {{ govukDateInput({
+            id: "dateApprovedTo",
+            namePrefix: "dateApprovedTo",
+            fieldset: {
+              legend: {
+                text: "To",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors["dateApprovedTo"] ? { text: errors["dateApprovedTo"][0] } : null,
+            items: [
+              { classes: "govuk-input--width-2", name: "Day", value: query["dateApprovedTo-Day"] },
+              { classes: "govuk-input--width-2", name: "Month", value: query["dateApprovedTo-Month"] },
+              { classes: "govuk-input--width-4", name: "Year", value: query["dateApprovedTo-Year"] }
+            ]
+          }) }}
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- Date claim rejected -->
+    <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+        Date claim rejected
+      </legend>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-margin-bottom-3">
+          {{ govukDateInput({
+            id: "dateRejectedFrom",
+            namePrefix: "dateRejectedFrom",
+            fieldset: {
+              legend: {
+                text: "From",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors["dateRejectedFrom"] ? { text: errors["dateRejectedFrom"][0] } : null,
+            items: [
+              { classes: "govuk-input--width-2", name: "Day", value: query["dateRejectedFrom-Day"] },
+              { classes: "govuk-input--width-2", name: "Month", value: query["dateRejectedFrom-Month"] },
+              { classes: "govuk-input--width-4", name: "Year", value: query["dateRejectedFrom-Year"] }
+            ]
+          }) }}
+        </div>
+
+        <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-margin-bottom-3">
+          {{ govukDateInput({
+            id: "dateRejectedTo",
+            namePrefix: "dateRejectedTo",
+            fieldset: {
+              legend: {
+                text: "To",
+                classes: "govuk-fieldset__legend--s"
+              }
+            },
+            errorMessage: errors["dateRejectedTo"] ? { text: errors["dateRejectedTo"][0] } : null,
+            items: [
+              { classes: "govuk-input--width-2", name: "Day", value: query["dateRejectedTo-Day"] },
+              { classes: "govuk-input--width-2", name: "Month", value: query["dateRejectedTo-Month"] },
+              { classes: "govuk-input--width-4", name: "Year", value: query["dateRejectedTo-Year"] }
+            ]
+          }) }}
+        </div>
+      </div>
+    </fieldset>
 
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
-        {{ govukDateInput({
-          id: "visitDateFrom",
-          namePrefix: "visitDateFrom",
-          fieldset: {
-            legend: {
-              text: "From",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          errorMessage: {
-            text: errors["visitDateFrom"][0]
-          } if errors["visitDateFrom"][0],
-          items: [
-            {
-              classes: "govuk-input--width-2",
-              name: "Day",
-              value: query["visitDateFrom-Day"]
-            },
-            {
-              classes: "govuk-input--width-2",
-              name: "Month",
-              value: query["visitDateFrom-Month"]
-            },
-            {
-              classes: "govuk-input--width-4",
-              name: "Year",
-              value: query["visitDateFrom-Year"]
-            }
-          ]
-        }) }}
-      </div>
-      <div class="govuk-grid-column-one-quarter">
-        {{ govukDateInput({
-          id: "visitDateTo",
-          namePrefix: "visitDateTo",
-          fieldset: {
-            legend: {
-              text: "To",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          errorMessage: {
-            text: errors["visitDateTo"][0]
-          } if errors["visitDateTo"][0],
-          items: [
-            {
-              classes: "govuk-input--width-2",
-              name: "Day",
-              value: query["visitDateTo-Day"]
-            },
-            {
-              classes: "govuk-input--width-2",
-              name: "Month",
-              value: query["visitDateTo-Month"]
-            },
-            {
-              classes: "govuk-input--width-4",
-              name: "Year",
-              value: query["visitDateTo-Year"]
-            }
-          ]
-        }) }}
-      </div>
-      <div class="govuk-grid-column-one-quarter">
-        {{ govukDateInput({
-          id: "dateSubmittedFrom",
-          namePrefix: "dateSubmittedFrom",
-          fieldset: {
-            legend: {
-              text: "From",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          errorMessage: {
-            text: errors["dateSubmittedFrom"][0]
-          } if errors["dateSubmittedFrom"][0],
-          items: [
-            {
-              classes: "govuk-input--width-2",
-              name: "Day",
-              value: query["dateSubmittedFrom-Day"]
-            },
-            {
-              classes: "govuk-input--width-2",
-              name: "Month",
-              value: query["dateSubmittedFrom-Month"]
-            },
-            {
-              classes: "govuk-input--width-4",
-              name: "Year",
-              value: query["dateSubmittedFrom-Year"]
-            }
-          ]
-        }) }}
-      </div>
-      <div class="govuk-grid-column-one-quarter">
-        {{ govukDateInput({
-          id: "dateSubmittedTo",
-          namePrefix: "dateSubmittedTo",
-          fieldset: {
-            legend: {
-              text: "To",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          errorMessage: {
-            text: errors["dateSubmittedTo"][0]
-          } if errors["dateSubmittedTo"][0],
-          items: [
-            {
-              classes: "govuk-input--width-2",
-              name: "Day",
-              value: query["dateSubmittedTo-Day"]
-            },
-            {
-              classes: "govuk-input--width-2",
-              name: "Month",
-              value: query["dateSubmittedTo-Month"]
-            },
-            {
-              classes: "govuk-input--width-4",
-              name: "Year",
-              value: query["dateSubmittedTo-Year"]
-            }
-          ]
-        }) }}
-      </div>
-    </div>
-
-    <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
-        <h3 class="govuk-heading-s">Date claim approved</h3>
-      </div>
-      <div class="govuk-grid-column-one-half">
-        <h3 class="govuk-heading-s">Date claim rejected</h3>
-      </div>
-    </div>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
-        {{ govukDateInput({
-          id: "dateApprovedFrom",
-          namePrefix: "dateApprovedFrom",
-          fieldset: {
-            legend: {
-              text: "From",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          errorMessage: {
-            text: errors["dateApprovedFrom"][0]
-          } if errors["dateApprovedFrom"][0],
-          items: [
-            {
-              classes: "govuk-input--width-2",
-              name: "Day",
-              value: query["dateApprovedFrom-Day"]
-            },
-            {
-              classes: "govuk-input--width-2",
-              name: "Month",
-              value: query["dateApprovedFrom-Month"]
-            },
-            {
-              classes: "govuk-input--width-4",
-              name: "Year",
-              value: query["dateApprovedFrom-Year"]
-            }
-          ]
-        }) }}
-      </div>
-      <div class="govuk-grid-column-one-quarter">
-        {{ govukDateInput({
-          id: "dateApprovedTo",
-          namePrefix: "dateApprovedTo",
-          fieldset: {
-            legend: {
-              text: "To",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          errorMessage: {
-            text: errors["dateApprovedTo"][0]
-          } if errors["dateApprovedTo"][0],
-          items: [
-            {
-              classes: "govuk-input--width-2",
-              name: "Day",
-              value: query["dateApprovedTo-Day"]
-            },
-            {
-              classes: "govuk-input--width-2",
-              name: "Month",
-              value: query["dateApprovedTo-Month"]
-            },
-            {
-              classes: "govuk-input--width-4",
-              name: "Year",
-              value: query["dateApprovedTo-Year"]
-            }
-          ]
-        }) }}
-      </div>
-      <div class="govuk-grid-column-one-quarter">
-        {{ govukDateInput({
-          id: "dateRejectedFrom",
-          namePrefix: "dateRejectedFrom",
-          fieldset: {
-            legend: {
-              text: "From",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          errorMessage: {
-            text: errors["dateRejectedFrom"][0]
-          } if errors["dateRejectedFrom"][0],
-          items: [
-            {
-              classes: "govuk-input--width-2",
-              name: "Day",
-              value: query["dateRejectedFrom-Day"]
-            },
-            {
-              classes: "govuk-input--width-2",
-              name: "Month",
-              value: query["dateRejectedFrom-Month"]
-            },
-            {
-              classes: "govuk-input--width-4",
-              name: "Year",
-              value: query["dateRejectedFrom-Year"]
-            }
-          ]
-        }) }}
-      </div>
-      <div class="govuk-grid-column-one-quarter">
-        {{ govukDateInput({
-          id: "dateRejectedTo",
-          namePrefix: "dateRejectedTo",
-          fieldset: {
-            legend: {
-              text: "To",
-              isPageHeading: true,
-              classes: "govuk-fieldset__legend--s"
-            }
-          },
-          errorMessage: {
-            text: errors["dateRejectedTo"][0]
-          } if errors["dateRejectedTo"][0],
-          items: [
-            {
-              classes: "govuk-input--width-2",
-              name: "Day",
-              value: query["dateRejectedTo-Day"]
-            },
-            {
-              classes: "govuk-input--width-2",
-              name: "Month",
-              value: query["dateRejectedTo-Month"]
-            },
-            {
-              classes: "govuk-input--width-4",
-              name: "Year",
-              value: query["dateRejectedTo-Year"]
-            }
-          ]
-        }) }}
-      </div>
-    </div>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-third">
         {{ govukInput({
           id: "approvedClaimAmountFrom",
           name: "approvedClaimAmountFrom",
@@ -602,7 +500,7 @@
         }) }}
       </div>
 
-      <div class="govuk-grid-column-one-third">
+      <div class="govuk-grid-column-one-half">
         {{ govukInput({
           id: "approvedClaimAmountTo",
           name: "approvedClaimAmountTo",
