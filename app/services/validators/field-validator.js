@@ -8,119 +8,117 @@ class FieldValidator {
    * @param fieldName The name of of the HTML element to link the error message to.
    * @param errors An instance of the ErrorHandler class.
    */
-  constructor (data, fieldName, errors) {
+  constructor(data, fieldName, errors) {
     this.data = data
     this.fieldName = fieldName
     this.errors = errors
   }
 
-  isRequired (specificMessage) {
-    const message = (!specificMessage) ? ERROR_MESSAGES.getIsRequired : specificMessage
-    if (validator.isNullOrUndefined(this.data)) {
-      this.errors.add(this.fieldName, message)
-    } else if (this.data === 'Select') {
+  isRequired(specificMessage) {
+    const message = !specificMessage ? ERROR_MESSAGES.getIsRequired : specificMessage
+    if (validator.isNullOrUndefined(this.data) || this.data === 'Select') {
       this.errors.add(this.fieldName, message)
     }
     return this
   }
 
-  isNumeric () {
+  isNumeric() {
     if (!validator.isNumeric(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsNumeric)
     }
     return this
   }
 
-  isCurrency () {
+  isCurrency() {
     if (!validator.isCurrency(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsCurrency)
     }
     return this
   }
 
-  isGreaterThanZero () {
+  isGreaterThanZero() {
     if (!validator.isGreaterThanZero(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsGreaterThan)
     }
     return this
   }
 
-  isLessOrEqualToHundred () {
+  isLessOrEqualToHundred() {
     if (!validator.isLessOrEqualToHundred(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getLessOrEqualToHundred)
     }
     return this
   }
 
-  isGreaterThanOrEqualToZero () {
+  isGreaterThanOrEqualToZero() {
     if (!validator.isGreaterThanOrEqualToZero(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsGreaterThanOrEqualTo)
     }
     return this
   }
 
-  isGreaterThanMinimumClaim () {
+  isGreaterThanMinimumClaim() {
     if (!validator.isGreaterThanMinimumClaim(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.isGreaterThanMinimumClaim)
     }
     return this
   }
 
-  isLessThanMaximumDifferentApprovedAmount () {
+  isLessThanMaximumDifferentApprovedAmount() {
     if (!validator.isLessThanMaximumDifferentApprovedAmount(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsLessThanMaximumDifferentApprovedAmount)
     }
     return this
   }
 
-  isEmail () {
+  isEmail() {
     if (!validator.isEmail(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsValidFormat)
     }
     return this
   }
 
-  isLessThanLength (length, specificMessage) {
-    const message = (!specificMessage) ? ERROR_MESSAGES.getIsLessThanLengthMessage : specificMessage
+  isLessThanLength(length, specificMessage) {
+    const message = !specificMessage ? ERROR_MESSAGES.getIsLessThanLengthMessage : specificMessage
     if (!validator.isLessThanLength(this.data, length)) {
       this.errors.add(this.fieldName, message, { length })
     }
     return this
   }
 
-  isInteger () {
+  isInteger() {
     if (!validator.isInteger(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getIsIntegerFormat)
     }
     return this
   }
 
-  isMaxIntOrLess () {
+  isMaxIntOrLess() {
     if (!validator.isMaxIntOrLess(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getValueIsTooLarge)
     }
     return this
   }
 
-  isMaxCostOrLess () {
+  isMaxCostOrLess() {
     if (!validator.isMaxCostOrLess(this.data)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getValueIsTooLarge)
     }
     return this
   }
 
-  isValidDate (date) {
+  isValidDate(date) {
     if (!validator.isValidDate(date)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getInvalidDateFormatMessage)
     }
     return this
   }
 
-  isDateRequired (specificMessage) {
-    const message = (!specificMessage) ? ERROR_MESSAGES.getIsRequired : specificMessage
+  isDateRequired(specificMessage) {
+    const message = !specificMessage ? ERROR_MESSAGES.getIsRequired : specificMessage
     const self = this
     if (this.data instanceof Array) {
-      this.data.forEach(function (data) {
+      this.data.forEach(data => {
         if (validator.isNullOrUndefined(data)) {
           self.errors.add(self.fieldName, message)
         }
@@ -129,7 +127,7 @@ class FieldValidator {
     return this
   }
 
-  isFutureDate (date) {
+  isFutureDate(date) {
     if (!validator.isDateInTheFuture(date)) {
       this.errors.add(this.fieldName, ERROR_MESSAGES.getFutureDateMessage)
     }
@@ -137,6 +135,6 @@ class FieldValidator {
   }
 }
 
-module.exports = function (data, fieldName, errors) {
+module.exports = (data, fieldName, errors) => {
   return new FieldValidator(data, fieldName, errors)
 }

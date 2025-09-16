@@ -3,7 +3,7 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 
 class AutoApprovalConfig {
-  constructor (
+  constructor(
     caseworker,
     autoApprovalEnabled,
     costVariancePercentage,
@@ -12,7 +12,7 @@ class AutoApprovalConfig {
     maxNumberOfClaimsPerYear,
     maxNumberOfClaimsPerMonth,
     numberOfConsecutiveAutoApprovals,
-    rulesDisabled
+    rulesDisabled,
   ) {
     this.caseworker = caseworker
     this.autoApprovalEnabled = autoApprovalEnabled || ''
@@ -27,11 +27,10 @@ class AutoApprovalConfig {
     this.IsValid()
   }
 
-  IsValid () {
+  IsValid() {
     const errors = ErrorHandler()
 
-    FieldValidator(this.autoApprovalEnabled, 'auto-approval-enabled', errors)
-      .isRequired()
+    FieldValidator(this.autoApprovalEnabled, 'auto-approval-enabled', errors).isRequired()
 
     FieldValidator(this.costVariancePercentage, 'cost-variance-percentage', errors)
       .isRequired()

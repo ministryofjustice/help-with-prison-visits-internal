@@ -3,7 +3,7 @@ const insertClaimEvent = require('./insert-claim-event')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const dateFormatter = require('../date-formatter')
 
-module.exports = function (claim, topup, caseworker) {
+module.exports = (claim, topup, caseworker) => {
   const db = getDatabaseConnector()
 
   return db('TopUp')
@@ -13,8 +13,18 @@ module.exports = function (claim, topup, caseworker) {
       Caseworker: caseworker,
       TopUpAmount: topup.amount,
       Reason: topup.reason,
-      DateAdded: dateFormatter.now().toDate()
-    }).then(function () {
-      return insertClaimEvent(claim.Reference, claim.EligibilityId, claim.ClaimId, claimEventEnum.TOP_UP_SUBMITTED.value, null, topup.reason, caseworker, true)
+      DateAdded: dateFormatter.now().toDate(),
+    })
+    .then(() => {
+      return insertClaimEvent(
+        claim.Reference,
+        claim.EligibilityId,
+        claim.ClaimId,
+        claimEventEnum.TOP_UP_SUBMITTED.value,
+        null,
+        topup.reason,
+        caseworker,
+        true,
+      )
     })
 }

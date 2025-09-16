@@ -1,4 +1,4 @@
-module.exports = function (status) {
+module.exports = status => {
   let displayStatus = ''
   switch (status) {
     case 'APPROVED':

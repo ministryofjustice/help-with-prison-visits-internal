@@ -11,14 +11,14 @@ module.exports = {
       database: config.DATABASE,
       options: {
         encrypt: false,
-        enableArithAbort: true
-      }
+        enableArithAbort: true,
+      },
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
-    acquireConnectionTimeout: 500000
+    acquireConnectionTimeout: 500000,
   },
   testing: {
     client: 'mssql',
@@ -29,8 +29,8 @@ module.exports = {
       database: config.TESTING_DATABASE,
       options: {
         encrypt: false,
-        enableArithAbort: true
-      }
-    }
-  }
+        enableArithAbort: true,
+      },
+    },
+  },
 }

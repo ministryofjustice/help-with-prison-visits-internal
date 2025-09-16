@@ -1,35 +1,34 @@
 const config = require('../../../config')
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function () {
+module.exports = () => {
   const db = getDatabaseConnector()
 
   return db('AutoApprovalConfig')
     .where('IsEnabled', true)
     .orderBy('DateCreated', 'desc')
     .first()
-    .then(function (autoApprovalConfig) {
+    .then(autoApprovalConfig => {
       if (autoApprovalConfig) {
         const rulesDisabled = autoApprovalConfig.RulesDisabled
         if (rulesDisabled) {
           autoApprovalConfig.RulesDisabled = rulesDisabled.split(',')
         }
         return autoApprovalConfig
-      } else {
-        return getDefaults()
       }
+      return getDefaults()
     })
 }
 
-function getDefaults () {
+function getDefaults() {
   return {
     AutoApprovalEnabled: config.AUTO_APPROVAL_ENABLED === 'true',
     CostVariancePercentage: parseFloat(config.AUTO_APPROVAL_COST_VARIANCE),
     MaxClaimTotal: parseFloat(config.AUTO_APPROVAL_MAX_CLAIM_TOTAL),
-    MaxDaysAfterAPVUVisit: parseInt(config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT),
-    MaxNumberOfClaimsPerYear: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR),
-    MaxNumberOfClaimsPerMonth: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH),
+    MaxDaysAfterAPVUVisit: parseInt(config.AUTO_APPROVAL_MAX_DAYS_AFTER_APVU_VISIT, 10),
+    MaxNumberOfClaimsPerYear: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_YEAR, 10),
+    MaxNumberOfClaimsPerMonth: parseInt(config.AUTO_APPROVAL_MAX_CLAIMS_PER_MONTH, 10),
     RulesDisabled: null,
-    NumberOfConsecutiveAutoApprovals: parseFloat(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS)
+    NumberOfConsecutiveAutoApprovals: parseFloat(config.AUTO_APPROVAL_NUMBER_OF_CONSECUTIVE_AUTO_APPROVALS),
   }
 }

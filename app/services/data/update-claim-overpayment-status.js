@@ -3,9 +3,10 @@ const dateFormatter = require('../date-formatter')
 const displayHelper = require('../../views/helpers/display-helper')
 const insertClaimEvent = require('./insert-claim-event')
 const overpaymentActionEnum = require('../../constants/overpayment-action-enum')
+
 const newLine = '<br >'
 
-module.exports = function (claim, overpaymentResponse) {
+module.exports = (claim, overpaymentResponse) => {
   const db = getDatabaseConnector()
 
   const eventLabel = overpaymentResponse.action
@@ -16,7 +17,7 @@ module.exports = function (claim, overpaymentResponse) {
 
   const updateClaim = {
     IsOverpaid: toBeMarkedAsOverpaid || toBeUpdated,
-    LastUpdated: dateFormatter.now().toDate()
+    LastUpdated: dateFormatter.now().toDate(),
   }
 
   if (toBeMarkedAsOverpaid) {
@@ -38,12 +39,12 @@ module.exports = function (claim, overpaymentResponse) {
   return db('Claim')
     .where('ClaimId', claim.ClaimId)
     .update(updateClaim)
-    .then(function () {
+    .then(() => {
       return insertClaimEvent(claim.Reference, claim.EligibilityId, claim.ClaimId, eventLabel, null, note, null, true)
     })
 }
 
-function buildUpdateNote (previousRemainingAmount, newRemainingAmount, note) {
+function buildUpdateNote(previousRemainingAmount, newRemainingAmount, note) {
   const result = []
   result.push(note)
   result.push(`Previous remaining amount: £${displayHelper.toDecimal(previousRemainingAmount)}`)

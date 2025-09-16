@@ -1,10 +1,10 @@
 const ClaimExpenseResponse = require('../../services/domain/claim-expense-response')
 
-module.exports = function (body) {
+module.exports = body => {
   const claimExpenses = []
   const formKeys = Object.keys(body)
 
-  formKeys.forEach(function (formKey) {
+  formKeys.forEach(formKey => {
     if (formKey.match(/claim-expense-[0-9]*-status/)) {
       const approvedCostKey = formKey.replace('-status', '-approvedcost')
       const costKey = formKey.replace('-status', '-cost')

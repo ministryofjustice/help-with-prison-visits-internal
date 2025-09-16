@@ -9,29 +9,28 @@ const AuditConfig = require('../services/domain/audit-config')
 const ValidationError = require('../services/errors/validation-error')
 const applicationRoles = require('../constants/application-roles-enum')
 
-module.exports = function (router) {
-  router.get('/config', function (req, res, next) {
+module.exports = router => {
+  router.get('/config', (req, res, next) => {
     authorisation.hasRoles(req, [applicationRoles.BAND_9])
 
     return getAutoApprovalConfig()
-      .then(function (autoApprovalConfig) {
-        getAuditConfig()
-          .then(function (auditConfig) {
-            const rulesDisabled = autoApprovalConfig.RulesDisabled ? autoApprovalConfig.RulesDisabled : ''
-            res.render('config', {
-              autoApprovalConfig,
-              auditConfig,
-              autoApprovalRulesEnum,
-              rulesDisabled
-            })
+      .then(autoApprovalConfig => {
+        getAuditConfig().then(auditConfig => {
+          const rulesDisabled = autoApprovalConfig.RulesDisabled ? autoApprovalConfig.RulesDisabled : ''
+          res.render('config', {
+            autoApprovalConfig,
+            auditConfig,
+            autoApprovalRulesEnum,
+            rulesDisabled,
           })
+        })
       })
-      .catch(function (error) {
+      .catch(error => {
         next(error)
       })
   })
 
-  router.post('/config', function (req, res, next) {
+  router.post('/config', (req, res, next) => {
     authorisation.hasRoles(req, [applicationRoles.BAND_9])
 
     const rulesDisabled = generateRulesDisabled(req.body?.rulesEnabled || [])
@@ -45,36 +44,33 @@ module.exports = function (router) {
         req.body?.MaxNumberOfClaimsPerYear,
         req.body?.MaxNumberOfClaimsPerMonth,
         req.body?.NumberOfConsecutiveAutoApprovals,
-        rulesDisabled
+        rulesDisabled,
       )
 
-      const auditConfig = new AuditConfig(
-        req.body?.AuditThreshold,
-        req.body?.VerificationPercentage
-      )
+      const auditConfig = new AuditConfig(req.body?.AuditThreshold, req.body?.VerificationPercentage)
 
       updateAutoApprovalConfig(autoApprovalConfig)
-        .then(function () {
+        .then(() => {
           updateAuditConfig(auditConfig)
-            .then(function () {
+            .then(() => {
               res.redirect('/config')
             })
-            .catch(function (error) {
+            .catch(error => {
               next(error)
             })
         })
-        .catch(function (error) {
+        .catch(error => {
           next(error)
         })
     } catch (error) {
       if (error instanceof ValidationError) {
         const autoApprovalConfig = {
           ...req.body,
-          AutoApprovalEnabled: req.body?.AutoApprovalEnabled === 'true'
+          AutoApprovalEnabled: req.body?.AutoApprovalEnabled === 'true',
         }
         const auditConfig = {
           ThresholdAmount: req.body?.ThresholdAmount,
-          VerificationPercent: req.body?.VerificationPercentage
+          VerificationPercent: req.body?.VerificationPercentage,
         }
         const errors = error.validationErrors
         res.status(400).render('config', {
@@ -82,7 +78,7 @@ module.exports = function (router) {
           auditConfig,
           autoApprovalRulesEnum,
           rulesDisabled,
-          errors
+          errors,
         })
       } else {
         next(error)
@@ -91,7 +87,7 @@ module.exports = function (router) {
   })
 }
 
-const generateRulesDisabled = (rulesEnabled) => {
+const generateRulesDisabled = rulesEnabled => {
   const rules = Object.values(autoApprovalRulesEnum).map(rule => rule.value)
   const rulesDisabled = rules.filter(rule => !rulesEnabled.includes(rule))
 

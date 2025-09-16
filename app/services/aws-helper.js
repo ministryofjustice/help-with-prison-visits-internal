@@ -1,22 +1,22 @@
-const { v4: uuidv4 } = require('uuid')
+const { randomUUID } = require('crypto')
 const { S3 } = require('@aws-sdk/client-s3')
 const fs = require('fs')
 const log = require('./log')
 const config = require('../../config')
 
 class AWSHelper {
-  constructor ({ bucketName = config.AWS_S3_BUCKET_NAME, region = config.AWS_REGION } = { }) {
+  constructor({ bucketName = config.AWS_S3_BUCKET_NAME, region = config.AWS_REGION } = {}) {
     this.bucketName = bucketName
     this.region = region
     this.s3 = new S3({
-      region: this.region
+      region: this.region,
     })
   }
 
-  async delete (key) {
+  async delete(key) {
     const deleteParams = {
       Bucket: this.bucketName,
-      Key: key
+      Key: key,
     }
 
     try {
@@ -27,18 +27,17 @@ class AWSHelper {
     }
   }
 
-  async upload (key, source) {
+  async upload(key, source) {
     const uploadParams = {
       Bucket: this.bucketName,
       Key: key,
-      Body: ''
+      Body: '',
     }
 
-    const fileStream = fs.createReadStream(source)
-      .on('error', function (error) {
-        log.error(`Error occurred reading from file ${source}`, error)
-        throw new Error(error)
-      })
+    const fileStream = fs.createReadStream(source).on('error', error => {
+      log.error(`Error occurred reading from file ${source}`, error)
+      throw new Error(error)
+    })
 
     uploadParams.Body = fileStream
 
@@ -52,16 +51,16 @@ class AWSHelper {
     }
   }
 
-  async download (key) {
+  async download(key) {
     if (key.startsWith('/data/')) {
       key = key.substring(6)
     }
 
     const downloadParams = {
       Bucket: this.bucketName,
-      Key: key
+      Key: key,
     }
-    const randomFilename = uuidv4()
+    const randomFilename = randomUUID()
     const tempFile = `${config.FILE_TMP_DIR}/${randomFilename}`
 
     try {
@@ -78,5 +77,5 @@ class AWSHelper {
 }
 
 module.exports = {
-  AWSHelper
+  AWSHelper,
 }

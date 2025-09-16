@@ -1,17 +1,54 @@
 const moment = require('moment')
 const { getDatabaseConnector } = require('../../app/databaseConnector')
+
 const db = getDatabaseConnector()
 
 // TODO extract sample data into separate object so you can retrieve it and use in tests, so if it is updated it won't break tests
-function insertTestData (reference, date, status, visitDate, increment, paymentStatus = null, dateReviewed = null, assistedDigitalCaseworker = null, paymentAmount = null, isIncludedInAudit = null) {
+function insertTestData(
+  reference,
+  date,
+  status,
+  visitDate,
+  increment,
+  paymentStatus = null,
+  dateReviewed = null,
+  assistedDigitalCaseworker = null,
+  paymentAmount = null,
+) {
   const idIncrement = increment || 0
   // Generate unique Integer for Ids using timestamp in tenth of seconds
   const uniqueId = Math.floor(Date.now() / 100) - 15000000000 + idIncrement
 
-  return insertTestDataForIds(reference, date, status, visitDate, uniqueId, uniqueId + 1, uniqueId + 2, uniqueId + 3, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount, isIncludedInAudit)
+  return insertTestDataForIds(
+    reference,
+    date,
+    status,
+    visitDate,
+    uniqueId,
+    uniqueId + 1,
+    uniqueId + 2,
+    uniqueId + 3,
+    paymentStatus,
+    dateReviewed,
+    assistedDigitalCaseworker,
+    paymentAmount,
+  )
 }
 
-function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uniqueId2, uniqueId3, uniqueId4, paymentStatus, dateReviewed, assistedDigitalCaseworker, paymentAmount, isIncludedInAudit) {
+function insertTestDataForIds(
+  reference,
+  date,
+  status,
+  visitDate,
+  uniqueId,
+  uniqueId2,
+  uniqueId3,
+  uniqueId4,
+  paymentStatus,
+  dateReviewed,
+  assistedDigitalCaseworker,
+  paymentAmount,
+) {
   const data = getTestData(reference, status)
 
   const ids = {}
@@ -21,10 +58,10 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
       Reference: reference,
       DateCreated: date,
       DateSubmitted: date,
-      Status: status
+      Status: status,
     })
     .returning('EligibilityId')
-    .then(function (result) {
+    .then(result => {
       ids.eligibilityId = result[0].EligibilityId
       return db('Prisoner')
         .returning('PrisonerId')
@@ -36,14 +73,14 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
           LastName: data.Prisoner.LastName,
           DateOfBirth: date,
           PrisonNumber: data.Prisoner.PrisonNumber,
-          NameOfPrison: data.Prisoner.NameOfPrison
+          NameOfPrison: data.Prisoner.NameOfPrison,
         })
-        .then(function (result) {
-          ids.prisonerId = result[0].PrisonerId
+        .then(idsResult => {
+          ids.prisonerId = idsResult[0].PrisonerId
           return ids.prisonerId
         })
     })
-    .then(function () {
+    .then(() => {
       return db('Visitor')
         .returning('VisitorId')
         .insert({
@@ -63,14 +100,14 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
           DateOfBirth: date,
           Relationship: data.Visitor.Relationship,
           Benefit: data.Visitor.Benefit,
-          DWPBenefitCheckerResult: data.Visitor.DWPBenefitCheckerResult
+          DWPBenefitCheckerResult: data.Visitor.DWPBenefitCheckerResult,
         })
-        .then(function (result) {
+        .then(result => {
           ids.visitorId = result[0].VisitorId
           return ids.visitorId
         })
     })
-    .then(function () {
+    .then(() => {
       return db('Claim')
         .returning(['ClaimId', 'LastUpdated'])
         .insert({
@@ -91,239 +128,267 @@ function insertTestDataForIds (reference, date, status, visitDate, uniqueId, uni
           PaymentStatus: paymentStatus,
           AssistedDigitalCaseworker: assistedDigitalCaseworker || null,
           DateReviewed: dateReviewed || null,
-          PaymentAmount: paymentAmount || null
+          PaymentAmount: paymentAmount || null,
         })
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimId = result[0].ClaimId
       ids.lastUpdated = result[0].LastUpdated
     })
-    .then(function () {
-      return db('ClaimExpense')
-        .returning('ClaimExpenseId')
-        .insert({
-          ClaimExpenseId: uniqueId,
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          ClaimId: ids.claimId,
-          ExpenseType: data.ClaimExpenses[0].ExpenseType,
-          Cost: data.ClaimExpenses[0].Cost,
-          From: data.ClaimExpenses[0].From,
-          To: data.ClaimExpenses[0].To,
-          IsReturn: data.ClaimExpenses[0].IsReturn,
-          IsEnabled: true
-        })
+    .then(() => {
+      return db('ClaimExpense').returning('ClaimExpenseId').insert({
+        ClaimExpenseId: uniqueId,
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        ClaimId: ids.claimId,
+        ExpenseType: data.ClaimExpenses[0].ExpenseType,
+        Cost: data.ClaimExpenses[0].Cost,
+        From: data.ClaimExpenses[0].From,
+        To: data.ClaimExpenses[0].To,
+        IsReturn: data.ClaimExpenses[0].IsReturn,
+        IsEnabled: true,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.expenseId1 = result[0].ClaimExpenseId
-      return db('ClaimExpense')
-        .returning('ClaimExpenseId')
-        .insert({
-          ClaimExpenseId: uniqueId2,
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          ClaimId: ids.claimId,
-          ExpenseType: data.ClaimExpenses[1].ExpenseType,
-          Cost: data.ClaimExpenses[1].Cost,
-          DurationOfTravel: data.ClaimExpenses[1].DurationOfTravel,
-          IsEnabled: true
-        })
+      return db('ClaimExpense').returning('ClaimExpenseId').insert({
+        ClaimExpenseId: uniqueId2,
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        ClaimId: ids.claimId,
+        ExpenseType: data.ClaimExpenses[1].ExpenseType,
+        Cost: data.ClaimExpenses[1].Cost,
+        DurationOfTravel: data.ClaimExpenses[1].DurationOfTravel,
+        IsEnabled: true,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.expenseId2 = result[0].ClaimExpenseId
-      return db('ClaimChild')
-        .returning('ClaimChildId')
-        .insert({
-          ClaimChildId: uniqueId,
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          ClaimId: ids.claimId,
-          FirstName: data.ClaimChild[0].FirstName,
-          LastName: data.ClaimChild[0].LastName,
-          DateOfBirth: date,
-          Relationship: data.ClaimChild[0].Relationship,
-          IsEnabled: true
-        })
+      return db('ClaimChild').returning('ClaimChildId').insert({
+        ClaimChildId: uniqueId,
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        ClaimId: ids.claimId,
+        FirstName: data.ClaimChild[0].FirstName,
+        LastName: data.ClaimChild[0].LastName,
+        DateOfBirth: date,
+        Relationship: data.ClaimChild[0].Relationship,
+        IsEnabled: true,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.childId1 = result[0].ClaimChildId
-      return db('ClaimChild')
-        .returning('ClaimChildId')
-        .insert({
-          ClaimChildId: uniqueId2,
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          ClaimId: ids.claimId,
-          FirstName: data.ClaimChild[1].FirstName,
-          LastName: data.ClaimChild[1].LastName,
-          DateOfBirth: date,
-          Relationship: data.ClaimChild[1].Relationship,
-          IsEnabled: true
-        })
+      return db('ClaimChild').returning('ClaimChildId').insert({
+        ClaimChildId: uniqueId2,
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        ClaimId: ids.claimId,
+        FirstName: data.ClaimChild[1].FirstName,
+        LastName: data.ClaimChild[1].LastName,
+        DateOfBirth: date,
+        Relationship: data.ClaimChild[1].Relationship,
+        IsEnabled: true,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.childId2 = result[0].ClaimChildId
-      return db('ClaimDocument')
-        .returning('ClaimDocumentId')
-        .insert({
-          ClaimDocumentId: uniqueId,
-          ClaimId: ids.claimId,
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          DocumentType: data.ClaimDocument['visit-confirmation'].DocumentType,
-          DocumentStatus: data.ClaimDocument['visit-confirmation'].DocumentStatus,
-          Filepath: '/example/path/1',
-          DateSubmitted: date,
-          IsEnabled: data.ClaimDocument['visit-confirmation'].IsEnabled
-        })
+      return db('ClaimDocument').returning('ClaimDocumentId').insert({
+        ClaimDocumentId: uniqueId,
+        ClaimId: ids.claimId,
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        DocumentType: data.ClaimDocument['visit-confirmation'].DocumentType,
+        DocumentStatus: data.ClaimDocument['visit-confirmation'].DocumentStatus,
+        Filepath: '/example/path/1',
+        DateSubmitted: date,
+        IsEnabled: data.ClaimDocument['visit-confirmation'].IsEnabled,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimDocumentId1 = result[0].ClaimDocumentId
-      return db('ClaimDocument')
-        .returning('ClaimDocumentId')
-        .insert({
-          ClaimDocumentId: uniqueId2,
-          ClaimId: ids.claimId,
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          DocumentType: data.ClaimDocument.benefit.DocumentType,
-          DocumentStatus: data.ClaimDocument.benefit.DocumentStatus,
-          Filepath: '/example/path/2',
-          DateSubmitted: date,
-          IsEnabled: data.ClaimDocument.benefit.IsEnabled
-        })
+      return db('ClaimDocument').returning('ClaimDocumentId').insert({
+        ClaimDocumentId: uniqueId2,
+        ClaimId: ids.claimId,
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        DocumentType: data.ClaimDocument.benefit.DocumentType,
+        DocumentStatus: data.ClaimDocument.benefit.DocumentStatus,
+        Filepath: '/example/path/2',
+        DateSubmitted: date,
+        IsEnabled: data.ClaimDocument.benefit.IsEnabled,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimDocumentId2 = result[0].ClaimDocumentId
-      return db('ClaimDocument')
-        .returning('ClaimDocumentId')
-        .insert({
-          ClaimDocumentId: uniqueId3,
-          ClaimExpenseId: uniqueId,
-          ClaimId: ids.claimId,
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          DocumentType: data.ClaimDocument.expense.DocumentType,
-          DocumentStatus: data.ClaimDocument.expense.DocumentStatus,
-          Filepath: '/example/path/3',
-          DateSubmitted: date,
-          IsEnabled: data.ClaimDocument.expense.IsEnabled
-        })
+      return db('ClaimDocument').returning('ClaimDocumentId').insert({
+        ClaimDocumentId: uniqueId3,
+        ClaimExpenseId: uniqueId,
+        ClaimId: ids.claimId,
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        DocumentType: data.ClaimDocument.expense.DocumentType,
+        DocumentStatus: data.ClaimDocument.expense.DocumentStatus,
+        Filepath: '/example/path/3',
+        DateSubmitted: date,
+        IsEnabled: data.ClaimDocument.expense.IsEnabled,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimDocumentId3 = result[0].ClaimDocumentId
-      return db('ClaimDocument')
-        .returning('ClaimDocumentId')
-        .insert({
-          ClaimDocumentId: uniqueId4,
-          ClaimExpenseId: uniqueId2,
-          ClaimId: ids.claimId,
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          DocumentType: data.ClaimDocument.expense.DocumentType,
-          DocumentStatus: data.ClaimDocument.expense.DocumentStatus,
-          Filepath: '/example/path/4',
-          DateSubmitted: date,
-          IsEnabled: data.ClaimDocument.expense.IsEnabled
-        })
+      return db('ClaimDocument').returning('ClaimDocumentId').insert({
+        ClaimDocumentId: uniqueId4,
+        ClaimExpenseId: uniqueId2,
+        ClaimId: ids.claimId,
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        DocumentType: data.ClaimDocument.expense.DocumentType,
+        DocumentStatus: data.ClaimDocument.expense.DocumentStatus,
+        Filepath: '/example/path/4',
+        DateSubmitted: date,
+        IsEnabled: data.ClaimDocument.expense.IsEnabled,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimDocumentId4 = result[0].ClaimDocumentId
-      return db('ClaimEvent')
-        .returning('ClaimEventId')
-        .insert({
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          ClaimId: uniqueId,
-          DateAdded: date,
-          Event: 'An event',
-          AdditionalData: 'Additional stuff',
-          Note: 'A note',
-          Caseworker: 'Joe Bloggs',
-          IsInternal: true
-        })
+      return db('ClaimEvent').returning('ClaimEventId').insert({
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        ClaimId: uniqueId,
+        DateAdded: date,
+        Event: 'An event',
+        AdditionalData: 'Additional stuff',
+        Note: 'A note',
+        Caseworker: 'Joe Bloggs',
+        IsInternal: true,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimEventId1 = result[0].ClaimEventId
-      return db('ClaimEvent')
-        .returning('ClaimEventId')
-        .insert({
-          EligibilityId: ids.eligibilityId,
-          Reference: reference,
-          ClaimId: uniqueId,
-          DateAdded: date,
-          Event: 'Another event',
-          AdditionalData: 'More additional stuff',
-          Note: 'Another note',
-          Caseworker: 'Jane Bloggs',
-          IsInternal: false
-        })
+      return db('ClaimEvent').returning('ClaimEventId').insert({
+        EligibilityId: ids.eligibilityId,
+        Reference: reference,
+        ClaimId: uniqueId,
+        DateAdded: date,
+        Event: 'Another event',
+        AdditionalData: 'More additional stuff',
+        Note: 'Another note',
+        Caseworker: 'Jane Bloggs',
+        IsInternal: false,
+      })
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimEventId2 = result[0].ClaimEventId
-      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction.hc3.DeductionType, data.ClaimDeduction.hc3.Amount)
+      return insertClaimDeduction(
+        uniqueId,
+        reference,
+        ids.eligibilityId,
+        data.ClaimDeduction.hc3.DeductionType,
+        data.ClaimDeduction.hc3.Amount,
+      )
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimDeductionId1 = result[0].ClaimDeductionId
-      return insertClaimDeduction(uniqueId, reference, ids.eligibilityId, data.ClaimDeduction.overpayment.DeductionType, data.ClaimDeduction.overpayment.Amount)
+      return insertClaimDeduction(
+        uniqueId,
+        reference,
+        ids.eligibilityId,
+        data.ClaimDeduction.overpayment.DeductionType,
+        data.ClaimDeduction.overpayment.Amount,
+      )
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimDeductionId2 = result[0].ClaimDeductionId
       return insertClaimEscort(uniqueId, reference, ids.eligibilityId, data.ClaimEscort)
     })
-    .then(function (result) {
+    .then(result => {
       ids.claimEscortId = result[0].ClaimEscortId
       return ids
     })
 }
 
-function deleteByReference (schemaTable, reference) {
+function deleteByReference(schemaTable, reference) {
   return db(schemaTable).where('Reference', reference).del()
 }
 
-function deleteByClaimIds (schemaTable, claimIds) {
+function deleteByClaimIds(schemaTable, claimIds) {
   return db(schemaTable).whereIn('ClaimId', claimIds).del()
 }
 
-function getClaimIdsForReference (schemaTable, reference) {
-  return db(schemaTable).where('Reference', reference).select('ClaimId')
-    .then(function (results) {
+function getClaimIdsForReference(schemaTable, reference) {
+  return db(schemaTable)
+    .where('Reference', reference)
+    .select('ClaimId')
+    .then(results => {
       const claimIdArray = []
-      results.forEach(function (result) {
+      results.forEach(result => {
         claimIdArray.push(result.ClaimId)
       })
       return claimIdArray
     })
 }
 
-function deleteAll (reference) {
+function deleteAll(reference) {
   return deleteByReference('Task', reference)
-    .then(function () { return deleteByReference('ClaimEvent', reference) })
-    .then(function () { return deleteByReference('ClaimBankDetail', reference) })
-    .then(function () { return deleteByReference('ClaimDocument', reference) })
-    .then(function () { return deleteByReference('ClaimExpense', reference) })
-    .then(function () { return deleteByReference('ClaimChild', reference) })
-    .then(function () { return deleteByReference('ClaimDeduction', reference) })
-    .then(function () { return deleteByReference('ClaimEscort', reference) })
-    .then(function () { return getClaimIdsForReference('Claim', reference) })
-    .then(function (claimIds) { return deleteByClaimIds('TopUp', claimIds) })
-    .then(function () { return deleteByReference('Claim', reference) })
-    .then(function () { return deleteByReference('Visitor', reference) })
-    .then(function () { return deleteByReference('Prisoner', reference) })
-    .then(function () { return deleteByReference('Eligibility', reference) })
-    .then(function () { return deleteByReference('ReportData', reference) })
-    .then(function () { return deleteByReference('ReportData', reference) })
-    .then(function () { return db('AuditReport').del() })
-    .then(function () { return db('AuditConfig').del() })
+    .then(() => {
+      return deleteByReference('ClaimEvent', reference)
+    })
+    .then(() => {
+      return deleteByReference('ClaimBankDetail', reference)
+    })
+    .then(() => {
+      return deleteByReference('ClaimDocument', reference)
+    })
+    .then(() => {
+      return deleteByReference('ClaimExpense', reference)
+    })
+    .then(() => {
+      return deleteByReference('ClaimChild', reference)
+    })
+    .then(() => {
+      return deleteByReference('ClaimDeduction', reference)
+    })
+    .then(() => {
+      return deleteByReference('ClaimEscort', reference)
+    })
+    .then(() => {
+      return getClaimIdsForReference('Claim', reference)
+    })
+    .then(claimIds => {
+      return deleteByClaimIds('TopUp', claimIds)
+    })
+    .then(() => {
+      return deleteByReference('Claim', reference)
+    })
+    .then(() => {
+      return deleteByReference('Visitor', reference)
+    })
+    .then(() => {
+      return deleteByReference('Prisoner', reference)
+    })
+    .then(() => {
+      return deleteByReference('Eligibility', reference)
+    })
+    .then(() => {
+      return deleteByReference('ReportData', reference)
+    })
+    .then(() => {
+      return deleteByReference('ReportData', reference)
+    })
+    .then(() => {
+      return db('AuditReport').del()
+    })
+    .then(() => {
+      return db('AuditConfig').del()
+    })
 }
 
-function getTestData (reference, status) {
+function getTestData(reference, status) {
   return {
     Prisoner: {
       FirstName: 'TestFirst',
       LastName: 'TestLast',
       PrisonNumber: 'A123456',
-      NameOfPrison: 'Test'
+      NameOfPrison: 'Test',
     },
     Visitor: {
       FirstName: 'John',
@@ -338,7 +403,7 @@ function getTestData (reference, status) {
       PhoneNumber: '07911111111',
       Relationship: 'partner',
       Benefit: 'income-support',
-      DWPBenefitCheckerResult: 'UNDETERMINED'
+      DWPBenefitCheckerResult: 'UNDETERMINED',
     },
     Claim: {
       ClaimType: 'first-time',
@@ -348,172 +413,177 @@ function getTestData (reference, status) {
       PaymentMethod: 'bank',
       AssignedTo: 'TestUser@test.com',
       Reference: reference,
-      Status: status
+      Status: status,
     },
-    ClaimExpenses: [{
-      ExpenseType: 'train',
-      Cost: 12,
-      From: 'London',
-      To: 'Hewell',
-      IsReturn: true
-    },
-    {
-      ExpenseType: 'accommodation',
-      Cost: 80,
-      DurationOfTravel: 1
-    }],
-    ClaimChild: [{
-      FirstName: 'Jane',
-      LastName: 'Bloggs',
-      DateOfBirth: '01-09-2005',
-      Relationship: 'prisoners-child'
-    },
-    {
-      FirstName: 'Michael',
-      LastName: 'Bloggs',
-      DateOfBirth: '15-10-2010',
-      Relationship: 'claimants-child'
-    }],
+    ClaimExpenses: [
+      {
+        ExpenseType: 'train',
+        Cost: 12,
+        From: 'London',
+        To: 'Hewell',
+        IsReturn: true,
+      },
+      {
+        ExpenseType: 'accommodation',
+        Cost: 80,
+        DurationOfTravel: 1,
+      },
+    ],
+    ClaimChild: [
+      {
+        FirstName: 'Jane',
+        LastName: 'Bloggs',
+        DateOfBirth: '01-09-2005',
+        Relationship: 'prisoners-child',
+      },
+      {
+        FirstName: 'Michael',
+        LastName: 'Bloggs',
+        DateOfBirth: '15-10-2010',
+        Relationship: 'claimants-child',
+      },
+    ],
     ClaimDocument: {
       'visit-confirmation': {
         DocumentType: 'VISIT-CONFIRMATION',
         DocumentStatus: 'uploaded',
         IsEnabled: 'true',
-        Caseworker: 'test@test.com'
+        Caseworker: 'test@test.com',
       },
       benefit: {
         DocumentType: 'BENEFIT',
         DocumentStatus: 'uploaded',
-        IsEnabled: 'true'
+        IsEnabled: 'true',
       },
       expense: {
         DocumentType: 'RECEIPT',
         DocumentStatus: 'uploaded',
-        IsEnabled: 'true'
-      }
+        IsEnabled: 'true',
+      },
     },
     ClaimEvent: [
       {
         Event: 'Event text',
         AdditionalData: 'A note',
         Caseworker: 'Joe Bloggs',
-        IsInternal: true
+        IsInternal: true,
       },
       {
         Event: 'Event text 2',
         AdditionalData: 'Another note',
         Caseworker: 'Jane Bloggs',
-        IsInternal: false
-      }
+        IsInternal: false,
+      },
     ],
     ClaimDeduction: {
       overpayment: {
         Amount: 5,
         DeductionType: 'overpayment',
-        IsEnabled: true
+        IsEnabled: true,
       },
       hc3: {
         Amount: 10,
         DeductionType: 'hc3',
-        IsEnabled: true
-      }
+        IsEnabled: true,
+      },
     },
     ClaimEscort: {
       FirstName: 'Escort',
       LastName: 'Person',
-      DateOfBirth: '01-01-1990'
-    }
+      DateOfBirth: '01-01-1990',
+    },
   }
 }
 
-function insertClaim (claimId, eligibilityId, reference, date, status, isOverpaid, overpaymentAmount, remainingOverpaymentAmount, isAdvanceClaim, paymentStatus, isIncludedInAudit, paymentAmount) {
-  return db('Claim')
-    .returning('ClaimId')
-    .insert({
-      ClaimId: claimId,
-      EligibilityId: eligibilityId,
-      Reference: reference,
-      DateOfJourney: date,
-      DateCreated: date,
-      DateSubmitted: date,
-      Status: status,
-      IsOverpaid: isOverpaid,
-      OverpaymentAmount: overpaymentAmount,
-      RemainingOverpaymentAmount: remainingOverpaymentAmount,
-      IsAdvanceClaim: isAdvanceClaim,
-      PaymentStatus: paymentStatus,
-      IsIncludedInAudit: isIncludedInAudit,
-      PaymentAmount: paymentAmount
-    })
+function insertClaim(
+  claimId,
+  eligibilityId,
+  reference,
+  date,
+  status,
+  isOverpaid,
+  overpaymentAmount,
+  remainingOverpaymentAmount,
+  isAdvanceClaim,
+  paymentStatus,
+  isIncludedInAudit,
+  paymentAmount,
+) {
+  return db('Claim').returning('ClaimId').insert({
+    ClaimId: claimId,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    DateOfJourney: date,
+    DateCreated: date,
+    DateSubmitted: date,
+    Status: status,
+    IsOverpaid: isOverpaid,
+    OverpaymentAmount: overpaymentAmount,
+    RemainingOverpaymentAmount: remainingOverpaymentAmount,
+    IsAdvanceClaim: isAdvanceClaim,
+    PaymentStatus: paymentStatus,
+    IsIncludedInAudit: isIncludedInAudit,
+    PaymentAmount: paymentAmount,
+  })
 }
 
-function insertClaimDeduction (claimId, reference, eligibilityId, deductionType, amount) {
-  return db('ClaimDeduction')
-    .returning('ClaimDeductionId')
-    .insert({
-      EligibilityId: eligibilityId,
-      Reference: reference,
-      ClaimId: claimId,
-      DeductionType: deductionType,
-      Amount: amount,
-      IsEnabled: true
-    })
+function insertClaimDeduction(claimId, reference, eligibilityId, deductionType, amount) {
+  return db('ClaimDeduction').returning('ClaimDeductionId').insert({
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    ClaimId: claimId,
+    DeductionType: deductionType,
+    Amount: amount,
+    IsEnabled: true,
+  })
 }
 
-function insertClaimEscort (claimId, reference, eligibilityId, escortData) {
-  return db('ClaimEscort')
-    .returning('ClaimEscortId')
-    .insert({
-      ClaimEscortId: claimId,
-      ClaimId: claimId,
-      EligibilityId: eligibilityId,
-      Reference: reference,
-      FirstName: escortData.FirstName,
-      LastName: escortData.LastName,
-      DateOfBirth: escortData.DateOfBirth,
-      IsEnabled: true
-    })
+function insertClaimEscort(claimId, reference, eligibilityId, escortData) {
+  return db('ClaimEscort').returning('ClaimEscortId').insert({
+    ClaimEscortId: claimId,
+    ClaimId: claimId,
+    EligibilityId: eligibilityId,
+    Reference: reference,
+    FirstName: escortData.FirstName,
+    LastName: escortData.LastName,
+    DateOfBirth: escortData.DateOfBirth,
+    IsEnabled: true,
+  })
 }
 
-function insertAuditReport (isDeleted, startDate, endDate) {
-  return db('AuditReport')
-    .returning('ReportId')
-    .insert({
-      IsDeleted: isDeleted,
-      StartDate: startDate,
-      EndDate: endDate
-    })
+function insertAuditReport(isDeleted, startDate, endDate) {
+  return db('AuditReport').returning('ReportId').insert({
+    IsDeleted: isDeleted,
+    StartDate: startDate,
+    EndDate: endDate,
+  })
 }
 
-function insertReportData (reportId, claimId, reference, paymentAmount) {
-  return db('ReportData')
-    .insert({
-      ReportId: reportId,
-      ClaimId: claimId,
-      Reference: reference,
-      PaymentAmount: paymentAmount
-    })
+function insertReportData(reportId, claimId, reference, paymentAmount) {
+  return db('ReportData').insert({
+    ReportId: reportId,
+    ClaimId: claimId,
+    Reference: reference,
+    PaymentAmount: paymentAmount,
+  })
 }
 
-function insertAuditConfig (thresholdAmount, verificationPercent) {
-  return db('AuditConfig')
-    .insert({
-      ThresholdAmount: thresholdAmount,
-      VerificationPercent: verificationPercent
-    })
+function insertAuditConfig(thresholdAmount, verificationPercent) {
+  return db('AuditConfig').insert({
+    ThresholdAmount: thresholdAmount,
+    VerificationPercent: verificationPercent,
+  })
 }
 
-function getBenefitExpiryDate (reference) {
-  return db('Visitor')
-    .first('BenefitExpiryDate')
-    .where('Reference', reference)
+function getBenefitExpiryDate(reference) {
+  return db('Visitor').first('BenefitExpiryDate').where('Reference', reference)
 }
 
-function getLastTopUpAdded (claimId) {
+function getLastTopUpAdded(claimId) {
   return db('TopUp')
     .first()
     .where('ClaimId', claimId)
-    .then(function (result) {
+    .then(result => {
       result.TopUpAmount = Number(result.TopUpAmount).toFixed(2)
       return result
     })
@@ -531,5 +601,5 @@ module.exports = {
   getDatabaseConnector,
   insertAuditReport,
   insertReportData,
-  db
+  db,
 }

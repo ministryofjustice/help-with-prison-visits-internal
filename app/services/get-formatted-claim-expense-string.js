@@ -1,9 +1,9 @@
-const claimExpenseTypes = require('../../app/views/helpers/display-field-names')
+const claimExpenseTypes = require('../views/helpers/display-field-names')
 
-module.exports = function (claimExpenses) {
+module.exports = claimExpenses => {
   const result = []
 
-  claimExpenses.forEach(function (claimExpense) {
+  claimExpenses.forEach(claimExpense => {
     const claimExpenseString = `${claimExpenseTypes[claimExpense.ExpenseType]}: ${claimExpense.ApprovedCost ? claimExpense.ApprovedCost : '0'}`
 
     result.push(claimExpenseString)

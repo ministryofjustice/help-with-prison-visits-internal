@@ -1,3 +1,4 @@
+const moment = require('moment')
 const { getDatabaseConnector } = require('../../databaseConnector')
 const duplicateClaimCheck = require('./duplicate-claim-check')
 const duplicateBankDetailsCheck = require('./duplicate-bank-details-check')
@@ -7,9 +8,8 @@ const getOverpaidClaimsByReference = require('./get-overpaid-claims-by-reference
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const topUpStatusEnum = require('../../constants/top-up-status-enum')
 const dateFormatter = require('../date-formatter')
-const moment = require('moment')
 
-module.exports = function (claimId) {
+module.exports = claimId => {
   let claim
   let claimEligibleChild
   let claimDocumentData
@@ -28,7 +28,7 @@ module.exports = function (claimId) {
   let bankDuplicates
 
   return getClaimantDetails(claimId)
-    .then(function (claimData) {
+    .then(claimData => {
       claim = claimData
       reference = claim.Reference
       claim.lastUpdatedHidden = moment(claim.LastUpdated)
@@ -45,23 +45,25 @@ module.exports = function (claimId) {
         getClaimsForPrisonNumberAndVisitDate(claimId, claim.PrisonNumber, claim.DateOfJourney),
         getTopUp(claimId),
         getLatestUnpaidTopUp(claimId),
-        duplicateBankDetailsCheck(reference, claimData.AccountNumber)
+        duplicateBankDetailsCheck(reference, claimData.AccountNumber),
       ])
     })
-    .then(function (results) {
-      claimEligibleChild = results[0]
-      claimDocumentData = results[1]
-      claimExpenses = results[2]
-      claimDeductions = results[3]
-      claimChildren = results[4]
-      claimEscort = results[5]
-      claimDuplicatesExist = results[6]
-      claimEvents = results[7]
-      overpaidClaimData = results[8]
-      claimantDuplicates = results[9]
-      topUps = results[10]
-      latestUnpaidTopUp = results[11]
-      bankDuplicates = results[12]
+    .then(results => {
+      ;[
+        claimEligibleChild,
+        claimDocumentData,
+        claimExpenses,
+        claimDeductions,
+        claimChildren,
+        claimEscort,
+        claimDuplicatesExist,
+        claimEvents,
+        overpaidClaimData,
+        claimantDuplicates,
+        topUps,
+        latestUnpaidTopUp,
+        bankDuplicates,
+      ] = results
       claim = appendClaimDocumentsToClaim(claim, claimDocumentData)
       claim.Total = getClaimTotalAmount(claimExpenses, claimDeductions)
 
@@ -78,14 +80,14 @@ module.exports = function (claimId) {
         TopUps: topUps,
         claimantDuplicates,
         latestUnpaidTopUp,
-        bankDuplicates
+        bankDuplicates,
       }
 
       return claimDetails
     })
 }
 
-function getClaimantDetails (claimId) {
+function getClaimantDetails(claimId) {
   const db = getDatabaseConnector()
 
   return db('Claim')
@@ -150,8 +152,9 @@ function getClaimantDetails (claimId) {
       'Benefit.DateOfBirth AS BenefitOwnerDateOfBirth',
       'Benefit.NationalInsuranceNumber AS BenefitOwnerNationalInsuranceNumber',
       'ClaimBankDetail.AccountNumber',
-      'ClaimBankDetail.NameOnAccount')
-    .then(function (data) {
+      'ClaimBankDetail.NameOnAccount',
+    )
+    .then(data => {
       if (data.AssignedTo && data.AssignmentExpiry < dateFormatter.now().toDate()) {
         data.AssignedTo = null
       }
@@ -159,7 +162,7 @@ function getClaimantDetails (claimId) {
     })
 }
 
-function getClaimEligibleChild (reference, eligibilityId) {
+function getClaimEligibleChild(reference, eligibilityId) {
   const db = getDatabaseConnector()
 
   return db('EligibleChild')
@@ -175,10 +178,11 @@ function getClaimEligibleChild (reference, eligibilityId) {
       'EligibleChild.Town',
       'EligibleChild.County',
       'EligibleChild.PostCode',
-      'EligibleChild.Country')
+      'EligibleChild.Country',
+    )
 }
 
-function getClaimDocuments (claimId, reference, eligibilityId) {
+function getClaimDocuments(claimId, reference, eligibilityId) {
   const db = getDatabaseConnector()
 
   return db('ClaimDocument')
@@ -188,40 +192,45 @@ function getClaimDocuments (claimId, reference, eligibilityId) {
       'ClaimDocument.Reference': reference,
       'ClaimDocument.EligibilityId': eligibilityId,
       'ClaimDocument.IsEnabled': true,
-      'ClaimDocument.ClaimExpenseId': null
+      'ClaimDocument.ClaimExpenseId': null,
     })
     .select(
       'ClaimDocument.ClaimDocumentId',
       'ClaimDocument.DocumentStatus',
       'ClaimDocument.Filepath',
-      'ClaimDocument.DocumentType')
+      'ClaimDocument.DocumentType',
+    )
     .orderBy('ClaimDocument.DateSubmitted', 'desc')
 }
 
-function getClaimExpenses (claimId) {
+function getClaimExpenses(claimId) {
   const db = getDatabaseConnector()
 
   return db('Claim')
     .join('ClaimExpense', 'Claim.ClaimId', '=', 'ClaimExpense.ClaimId')
     .where('Claim.ClaimId', claimId)
-    .select('ClaimExpense.*', 'ClaimDocument.DocumentStatus', 'ClaimDocument.DocumentType', 'ClaimDocument.ClaimDocumentId', 'ClaimDocument.Filepath')
-    .leftJoin('ClaimDocument', function () {
-      this
-        .on('ClaimExpense.ClaimId', 'ClaimDocument.ClaimId')
+    .select(
+      'ClaimExpense.*',
+      'ClaimDocument.DocumentStatus',
+      'ClaimDocument.DocumentType',
+      'ClaimDocument.ClaimDocumentId',
+      'ClaimDocument.Filepath',
+    )
+    .leftJoin('ClaimDocument', function leftJoinQuery() {
+      this.on('ClaimExpense.ClaimId', 'ClaimDocument.ClaimId')
         .on('ClaimExpense.ClaimExpenseId', 'ClaimDocument.ClaimExpenseId')
         .on('ClaimExpense.IsEnabled', 'ClaimDocument.IsEnabled')
     })
     .orderBy('ClaimExpense.ClaimExpenseId')
 }
 
-function getClaimDeductions (claimId) {
+function getClaimDeductions(claimId) {
   const db = getDatabaseConnector()
 
-  return db('ClaimDeduction')
-    .where({ ClaimId: claimId, IsEnabled: true })
+  return db('ClaimDeduction').where({ ClaimId: claimId, IsEnabled: true })
 }
 
-function getClaimChildren (claimId) {
+function getClaimChildren(claimId) {
   const db = getDatabaseConnector()
 
   return db('Claim')
@@ -231,31 +240,28 @@ function getClaimChildren (claimId) {
     .orderBy('ClaimChild.FirstName')
 }
 
-function getClaimEscort (claimId) {
+function getClaimEscort(claimId) {
   const db = getDatabaseConnector()
 
-  return db('ClaimEscort')
-    .first()
-    .where({ ClaimId: claimId, IsEnabled: true })
-    .select()
-    .orderBy('FirstName')
+  return db('ClaimEscort').first().where({ ClaimId: claimId, IsEnabled: true }).select().orderBy('FirstName')
 }
 
-function getClaimEvents (claimId) {
+function getClaimEvents(claimId) {
   const db = getDatabaseConnector()
 
-  return db('ClaimEvent')
-    .where('ClaimId', claimId)
+  return db('ClaimEvent').where('ClaimId', claimId)
 }
 
-function getTopUp (claimId) {
+function getTopUp(claimId) {
   const db = getDatabaseConnector()
 
-  return db.select('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate').from('TopUp')
+  return db
+    .select('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate')
+    .from('TopUp')
     .where('ClaimId', claimId)
-    .then(function (TopUpResults) {
+    .then(TopUpResults => {
       let allTopUpsPaid = true
-      TopUpResults.forEach(function (TopUpResult) {
+      TopUpResults.forEach(TopUpResult => {
         if (TopUpResult.PaymentStatus === topUpStatusEnum.PENDING) {
           allTopUpsPaid = false
         }
@@ -266,13 +272,15 @@ function getTopUp (claimId) {
     })
 }
 
-function getLatestUnpaidTopUp (claimId) {
+function getLatestUnpaidTopUp(claimId) {
   const db = getDatabaseConnector()
 
-  return db.first('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate').from('TopUp')
+  return db
+    .first('TopUpId', 'ClaimId', 'PaymentStatus', 'Caseworker', 'TopUpAmount', 'Reason', 'DateAdded', 'PaymentDate')
+    .from('TopUp')
     .where('ClaimId', claimId)
     .where('PaymentStatus', topUpStatusEnum.PENDING)
-    .then(function (latestUnpaidTopUp) {
+    .then(latestUnpaidTopUp => {
       if (latestUnpaidTopUp) {
         latestUnpaidTopUp.TopUpAmount = Number(latestUnpaidTopUp.TopUpAmount).toFixed(2)
       }
@@ -280,8 +288,8 @@ function getLatestUnpaidTopUp (claimId) {
     })
 }
 
-function setClaimExpenseStatusForCarJourneys (claimExpenses) {
-  claimExpenses.forEach(function (claimExpense) {
+function setClaimExpenseStatusForCarJourneys(claimExpenses) {
+  claimExpenses.forEach(claimExpense => {
     if (claimExpense.ExpenseType === 'car' && claimExpense.Status === null && claimExpense.Cost === 0) {
       claimExpense.Status = claimDecisionEnum.APPROVED_DIFF_AMOUNT
     }
@@ -290,9 +298,9 @@ function setClaimExpenseStatusForCarJourneys (claimExpenses) {
   return claimExpenses
 }
 
-function appendClaimDocumentsToClaim (claim, claimDocuments) {
+function appendClaimDocumentsToClaim(claim, claimDocuments) {
   claim.benefitDocument = []
-  claimDocuments.forEach(function (document) {
+  claimDocuments.forEach(document => {
     if (document.DocumentType === 'VISIT-CONFIRMATION') {
       claim.visitConfirmation = document
     } else {

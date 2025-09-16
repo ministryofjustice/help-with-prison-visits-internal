@@ -1,9 +1,10 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (claimId) {
+module.exports = claimId => {
   const db = getDatabaseConnector()
 
-  return db('Claim').where('ClaimId', claimId)
+  return db('Claim')
+    .where('ClaimId', claimId)
     .join('Eligibility', 'Claim.EligibilityId', '=', 'Eligibility.EligibilityId')
     .first(
       'Eligibility.EligibilityId',
@@ -16,6 +17,6 @@ module.exports = function (claimId) {
       'Eligibility.Status',
       'Eligibility.ReferenceDisabled',
       'Eligibility.DisabledReason',
-      'Eligibility.ReEnabledReason'
+      'Eligibility.ReEnabledReason',
     )
 }

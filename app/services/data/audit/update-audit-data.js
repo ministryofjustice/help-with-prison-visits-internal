@@ -1,16 +1,14 @@
-const {
-  getDatabaseConnector
-} = require('../../../databaseConnector')
+const { getDatabaseConnector } = require('../../../databaseConnector')
 
-module.exports = function (reportId, checkStatus, verificationStatus, finalStatus) {
+module.exports = (reportId, checkStatus, verificationStatus, finalStatus) => {
   const db = getDatabaseConnector()
   return db('AuditReport')
     .update({
       CheckStatus: checkStatus,
       VerificationStatus: verificationStatus,
-      FinalStatus: finalStatus
+      FinalStatus: finalStatus,
     })
     .where({
-      ReportId: reportId
+      ReportId: reportId,
     })
 }

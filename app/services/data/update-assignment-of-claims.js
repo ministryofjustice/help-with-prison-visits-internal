@@ -2,7 +2,7 @@ const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 const environmentVariables = require('../../../config')
 
-module.exports = function (claimId, assignedTo) {
+module.exports = (claimId, assignedTo) => {
   let assignmentExpiry = null
   const db = getDatabaseConnector()
 

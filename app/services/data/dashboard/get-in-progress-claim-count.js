@@ -1,8 +1,8 @@
 const { getDatabaseConnector } = require('../../../databaseConnector')
-const claimStatusEnum = require('../../../../app/constants/claim-status-enum')
+const claimStatusEnum = require('../../../constants/claim-status-enum')
 const applyFilter = require('./apply-filter')
 
-module.exports = function (filter) {
+module.exports = filter => {
   const db = getDatabaseConnector()
 
   return applyFilter(
@@ -12,8 +12,8 @@ module.exports = function (filter) {
         claimStatusEnum.NEW.value,
         claimStatusEnum.UPDATED.value,
         claimStatusEnum.REQUEST_INFORMATION.value,
-        claimStatusEnum.REQUEST_INFO_PAYMENT.value
+        claimStatusEnum.REQUEST_INFO_PAYMENT.value,
       ]),
-    filter
+    filter,
   )
 }

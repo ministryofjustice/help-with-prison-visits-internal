@@ -3,25 +3,19 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 
 class TopupResponse {
-  constructor (amount, reason) {
+  constructor(amount, reason) {
     this.amount = amount
     this.reason = reason
 
     this.IsValid()
   }
 
-  IsValid () {
+  IsValid() {
     const errors = ErrorHandler()
 
-    FieldValidator(this.amount, 'top-up-amount', errors)
-      .isRequired()
-      .isGreaterThanZero()
-      .isCurrency()
-      .isMaxCostOrLess()
+    FieldValidator(this.amount, 'top-up-amount', errors).isRequired().isGreaterThanZero().isCurrency().isMaxCostOrLess()
 
-    FieldValidator(this.reason, 'top-up-reason', errors)
-      .isLessThanLength(2000)
-      .isRequired()
+    FieldValidator(this.reason, 'top-up-reason', errors).isLessThanLength(2000).isRequired()
 
     const validationErrors = errors.get()
 

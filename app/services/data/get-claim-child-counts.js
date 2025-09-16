@@ -1,10 +1,7 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (claimIds) {
+module.exports = () => {
   const db = getDatabaseConnector()
 
-  return db('ClaimChild')
-    .select('ClaimId')
-    .count('ClaimChildId AS Count')
-    .groupBy('ClaimId')
+  return db('ClaimChild').select('ClaimId').count('ClaimChildId AS Count').groupBy('ClaimId')
 }

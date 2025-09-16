@@ -5,7 +5,7 @@ const sanitizeHtml = require('sanitize-html')
 */
 module.exports = () => {
   return (req, res, next) => {
-    Object.keys(req.body ?? {}).forEach((key) => {
+    Object.keys(req.body ?? {}).forEach(key => {
       const value = req.body?.[key]
 
       if (typeof value === 'string') {
@@ -17,7 +17,7 @@ module.exports = () => {
       }
     })
 
-    Object.keys(req.query ?? {}).forEach((key) => {
+    Object.keys(req.query ?? {}).forEach(key => {
       const value = req.query?.[key]
 
       if (typeof value === 'string') {
@@ -33,10 +33,11 @@ module.exports = () => {
   }
 }
 
-const sanitizeObject = (value) => {
+const sanitizeObject = value => {
   try {
     const sanitized = sanitizeHtml(JSON.stringify(value))
     return JSON.parse(sanitized)
+    // eslint-disable-next-line no-unused-vars
   } catch (e) {
     return value
   }

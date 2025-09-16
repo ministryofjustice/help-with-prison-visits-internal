@@ -6,23 +6,23 @@ const deductionTypeEnum = require('../../constants/deduction-type-enum')
 const overpaymentActionEnum = require('../../constants/overpayment-action-enum')
 const displayHelper = require('../../views/helpers/display-helper')
 
-module.exports = function (currentClaimId, reference) {
-  return getIndividualClaimDetails(currentClaimId)
-    .then(function (claimDetails) {
-      return getOverpaidClaimsByReference(reference, currentClaimId)
-        .then(function (overpaidClaims) {
-          const deductionTotal = getOverpaymentDeductionTotal(claimDetails.deductions)
+module.exports = (currentClaimId, reference) => {
+  return getIndividualClaimDetails(currentClaimId).then(claimDetails => {
+    return getOverpaidClaimsByReference(reference, currentClaimId).then(overpaidClaims => {
+      const deductionTotal = getOverpaymentDeductionTotal(claimDetails.deductions)
 
-          if (deductionTotal > 0 && overpaidClaims.length > 0) {
-            return subtractTotalDeductionsFromRemainingOverpayments(overpaidClaims, deductionTotal)
-          }
-        })
+      if (deductionTotal > 0 && overpaidClaims.length > 0) {
+        return subtractTotalDeductionsFromRemainingOverpayments(overpaidClaims, deductionTotal)
+      }
+
+      return null
     })
+  })
 }
 
-function getOverpaymentDeductionTotal (claimDeductions) {
+function getOverpaymentDeductionTotal(claimDeductions) {
   let total = 0
-  claimDeductions.forEach(function (claimDeduction) {
+  claimDeductions.forEach(claimDeduction => {
     if (claimDeduction.DeductionType === deductionTypeEnum.OVERPAYMENT.value) {
       total += claimDeduction.Amount
     }
@@ -31,7 +31,7 @@ function getOverpaymentDeductionTotal (claimDeductions) {
   return total
 }
 
-function subtractTotalDeductionsFromRemainingOverpayments (overpaidClaims, deductionTotal) {
+function subtractTotalDeductionsFromRemainingOverpayments(overpaidClaims, deductionTotal) {
   let deductionsToBeSubtracted = deductionTotal
   let index = 0
   const updates = []
@@ -46,32 +46,41 @@ function subtractTotalDeductionsFromRemainingOverpayments (overpaidClaims, deduc
       deductionsToBeSubtracted = newRemainingBalance * -1
       newRemainingBalance = 0
     } else {
-      deductionsToBeSubtracted = deductionsToBeSubtracted - newRemainingBalance
+      deductionsToBeSubtracted -= newRemainingBalance
     }
 
     const isOverpaid = newRemainingBalance > 0
 
-    updates.push(updateRemainingOverpaymentAmount(overpaidClaim, newRemainingBalance, amountToBeDeductedFromClaim.toFixed(2), isOverpaid))
-    index++
+    updates.push(
+      updateRemainingOverpaymentAmount(
+        overpaidClaim,
+        newRemainingBalance,
+        amountToBeDeductedFromClaim.toFixed(2),
+        isOverpaid,
+      ),
+    )
+    index += 1
   }
 
   return Promise.all(updates)
 }
 
-function updateRemainingOverpaymentAmount (claim, newRemainingOverpaymentAmount, deductionAmount, isOverpaid) {
+function updateRemainingOverpaymentAmount(claim, newRemainingOverpaymentAmount, deductionAmount, isOverpaid) {
   const db = getDatabaseConnector()
 
   const updatedClaim = {
     ClaimId: claim.ClaimId,
     RemainingOverpaymentAmount: newRemainingOverpaymentAmount,
-    IsOverpaid: isOverpaid
+    IsOverpaid: isOverpaid,
   }
 
   const eventLabel = isOverpaid ? overpaymentActionEnum.UPDATE : overpaymentActionEnum.RESOLVE
   const note = `Deduction of £${displayHelper.toDecimal(deductionAmount)} applied on related claim`
 
-  return db('Claim').where('ClaimId', claim.ClaimId).update(updatedClaim)
-    .then(function () {
+  return db('Claim')
+    .where('ClaimId', claim.ClaimId)
+    .update(updatedClaim)
+    .then(() => {
       return insertClaimEvent(claim.Reference, claim.EligibilityId, claim.ClaimId, eventLabel, null, note, null, true)
     })
 }

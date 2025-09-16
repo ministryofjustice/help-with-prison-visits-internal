@@ -1,3 +1,3 @@
-module.exports = function (req, property) {
+module.exports = (req, property) => {
   return req.session.audit[property]
 }

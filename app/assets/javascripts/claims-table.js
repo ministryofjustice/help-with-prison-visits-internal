@@ -17,7 +17,7 @@ function cleanColumnOutput (data, type, row) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   const status = getUrlParameter('status') || 'NEW'
   const dataReference = '/claims/' + status
 
@@ -31,7 +31,7 @@ $(document).ready(function () {
     ajax: {
       url: dataReference,
       dataSrc: 'claims',
-      error: function (response) {
+      error: response => {
         $('#claims_processing').hide()
         alert('An error occurred when searching for claims.') // eslint-disable-line no-undef
       }
@@ -74,7 +74,7 @@ $(document).ready(function () {
         searchable: false
       }
     ],
-    drawCallback: function () {
+    drawCallback: () => {
       const total = $('#claims_info').text().split(' ')[5]
       $('.moj-notification-badge').text(total)
     },
