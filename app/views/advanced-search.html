@@ -308,13 +308,15 @@
                 classes: "govuk-fieldset__legend--s"
               }
             },
-            errorMessage: errors["visitDateFrom"] ? { text: errors["visitDateFrom"][0] } : null,
+            errorMessage: {
+              text: errors["visitDateFrom"][0]
+            } if errors["visitDateFrom"][0],            
             items: [
-              { classes: "govuk-input--width-2", name: "Day", value: query["visitDateFrom-Day"] },
-              { classes: "govuk-input--width-2", name: "Month", value: query["visitDateFrom-Month"] },
-              { classes: "govuk-input--width-4", name: "Year", value: query["visitDateFrom-Year"] }
-            ]
-          }) }}
+                { classes: "govuk-input--width-2", name: "Day", value: query["visitDateFrom-Day"] },
+                { classes: "govuk-input--width-2", name: "Month", value: query["visitDateFrom-Month"] },
+                { classes: "govuk-input--width-4", name: "Year", value: query["visitDateFrom-Year"] }
+              ]
+            }) }}
         </div>
 
         <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop govuk-!-margin-bottom-3">
@@ -327,7 +329,9 @@
                 classes: "govuk-fieldset__legend--s"
               }
             },
-            errorMessage: errors["visitDateTo"] ? { text: errors["visitDateTo"][0] } : null,
+            errorMessage: {
+              text: errors["visitDateTo"][0]
+            } if errors["visitDateTo"][0],
             items: [
               { classes: "govuk-input--width-2", name: "Day", value: query["visitDateTo-Day"] },
               { classes: "govuk-input--width-2", name: "Month", value: query["visitDateTo-Month"] },
@@ -355,7 +359,9 @@
                 classes: "govuk-fieldset__legend--s"
               }
             },
-            errorMessage: errors["dateSubmittedFrom"] ? { text: errors["dateSubmittedFrom"][0] } : null,
+            errorMessage: {
+              text: errors["dateSubmittedFrom"][0]
+            } if errors["dateSubmittedFrom"][0],
             items: [
               { classes: "govuk-input--width-2", name: "Day", value: query["dateSubmittedFrom-Day"] },
               { classes: "govuk-input--width-2", name: "Month", value: query["dateSubmittedFrom-Month"] },
@@ -374,7 +380,9 @@
                 classes: "govuk-fieldset__legend--s"
               }
             },
-            errorMessage: errors["dateSubmittedTo"] ? { text: errors["dateSubmittedTo"][0] } : null,
+            errorMessage: {
+              text: errors["dateSubmittedTo"][0]
+            } if errors["dateSubmittedTo"][0],
             items: [
               { classes: "govuk-input--width-2", name: "Day", value: query["dateSubmittedTo-Day"] },
               { classes: "govuk-input--width-2", name: "Month", value: query["dateSubmittedTo-Month"] },
@@ -402,7 +410,9 @@
                 classes: "govuk-fieldset__legend--s"
               }
             },
-            errorMessage: errors["dateApprovedFrom"] ? { text: errors["dateApprovedFrom"][0] } : null,
+            errorMessage: {
+              text: errors["dateApprovedFrom"][0]
+            } if errors["dateApprovedFrom"][0],
             items: [
               { classes: "govuk-input--width-2", name: "Day", value: query["dateApprovedFrom-Day"] },
               { classes: "govuk-input--width-2", name: "Month", value: query["dateApprovedFrom-Month"] },
@@ -421,7 +431,9 @@
                 classes: "govuk-fieldset__legend--s"
               }
             },
-            errorMessage: errors["dateApprovedTo"] ? { text: errors["dateApprovedTo"][0] } : null,
+            errorMessage: {
+              text: errors["dateApprovedTo"][0]
+            } if errors["dateApprovedTo"][0],
             items: [
               { classes: "govuk-input--width-2", name: "Day", value: query["dateApprovedTo-Day"] },
               { classes: "govuk-input--width-2", name: "Month", value: query["dateApprovedTo-Month"] },
@@ -449,7 +461,9 @@
                 classes: "govuk-fieldset__legend--s"
               }
             },
-            errorMessage: errors["dateRejectedFrom"] ? { text: errors["dateRejectedFrom"][0] } : null,
+            errorMessage: {
+              text: errors["dateRejectedFrom"][0]
+            } if errors["dateRejectedFrom"][0],
             items: [
               { classes: "govuk-input--width-2", name: "Day", value: query["dateRejectedFrom-Day"] },
               { classes: "govuk-input--width-2", name: "Month", value: query["dateRejectedFrom-Month"] },
@@ -468,7 +482,9 @@
                 classes: "govuk-fieldset__legend--s"
               }
             },
-            errorMessage: errors["dateRejectedTo"] ? { text: errors["dateRejectedTo"][0] } : null,
+            errorMessage: {
+              text: errors["dateRejectedTo"][0]
+            } if errors["dateRejectedTo"][0],
             items: [
               { classes: "govuk-input--width-2", name: "Day", value: query["dateRejectedTo-Day"] },
               { classes: "govuk-input--width-2", name: "Month", value: query["dateRejectedTo-Month"] },
