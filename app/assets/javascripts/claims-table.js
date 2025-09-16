@@ -37,14 +37,13 @@ $(document).ready(() => {
       }
     },
     columns: [
-      { title: 'Ref no.', data: 'Reference', render: cleanColumnOutput, orderable: false },
-      { title: 'Name', data: 'Name', render: cleanColumnOutput, orderable: false },
-      { title: 'Submitted', data: 'DateSubmittedFormatted', orderable: true },
-      { title: 'Visit date', data: 'DateOfJourneyFormatted', orderable: true },
-      { title: 'Updated date', data: 'UpdatedDateFormatted', orderable: true },
-      { title: 'Status', data: 'DisplayStatus', orderable: false },
+      { data: 'Reference', render: cleanColumnOutput, orderable: false },
+      { data: 'Name', render: cleanColumnOutput, orderable: false },
+      { data: 'DateSubmittedFormatted', orderable: true },
+      { data: 'DateOfJourneyFormatted', orderable: true },
+      { data: 'UpdatedDateFormatted', orderable: true },
+      { data: 'DisplayStatus', orderable: false },
       {
-        title: 'Claim type',
         data: 'ClaimType',
         orderable: false,
         createdCell: function (td, cellData, rowData, row, col) {
@@ -56,7 +55,6 @@ $(document).ready(() => {
         }
       },
       {
-        title: '',
         data: 'ClaimId',
         orderable: false,
         createdCell: function (td, cellData, rowData, row, col) {
