@@ -3,6 +3,7 @@ const getClaimsListAndCount = require('../services/data/get-claim-list-and-count
 const claimStatusEnum = require('../constants/claim-status-enum')
 const displayHelper = require('../views/helpers/display-helper')
 const applicationRoles = require('../constants/application-roles-enum')
+const log = require('../services/log')
 
 const allowedRoles = [
   applicationRoles.CLAIM_ENTRY_BAND_2,
@@ -27,7 +28,10 @@ module.exports = router => {
     let sortType
     let sortOrder
 
-    if (req.query?.order) {
+    log.info(JSON.stringify(req.query))
+    log.info(req.query?.order[0])
+
+    if (req.query?.order[0]) {
       switch (req.query.order[0].column) {
         case '2':
           sortType = 'Claim.DateSubmitted'

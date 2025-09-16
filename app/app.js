@@ -37,11 +37,16 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", '*.google-analytics.com', (_req, res) => `'nonce-${res.locals.cspNonce}'`],
-      connectSrc: ["'self'", '*.google-analytics.com'],
+      scriptSrc: [
+        "'self'",
+        '*.google-analytics.com',
+        '*.googletagmanager.com',
+        (_req, res) => `'nonce-${res.locals.cspNonce}'`,
+      ],
+      connectSrc: ["'self'", '*.google-analytics.com', '*.googletagmanager.com'],
       styleSrc: ["'self'"],
       fontSrc: ["'self'", 'data:'],
-      imgSrc: ["'self'", '*.google-analytics.com'],
+      imgSrc: ["'self'", '*.google-analytics.com', '*.googletagmanager.com'],
     },
   }),
 )
