@@ -31,19 +31,19 @@ module.exports = router => {
     log.info(JSON.stringify(req.query))
     log.info(req.query?.['order[0][column]'])
 
-    if (req.query?.order) {
-      switch (req.query.order[0].column) {
+    if (req.query?.['order[0][column]']) {
+      switch (req.query['order[0][column]']) {
         case '2':
           sortType = 'Claim.DateSubmitted'
-          sortOrder = req.query.order[0].dir
+          sortOrder = req.query?.['order[0][dir]']
           break
         case '3':
           sortType = 'Claim.DateOfJourney'
-          sortOrder = req.query.order[0].dir
+          sortOrder = req.query?.['order[0][dir]']
           break
         case '4':
           sortType = 'Claim.LastUpdated'
-          sortOrder = req.query.order[0].dir
+          sortOrder = req.query?.['order[0][dir]']
           break
         default:
           sortType = 'Claim.DateSubmitted'
@@ -117,19 +117,19 @@ module.exports = router => {
     let sortType
     let sortOrder = 'desc'
 
-    if (req.query?.order) {
-      switch (req.query.order[0].column) {
+    if (req.query?.['order[0][column]']) {
+      switch (req.query?.['order[0][column]']) {
         case '2':
           sortType = 'Claim.DateSubmitted'
-          sortOrder = req.query.order[0].dir
+          sortOrder = req.query?.['order[0][dir]']
           break
         case '3':
           sortType = 'Claim.DateOfJourney'
-          sortOrder = req.query.order[0].dir
+          sortOrder = req.query?.['order[0][dir]']
           break
         case '4':
           sortType = 'Claim.LastUpdated'
-          sortOrder = req.query.order[0].dir
+          sortOrder = req.query?.['order[0][dir]']
           break
         default:
           sortType = 'Claim.DateSubmitted'
