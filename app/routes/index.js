@@ -29,7 +29,7 @@ module.exports = router => {
     let sortOrder
 
     log.info(JSON.stringify(req.query))
-    log.info(req.query?.order)
+    log.info(req.query?.['order[0][column]'])
 
     if (req.query?.order) {
       switch (req.query.order[0].column) {
