@@ -5,17 +5,13 @@ const dateFormatter = require('../date-formatter')
 const ERROR_MESSAGES = require('../validators/validation-error-messages')
 
 class BenefitExpiryDate {
-  constructor (day, month, year) {
-    this.expiryDateFields = [
-      day,
-      month,
-      year
-    ]
+  constructor(day, month, year) {
+    this.expiryDateFields = [day, month, year]
     this.expiryDate = dateFormatter.build(day, month, year)
     this.IsValid()
   }
 
-  IsValid () {
+  IsValid() {
     const errors = ErrorHandler()
 
     FieldValidator(this.expiryDateFields, 'benefit-expiry', errors)

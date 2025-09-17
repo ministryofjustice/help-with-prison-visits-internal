@@ -2,7 +2,7 @@ const { getDatabaseConnector } = require('../../databaseConnector')
 const claimEventEnum = require('../../constants/claim-event-enum')
 const closedClaimStatusMap = require('../../constants/closed-claim-status-map')
 
-module.exports = function (claimIds) {
+module.exports = claimIds => {
   const claimEvents = [
     claimEventEnum.REQUEST_NEW_BANK_DETAILS.value,
     claimEventEnum.PAYOUT_BARCODE_EXPIRED.value,
@@ -10,7 +10,7 @@ module.exports = function (claimIds) {
     claimEventEnum.CLAIM_APPROVED.value,
     claimEventEnum.CLAIM_AUTO_APPROVED.value,
     claimEventEnum.CLAIM_REJECTED.value,
-    claimEventEnum.CLAIM_UPDATED.value
+    claimEventEnum.CLAIM_UPDATED.value,
   ]
   const db = getDatabaseConnector()
 
@@ -19,21 +19,23 @@ module.exports = function (claimIds) {
     .whereIn('Event', claimEvents)
     .orderBy([
       { column: 'ClaimId', order: 'desc' },
-      { column: 'ClaimEventId', order: 'desc' }
+      { column: 'ClaimEventId', order: 'desc' },
     ])
-    .then(function (events) {
-      return events.filter(function (event) {
-        return claimIds.includes(event.ClaimId)
-      }).reduce(function (statuses, event) {
-        if (!statuses[event.ClaimId]) {
-          if (event && event !== null && event !== undefined) {
-            statuses[event.ClaimId] = closedClaimStatusMap[event.Event]
-          } else {
-            statuses[event.ClaimId] = 'Closed'
+    .then(events => {
+      return events
+        .filter(event => {
+          return claimIds.includes(event.ClaimId)
+        })
+        .reduce((statuses, event) => {
+          if (!statuses[event.ClaimId]) {
+            if (event && event !== null && event !== undefined) {
+              statuses[event.ClaimId] = closedClaimStatusMap[event.Event]
+            } else {
+              statuses[event.ClaimId] = 'Closed'
+            }
           }
-        }
 
-        return statuses
-      }, {})
+          return statuses
+        }, {})
     })
 }

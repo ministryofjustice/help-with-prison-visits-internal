@@ -1,12 +1,12 @@
-const getFileUploadPath = function (req) {
+const getFileUploadPath = req => {
   return req.file?.path ?? ''
 }
 
-const getUploadFilename = function (req) {
+const getUploadFilename = req => {
   return req.file?.filename
 }
 
-const getFilenamePrefix = function (params, query) {
+const getFilenamePrefix = (params, query) => {
   let filenamePrefix = `${params.referenceId}-${query.eligibilityId}/${params.claimId}/${params.documentType}`
 
   if (params.documentType !== 'VISIT_CONFIRMATION' && params.documentType !== 'RECEIPT') {
@@ -21,5 +21,5 @@ const getFilenamePrefix = function (params, query) {
 module.exports = {
   getFileUploadPath,
   getUploadFilename,
-  getFilenamePrefix
+  getFilenamePrefix,
 }

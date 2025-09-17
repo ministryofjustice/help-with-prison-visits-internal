@@ -8,8 +8,8 @@ const getAllClaimsDataBelowThreshold = require('../../services/data/audit/get-al
 const getAllClaimsDataOverThreshold = require('../../services/data/audit/get-all-claims-data-over-threshold')
 const updateReport = require('../../services/data/audit/update-report')
 
-module.exports = function (router) {
-  router.get('/audit/create-report', function (req, res, next) {
+module.exports = router => {
+  router.get('/audit/create-report', (req, res, next) => {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
 
     const startDate = getAuditSessionData(req, audit.SESSION.START_DATE)
@@ -24,11 +24,11 @@ module.exports = function (router) {
       totalReviewClaim: percentClaim + claimCountOverThreshold,
       claimCountOverThreshold,
       thresholdAmount,
-      backLinkHref: '/audit/create-report-percent'
+      backLinkHref: '/audit/create-report-percent',
     })
   })
 
-  router.post('/audit/create-report', function (req, res, next) {
+  router.post('/audit/create-report', (req, res, next) => {
     authorisation.hasRoles(req, [applicationRoles.BAND_9, applicationRoles.CASEWORK_MANAGER_BAND_5])
 
     const startDate = getAuditSessionData(req, audit.SESSION.START_DATE)
@@ -41,20 +41,22 @@ module.exports = function (router) {
     if (reportId) {
       return res.render('audit/report-created', {
         reportId,
-        backLinkHref: '/audit'
+        backLinkHref: '/audit',
       })
     }
-    getAllClaimsDataBelowThreshold(startDate, endDate, percentClaim, thresholdAmount).then(function (claimsDataBelowThreshold) {
-      getAllClaimsDataOverThreshold(startDate, endDate, thresholdAmount).then(function (claimsDataOverThreshold) {
-        const claims = [...claimsDataBelowThreshold, ...claimsDataOverThreshold]
-        updateReport(claims, startDate, endDate, claimCount).then(function (reportId) {
-          addAuditSessionData(req, audit.SESSION.REPORT_ID, reportId)
-          return res.render('audit/report-created', {
-            reportId,
-            backLinkHref: '/audit'
+    return getAllClaimsDataBelowThreshold(startDate, endDate, percentClaim, thresholdAmount).then(
+      claimsDataBelowThreshold => {
+        getAllClaimsDataOverThreshold(startDate, endDate, thresholdAmount).then(claimsDataOverThreshold => {
+          const claims = [...claimsDataBelowThreshold, ...claimsDataOverThreshold]
+          updateReport(claims, startDate, endDate, claimCount).then(updateReportReportId => {
+            addAuditSessionData(req, audit.SESSION.REPORT_ID, updateReportReportId)
+            return res.render('audit/report-created', {
+              updateReportReportId,
+              backLinkHref: '/audit',
+            })
           })
         })
-      })
-    })
+      },
+    )
   })
 }

@@ -1,8 +1,7 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (claimIds) {
+module.exports = () => {
   const db = getDatabaseConnector()
 
-  return db('ClaimExpense')
-    .select('ClaimExpenseId', 'ExpenseType', 'ApprovedCost', 'ClaimId')
+  return db('ClaimExpense').select('ClaimExpenseId', 'ExpenseType', 'ApprovedCost', 'ClaimId')
 }

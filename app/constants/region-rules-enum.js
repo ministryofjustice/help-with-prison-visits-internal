@@ -1,26 +1,26 @@
 module.exports = {
   ENGLAND: {
     value: 'England',
-    rules: 'ENG/WAL'
+    rules: 'ENG/WAL',
   },
 
   WALES: {
     value: 'Wales',
-    rules: 'ENG/WAL'
+    rules: 'ENG/WAL',
   },
 
   SCOTLAND: {
     value: 'Scotland',
-    rules: 'SCO'
+    rules: 'SCO',
   },
 
   NI: {
     value: 'Northern Ireland',
-    rules: 'NI'
+    rules: 'NI',
   },
 
   YCS: {
     value: 'YCS',
-    rules: 'YCS'
-  }
+    rules: 'YCS',
+  },
 }

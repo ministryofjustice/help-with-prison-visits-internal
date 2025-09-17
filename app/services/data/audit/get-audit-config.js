@@ -1,15 +1,13 @@
-const {
-  getDatabaseConnector
-} = require('../../../databaseConnector')
+const { getDatabaseConnector } = require('../../../databaseConnector')
 const config = require('../../../../config')
 
-module.exports = function () {
+module.exports = () => {
   const db = getDatabaseConnector()
 
   return db('AuditConfig')
     .orderBy('DateCreated', 'desc')
     .first()
-    .then(function (auditConfig) {
+    .then(auditConfig => {
       if (auditConfig) {
         return auditConfig
       }
@@ -17,9 +15,9 @@ module.exports = function () {
     })
 }
 
-function getDefaults () {
+function getDefaults() {
   return {
     ThresholdAmount: config.AUDIT_THRESHOLD_AMOUNT,
-    VerificationPercent: config.AUDIT_VERIFICATION_PERCENT
+    VerificationPercent: config.AUDIT_VERIFICATION_PERCENT,
   }
 }

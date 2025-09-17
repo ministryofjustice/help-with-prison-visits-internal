@@ -8,7 +8,7 @@ module.exports = {
     NOT_REQUIRED: 'Not required',
     NOT_CHECKED: 'Not checked',
     NOT_STARTED: 'NotStarted',
-    IN_PROGRESS: 'InProgress'
+    IN_PROGRESS: 'InProgress',
   },
   SESSION: {
     CLAIM_DATA: 'claimData',
@@ -18,11 +18,11 @@ module.exports = {
     CLAIM_COUNT_OVER_THRESHOLD: 'claimCountOverThreshold',
     THRESHOLD_AMOUNT: 'thresholdAmount',
     REPORT_ID: 'reportId',
-    CLAIM_COUNT: 'claimCount'
+    CLAIM_COUNT: 'claimCount',
   },
   CLAIM_STATUS: {
     VALID: 'Valid',
-    INVALID: 'Invalid'
+    INVALID: 'Invalid',
   },
-  DATE_FORMAT: 'DD MMMM YYYY'
+  DATE_FORMAT: 'DD MMMM YYYY',
 }

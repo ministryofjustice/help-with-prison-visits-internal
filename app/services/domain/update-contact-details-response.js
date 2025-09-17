@@ -3,23 +3,19 @@ const FieldValidator = require('../validators/field-validator')
 const ErrorHandler = require('../validators/error-handler')
 
 class UpdateContactDetailsResponse {
-  constructor (emailAddress, phoneNumber) {
+  constructor(emailAddress, phoneNumber) {
     this.emailAddress = emailAddress
     this.phoneNumber = phoneNumber
 
     this.IsValid()
   }
 
-  IsValid () {
+  IsValid() {
     const errors = ErrorHandler()
 
-    FieldValidator(this.emailAddress, 'EmailAddress', errors)
-      .isRequired()
-      .isLessThanLength(100)
-      .isEmail()
+    FieldValidator(this.emailAddress, 'EmailAddress', errors).isRequired().isLessThanLength(100).isEmail()
 
-    FieldValidator(this.phoneNumber, 'PhoneNumber', errors)
-      .isLessThanLength(20)
+    FieldValidator(this.phoneNumber, 'PhoneNumber', errors).isLessThanLength(20)
 
     const validationErrors = errors.get()
 

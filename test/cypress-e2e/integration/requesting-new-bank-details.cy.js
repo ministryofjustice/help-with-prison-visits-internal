@@ -7,7 +7,7 @@ const reference = '123456'
 let claimId
 
 describe('Requesting bank details flow', () => {
-  before(function () {
+  before(() => {
     const date = moment('20010101').toDate()
     cy.task('insertTestData', { reference, date, status: 'APPROVED', visitDate: undefined, increment: undefined }).then(function (ids) {
       claimId = ids.claimId
@@ -40,7 +40,7 @@ describe('Requesting bank details flow', () => {
     cy.get(`#claim${claimId}`).should('not.equal', undefined)
   })
 
-  after(function () {
+  after(() => {
     cy.task('deleteAll', reference)
   })
 })

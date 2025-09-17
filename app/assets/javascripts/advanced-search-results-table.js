@@ -3,7 +3,7 @@ function cleanColumnOutput (data, type, row) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   const searchQuery = decodeURIComponent(window.location.search.substring(1))
 
   if (searchQuery) {
@@ -23,7 +23,7 @@ $(document).ready(function () {
         type: 'POST',
         data: search,
         dataSrc: 'claims',
-        error: function (response) {
+        error: response => {
           $('#advanced-search-results_processing').hide()
           alert('An error occurred when searching for claims.') // eslint-disable-line no-undef
         }
@@ -63,7 +63,7 @@ $(document).ready(function () {
         }
       ],
 
-      drawCallback: function () {
+      drawCallback: () => {
         const total = $('#advanced-search-results_info').text().split(' ')[6]
         $('.badge').text(total)
       },

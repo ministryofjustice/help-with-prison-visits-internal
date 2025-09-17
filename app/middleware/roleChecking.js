@@ -1,4 +1,10 @@
-const { CLAIM_ENTRY_BAND_2, CLAIM_PAYMENT_BAND_3, CASEWORK_MANAGER_BAND_5, HWPV_SSCL, BAND_9 } = require('../constants/application-roles-enum')
+const {
+  CLAIM_ENTRY_BAND_2,
+  CLAIM_PAYMENT_BAND_3,
+  CASEWORK_MANAGER_BAND_5,
+  HWPV_SSCL,
+  BAND_9,
+} = require('../constants/application-roles-enum')
 const applicationRoles = require('../constants/application-roles-enum')
 
 const userNavigationOptions = {
@@ -6,7 +12,7 @@ const userNavigationOptions = {
   claims: false,
   audit: false,
   download: false,
-  config: false
+  config: false,
 }
 
 const setNavigationOptions = (role, options) => {

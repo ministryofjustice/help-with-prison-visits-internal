@@ -1,27 +1,23 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (reference, accountNumber) {
+module.exports = (reference, accountNumber) => {
   if (accountNumber) {
     const db = getDatabaseConnector()
 
     return db('ClaimBankDetail')
       .where({
-        AccountNumber: accountNumber
+        AccountNumber: accountNumber,
       })
       .whereNot('Reference', reference)
-      .select(
-        'ClaimId',
-        'Reference'
-      )
-      .then(function (data) {
-        return data.map(function (item) {
+      .select('ClaimId', 'Reference')
+      .then(data => {
+        return data.map(item => {
           return {
             ClaimId: item.ClaimId,
-            Reference: item.Reference
+            Reference: item.Reference,
           }
         })
       })
-  } else {
-    Promise.resolve([])
   }
+  return Promise.resolve([])
 }

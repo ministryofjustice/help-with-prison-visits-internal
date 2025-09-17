@@ -1,12 +1,12 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 
-module.exports = function (reference, currentClaimId) {
+module.exports = (reference, currentClaimId) => {
   const db = getDatabaseConnector()
 
   return db('Claim')
     .where({
       Reference: reference,
-      IsOverpaid: true
+      IsOverpaid: true,
     })
     .whereNot('ClaimId', currentClaimId)
     .orderBy('DateOfJourney', 'asc')

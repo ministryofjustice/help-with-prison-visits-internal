@@ -1,6 +1,6 @@
 const express = require('express')
-const nunjucksSetup = require('./services/nunjucks-setup')
 const path = require('path')
+const nunjucksSetup = require('./services/nunjucks-setup')
 const log = require('./services/log')
 
 const app = express()
@@ -25,14 +25,14 @@ const govukAssets = [
   '../node_modules/govuk-frontend/dist',
   '../node_modules/jquery/dist',
   '../node_modules/datatables.net',
-  '../node_modules/datatables.net-dt'
+  '../node_modules/datatables.net-dt',
 ]
 govukAssets.forEach(dir => {
   app.use('/assets', express.static(path.join(__dirname, dir)))
 })
 
 // Send assetPath to all views.
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   res.locals.asset_path = '/public/'
   res.locals.serviceName = serviceName
   res.locals.organisationName = organisationName
@@ -40,7 +40,7 @@ app.use(function (req, res, next) {
 })
 
 // Username handling.
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   if (!res.locals.user || !res.locals.user.name) {
     res.locals.serialisedName = ''
   } else {
@@ -50,12 +50,12 @@ app.use(function (req, res, next) {
 })
 
 // Display maintenance page
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   res.render('includes/maintenance')
 })
 
 // catch 404 and forward to error handler.
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   const err = new Error('Not Found')
   err.status = 404
   res.status(404)
@@ -63,7 +63,7 @@ app.use(function (req, res, next) {
 })
 
 // Development error handler.
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   log.error(err)
   res.status(err.status || 500)
   if (err.status === 404) {
@@ -72,7 +72,7 @@ app.use(function (err, req, res, next) {
     res.render('includes/error-403')
   } else {
     res.render('includes/error', {
-      error: developmentMode ? err : null
+      error: developmentMode ? err : null,
     })
   }
 })

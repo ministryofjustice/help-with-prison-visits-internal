@@ -4,7 +4,7 @@ const ErrorHandler = require('../validators/error-handler')
 const overpaymentActionEnum = require('../../constants/overpayment-action-enum')
 
 class OverpaymentResponse {
-  constructor (amount, remaining, reason, currentOverpaymentStatus) {
+  constructor(amount, remaining, reason, currentOverpaymentStatus) {
     this.action = getOverpaymentStatus(amount, remaining, currentOverpaymentStatus)
     this.amount = amount
     this.remaining = remaining
@@ -13,7 +13,7 @@ class OverpaymentResponse {
     this.IsValid()
   }
 
-  IsValid () {
+  IsValid() {
     const errors = ErrorHandler()
 
     if (this.action === overpaymentActionEnum.UPDATE || this.action === overpaymentActionEnum.RESOLVE) {
@@ -29,8 +29,7 @@ class OverpaymentResponse {
         .isMaxCostOrLess()
     }
 
-    FieldValidator(this.reason, 'reason', errors)
-      .isLessThanLength(2000)
+    FieldValidator(this.reason, 'reason', errors).isLessThanLength(2000)
 
     const validationErrors = errors.get()
 
@@ -40,7 +39,7 @@ class OverpaymentResponse {
   }
 }
 
-function getOverpaymentStatus (amount, remaining, claimCurrentlyOverpaid) {
+function getOverpaymentStatus(amount, remaining, claimCurrentlyOverpaid) {
   let result
 
   if (claimCurrentlyOverpaid) {

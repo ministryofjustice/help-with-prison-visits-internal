@@ -1,7 +1,7 @@
 const { getDatabaseConnector } = require('../../databaseConnector')
 const dateFormatter = require('../date-formatter')
 
-module.exports = function (ref, eligibilityId, claimId, event, additionalData, note, caseworker, isInternal) {
+module.exports = (ref, eligibilityId, claimId, event, additionalData, note, caseworker, isInternal) => {
   const db = getDatabaseConnector()
 
   return db('ClaimEvent').insert({
@@ -13,6 +13,6 @@ module.exports = function (ref, eligibilityId, claimId, event, additionalData, n
     AdditionalData: additionalData,
     Note: note,
     Caseworker: caseworker,
-    IsInternal: isInternal
+    IsInternal: isInternal,
   })
 }

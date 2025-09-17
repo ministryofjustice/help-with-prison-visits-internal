@@ -17,7 +17,7 @@ function cleanColumnOutput (data, type, row) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-$(document).ready(function () {
+$(document).ready(() => {
   const status = getUrlParameter('status') || 'NEW'
   const dataReference = '/claims/' + status
 
@@ -31,20 +31,19 @@ $(document).ready(function () {
     ajax: {
       url: dataReference,
       dataSrc: 'claims',
-      error: function (response) {
+      error: () => {
         $('#claims_processing').hide()
         alert('An error occurred when searching for claims.') // eslint-disable-line no-undef
       }
     },
     columns: [
-      { title: 'Ref no.', data: 'Reference', render: cleanColumnOutput, orderable: false },
-      { title: 'Name', data: 'Name', render: cleanColumnOutput, orderable: false },
-      { title: 'Submitted', data: 'DateSubmittedFormatted', orderable: true },
-      { title: 'Visit date', data: 'DateOfJourneyFormatted', orderable: true },
-      { title: 'Updated date', data: 'UpdatedDateFormatted', orderable: true },
-      { title: 'Status', data: 'DisplayStatus', orderable: false },
+      { data: 'Reference', render: cleanColumnOutput, orderable: false },
+      { data: 'Name', render: cleanColumnOutput, orderable: false },
+      { data: 'DateSubmittedFormatted', orderable: true },
+      { data: 'DateOfJourneyFormatted', orderable: true },
+      { data: 'UpdatedDateFormatted', orderable: true },
+      { data: 'DisplayStatus', orderable: false },
       {
-        title: 'Claim type',
         data: 'ClaimType',
         orderable: false,
         createdCell: function (td, cellData, rowData, row, col) {
@@ -56,7 +55,6 @@ $(document).ready(function () {
         }
       },
       {
-        title: '',
         data: 'ClaimId',
         orderable: false,
         createdCell: function (td, cellData, rowData, row, col) {
@@ -74,7 +72,7 @@ $(document).ready(function () {
         searchable: false
       }
     ],
-    drawCallback: function () {
+    drawCallback: () => {
       const total = $('#claims_info').text().split(' ')[5]
       $('.moj-notification-badge').text(total)
     },

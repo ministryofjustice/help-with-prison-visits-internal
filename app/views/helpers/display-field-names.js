@@ -11,5 +11,5 @@ module.exports = {
   accommodation: 'Accommodation',
   ferry: 'Ferry journey',
   'foot-passenger': 'a foot passenger',
-  'car-passenger': 'a car passenger'
+  'car-passenger': 'a car passenger',
 }
