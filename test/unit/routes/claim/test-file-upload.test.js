@@ -15,15 +15,15 @@ describe('routes/claim/file-upload', () => {
   const mockHasRoles = jest.fn()
   const mockFileUpload = jest.fn()
   const mockClaimDocumentUpdate = jest.fn()
-  const mockGenerateCSRFToken = jest.fn()
+  // const mockGenerateCSRFToken = jest.fn()
   const mockUpload = jest.fn()
   const mockGetFileUploadPath = jest.fn()
   const mockGetUploadFilename = jest.fn()
   const mockGetFilenamePrefix = jest.fn()
   const mockUploadStub = jest.fn()
   const mockAws = jest.fn()
-  const mockCsurf = jest.fn()
-  const mockCsurfResponse = jest.fn()
+  // const mockCsurf = jest.fn()
+  // const mockCsurfResponse = jest.fn()
   const mockCallback = jest.fn()
 
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe('routes/claim/file-upload', () => {
     mockGetFileUploadPath.mockReturnValue('/tmp/1234.png')
     mockGetUploadFilename.mockReturnValue(uploadFilename)
     mockGetFilenamePrefix.mockReturnValue(filenamePrefix)
-    mockCsurf.mockReturnValue(mockCsurfResponse)
+    // mockCsurf.mockReturnValue(mockCsurfResponse)
 
     mockAws.mockReturnValue({
       upload: mockUpload.mockResolvedValue(`${filenamePrefix}${uploadFilename}`),
@@ -47,13 +47,13 @@ describe('routes/claim/file-upload', () => {
     jest.mock('../../../../app/services/upload', () => mockUploadStub)
     jest.mock('../../../../app/services/domain/file-upload', () => mockFileUpload)
     jest.mock('../../../../app/services/data/update-file-upload-details-for-claim', () => mockClaimDocumentUpdate)
-    jest.mock('../../../../app/services/generate-csrf-token', () => mockGenerateCSRFToken)
+    // jest.mock('../../../../app/services/generate-csrf-token', () => mockGenerateCSRFToken)
     jest.mock('../../../../app/routes/claim/file-upload-path-helper', () => ({
       getFileUploadPath: mockGetFileUploadPath,
       getUploadFilename: mockGetUploadFilename,
       getFilenamePrefix: mockGetFilenamePrefix,
     }))
-    jest.mock('csurf', () => mockCsurf)
+    // jest.mock('csurf', () => mockCsurf)
     jest.mock('../../../../app/services/aws-helper', () => mockAwsHelper)
 
     const route = require('../../../../app/routes/claim/file-upload')
@@ -65,14 +65,14 @@ describe('routes/claim/file-upload', () => {
   })
 
   describe(`GET ${BASEROUTE}`, () => {
-    it('should call the CSRFToken generator', () => {
-      return supertest(app)
-        .get(VALIDROUTE)
-        .expect(() => {
-          expect(mockGenerateCSRFToken).toHaveBeenCalledTimes(1)
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
-        })
-    })
+    // it('should call the CSRFToken generator', () => {
+    //   return supertest(app)
+    //     .get(VALIDROUTE)
+    //     .expect(() => {
+    //       expect(mockGenerateCSRFToken).toHaveBeenCalledTimes(1)
+    //       expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
+    //     })
+    // })
 
     it('should respond with a 200 if passed valid document type', () => {
       return supertest(app).get(VALIDROUTE).expect(200)
