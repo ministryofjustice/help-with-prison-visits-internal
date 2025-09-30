@@ -117,11 +117,11 @@ app.use((req, res, next) => {
     } = csrfSync({
       getTokenFromRequest: innerReq => {
         // eslint-disable-next-line no-underscore-dangle
-        return innerReq.body._csrf || innerReq.headers['x-csrf-token']
+        return innerReq.body?._csrf
       },
     })
 
-    csrfSynchronisedProtection()
+    csrfSynchronisedProtection(req, res, next)
   } else {
     next()
   }
