@@ -28,8 +28,8 @@ function fileFilter(req, file, cb) {
     req.error = error
     return cb(null, false, error)
   }
+
   return cb(null, true)
-  // })
 }
 
 module.exports = multer({
