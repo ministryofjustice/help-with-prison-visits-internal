@@ -10,7 +10,6 @@ const roleCheckingMiddleware = require('./middleware/roleChecking')
 const routes = require('./routes/routes')
 const log = require('./services/log')
 const authentication = require('./authentication')
-const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
 const applicationRoles = require('./constants/application-roles-enum')
 const { nameSerialiser } = require('./views/helpers/username-serialiser')
 
@@ -108,23 +107,17 @@ app.use((req, res, next) => {
 })
 
 app.use((req, res, next) => {
-  const exclude = csrfExcludeRoutes.some(route => req.method === 'POST' && req.originalUrl.includes(route))
-
   // CSRF protection
-  if (!exclude) {
-    const {
-      csrfSynchronisedProtection, // This is the default CSRF protection middleware.
-    } = csrfSync({
-      getTokenFromRequest: innerReq => {
-        // eslint-disable-next-line no-underscore-dangle
-        return innerReq.body?._csrf
-      },
-    })
+  const {
+    csrfSynchronisedProtection, // This is the default CSRF protection middleware.
+  } = csrfSync({
+    getTokenFromRequest: innerReq => {
+      // eslint-disable-next-line no-underscore-dangle
+      return innerReq.body?._csrf
+    },
+  })
 
-    csrfSynchronisedProtection(req, res, next)
-  } else {
-    next()
-  }
+  csrfSynchronisedProtection(req, res, next)
 })
 
 app.use((req, res, next) => {

@@ -23,11 +23,6 @@ const storage = multer.diskStorage({
 })
 
 function fileFilter(req, file, cb) {
-  // csrfProtection(req, file, csrfError => {
-  //   if (csrfError) {
-  //     req.error = csrfError
-  //     return cb(null, false, csrfError)
-  //   }
   if (!allowedFileTypes.includes(file.mimetype)) {
     const error = new UploadError('File type error')
     req.error = error
