@@ -1,5 +1,7 @@
 {% extends "includes/layout_new.html" %}
 
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
 {% block pageTitle %}
   {% if serviceName %} {{ serviceName }} {% endif %}
 {% endblock %}
@@ -9,16 +11,16 @@
 {% block content %}
 
   <div class="govuk-grid-row">
-    <div class="column-two-thirds">
+    <div class="govuk-grid-column-two-thirds">
 
     {% include "includes/validation-error-messages.html" %}
 
-      <h2 class="govuk-heading-l">
+      <h1 class="govuk-heading-l">
       {{ fileUploadGuidingText[document].title }}
-      </h2>
+      </h1>
       <p>{{ fileUploadGuidingText[document].guidingText }}</p>
 
-      <h3 id="upload" class="govuk-heading-m">Upload now</h3>
+      <h2 id="upload" class="govuk-heading-m">Upload now</h2>
 
       <form action="{{ URL }}" method="post" class="form" enctype="multipart/form-data">
 
@@ -26,38 +28,30 @@
 
         <div>
           <div>
-            <p id='document-name' class="column-two-quarter"></p>
+            <p id="document-name" class="column-two-quarter"></p>
             <a id="remove-file-upload" class="link pull-right remove-upload" href="{{ URL }}">remove</a>
           </div>
           <div>
-            <label id="label" class="custom-file-upload">
-              <input id="document" type="file" name="document" />
-              <div id='choose-file'>Choose file</div>
-            </label>
+            <label id="label" class="govuk-label" for="document">Upload a file</label>
+            <input id="document" type="file" name="document" class="govuk-file-upload" />
           </div>
 
         </div>
 
-        <div class="form-group">
-          <details role="group">
-            <summary role="button" aria-controls="details-content-0" aria-expanded="true"><span class="summary">Help with upload</span></summary>
-            <div class="panel panel-border-narrow" id="details-content-0" aria-hidden="false">
-              <ul class="list list-number">
-                <li>Take a photo using your smartphone, tablet or camera, or scan the document</li>
-                <li>Transfer the image to your computer or the device you’re using to make the claim</li>
-                <li>Go to ‘choose file’ above and find the image</li>
-              </ul>
-            </div>
-          </details>
-        </div>
+        {{ govukDetails({
+          summaryText: "How to upload a file",
+          html:
+            '<ul class="govuk-list govuk-list--number">
+              <li>Take a photo using your smartphone, tablet or camera, or scan the document</li>
+              <li>Transfer the image to your computer or the device you’re using to make the claim</li>
+              <li>Go to ‘choose file’ above and find the image</li>
+            </ul>'
+        }) }}
 
-        <div class="form-group">
-          <input id="file-upload-submit"
-                 type="submit"
-                 name="commit"
-                 value="Continue"
-                 class="button">
-        </div>
+        {{ govukButton({
+          text: "Continue",
+          preventDoubleClick: true
+        }) }}
       </form>
     </div>
   </div>
