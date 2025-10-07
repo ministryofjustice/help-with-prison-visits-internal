@@ -12,6 +12,7 @@ generic-service:
     HWPV_COOKIE_DOMAIN: "manage.hwpv-preprod.hmpps.service.justice.gov.uk"
     HWPV_POST_LOGOUT_URL: "https://manage.hwpv-preprod.hmpps.service.justice.gov.uk/"
     HWPV_COOKIE_NAME: hwpv-session-preprod
+    ENVIRONMENT_NAME: preprod
 
   allowlist:
     groups:
