@@ -22,7 +22,7 @@
     "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
     "test-e2e": "KNEX_CONFIG=testing cypress run --config video=false",
     "test-e2e-ui": "KNEX_CONFIG=testing cypress open",
-    "css-build": "sass --no-source-map --quiet-deps --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=.  ./app/assets/sass/application.scss ./app/public/stylesheets/application.css",
+    "css-build": "sass --no-source-map --quiet-deps --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./app/assets/sass/application.scss ./app/public/stylesheets/application.css",
     "lint": "eslint . --cache --max-warnings 0",
     "lint-fix": "eslint . --fix"
   },
