@@ -2,7 +2,6 @@
 
 mkdir dist
 cp -R app dist
-cp package*.json dist
 cp knexfile.js dist
 cp config.js dist
 cp -R test dist
