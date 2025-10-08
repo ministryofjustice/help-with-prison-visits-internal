@@ -1,7 +1,4 @@
 #!/bin/bash
 
 mkdir dist
-cp -R app dist
-cp knexfile.js dist
-cp config.js dist
-cp -R test dist
+cp build dist
