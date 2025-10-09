@@ -14,7 +14,7 @@ RUN addgroup --gid 2000 --system appgroup && \
 
 WORKDIR /app
 
-ENV BUILD_NUMBER ${BUILD_NUMBER:-1_0_0}
+ENV BUILD_NUMBER=${BUILD_NUMBER:-1_0_0}
 
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -54,7 +54,6 @@ COPY --from=build --chown=appuser:appgroup \
         /app/knexfile.js \
         /app/config.js \
         /app/build-info.json \
-        /app/build-css \
         ./
 
 COPY --from=build --chown=appuser:appgroup \

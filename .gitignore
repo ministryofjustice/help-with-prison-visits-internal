@@ -41,3 +41,5 @@ uploads/
 #jest
 test_results
 .eslintcache
+
+dist
