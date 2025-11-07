@@ -11,6 +11,7 @@
     "npm": "^11"
   },
   "scripts": {
+    "build": "./build",
     "start": "npm run css-build && node ./app/bin/www",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "record-build-info": "node scripts/record-build-info",
