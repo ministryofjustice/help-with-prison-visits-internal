@@ -43,6 +43,7 @@ module.exports = () => {
       })
       res.locals.userNavigationOptions = userNavigationOptions
     }
+
     next()
   }
 }

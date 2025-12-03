@@ -16,12 +16,12 @@ generic-service:
 
   livenessProbe:
     httpGet:
-      path: /status
+      path: /ping
       port: http
   
   readinessProbe:
     httpGet:
-      path: /status
+      path: /ping
       port: http
   
   env:
