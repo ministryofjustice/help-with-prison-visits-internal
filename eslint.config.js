@@ -9,6 +9,7 @@ const config = hmppsConfig({
     'test/e2e-smoke/**/*.js',
     'cypress.config.js',
   ],
+  extraPathsAllowingDevDependencies: ['.allowed-scripts.mjs'],
 })
 config.push({
   rules: {
