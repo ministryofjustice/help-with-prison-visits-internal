@@ -35,10 +35,14 @@ const setNavigationOptions = (role, options) => {
 
 module.exports = () => {
   return (req, res, next) => {
-    Object.keys(applicationRoles).forEach(role => {
-      setNavigationOptions(applicationRoles[role], userNavigationOptions)
-    })
-    res.locals.userNavigationOptions = userNavigationOptions
+    const ignorePaths = ['/ping', '/health', '/info']
+
+    if (!ignorePaths.includes(req.path)) {
+      Object.keys(applicationRoles).forEach(role => {
+        setNavigationOptions(applicationRoles[role], userNavigationOptions)
+      })
+      res.locals.userNavigationOptions = userNavigationOptions
+    }
     next()
   }
 }
