@@ -56,7 +56,7 @@ It is possible to use the dev instance of the database which can then be used to
 Then install dependencies and run on port 3001.
 
 ```
-npm install
+npm run setup
 npm start
 ```
 
