@@ -87,7 +87,7 @@
     "datatables.net-dt": "^2.3.5",
     "debug": "^4.4.3",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
+    "express": "^5.2.0",
     "express-session": "^1.18.2",
     "govuk-frontend": "^5.13.0",
     "helmet": "^8.1.0",
