@@ -2,9 +2,7 @@ const { monitoringMiddleware, endpointHealthComponent } = require('@ministryofju
 
 const log = require('../../services/log')
 const config = require('../../../config')
-const applicationInfoSupplier = require('../../application-version')
-
-const applicationInfo = applicationInfoSupplier()
+const applicationInfo = require('../../application-version')
 
 module.exports = router => {
   const apiConfig = Object.entries(config.apis)
