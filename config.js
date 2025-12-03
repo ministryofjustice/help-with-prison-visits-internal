@@ -24,28 +24,18 @@ module.exports = {
   branchName: get('GIT_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
 
   apis: {
-    // hmppsAuth: {
-    //   url: get('APVS_MOJ_SSO_TOKEN_HOST', 'http://localhost:9090/auth', requiredInProduction),
-    //   healthPath: '/health/ping',
-    //   externalUrl: get('APVS_MOJ_SSO_TOKEN_HOST', get('APVS_MOJ_SSO_TOKEN_HOST', 'http://localhost:9090/auth')),
-    //   timeout: {
-    //     response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000)),
-    //     deadline: Number(get('HMPPS_AUTH_TIMEOUT_DEADLINE', 10000)),
-    //   },
-    //   agent: new AgentConfig(Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000))),
-    //   systemClientId: get('APVS_MOJ_SSO_CLIENT_ID', 'clientid', requiredInProduction),
-    //   systemClientSecret: get('APVS_MOJ_SSO_CLIENT_SECRET', 'clientsecret', requiredInProduction),
-    // },
-    // tokenVerification: {
-    //   url: get('APVS_MOJ_SSO_TOKEN_HOST', 'http://localhost:8100', requiredInProduction),
-    //   healthPath: '/health/ping',
-    //   timeout: {
-    //     response: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000)),
-    //     deadline: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_DEADLINE', 5000)),
-    //   },
-    //   agent: new AgentConfig(Number(get('TOKEN_VERIFICATION_API_TIMEOUT_RESPONSE', 5000))),
-    //   enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
-    // },
+    hmppsAuth: {
+      url: get('APVS_MOJ_SSO_TOKEN_HOST', 'http://localhost:9090/auth', requiredInProduction),
+      healthPath: '/health/ping',
+      externalUrl: get('APVS_MOJ_SSO_TOKEN_HOST', get('APVS_MOJ_SSO_TOKEN_HOST', 'http://localhost:9090/auth')),
+      timeout: {
+        response: Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000)),
+        deadline: Number(get('HMPPS_AUTH_TIMEOUT_DEADLINE', 10000)),
+      },
+      agent: new AgentConfig(Number(get('HMPPS_AUTH_TIMEOUT_RESPONSE', 10000))),
+      systemClientId: get('APVS_MOJ_SSO_CLIENT_ID', 'clientid', requiredInProduction),
+      systemClientSecret: get('APVS_MOJ_SSO_CLIENT_SECRET', 'clientsecret', requiredInProduction),
+    },
     manageUsers: {
       url: get('MANAGE_USERS_API_URL', 'http://localhost:8080', requiredInProduction),
       healthPath: '/health/ping',
