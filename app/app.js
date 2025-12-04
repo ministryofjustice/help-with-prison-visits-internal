@@ -15,6 +15,7 @@ const authentication = require('./authentication')
 const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
 const applicationRoles = require('./constants/application-roles-enum')
 const { nameSerialiser } = require('./views/helpers/username-serialiser')
+const healthRoutes = require('./routes/health-check/status')
 
 const app = express()
 
@@ -137,11 +138,15 @@ app.use((req, res, next) => {
   next()
 })
 
+// Build the router to route all HTTP requests and pass to the routes file for route configuration.
+const router = express.Router()
+
+// health check routes first to skip the role checking
+healthRoutes(router)
+
 // Add middleware to check roles for navigation
 app.use(roleCheckingMiddleware())
 
-// Build the router to route all HTTP requests and pass to the routes file for route configuration.
-const router = express.Router()
 routes(router)
 app.use('/', router)
 
