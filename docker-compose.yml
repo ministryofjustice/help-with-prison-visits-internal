@@ -18,7 +18,7 @@ services:
     ports:
       - "6379:6379"
   oauth:
-    image: quay.io/hmpps/hmpps-auth:latest
+    image: ghcr.io/ministryofjustice/hmpps-auth:latest
     networks:
       - hmpps
     container_name: oauth
