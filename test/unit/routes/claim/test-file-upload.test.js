@@ -15,7 +15,6 @@ describe('routes/claim/file-upload', () => {
   const mockHasRoles = jest.fn()
   const mockFileUpload = jest.fn()
   const mockClaimDocumentUpdate = jest.fn()
-  const mockGenerateCSRFToken = jest.fn()
   const mockUpload = jest.fn()
   const mockGetFileUploadPath = jest.fn()
   const mockGetUploadFilename = jest.fn()
@@ -47,7 +46,6 @@ describe('routes/claim/file-upload', () => {
     jest.mock('../../../../app/services/upload', () => mockUploadStub)
     jest.mock('../../../../app/services/domain/file-upload', () => mockFileUpload)
     jest.mock('../../../../app/services/data/update-file-upload-details-for-claim', () => mockClaimDocumentUpdate)
-    jest.mock('../../../../app/services/generate-csrf-token', () => mockGenerateCSRFToken)
     jest.mock('../../../../app/routes/claim/file-upload-path-helper', () => ({
       getFileUploadPath: mockGetFileUploadPath,
       getUploadFilename: mockGetUploadFilename,
@@ -69,7 +67,6 @@ describe('routes/claim/file-upload', () => {
       return supertest(app)
         .get(VALIDROUTE)
         .expect(() => {
-          expect(mockGenerateCSRFToken).toHaveBeenCalledTimes(1)
           expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
         })
     })
