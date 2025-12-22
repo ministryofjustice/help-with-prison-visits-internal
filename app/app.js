@@ -3,9 +3,7 @@ const crypto = require('crypto')
 const path = require('path')
 const helmet = require('helmet')
 const compression = require('compression')
-const cookieParser = require('cookie-parser')
-const csurf = require('csurf')
-const config = require('../config')
+const { csrfSync } = require('csrf-sync')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
 const roleCheckingMiddleware = require('./middleware/roleChecking')
@@ -110,11 +108,17 @@ app.use((req, res, next) => {
   next()
 })
 
-// Use cookie parser middleware (required for csurf)
-app.use(cookieParser(config.INT_APPLICATION_SECRET, { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' }))
-
 // Check for valid CSRF tokens on state-changing methods.
-const csrfProtection = csurf({ cookie: { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' } })
+
+const {
+  csrfSynchronisedProtection, // This is the default CSRF protection middleware.
+} = csrfSync({
+  // By default, csrf-sync uses x-csrf-token header, but we use the token in forms and send it in the request body, so change getTokenFromRequest so it grabs from there
+  getTokenFromRequest: req => {
+    // eslint-disable-next-line no-underscore-dangle
+    return req.body?._csrf
+  },
+})
 
 app.use((req, res, next) => {
   let exclude = false
@@ -126,13 +130,13 @@ app.use((req, res, next) => {
   if (exclude) {
     next()
   } else {
-    csrfProtection(req, res, next)
+    csrfSynchronisedProtection(req, res, next)
   }
 })
 
 // Generate CSRF tokens to be sent in POST requests
 app.use((req, res, next) => {
-  if (req.csrfToken) {
+  if (typeof req.csrfToken === 'function') {
     res.locals.csrfToken = req.csrfToken()
   }
   next()
