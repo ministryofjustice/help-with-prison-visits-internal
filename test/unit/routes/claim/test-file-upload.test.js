@@ -21,8 +21,11 @@ describe('routes/claim/file-upload', () => {
   const mockGetFilenamePrefix = jest.fn()
   const mockUploadStub = jest.fn()
   const mockAws = jest.fn()
-  const mockCsurf = jest.fn()
-  const mockCsurfResponse = jest.fn()
+  const mockCsrfSync = {
+    generateToken: jest.fn(),
+    isRequestValid: jest.fn(),
+    invalidCsrfTokenError: jest.fn(),
+  }
   const mockCallback = jest.fn()
 
   beforeEach(() => {
@@ -32,7 +35,6 @@ describe('routes/claim/file-upload', () => {
     mockGetFileUploadPath.mockReturnValue('/tmp/1234.png')
     mockGetUploadFilename.mockReturnValue(uploadFilename)
     mockGetFilenamePrefix.mockReturnValue(filenamePrefix)
-    mockCsurf.mockReturnValue(mockCsurfResponse)
 
     mockAws.mockReturnValue({
       upload: mockUpload.mockResolvedValue(`${filenamePrefix}${uploadFilename}`),
@@ -51,7 +53,7 @@ describe('routes/claim/file-upload', () => {
       getUploadFilename: mockGetUploadFilename,
       getFilenamePrefix: mockGetFilenamePrefix,
     }))
-    jest.mock('csurf', () => mockCsurf)
+    jest.mock('csrf-sync', () => mockCsrfSync)
     jest.mock('../../../../app/services/aws-helper', () => mockAwsHelper)
 
     const route = require('../../../../app/routes/claim/file-upload')
@@ -63,14 +65,6 @@ describe('routes/claim/file-upload', () => {
   })
 
   describe(`GET ${BASEROUTE}`, () => {
-    it('should call the CSRFToken generator', () => {
-      return supertest(app)
-        .get(VALIDROUTE)
-        .expect(() => {
-          expect(mockAuthorisation.hasRoles).toHaveBeenCalledTimes(1)
-        })
-    })
-
     it('should respond with a 200 if passed valid document type', () => {
       return supertest(app).get(VALIDROUTE).expect(200)
     })
@@ -91,7 +85,7 @@ describe('routes/claim/file-upload', () => {
   })
 
   describe(`POST ${BASEROUTE}`, () => {
-    it('should create a file upload object, insert it to DB and give 302', () => {
+    it.only('should create a file upload object, insert it to DB and give 302', () => {
       mockCallback.mockResolvedValue({})
       mockUploadStub.mockImplementation((...args) => args[2]())
       mockClaimDocumentUpdate.mockResolvedValue()

@@ -109,7 +109,6 @@ app.use((req, res, next) => {
 })
 
 // Check for valid CSRF tokens on state-changing methods.
-
 const {
   csrfSynchronisedProtection, // This is the default CSRF protection middleware.
 } = csrfSync({
