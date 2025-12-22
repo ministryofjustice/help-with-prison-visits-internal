@@ -97,7 +97,6 @@ module.exports = {
 
   // Session and Cookie security (CSRF)
   INT_APPLICATION_SECRET: process.env.APVS_INT_APPLICATION_SECRET, // NO DEFAULT FOR SECURITY REASONS, WILL FAIL IF NOT SET
-  INT_SECURE_COOKIE: process.env.APVS_INT_SECURE_COOKIE || 'false',
 
   // Auto approval config defaults
   AUTO_APPROVAL_ENABLED: process.env.APVS_AUTO_APPROVAL_ENABLED || 'false',
