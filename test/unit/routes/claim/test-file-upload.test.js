@@ -21,10 +21,11 @@ describe('routes/claim/file-upload', () => {
   const mockGetFilenamePrefix = jest.fn()
   const mockUploadStub = jest.fn()
   const mockAws = jest.fn()
+  const mockIsRequestValid = jest.fn()
   const mockCsrfSync = {
     generateToken: jest.fn(),
-    isRequestValid: jest.fn(),
-    invalidCsrfTokenError: jest.fn(),
+    isRequestValid: mockIsRequestValid,
+    invalidCsrfTokenError: new Error(),
   }
 
   beforeEach(() => {
@@ -34,6 +35,7 @@ describe('routes/claim/file-upload', () => {
     mockGetFileUploadPath.mockReturnValue('/tmp/1234.png')
     mockGetUploadFilename.mockReturnValue(uploadFilename)
     mockGetFilenamePrefix.mockReturnValue(filenamePrefix)
+    mockIsRequestValid.mockReturnValue(true)
 
     mockAws.mockReturnValue({
       upload: mockUpload.mockResolvedValue(`${filenamePrefix}${uploadFilename}`),
@@ -52,8 +54,8 @@ describe('routes/claim/file-upload', () => {
       getUploadFilename: mockGetUploadFilename,
       getFilenamePrefix: mockGetFilenamePrefix,
     }))
-    jest.mock('csrf-sync', () => mockCsrfSync)
     jest.mock('../../../../app/services/aws-helper', () => mockAwsHelper)
+    jest.mock('csrf-sync', () => mockCsrfSync)
 
     const route = require('../../../../app/routes/claim/file-upload')
     app = routeHelper.buildApp(route)
@@ -84,7 +86,8 @@ describe('routes/claim/file-upload', () => {
   })
 
   describe(`POST ${BASEROUTE}`, () => {
-    it.only('should create a file upload object, insert it to DB and give 302', () => {
+    it('should create a file upload object, insert it to DB and give 302', () => {
+      // calls the 3rd arg of Upload, so the callback function
       mockUploadStub.mockImplementation((...args) => args[2]())
       mockClaimDocumentUpdate.mockResolvedValue()
 
