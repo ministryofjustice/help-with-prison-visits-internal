@@ -38,7 +38,6 @@ module.exports = router => {
     authorisation.hasRoles(req, allowedRoles)
 
     return Upload(req, res, async error => {
-      console.log('GOTHERE')
       try {
         // If there was no file attached, we still need to check the CSRF token
         if (!req.file) {
