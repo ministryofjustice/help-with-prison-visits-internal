@@ -26,7 +26,6 @@ describe('routes/claim/file-upload', () => {
     isRequestValid: jest.fn(),
     invalidCsrfTokenError: jest.fn(),
   }
-  const mockCallback = jest.fn()
 
   beforeEach(() => {
     const uploadFilename = '1234.png'
@@ -86,7 +85,6 @@ describe('routes/claim/file-upload', () => {
 
   describe(`POST ${BASEROUTE}`, () => {
     it.only('should create a file upload object, insert it to DB and give 302', () => {
-      mockCallback.mockResolvedValue({})
       mockUploadStub.mockImplementation((...args) => args[2]())
       mockClaimDocumentUpdate.mockResolvedValue()
 
@@ -101,7 +99,6 @@ describe('routes/claim/file-upload', () => {
     })
 
     it('should catch a validation error', () => {
-      mockCallback.mockResolvedValue({})
       mockUploadStub.mockImplementation((...args) => args[2]())
       mockFileUpload.mockImplementation(() => {
         throw new ValidationError()
@@ -110,7 +107,6 @@ describe('routes/claim/file-upload', () => {
     })
 
     it('should respond with a 500 if passed invalid document type', () => {
-      mockCallback.mockResolvedValue({})
       mockUploadStub.mockImplementation((...args) => args[2]())
       return supertest(app)
         .post(`${BASEROUTE}TEST/?claimDocumentId=${CLAIMDOCUMENTID}&eligibilityId=${ELIGIBILITYID}`)
