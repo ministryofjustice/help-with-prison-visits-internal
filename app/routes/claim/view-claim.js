@@ -608,7 +608,7 @@ function renderValues(data, req, error) {
     bankDuplicates: data.bankDuplicates,
     claimDecisionEnum,
     errors: error.validationErrors,
-    unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry),
+    unlock: true, // checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry),
     latestUnpaidTopUp: data.latestUnpaidTopUp,
     topUpAmount: req.body?.['top-up-amount'],
     topUpReason: req.body?.['top-up-reason'],
