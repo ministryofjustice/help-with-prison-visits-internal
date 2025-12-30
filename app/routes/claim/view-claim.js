@@ -34,7 +34,7 @@ const updateEligibilityTrustedStatus = require('../../services/data/update-eligi
 const requestNewBankDetails = require('../../services/data/request-new-bank-details')
 const claimDecisionEnum = require('../../constants/claim-decision-enum')
 const updateAssignmentOfClaims = require('../../services/data/update-assignment-of-claims')
-// const checkUserAssignment = require('../../services/check-user-assignment')
+const checkUserAssignment = require('../../services/check-user-assignment')
 const getRejectionReasons = require('../../services/data/get-rejection-reasons')
 const getRejectionReasonId = require('../../services/data/get-rejection-reason-id')
 const updateVisitorBenefitExpiryDate = require('../../services/data/update-visitor-benefit-expiry-date')
@@ -608,7 +608,7 @@ function renderValues(data, req, error) {
     bankDuplicates: data.bankDuplicates,
     claimDecisionEnum,
     errors: error.validationErrors,
-    unlock: true, // checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry),
+    unlock: checkUserAssignment(req.user.email, data.claim.AssignedTo, data.claim.AssignmentExpiry),
     latestUnpaidTopUp: data.latestUnpaidTopUp,
     topUpAmount: req.body?.['top-up-amount'],
     topUpReason: req.body?.['top-up-reason'],
