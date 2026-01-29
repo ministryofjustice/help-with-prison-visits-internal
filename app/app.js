@@ -155,7 +155,7 @@ app.use('/', router)
 
 // catch 404 and forward to error handler.
 app.use((req, res, next) => {
-  const err = new Error('Not Found')
+  const err = new Error(`Not Found: ${req.originalUrl}`)
   err.status = 404
   res.status(404)
   next(err)
