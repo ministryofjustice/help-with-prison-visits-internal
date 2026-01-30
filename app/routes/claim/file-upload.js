@@ -40,10 +40,8 @@ module.exports = router => {
     return Upload(req, res, async error => {
       try {
         // If there was no file attached, we still need to check the CSRF token
-        if (!req.file) {
-          if (!isRequestValid(req)) {
-            throw invalidCsrfTokenError
-          }
+        if (!req.file && !isRequestValid(req)) {
+          throw invalidCsrfTokenError
         }
 
         if (error) {
