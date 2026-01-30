@@ -1,5 +1,4 @@
-const { generateToken, isRequestValid, invalidCsrfTokenError } = require('csrf-sync')
-
+const { generateToken, isRequestValid, invalidCsrfTokenError } = require('../../services/get-csrf-functions')
 const authorisation = require('../../services/authorisation')
 const DocumentTypeEnum = require('../../constants/document-type-enum')
 const Upload = require('../../services/upload')
@@ -20,7 +19,7 @@ module.exports = router => {
   router.get('/claim/file-upload/:referenceId/:claimId/:documentType', (req, res) => {
     authorisation.hasRoles(req, allowedRoles)
 
-    csrfToken = generateToken(req, true)
+    csrfToken = generateToken(req)
 
     if (Object.prototype.hasOwnProperty.call(DocumentTypeEnum, req.params?.documentType)) {
       return res.render('claim/file-upload', {

@@ -1,7 +1,8 @@
 const multer = require('multer')
 const crypto = require('crypto')
 const path = require('path')
-const { isRequestValid, invalidCsrfTokenError } = require('csrf-sync')
+
+const { isRequestValid, invalidCsrfTokenError } = require('./get-csrf-functions')
 
 const UploadError = require('./errors/upload-error')
 const config = require('../../config')

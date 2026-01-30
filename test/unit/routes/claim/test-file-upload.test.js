@@ -22,7 +22,7 @@ describe('routes/claim/file-upload', () => {
   const mockUploadStub = jest.fn()
   const mockAws = jest.fn()
   const mockIsRequestValid = jest.fn()
-  const mockCsrfSync = {
+  const mockCsrfFunctions = {
     generateToken: jest.fn(),
     isRequestValid: mockIsRequestValid,
     invalidCsrfTokenError: new Error(),
@@ -55,7 +55,9 @@ describe('routes/claim/file-upload', () => {
       getFilenamePrefix: mockGetFilenamePrefix,
     }))
     jest.mock('../../../../app/services/aws-helper', () => mockAwsHelper)
-    jest.mock('csrf-sync', () => mockCsrfSync)
+    jest.mock('../../../../app/services/get-csrf-functions', () => {
+      return mockCsrfFunctions
+    })
 
     const route = require('../../../../app/routes/claim/file-upload')
     app = routeHelper.buildApp(route)
