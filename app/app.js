@@ -3,7 +3,6 @@ const crypto = require('crypto')
 const path = require('path')
 const helmet = require('helmet')
 const compression = require('compression')
-const { csrfSync } = require('csrf-sync')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
 const roleCheckingMiddleware = require('./middleware/roleChecking')
@@ -14,6 +13,7 @@ const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
 const applicationRoles = require('./constants/application-roles-enum')
 const { nameSerialiser } = require('./views/helpers/username-serialiser')
 const healthRoutes = require('./routes/health-check/status')
+const { csrfSynchronisedProtection } = require('./services/get-csrf-functions')
 
 const app = express()
 
@@ -106,17 +106,6 @@ app.use((req, res, next) => {
     res.locals.serialisedName = nameSerialiser(res.locals.user.name)
   }
   next()
-})
-
-// Check for valid CSRF tokens on state-changing methods.
-const {
-  csrfSynchronisedProtection, // This is the default CSRF protection middleware.
-} = csrfSync({
-  // By default, csrf-sync uses x-csrf-token header, but we use the token in forms and send it in the request body, so change getTokenFromRequest so it grabs from there
-  getTokenFromRequest: req => {
-    // eslint-disable-next-line no-underscore-dangle
-    return req.body?._csrf
-  },
 })
 
 app.use((req, res, next) => {
