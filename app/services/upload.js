@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 })
 
 function fileFilter(req, file, cb) {
-  if (isRequestValid(req)) {
+  if (!isRequestValid(req)) {
     req.error = invalidCsrfTokenError
     return cb(null, false, invalidCsrfTokenError)
   }
