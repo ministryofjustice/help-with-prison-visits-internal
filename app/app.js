@@ -109,12 +109,8 @@ app.use((req, res, next) => {
 })
 
 app.use((req, res, next) => {
-  let exclude = false
-  csrfExcludeRoutes.forEach(route => {
-    if (req.originalUrl.includes(route) && req.method === 'POST') {
-      exclude = true
-    }
-  })
+  const exclude = csrfExcludeRoutes.some(route => req.originalUrl.includes(route) && req.method === 'POST')
+
   if (exclude) {
     next()
   } else {
