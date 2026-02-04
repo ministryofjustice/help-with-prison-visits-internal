@@ -37,8 +37,7 @@
     "bunyan-format": "^0.2.1",
     "compression": "^1.8.1",
     "connect-redis": "^9.0.0",
-    "cookie-parser": "^1.4.7",
-    "csurf": "^1.11.0",
+    "csrf-sync": "4.2.1",
     "csv-stringify": "^6.6.0",
     "datatables.net": "^2.3.7",
     "datatables.net-dt": "^2.3.7",
@@ -75,10 +74,5 @@
     "prettier-plugin-jinja-template": "^2.1.0",
     "sass": "^1.97.3",
     "supertest": "^7.2.2"
-  },
-  "overrides": {
-    "csurf": {
-      "cookie": "1.1.1"
-    }
   }
 }
