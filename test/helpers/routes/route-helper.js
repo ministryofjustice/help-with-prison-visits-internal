@@ -1,5 +1,4 @@
 const express = require('express')
-const cookieParser = require('cookie-parser')
 const htmlSanitizerMiddleware = require('../../../app/middleware/htmlSanitizer')
 const mockViewEngine = require('../../unit/routes/mock-view-engine')
 const applicationRoles = require('../../../app/constants/application-roles-enum')
@@ -10,7 +9,6 @@ module.exports.buildApp = route => {
   const app = express()
   app.use(express.json())
   app.use(htmlSanitizerMiddleware())
-  app.use(cookieParser())
 
   app.use((req, res, next) => {
     req.user = {

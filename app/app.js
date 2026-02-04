@@ -3,9 +3,6 @@ const crypto = require('crypto')
 const path = require('path')
 const helmet = require('helmet')
 const compression = require('compression')
-const cookieParser = require('cookie-parser')
-const csurf = require('csurf')
-const config = require('../config')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
 const roleCheckingMiddleware = require('./middleware/roleChecking')
@@ -16,6 +13,7 @@ const csrfExcludeRoutes = require('./constants/csrf-exclude-routes')
 const applicationRoles = require('./constants/application-roles-enum')
 const { nameSerialiser } = require('./views/helpers/username-serialiser')
 const healthRoutes = require('./routes/health-check/status')
+const { csrfSynchronisedProtection } = require('./services/get-csrf-functions')
 
 const app = express()
 
@@ -110,29 +108,19 @@ app.use((req, res, next) => {
   next()
 })
 
-// Use cookie parser middleware (required for csurf)
-app.use(cookieParser(config.INT_APPLICATION_SECRET, { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' }))
-
-// Check for valid CSRF tokens on state-changing methods.
-const csrfProtection = csurf({ cookie: { httpOnly: true, secure: config.INT_SECURE_COOKIE === 'true' } })
-
 app.use((req, res, next) => {
-  let exclude = false
-  csrfExcludeRoutes.forEach(route => {
-    if (req.originalUrl.includes(route) && req.method === 'POST') {
-      exclude = true
-    }
-  })
+  const exclude = csrfExcludeRoutes.some(route => req.originalUrl.includes(route) && req.method === 'POST')
+
   if (exclude) {
     next()
   } else {
-    csrfProtection(req, res, next)
+    csrfSynchronisedProtection(req, res, next)
   }
 })
 
 // Generate CSRF tokens to be sent in POST requests
 app.use((req, res, next) => {
-  if (req.csrfToken) {
+  if (typeof req.csrfToken === 'function') {
     res.locals.csrfToken = req.csrfToken()
   }
   next()
