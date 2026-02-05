@@ -1,5 +1,5 @@
-$(document).ready(() => {
-  $('#filter').change(() => {
-    $('#dateFilter').submit()
+jQuery(() => {
+  $('#filter').on('change', () => {
+    $('#dateFilter').trigger('submit')
   })
 })
