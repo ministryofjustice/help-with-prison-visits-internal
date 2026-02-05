@@ -3,14 +3,13 @@ function cleanColumnOutput (data, type, row) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-$(document).ready(() => {
+jQuery(() => {
   const searchQuery = decodeURIComponent(window.location.search.substring(1))
 
   if (searchQuery) {
-    const search = JSON.parse('{"' + decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ') + '"}')
-    $('#search-results-header').show()
-    $('#advanced-search-results').show()
+    const search = JSON.parse(`{"${decodeURI(searchQuery).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"').replace(/\+/g, ' ')}"}`)
     const dataReference = '/advanced-search-results'
+    $('#search-results-header,#advanced-search-results').show()
 
     $('#advanced-search-results').DataTable({
       processing: true,
@@ -38,7 +37,7 @@ $(document).ready(() => {
         {
           data: 'ClaimType',
           createdCell: function (td, cellData, rowData, row, col) {
-            $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
+            $(td).html(`<span class="tag ${rowData.ClaimType}">${rowData.ClaimTypeDisplayName}</span>`)
           }
         },
         { data: 'DaysUntilPayment' },
@@ -46,7 +45,7 @@ $(document).ready(() => {
         {
           data: 'ClaimId',
           createdCell: function (td, cellData, rowData, row, col) {
-            $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
+            $(td).html(`<a id="claim${rowData.ClaimId}" href="/claim/${rowData.ClaimId}">View</a>`)
           }
         }
       ],

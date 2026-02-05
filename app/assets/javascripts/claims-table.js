@@ -1,25 +1,13 @@
-function getUrlParameter (sParam) {
-  const sPageURL = decodeURIComponent(window.location.search.substring(1))
-  const sURLVariables = sPageURL.split('&')
-  let sParameterName
-
-  for (let i = 0; i < sURLVariables.length; i++) {
-    sParameterName = sURLVariables[i].split('=')
-
-    if (sParameterName[0] === sParam) {
-      return sParameterName[1] === undefined ? true : sParameterName[1]
-    }
-  }
-}
-
 function cleanColumnOutput (data, type, row) {
   const unsafeOutputPattern = />|<|&|"|\/|'/g
   return data.replace(unsafeOutputPattern, '')
 }
 
-$(document).ready(() => {
-  const status = getUrlParameter('status') || 'NEW'
-  const dataReference = '/claims/' + status
+jQuery(() => {
+  const paramsString = window.location.search
+  const searchParams = new URLSearchParams(paramsString)
+  const status = searchParams.get('status') || 'NEW'
+  const dataReference = `/claims/${status}`
 
   $('#claims').DataTable({
     processing: true,
@@ -47,18 +35,15 @@ $(document).ready(() => {
         data: 'ClaimType',
         orderable: false,
         createdCell: function (td, cellData, rowData, row, col) {
-          if (rowData.ClaimTypeDisplayName === 'Repeat') {
-            $(td).html('<span class="moj-badge moj-badge--green">' + rowData.ClaimTypeDisplayName + '</span>')
-          } else {
-            $(td).html('<span class="moj-badge">' + rowData.ClaimTypeDisplayName + '</span>')
-          }
+          const extraClasses = rowData.ClaimTypeDisplayName === 'Repeat' ? ' moj-badge--green' : ''
+          $(td).html(`<span class="moj-badge${extraClasses}">${rowData.ClaimTypeDisplayName}</span>`)
         }
       },
       {
         data: 'ClaimId',
         orderable: false,
         createdCell: function (td, cellData, rowData, row, col) {
-          $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
+          $(td).html(`<a id="claim${rowData.ClaimId}" href="/claim/${rowData.ClaimId}">View</a>`)
         }
       }
     ],

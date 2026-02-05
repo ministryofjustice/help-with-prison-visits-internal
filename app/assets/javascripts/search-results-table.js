@@ -3,9 +3,9 @@ function cleanColumnOutput (data, type, row) {
   return data.replace(unsafeOutputPattern, '')
 }
 
-$(document).ready(() => {
+jQuery(() => {
   const searchQuery = decodeURIComponent(window.location.search)
-  const dataReference = '/search-results' + searchQuery
+  const dataReference = `/search-results${searchQuery}`
 
   $('#search-results').DataTable({
     processing: true,
@@ -31,14 +31,14 @@ $(document).ready(() => {
       {
         data: 'ClaimType',
         createdCell: function (td, cellData, rowData, row, col) {
-          $(td).html('<span class=\'tag ' + rowData.ClaimType + '\'>' + rowData.ClaimTypeDisplayName + '</span>')
+          $(td).html(`<span class="tag ${rowData.ClaimType}">${rowData.ClaimTypeDisplayName}</span>`)
         }
       },
       { data: 'AssignedTo' },
       {
         data: 'ClaimId',
         createdCell: function (td, cellData, rowData, row, col) {
-          $(td).html("<a id='claim" + rowData.ClaimId + "' href='/claim/" + rowData.ClaimId + "'>View</a>")
+          $(td).html(`<a id="claim${rowData.ClaimId}" href="/claim/${rowData.ClaimId}">View</a>`)
         }
       }
     ],
