@@ -32,9 +32,7 @@ function totalApproved () {
 }
 
 function showClosedClaimActionSection(id) {
-  $('#overpayment-input').addClass('js-hidden')
-  $('#close-advanced-claim-input').addClass('js-hidden')
-  $('#request-new-payment-details-input').addClass('js-hidden')
+  $('#overpayment-input,#close-advanced-claim-input,#request-new-payment-details-input').addClass('js-hidden')
   $(id).removeClass('js-hidden')
 }
 
