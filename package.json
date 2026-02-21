@@ -27,8 +27,8 @@
     "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.989.0",
-    "@ministryofjustice/frontend": "8.0.0",
+    "@aws-sdk/client-s3": "^3.993.0",
+    "@ministryofjustice/frontend": "8.0.1",
     "@ministryofjustice/hmpps-monitoring": "1.0.2",
     "applicationinsights": "^2.9.8",
     "axios": "^1.13.5",
@@ -55,8 +55,8 @@
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
     "path": "^0.12.7",
-    "redis": "^5.10.0",
-    "sanitize-html": "^2.17.0",
+    "redis": "^5.11.0",
+    "sanitize-html": "^2.17.1",
     "tedious": "^19.2.1",
     "validator": "^13.15.26"
   },
