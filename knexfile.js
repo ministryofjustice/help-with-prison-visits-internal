@@ -1,4 +1,3 @@
-require('dotenv').config({ quiet: true })
 const config = require('./config')
 
 module.exports = {
