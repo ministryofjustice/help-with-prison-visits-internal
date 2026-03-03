@@ -7,12 +7,12 @@ Help With Prison Visits internal, staff facing web application. This app sits be
 ## Requirements
 
 * Docker (Including Docker Compose)
-* Node 12 (Including NPM) - If running locally
+* Node 24 (Including NPM) - If running locally
 
 ## Run
 
 ### Locally
-The application uses `dotenv` to pick up a local file containing settings for environment variables called `.env`. This file will not be checked into Git. Speak to a member of the PVB dev team (#prison-visit-booking-dev on Slack) to populate or use the following credentials from the dev namespace:
+The application uses node's `--env-file=.env` to pick up a local file containing settings for environment variables called `.env`. This file will not be checked into Git. Speak to a member of the Visits dev team (#visits-dev on Slack) to populate or use the following credentials from the dev namespace:
 
 ```bash
 DEVELOPMENT=true

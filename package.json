@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "./build",
-    "start": "npm run css-build && node ./app/bin/www",
+    "start": "npm run css-build && node  --env-file=.env ./app/bin/www",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "test": "npm run lint && npm run test-unit",
     "test-unit": "jest",
@@ -42,7 +42,6 @@
     "datatables.net": "^2.3.7",
     "datatables.net-dt": "^2.3.7",
     "debug": "^4.4.3",
-    "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
     "govuk-frontend": "^5.14.0",
@@ -66,11 +65,9 @@
     "jest": "^30.2.0",
     "jest-html-reporter": "^4.3.0",
     "jest-junit": "^16.0.0",
-    "lint-staged": "^16.3.1",
     "node-mocks-http": "^1.17.2",
     "nyc": "^18.0.0",
     "prettier": "^3.8.1",
-    "prettier-plugin-jinja-template": "^2.1.0",
     "sass": "^1.97.3",
     "supertest": "^7.2.2"
   }
