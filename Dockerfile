@@ -1,19 +1,5 @@
 # Stage: base image
-FROM node:24-alpine AS base
-
-LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
-
-RUN apk --update-cache upgrade --available \
-        && apk --no-cache add tzdata \
-        && rm -rf /var/cache/apk/*
-
-ENV TZ=Europe/London
-RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
-
-RUN addgroup --gid 2000 --system appgroup && \
-        adduser --uid 2000 --system appuser --ingroup appgroup
-
-WORKDIR /app
+FROM ghcr.io/ministryofjustice/hmpps-node:24-alpine AS base
 
 ARG BUILD_NUMBER
 ARG GIT_REF
@@ -32,27 +18,24 @@ ENV GIT_BRANCH=${GIT_BRANCH}
 # Stage: build assets
 FROM base AS build
 
-ARG BUILD_NUMBER=1_0_0
-ARG GIT_REF=not-available
+ARG BUILD_NUMBER
+ARG GIT_REF
 ARG GIT_BRANCH
 
-COPY package*.json ./
-RUN CYPRESS_INSTALL_BINARY=0 npm run setup --no-audit
+COPY package*.json .allowed-scripts.mjs ./
+RUN CYPRESS_INSTALL_BINARY=0 NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm run setup
 ENV NODE_ENV='production'
 
 COPY . .
 RUN npm run css-build
 
-RUN npm prune --no-audit --omit=dev
+RUN npm prune --no-audit --no-fund --omit=dev
 
 # Stage: copy production assets and dependencies
 FROM base
 
 RUN mkdir /app/logs && chown appuser:appgroup /app/logs
 RUN mkdir /app/uploads && chown appuser:appgroup /app/uploads
-
-USER 2000
-WORKDIR /app
 
 COPY --from=build --chown=appuser:appgroup \
         /app/package.json \
@@ -67,11 +50,8 @@ COPY --from=build --chown=appuser:appgroup \
 COPY --from=build --chown=appuser:appgroup \
         /app/app ./app
 
-ENV PORT=3001
-
-EXPOSE 3001
+EXPOSE 3000
+ENV NODE_ENV='production'
 USER 2000
 
-HEALTHCHECK CMD curl --fail http://localhost:3001/status || exit 1
-
-CMD [ "node", "./app/bin/www" ]
+CMD [ "npm", "start" ]
