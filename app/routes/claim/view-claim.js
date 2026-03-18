@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 const authorisation = require('../../services/authorisation')
 const getIndividualClaimDetails = require('../../services/data/get-individual-claim-details')
 const getClaimDocumentFilePath = require('../../services/data/get-claim-document-file-path')
