@@ -1,6 +1,8 @@
-# Help with Prison Visits (HwPV) Internal/Staff
+# Help with Prison Visits (HwPV) Staff
 
-[![pipeline](https://github.com/ministryofjustice/help-with-prison-visits-internal/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ministryofjustice/help-with-prison-visits-internal) [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+[![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/help-with-prison-visits-internal/badge?style=flat)](https://github-community.service.justice.gov.uk/repository-standards/help-with-prison-visits-internal)
+[![pipeline](https://github.com/ministryofjustice/help-with-prison-visits-internal/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ministryofjustice/help-with-prison-visits-internal) 
+[![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 Help With Prison Visits internal, staff facing web application. This app sits behind [HMPPS Auth](https://github.com/ministryofjustice/hmpps-auth/) and users and roles need to be added in order to run this application.
 
