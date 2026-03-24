@@ -3,6 +3,7 @@ const crypto = require('crypto')
 const path = require('path')
 const helmet = require('helmet')
 const compression = require('compression')
+const config = require('../config')
 const nunjucksSetup = require('./services/nunjucks-setup')
 const htmlSanitizerMiddleware = require('./middleware/htmlSanitizer')
 const roleCheckingMiddleware = require('./middleware/roleChecking')
@@ -95,6 +96,7 @@ app.use((req, res, next) => {
   res.locals.organisationName = organisationName
   res.locals.releaseVersion = `v${releaseVersion}`
   res.locals.applicationRoles = applicationRoles
+  app.locals.environmentName = config.environmentName
   next()
 })
 
