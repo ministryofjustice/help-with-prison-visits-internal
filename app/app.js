@@ -96,7 +96,7 @@ app.use((req, res, next) => {
   res.locals.organisationName = organisationName
   res.locals.releaseVersion = `v${releaseVersion}`
   res.locals.applicationRoles = applicationRoles
-  app.locals.environmentName = config.environmentName
+  res.locals.environmentName = config.environmentName
   next()
 })
 

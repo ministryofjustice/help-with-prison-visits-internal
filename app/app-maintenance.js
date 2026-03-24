@@ -37,7 +37,7 @@ app.use((req, res, next) => {
   res.locals.asset_path = '/public/'
   res.locals.serviceName = serviceName
   res.locals.organisationName = organisationName
-  app.locals.environmentName = config.environmentName
+  res.locals.environmentName = config.environmentName
   next()
 })
 
