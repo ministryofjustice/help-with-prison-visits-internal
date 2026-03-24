@@ -867,3 +867,19 @@ ul.sub-tabs li a.active span.badge {
 .moj-timeline__date {
     font-size: 16px;
 }
+
+.env--localhost .moj-header__link--service-name::after {
+  content: "LOCALHOST";
+  @extend .govuk-tag--yellow;
+}
+.env--dev .moj-header__link--service-name::after {
+  content: "DEV";
+}
+.env--preprod .moj-header__link--service-name::after {
+  content: "PRE-PRODUCTION";
+  @extend .govuk-tag--green;
+}
+.moj-header__link--service-name::after {
+  margin-left: govuk-spacing(1);
+  @extend .govuk-tag;
+}

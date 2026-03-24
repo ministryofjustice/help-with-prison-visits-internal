@@ -1,5 +1,7 @@
 {% extends "views/layouts/govuk_template.html" %}
 
+{% set bodyClasses = ("env--" + environmentName) if environmentName %}
+
 {% block head %}
   {% include "includes/head.html" %}
 {% endblock %}
