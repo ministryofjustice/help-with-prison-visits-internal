@@ -22,7 +22,7 @@ module.exports = {
   productId: get('PRODUCT_ID', 'UNASSIGNED', requiredInProduction),
   gitRef: get('GIT_REF', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
   branchName: get('GIT_BRANCH', 'xxxxxxxxxxxxxxxxxxx', requiredInProduction),
-
+  environmentName: get('ENVIRONMENT_NAME', ''),
   apis: {
     hmppsAuth: {
       url: get('APVS_MOJ_SSO_TOKEN_HOST', 'http://localhost:9090/auth', requiredInProduction),
