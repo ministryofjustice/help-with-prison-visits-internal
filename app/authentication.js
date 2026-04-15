@@ -79,58 +79,55 @@ module.exports = app => {
           fetch(`${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}${config.MANAGE_USER_DETAILS_PATH}`, {
             headers,
           })
+            .then(response => response.json())
             .then(response => {
-              if (response.status === 200) {
-                let roles = []
-                const userDetails = response.body
+              let roles = []
+              const userDetails = response
 
-                fetch(
-                  `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}/${userDetails.username}${config.MANAGE_USER_EMAIL_PATH}`,
-                  { headers },
-                )
-                  .then(manageUsersEmailResponse => {
-                    if (manageUsersEmailResponse.status === 200) {
-                      const userEmail = manageUsersEmailResponse.body
+              fetch(
+                `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}/${userDetails.username}${config.MANAGE_USER_EMAIL_PATH}`,
+                { headers },
+              )
+                .then(manageUsersEmailResponse => manageUsersEmailResponse.json())
+                .then(manageUsersEmailResponse => {
+                  const userEmail = manageUsersEmailResponse
 
-                      fetch(
-                        `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}${config.MANAGE_USER_ROLES_PATH}`,
-                        { headers },
-                      )
-                        .then(manageUsersRolesResponse => {
-                          if (manageUsersRolesResponse.status === 200) {
-                            const userRoles = manageUsersRolesResponse.body
-                            userRoles.forEach(role => {
-                              roles = roles.concat(role.roleCode)
-                            })
+                  fetch(
+                    `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}${config.MANAGE_USER_ROLES_PATH}`,
+                    { headers },
+                  )
+                    .then(manageUsersRolesResponse => manageUsersRolesResponse.json())
+                    .then(manageUsersRolesResponse => {
+                      const userRoles = manageUsersRolesResponse
+                      userRoles.forEach(role => {
+                        roles = roles.concat(role.roleCode)
+                      })
 
-                            if (roles) {
-                              const sessionUser = {
-                                email: userEmail.email,
-                                name: userDetails.name,
-                                activeCaseLoadId: userDetails.activeCaseLoadId,
-                                username: userDetails.username,
-                                roles,
-                              }
-                              done(null, sessionUser)
-                            } else {
-                              log.error('no roles found for user')
-                              const notAuthorisedError = new Error('You are not authorised for this service')
-                              notAuthorisedError.status = 403
-                              done(notAuthorisedError, null)
-                            }
-                          }
-                        })
-                        .catch(error => {
-                          log.error(error, 'error returned when requesting user roles from SSO')
-                          done(error, null)
-                        })
-                    }
-                  })
-                  .catch(error => {
-                    log.error(error, 'error returned when requesting user email from SSO')
-                    done(error, null)
-                  })
-              }
+                      if (roles) {
+                        const sessionUser = {
+                          email: userEmail.email,
+                          name: userDetails.name,
+                          activeCaseLoadId: userDetails.activeCaseLoadId,
+                          username: userDetails.username,
+                          roles,
+                        }
+                        done(null, sessionUser)
+                      } else {
+                        log.error('no roles found for user')
+                        const notAuthorisedError = new Error('You are not authorised for this service')
+                        notAuthorisedError.status = 403
+                        done(notAuthorisedError, null)
+                      }
+                    })
+                    .catch(error => {
+                      log.error(error, 'error returned when requesting user roles from SSO')
+                      done(error, null)
+                    })
+                })
+                .catch(error => {
+                  log.error(error, 'error returned when requesting user email from SSO')
+                  done(error, null)
+                })
             })
             .catch(error => {
               log.error(error, 'error returned when requesting user details from SSO')
