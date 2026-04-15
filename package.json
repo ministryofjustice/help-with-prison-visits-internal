@@ -32,7 +32,6 @@
     "@ministryofjustice/frontend": "9.0.0",
     "@ministryofjustice/hmpps-monitoring": "1.0.2",
     "applicationinsights": "^2.9.8",
-    "axios": "^1.15.0",
     "bluebird": "^3.7.2",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",
@@ -62,6 +61,7 @@
   "devDependencies": {
     "@ministryofjustice/eslint-config-hmpps": "^1.0.3",
     "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
+    "chokidar": "3.6.0",
     "cypress": "^15.13.1",
     "jest": "^30.3.0",
     "jest-html-reporter": "^4.4.0",
