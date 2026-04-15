@@ -32,7 +32,6 @@
     "@ministryofjustice/frontend": "9.0.0",
     "@ministryofjustice/hmpps-monitoring": "1.0.2",
     "applicationinsights": "^2.9.8",
-    "axios": "^1.15.0",
     "bluebird": "^3.7.2",
     "bunyan": "^1.8.15",
     "bunyan-format": "^0.2.1",

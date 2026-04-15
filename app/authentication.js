@@ -3,7 +3,6 @@ const redis = require('redis')
 const { RedisStore } = require('connect-redis')
 const passport = require('passport')
 const OAuth2Strategy = require('passport-oauth2').Strategy
-const axios = require('axios')
 const config = require('../config')
 const log = require('./services/log')
 const applicationRoles = require('./constants/application-roles-enum')
@@ -76,27 +75,30 @@ module.exports = app => {
         },
         (accessToken, refreshToken, params, profile, done) => {
           // Call API to get details on user
-          const options = {
-            url: `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}${config.MANAGE_USER_DETAILS_PATH}`,
-            headers: `Authorization: Bearer ${accessToken}`,
-          }
-          axios(options)
+          const headers = { Authorization: `Bearer ${accessToken}` }
+          fetch(`${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}${config.MANAGE_USER_DETAILS_PATH}`, {
+            headers,
+          })
             .then(response => {
               if (response.status === 200) {
                 let roles = []
-                const userDetails = response.data
-                options.url = `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}/${userDetails.username}${config.MANAGE_USER_EMAIL_PATH}`
+                const userDetails = response.body
 
-                axios(options)
+                fetch(
+                  `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}/${userDetails.username}${config.MANAGE_USER_EMAIL_PATH}`,
+                  { headers },
+                )
                   .then(manageUsersEmailResponse => {
                     if (manageUsersEmailResponse.status === 200) {
-                      const userEmail = manageUsersEmailResponse.data
-                      options.url = `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}${config.MANAGE_USER_ROLES_PATH}`
+                      const userEmail = manageUsersEmailResponse.body
 
-                      axios(options)
+                      fetch(
+                        `${config.MANAGE_USERS_HOST}${config.MANAGE_USER_PATH_PREFIX}${config.MANAGE_USER_ROLES_PATH}`,
+                        { headers },
+                      )
                         .then(manageUsersRolesResponse => {
                           if (manageUsersRolesResponse.status === 200) {
-                            const userRoles = manageUsersRolesResponse.data
+                            const userRoles = manageUsersRolesResponse.body
                             userRoles.forEach(role => {
                               roles = roles.concat(role.roleCode)
                             })
