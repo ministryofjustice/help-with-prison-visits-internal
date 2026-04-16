@@ -54,7 +54,7 @@
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
     "redis": "^5.11.0",
-    "sanitize-html": "^2.17.2",
+    "sanitize-html": "^2.17.3",
     "tedious": "^19.2.1",
     "validator": "^13.15.35"
   },
