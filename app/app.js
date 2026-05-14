@@ -165,7 +165,7 @@ app.use((err, req, res, next) => {
   if (err.status === 404) {
     res.render('includes/error-404')
   } else if (err.status === 401) {
-    res.redirect('/login')
+    res.render('includes/error-401')
   } else if (err.status === 403) {
     res.render('includes/error-403')
   } else {
