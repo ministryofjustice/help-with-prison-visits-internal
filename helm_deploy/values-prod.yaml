@@ -16,5 +16,10 @@ generic-service:
     HWPV_COOKIE_NAME: hwpv-session-prod
     ENVIRONMENT_NAME: prod
 
+  allowlist:
+    groups:
+      - internal
+      - prisons
+
 generic-prometheus-alerts:
   alertSeverity: help-with-prison-visits 
