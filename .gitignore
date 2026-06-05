@@ -24,7 +24,6 @@ test/cypress-e2e/videos/
 
 # coverage reports
 coverage
-.nyc_output/
 
 # Ignore IntelliJ files
 .idea/
