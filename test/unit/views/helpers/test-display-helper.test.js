@@ -93,4 +93,21 @@ describe('views/helpers/display-helper', () => {
     expect(displayHelper.toDecimal(50)).toBe('50.00')
     expect(displayHelper.toDecimal('21.5')).toBe('21.50')
   })
+
+  describe('getPrisonsByRegion', () => {
+    const VALID_REGIONS = ['ENG/WAL', 'SCO', 'NI', 'JSY', 'GSY', 'YCS']
+    const INVALID_REGION = 'some invalid region'
+
+    it('should return the list of prisons for the given region', () => {
+      VALID_REGIONS.forEach(region => {
+        const result = displayHelper.getPrisonsByRegion(region)
+        expect(result).toBeDefined()
+      })
+    })
+
+    it('should return undefined if an invalid region is passed as input', () => {
+      const result = displayHelper.getPrisonsByRegion(INVALID_REGION)
+      expect(result).toBeUndefined()
+    })
+  })
 })

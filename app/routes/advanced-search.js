@@ -19,7 +19,7 @@ module.exports = router => {
   router.get('/advanced-search-input', (req, res) => {
     authorisation.hasRoles(req, allowedRoles)
 
-    return res.render('advanced-search')
+    return res.render('advanced-search', { displayHelper })
   })
 
   router.get('/advanced-search', (req, res) => {
