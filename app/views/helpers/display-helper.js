@@ -86,3 +86,22 @@ module.exports.maskString = (unmaskedValue, visibleCharacterCount) => {
   const result = `${'*'.repeat(unmaskedValue.length - visibleCharacterCount)}${unmaskedValue.substring(visibleCharacterCount, unmaskedValue.length)}`
   return result
 }
+
+const prisonsByRegion = {
+  'ENG/WAL': {},
+  SCO: {},
+  NI: {},
+  JSY: {},
+  GSY: {},
+  YCS: {},
+}
+
+Object.keys(prisonsEnum).forEach(prisonKey => {
+  if (Object.hasOwn(prisonsEnum, prisonKey) && typeof prisonsEnum[prisonKey] === 'object') {
+    prisonsByRegion[prisonsEnum[prisonKey].region][prisonKey] = prisonsEnum[prisonKey]
+  }
+})
+
+module.exports.getPrisonsByRegion = region => {
+  return prisonsByRegion[region]
+}
