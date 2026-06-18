@@ -39,6 +39,7 @@ module.exports = router => {
     return res.render('advanced-search', {
       query: req.query,
       rawQuery: rawQueryString,
+      displayHelper,
     })
   })
 
