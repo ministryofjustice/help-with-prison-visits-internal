@@ -81,9 +81,8 @@
       <div class="govuk-grid-column-one-third">
         <div class="govuk-form-group">
           <label class="govuk-label govuk-label--s" for="prison">Prison</label>
-          <!-- Ignore WCAG2AA.Principle4.Guideline4_1.4_1_2.H91 and WCAG2AA.Principle1.Guideline1_3.1_3_1.F68, caused by autocomplete generated input -->
           <select id="prison" class="govuk-select" name="prison">
-            <option value="">select</option>
+            <option value="">Please select</option>
             <optgroup label="England / Wales">
             {% for key, prison in displayHelper.getPrisonsByRegion('ENG/WAL') %}
               <option value="{{ prison.value }}" {% if query.prison == prison.value %} selected {% endif %} id="prison-{{ prison.value }}">{{ prison.displayName }}</option>
