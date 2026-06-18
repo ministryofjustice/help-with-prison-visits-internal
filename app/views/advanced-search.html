@@ -79,16 +79,43 @@
       </div>
 
       <div class="govuk-grid-column-one-third">
-        {{ govukInput({
-          label: {
-            text: "Prison",
-            classes: "govuk-label--s",
-            isPageHeading: false
-          },
-          id: "prison",
-          name: "prison",
-          value: query.prison
-        }) }}
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-label--s" for="prison">Prison</label>
+          <select id="prison" class="govuk-select" name="prison">
+            <option value="">Please select</option>
+            <optgroup label="England / Wales">
+            {% for key, prison in displayHelper.getPrisonsByRegion('ENG/WAL') %}
+              <option value="{{ prison.value }}" {% if query.prison == prison.value %} selected {% endif %} id="prison-{{ prison.value }}">{{ prison.displayName }}</option>
+            {% endfor %}
+            </optgroup>
+            <optgroup label="Scotland">
+            {% for key, prison in displayHelper.getPrisonsByRegion('SCO') %}
+              <option value="{{ prison.value }}" {% if query.prison == prison.value %} selected {% endif %} id="prison-{{ prison.value }}">{{ prison.displayName }}</option>
+            {% endfor %}
+            </optgroup>
+            <optgroup label="Northern Ireland">
+            {% for key, prison in displayHelper.getPrisonsByRegion('NI') %}
+              <option value="{{ prison.value }}" {% if query.prison == prison.value %} selected {% endif %} id="prison-{{ prison.value }}">{{ prison.displayName }}</option>
+            {% endfor %}
+            </optgroup>
+            <optgroup label="Jersey">
+            {% for key, prison in displayHelper.getPrisonsByRegion('JSY') %}
+              <option value="{{ prison.value }}" {% if query.prison == prison.value %} selected {% endif %} id="prison-{{ prison.value }}">{{ prison.displayName }}</option>
+            {% endfor %}
+            </optgroup>
+            <optgroup label="Guernsey">
+            {% for key, prison in displayHelper.getPrisonsByRegion('GSY') %}
+              <option value="{{ prison.value }}" {% if query.prison == prison.value %} selected {% endif %} id="prison-{{ prison.value }}">{{ prison.displayName }}</option>
+            {% endfor %}
+            </optgroup>
+            <optgroup label="YCS">
+            {% for key, prison in displayHelper.getPrisonsByRegion('YCS') %}
+              <option value="{{ prison.value }}" {% if query.prison == prison.value %} selected {% endif %} id="prison-{{ prison.value }}">{{ prison.displayName }}</option>
+            {% endfor %}
+            </optgroup>
+          </select>
+        </div>
+
       </div>
 
       <div class="govuk-grid-column-one-third">
