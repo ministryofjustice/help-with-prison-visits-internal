@@ -27,8 +27,8 @@
     "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1091.0",
-    "@ministryofjustice/frontend": "9.0.0",
+    "@aws-sdk/client-s3": "^3.1101.0",
+    "@ministryofjustice/frontend": "10.0.1",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "applicationinsights": "^2.9.8",
     "bluebird": "^3.7.2",
@@ -37,9 +37,9 @@
     "compression": "^1.8.1",
     "connect-redis": "^10.0.0",
     "csrf-sync": "4.2.1",
-    "csv-stringify": "^6.8.1",
-    "datatables.net": "^2.3.8",
-    "datatables.net-dt": "^2.3.8",
+    "csv-stringify": "^6.8.2",
+    "datatables.net": "^3.0.1",
+    "datatables.net-dt": "^3.0.1",
     "debug": "^4.4.3",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
@@ -52,7 +52,7 @@
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
-    "redis": "^6.1.0",
+    "redis": "^6.2.0",
     "sanitize-html": "2.17.5",
     "tedious": "^20.0.0",
     "validator": "^13.15.35"
@@ -66,11 +66,13 @@
     "jest-junit": "^17.0.0",
     "node-mocks-http": "^1.18.1",
     "prettier": "^3.9.6",
-    "sass": "^1.101.6",
+    "sass": "^1.102.0",
     "supertest": "^7.2.2"
   },
   "overrides": {
     "@opentelemetry/core": "2.10.0",
-    "brace-expansion": "5.0.8"
+    "brace-expansion": "5.0.9",
+    "js-yaml": "3.15.1",
+    "nanoid": "3.3.17"
   }
 }
