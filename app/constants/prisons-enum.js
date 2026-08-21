@@ -283,9 +283,9 @@ module.exports = {
     region: 'ENG/WAL',
   },
 
-  GRENDON_SPRING_HILL: {
-    value: 'grendon/spring-hill',
-    displayName: 'Grendon/Spring Hill',
+  GRENDON: {
+    value: 'grendon',
+    displayName: 'Grendon',
     region: 'ENG/WAL',
   },
 
@@ -355,9 +355,9 @@ module.exports = {
     region: 'ENG/WAL',
   },
 
-  HMP_HUMBER: {
-    value: 'hmp-humber',
-    displayName: 'Hmp Humber',
+  HUMBER: {
+    value: 'humber',
+    displayName: 'Humber',
     region: 'ENG/WAL',
   },
 
@@ -478,6 +478,12 @@ module.exports = {
   MANCHESTER: {
     value: 'manchester',
     displayName: 'Manchester',
+    region: 'ENG/WAL',
+  },
+
+  MILLSIKE: {
+    value: 'millsike',
+    displayName: 'Millsike',
     region: 'ENG/WAL',
   },
 
@@ -604,6 +610,12 @@ module.exports = {
   SEND: {
     value: 'send',
     displayName: 'Send',
+    region: 'ENG/WAL',
+  },
+
+  SPRING_HILL: {
+    value: 'spring-hill',
+    displayName: 'Spring Hill',
     region: 'ENG/WAL',
   },
 
@@ -777,6 +789,12 @@ module.exports = {
     region: 'SCO',
   },
 
+  BELLA_CENTRE: {
+    value: 'bella-centre',
+    displayName: 'Bella Centre',
+    region: 'SCO',
+  },
+
   CASTLE_HUNTLY: {
     value: 'castle-huntly',
     displayName: 'Castle Huntly',
@@ -831,6 +849,12 @@ module.exports = {
     region: 'SCO',
   },
 
+  LILIAS_CENTRE: {
+    value: 'lilias-centre',
+    displayName: 'Lilias Centre',
+    region: 'SCO',
+  },
+
   LOW_MOSS: {
     value: 'low-moss',
     displayName: 'Low Moss',
@@ -852,6 +876,12 @@ module.exports = {
   SHOTTS: {
     value: 'shotts',
     displayName: 'Shotts',
+    region: 'SCO',
+  },
+
+  STIRLING: {
+    value: 'stirling',
+    displayName: 'Stirling',
     region: 'SCO',
   },
 
