@@ -295,7 +295,7 @@ module.exports = (searchCriteria, offset, limit, isExport) => {
   }
 
   function applyPrisonFilter(query, prison) {
-    query.where('Prisoner.NameOfPrison', 'like', `%${prison}%`)
+    query.where('Prisoner.NameOfPrison', prison)
   }
 
   function applyAssistedDigitalFilter(query) {
