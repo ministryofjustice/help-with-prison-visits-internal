@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1117.0",
-    "@ministryofjustice/frontend": "10.0.1",
+    "@ministryofjustice/frontend": "11.0.0",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "applicationinsights": "^2.9.8",
     "bluebird": "^3.7.2",
