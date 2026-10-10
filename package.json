@@ -28,7 +28,7 @@
     "prepare": "hmpps-precommit-hooks-prepare"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1143.0",
+    "@aws-sdk/client-s3": "^3.1146.0",
     "@ministryofjustice/frontend": "11.1.0",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "applicationinsights": "^2.9.8",
@@ -39,8 +39,8 @@
     "connect-redis": "^10.0.0",
     "csrf-sync": "4.2.1",
     "csv-stringify": "^6.9.0",
-    "datatables.net": "^3.1.2",
-    "datatables.net-dt": "^3.1.2",
+    "datatables.net": "^3.1.3",
+    "datatables.net-dt": "^3.1.3",
     "debug": "^4.4.3",
     "express": "^5.2.1",
     "express-session": "^1.19.0",
@@ -53,8 +53,8 @@
     "nunjucks": "^3.2.4",
     "passport": "^0.7.0",
     "passport-oauth2": "^1.8.0",
-    "redis": "^6.2.1",
-    "sanitize-html": "2.17.7",
+    "redis": "^6.3.0",
+    "sanitize-html": "2.18.0",
     "tedious": "^20.3.3",
     "validator": "^13.15.35"
   },
@@ -70,7 +70,7 @@
     "node-mocks-http": "^1.18.1",
     "prettier": "^3.9.9",
     "sass": "^1.105.1",
-    "supertest": "^7.3.0"
+    "supertest": "^7.3.1"
   },
   "overrides": {
     "@opentelemetry/core": "2.11.0",
