@@ -23,6 +23,3 @@ generic-service:
       - internal
       - prisons
       - sscl
-
-generic-prometheus-alerts:
-  alertSeverity: help-with-prison-visits 
