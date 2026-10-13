@@ -18,6 +18,3 @@ generic-service:
     groups:
       - internal
       - prisons
-
-generic-prometheus-alerts:
-  alertSeverity: help-with-prison-visits-devtest
