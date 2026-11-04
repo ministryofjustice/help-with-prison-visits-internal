@@ -5,13 +5,12 @@ Guidance for AI coding agents working on Help with Prison Visits Internal, the s
 ## Start Here
 
 - Read [README.md](README.md) for local environment setup, required `.env` values, database/Redis/OAuth notes, and security background.
-- This is a Node 24 / npm 11 app. Run `npm run setup` after dependency changes or on a fresh checkout.
+- This is a Node 26 / npm 12 app. Run `npm ci` after dependency changes or on a fresh checkout.
 - Use CommonJS (`require`, `module.exports`) in application code unless a nearby file already uses ESM. The Jest config is ESM, but the app is not.
 - Keep changes within the existing Express route -> service/domain -> data access shape. Avoid putting business logic directly into views or route registration.
 
 ## Useful Commands
 
-- `npm run setup`: install dependencies and run the HMPPS npm script allowlist check.
 - `npm run start:dev`: build CSS once, load `.env`, and start the app locally.
 - `npm start`: start via `app/bin/www` with Bunyan output formatting.
 - `npm run css-build`: compile Sass from [app/assets/sass/application.scss](app/assets/sass/application.scss) to the generated public stylesheet.

@@ -19,7 +19,7 @@ WORKDIR /app
 
 RUN npm install -g npm@12
 COPY package*.json .npmrc ./
-RUN CYPRESS_INSTALL_BINARY=0 NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm run setup
+RUN CYPRESS_INSTALL_BINARY=0 NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false npm ci
 ENV NODE_ENV='production'
 
 COPY . .
