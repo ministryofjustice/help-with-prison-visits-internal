@@ -9,7 +9,7 @@ Help With Prison Visits internal, staff facing web application. This app sits be
 ## Requirements
 
 * Docker (Including Docker Compose)
-* Node 24 (Including NPM) - If running locally
+* Node 26 (Including NPM 12) - If running locally
 
 ## Run
 
