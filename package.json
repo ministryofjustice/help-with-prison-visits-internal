@@ -21,14 +21,14 @@
     "test-integration": "KNEX_CONFIG=testing mocha --recursive test/integration/ --timeout 15000 --exit",
     "test-e2e": "KNEX_CONFIG=testing cypress run --config video=false",
     "test-e2e-ui": "KNEX_CONFIG=testing cypress open",
-    "css-build": "sass --no-source-map --quiet-deps --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./app/assets/sass/application.scss ./app/public/stylesheets/application.css",
+    "css-build": "sass --no-source-map --quiet-deps --load-path=node_modules --load-path=node_modules/govuk-frontend/dist --load-path=node_modules/@ministryofjustice/frontend --load-path=. ./app/assets/sass/application.scss ./app/public/stylesheets/application.css",
     "lint": "eslint . --cache --max-warnings 0",
     "lint-fix": "eslint . --fix",
     "prepare": "hmpps-precommit-hooks-prepare"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1165.0",
-    "@ministryofjustice/frontend": "11.1.0",
+    "@ministryofjustice/frontend": "12.0.0",
     "@ministryofjustice/hmpps-monitoring": "2.1.0",
     "applicationinsights": "^2.9.8",
     "bluebird": "^3.7.2",
