@@ -18,13 +18,14 @@ generic-service:
     httpGet:
       path: /ping
       port: http
-  
+
   readinessProbe:
     httpGet:
       path: /ping
       port: http
-  
+
   env:
+    LOG_LEVEL: "info"
     FILE_ARCHIVE_LOCATION: '/archive'
     APVS_MOJ_SSO_AUTHENTICATION_ENABLED: 'true'
     APVS_MOJ_SSO_TOKEN_PATH: '/oauth/token'
@@ -47,7 +48,7 @@ generic-service:
     help-with-prison-visits-internal:
       APVS_DATABASE: "APVS_DATABASE"
       APVS_INT_WEB_USERNAME: "APVS_INT_WEB_USERNAME"
-      APVS_INT_WEB_PASSWORD: "APVS_INT_WEB_PASSWORD"  
+      APVS_INT_WEB_PASSWORD: "APVS_INT_WEB_PASSWORD"
       APPINSIGHTS_INSTRUMENTATIONKEY: "APVS_APP_INSIGHTS_INSTRUMENTATION_KEY"
       APVS_MOJ_SSO_CLIENT_ID: "APVS_MOJ_SSO_CLIENT_ID"
       APVS_MOJ_SSO_CLIENT_SECRET: "APVS_MOJ_SSO_CLIENT_SECRET"
