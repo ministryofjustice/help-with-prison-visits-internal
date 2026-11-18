@@ -16,7 +16,7 @@ const parsedLogLevel = logLevel.toLowerCase().trim()
 validateLogLevel(parsedLogLevel)
 
 const log = bunyan.createLogger({
-  name: 'HwPV Asynchronous Worker',
+  name: 'HwPV Internal',
   stream: formatOut,
   level: parsedLogLevel,
 })
